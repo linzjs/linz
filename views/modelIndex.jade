@@ -15,8 +15,9 @@ block content
 			for record in records
 				tr
 					td
-						span.glyphicon.glyphicon-trash
-						span.glyphicon.glyphicon-plus-sign
+						div.btn-group
+							a.btn.btn-default(href='/admin/#{model.modelName}/#{record._id}/delete') Delete
+							a.btn.btn-default(href='/admin/#{model.modelName}/#{record._id}/edit') Edit
 					td
 						a(href='/admin/#{model.modelName}/#{record._id}/overview')= record.title
 					td= record.status
