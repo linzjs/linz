@@ -1,9 +1,8 @@
-doctype 5
-html(lang="en")
-	head
-		title= pageTitle
-	body
-		h1 List of Models
-		each val in models
-			p
-				a(href='/admin/model/#{val}/list')= val
+extends layout
+
+block content
+	h1 List of Models
+	ul.nav.nav-pills.nav-stacked
+		each model in models
+			li
+				a(href='/admin/model/#{model.modelName}/list') #{model.label}
