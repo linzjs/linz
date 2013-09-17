@@ -12,12 +12,12 @@ block content
 				th Publish date
 				th Created date
 		tbody
-			for model in models
+			for record in records
 				tr
 					td
 						span.glyphicon.glyphicon-trash
 						span.glyphicon.glyphicon-plus-sign
-					td= model.title
-					td= model.status
-					td= model.publishDate
-					td= model.dateCreated
+					td= record.title
+					td= record.status
+					td= moment(record.publishDate).format('ddd DD/MM/YYYY')
+					td= moment(record.dateCreated).format('ddd DD/MM/YYYY')
