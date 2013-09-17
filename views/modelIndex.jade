@@ -1,0 +1,21 @@
+doctype 5
+html(lang="en")
+	head
+		title= pageTitle
+	body
+		h1= modelLabel
+		p There are #{count} records.
+		table
+			tr
+				th Actions
+				th Label
+				th Status
+				th Publish date
+				th Created date
+			for model in models
+				tr
+					td edit | delete
+					td= model.title
+					td= model.status
+					td= model.publishDate
+					td= model.dateCreated

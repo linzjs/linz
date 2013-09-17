@@ -1,7 +1,9 @@
+var path = require('path');
+
 /* GET /admin/models/list */
 var route = function (req, res) {
 
-	res.send('models list');
+	res.render(req.linz.views + '/modelList.jade', { models: req.linz.listModels() });
 
 };
 

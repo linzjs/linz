@@ -1,7 +1,13 @@
+
+
 /* GET /admin/model/:model/list */
 var route = function (req, res) {
 
-	res.send('model index');
+	res.render(req.linz.views + '/modelIndex.jade', {
+		modelLabel: req.linz.model.label,
+		models: req.linz.models,
+		count: req.linz.models.length
+	});
 
 };
 
