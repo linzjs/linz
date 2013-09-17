@@ -1,20 +1,22 @@
-doctype 5
-html(lang="en")
-	head
-		title= pageTitle
-	body
-		h1= modelLabel
-		p There are #{count} records.
-		table
+extends layout
+
+block content
+	h1= modelLabel
+	div.alert.alert-info There are #{count} records.
+	table.table.table-striped.table-hover
+		thead
 			tr
 				th Actions
 				th Label
 				th Status
 				th Publish date
 				th Created date
+		tbody
 			for model in models
 				tr
-					td edit | delete
+					td
+						span.glyphicon.glyphicon-trash
+						span.glyphicon.glyphicon-plus-sign
 					td= model.title
 					td= model.status
 					td= model.publishDate
