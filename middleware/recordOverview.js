@@ -13,8 +13,6 @@ module.exports = function () {
 				req.linz.record = doc;
 			}
 
-			console.log(req.linz.model.schema);
-
 			next();
 
 		});
