@@ -7,14 +7,16 @@ var forms = require('forms'),
 /* GET /admin/model/:model/create */
 var route = function (req, res) {
 
-	var editForm = helpers.generateFormFromModel(req.linz.model, {});
+	helpers.generateFormFromModel(req.linz.model, {}, function (editForm) {
 
-	res.render(req.linz.views + '/modelCreate.jade', {
-		model: req.linz.model,
-		form: editForm.toHTML(function (name, object) {
-			return helpers.bootstrapField(name, object);
-		}),
-		cancelLink: req.linz.options.adminPath + '/model/' + req.linz.model.modelName + '/list'
+		res.render(req.linz.views + '/modelCreate.jade', {
+			model: req.linz.model,
+			form: editForm.toHTML(function (name, object) {
+				return helpers.bootstrapField(name, object);
+			}),
+			cancelLink: req.linz.options.adminPath + '/model/' + req.linz.model.modelName + '/list'
+		});
+
 	});
 
 };
