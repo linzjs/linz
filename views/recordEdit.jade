@@ -1,0 +1,11 @@
+extends layout
+
+block content
+	h1 Editing '#{record.title}'
+	div
+		form.form-horizontal(role="form")
+			!= form
+			.form-group
+				.col-lg-offset-2.col-lg-10
+					button.btn.btn-primary(type='submit') Save
+					button.btn.btn-default(type='button') Cancel

@@ -11,10 +11,9 @@
     "url": "https://github.com/smebberson/linz.git"
   },
   "author": "Scott Mebberson",
-  "license": "BSD",
   "readmeFilename": "README.md",
-  "gitHead": "855a16113528514bd3f0dbbc3a92b96dbf08fb66",
   "dependencies": {
-    "moment": "~2.2.1"
+    "moment": "~2.2.1",
+    "forms": "~0.3.0"
   }
 }
