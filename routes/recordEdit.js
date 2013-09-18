@@ -18,71 +18,100 @@ var route = function (req, res) {
 
 			var field = m.schema.paths[fieldName];
 			var schemaType = helpers.findFieldType(field);
+			var formField;
+			var choices;
+
+			if (Array.isArray(field.enumValues) && field.enumValues.length) {
+
+				// add the options to the choices object to be passed to the select box
+				schemaType = 'Enum';
+				choices = {};
+
+				field.enumValues.forEach(function (val) {
+					choices[val] = val;
+				});
+
+			}
 
 			switch (schemaType) {
 
+				case 'Enum':
+				formField = fields.string({
+								widget: widgets.select({
+									classes: ['form-control']
+								}),
+								cssClasses: {
+									label: ['col-lg-2 control-label']
+								},
+								value: r[fieldName],
+								choices: choices
+							});
+				break;
+
 				case 'String':
-				fds[field.path] = fields.string({
-									widget: widgets.text({
-										classes: ['form-control']
-									}),
-									value: r[fieldName],
-									cssClasses: {
-										label: ['col-lg-2 control-label']
-									}
-								});
+				formField = fields.string({
+								widget: widgets.text({
+									classes: ['form-control']
+								}),
+								value: r[fieldName],
+								cssClasses: {
+									label: ['col-lg-2 control-label']
+								}
+							});
 				break;
 
 				case 'Date':
-				fds[field.path] = fields.date({
-									widget: widgets.date({
-										classes: ['form-control']
-									}),
-									value: r[fieldName],
-									cssClasses: {
-										label: ['col-lg-2 control-label']
-									}
-								});
+				formField = fields.date({
+								widget: widgets.date({
+									classes: ['form-control']
+								}),
+								value: r[fieldName],
+								cssClasses: {
+									label: ['col-lg-2 control-label']
+								}
+							});
 				break;
 
 				case 'Text':
-				fds[field.path] = fields.string({
-									widget: widgets.textarea({
-										classes: ['form-control'],
-										rows: '6'
-									}),
-									value: r[fieldName],
-									cssClasses: {
-										label: ['col-lg-2 control-label']
-									}
-								});
+				formField = fields.string({
+								widget: widgets.textarea({
+									classes: ['form-control'],
+									rows: '6'
+								}),
+								value: r[fieldName],
+								cssClasses: {
+									label: ['col-lg-2 control-label']
+								}
+							});
 				break;
 
 				case 'Number':
-				fds[field.path] = fields.number({
-									widget: widgets.text({
-										classes: ['form-control']
-									}),
-									value: r[fieldName],
-									cssClasses: {
-										label: ['col-lg-2 control-label']
-									}
-								});
+				formField = fields.number({
+								widget: widgets.text({
+									classes: ['form-control']
+								}),
+								value: r[fieldName],
+								cssClasses: {
+									label: ['col-lg-2 control-label']
+								}
+							});
 				break;
 
 				case 'Oid':
-				fds[field.path] = fields.string({
-									widget: widgets.text({
-										classes: ['form-control']
-									}),
-									value: r[fieldName],
-									cssClasses: {
-										label: ['col-lg-2 control-label']
-									}
-								});
+				formField = fields.string({
+								widget: widgets.text({
+									classes: ['form-control']
+								}),
+								value: r[fieldName],
+								cssClasses: {
+									label: ['col-lg-2 control-label']
+								}
+							});
 				break;
 
 			}
+
+			fds[field.path] = formField;
 
 		}
 
