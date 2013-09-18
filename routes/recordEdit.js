@@ -35,7 +35,7 @@ var route = function (req, res) {
 
 				case 'Date':
 				fds[field.path] = fields.date({
-									widget: widgets.text({
+									widget: widgets.date({
 										classes: ['form-control']
 									}),
 									value: r[fieldName],
