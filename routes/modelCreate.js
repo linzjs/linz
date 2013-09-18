@@ -4,14 +4,13 @@ var forms = require('forms'),
 	widgets = forms.widgets,
 	helpers = require('../lib/helpers-form');
 
-/* GET /admin/:model/:id/overview */
+/* GET /admin/model/:model/create */
 var route = function (req, res) {
 
-	var editForm = helpers.generateFormFromModel(req.linz.model, req.linz.record);
+	var editForm = helpers.generateFormFromModel(req.linz.model, {});
 
-	res.render(req.linz.views + '/recordEdit.jade', {
+	res.render(req.linz.views + '/modelCreate.jade', {
 		model: req.linz.model,
-		record: req.linz.record,
 		form: editForm.toHTML(function (name, object) {
 			return helpers.bootstrapField(name, object);
 		}),
