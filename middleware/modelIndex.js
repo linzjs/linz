@@ -4,8 +4,6 @@ module.exports = function (model) {
 
 	return function (req, res, next) {
 
-		// console.log(req.linz.models[req.params.model]);
-
 		req.linz.model = req.linz.models[req.params.model];
 
 		// simply return all docs
