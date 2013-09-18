@@ -95,7 +95,8 @@ var route = function (req, res) {
 		record: req.linz.record,
 		form: editForm.toHTML(function (name, object) {
 			return bootstrapField(name, object);
-		})
+		}),
+		cancelLink: req.linz.options.adminPath + '/model/' + req.linz.model.modelName + '/list'
 	});
 
 };
