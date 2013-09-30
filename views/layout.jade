@@ -16,10 +16,9 @@ html(lang="en")
 					a.navbar-brand(href='/admin') Linz
 				.navbar-collapse.collapse
 					ul.nav.navbar-nav
-						li
-							a(href='/admin/models/list') Models
-						li
-							a(href='#') Logout
+						each val,index in linzNavigation
+							li
+								a(href=val.href)= val.name
 
 			block content
 

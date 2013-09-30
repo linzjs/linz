@@ -22,6 +22,10 @@ module.exports = function responseTime(logPath, options) {
 
 			var duration = Date.now() - start;
 
+			if (options.exclude && options.exclude.test(req.originalUrl)) {
+				return;
+			}
+
 			winston.info(req.method + ' ' + req.originalUrl + ' [' + duration + ']');
 
 		});
