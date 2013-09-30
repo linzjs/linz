@@ -1,0 +1,12 @@
+extends layout-preauth
+
+block content
+	h1 Login to Linz
+	form(role='form', method='post')
+		.form-group
+			label(for='username') Username
+			input.form-control(type='text', id='username', name='username', placeholder='Enter your username...')
+		.form-group
+			label(for='password') Password
+			input.form-control(type='password', id='password', name='password', placeholder='Enter your password...')
+		button.btn.btn-primary(type='submit') Submit
