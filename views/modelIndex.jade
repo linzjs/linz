@@ -3,7 +3,7 @@ extends layout
 block content
 	h1= model.label
 		span
-			a.btn.btn-primary.pull-right(href='/admin/model/#{model.modelName}/new') Create a new post
+			a.btn.btn-primary.pull-right(href='/admin/model/#{model.modelName}/new') Create a new #{model.singular}
 	div.alert.alert-info There are #{count} records.
 	table.table.table-striped.table-hover
 		thead
