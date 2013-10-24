@@ -1,27 +1,31 @@
 extends layout
 
 block content
-	h1= model.label
+	h1
+		a(href='/admin/model/#{model.modelName}/list')= model.label
 		span
 			a.btn.btn-primary.pull-right(href='/admin/model/#{model.modelName}/new') Create a new #{model.singular}
 	div.alert.alert-info There are #{count} records.
-	table.table.table-striped.table-hover
-		thead
-			tr
-				th Actions
-				th Label
-				th Status
-				th Publish date
-				th Created date
-		tbody
-			for record in records
+	if count > 0
+		table.table.table-striped.table-hover
+			thead
 				tr
-					td
-						div.btn-group
-							a.btn.btn-default(href='/admin/#{model.modelName}/#{record._id}/delete') Delete
-							a.btn.btn-default(href='/admin/#{model.modelName}/#{record._id}/edit') Edit
-					td
-						a(href='/admin/#{model.modelName}/#{record._id}/overview')= record.title
-					td= record.status
-					td= moment(record.publishDate).format('ddd DD/MM/YYYY')
-					td= moment(record.dateCreated).format('ddd DD/MM/YYYY')
+					th Actions
+					th Label
+					if model.schema.paths.status
+						th Status
+					th Publish date
+					th Created date
+			tbody
+				for record in records
+					tr
+						td
+							div.btn-group
+								a.btn.btn-default(href='/admin/#{model.modelName}/#{record._id}/delete') Delete
+								a.btn.btn-default(href='/admin/#{model.modelName}/#{record._id}/edit') Edit
+						td
+							a(href='/admin/#{model.modelName}/#{record._id}/overview')= record.title || record.toString()
+						if model.schema.paths.status
+							td= record.status
+						td= moment(record.publishDate).format('ddd DD/MM/YYYY')
+						td= moment(record.dateCreated).format('ddd DD/MM/YYYY')
