@@ -11,11 +11,8 @@ block content
 			thead
 				tr
 					th Actions
-					th Label
-					if model.schema.paths.status
-						th Status
-					th Publish date
-					th Created date
+					for column in columns
+						th= column.label
 			tbody
 				for record in records
 					tr
@@ -23,9 +20,5 @@ block content
 							div.btn-group
 								a.btn.btn-default(href='/admin/#{model.modelName}/#{record._id}/delete') Delete
 								a.btn.btn-default(href='/admin/#{model.modelName}/#{record._id}/edit') Edit
-						td
-							a(href='/admin/#{model.modelName}/#{record._id}/overview')= record.title || record.toString()
-						if model.schema.paths.status
-							td= record.status
-						td= moment(record.publishDate).format('ddd DD/MM/YYYY')
-						td= moment(record.dateCreated).format('ddd DD/MM/YYYY')
+						each val in Object.keys(columns)
+							td!= columns[val].renderer(record[val], record, model.modelName)
