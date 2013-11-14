@@ -1,28 +1,23 @@
 
 var Linz = require('./lib/linz'),
-	application = require('./lib/application');
+	application = require('./lib/application'),
+	utils = require('./lib/utils');
 
-exports = module.exports = createLinz;
+function createLinz(expressApp, models, options) {
 
-function createLinz() {
+	if (!expressApp) throw new Error('You must pass an express app to Linz.');
 
-	var linz = new Linz();
-	merge(linz, application);
+	models = models || {};
+	options = options || {};
+
+	var linz = new Linz(expressApp, models, options);
+	utils.merge(linz, application);
 	linz.init();
 	return linz;
 
 }
 
-merge = function(a, b){
-	if (a && b) {
-		for (var key in b) {
-			a[key] = b[key];
-		}
-	}
-	return a;
-};
-
-// module.exports.Linz = require('./lib/linz');
+exports = module.exports = createLinz;
 module.exports.formtools = require('./lib/formtools/');
 module.exports.formtools.extendTypes = require('./lib/formtools/extend-types');
 module.exports.formtools.cellRenderers = require('./lib/formtools/renderers-cell');

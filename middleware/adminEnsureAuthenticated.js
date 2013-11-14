@@ -4,11 +4,11 @@ module.exports = function ensureAuthenticated () {
 
 	return function (req, res, next) {
 
-		if (req.originalUrl === req.linz.options.adminPath + '/login' || req.isAuthenticated()) {
+		if (req.originalUrl === req.linz.get('admin path') + '/login' || req.isAuthenticated()) {
 			return next();
 		}
 
-		res.redirect(req.linz.options.adminPath + '/login');
+		res.redirect(req.linz.get('admin path') + '/login');
 
 	}
 

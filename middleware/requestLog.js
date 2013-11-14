@@ -1,11 +1,11 @@
 var util = require('util'),
 	fs = require('fs');
 
-module.exports = function (model) {
+module.exports = function (logPath) {
 
 	return function (req, res, next) {
 
-		fs.readFile(req.linz.options.requestLogging.path, 'utf8', function (err, data) {
+		fs.readFile(logPath, 'utf8', function (err, data) {
 
 			req.linz.requestLog = data;
 

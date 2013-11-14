@@ -8,7 +8,7 @@ var route = {
 	},
 
 	post: function (req, res) {
-		res.render('post');
+		res.render(req.linz.views + 'post');
 	}
 
 };
