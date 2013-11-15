@@ -3,7 +3,7 @@ extends layout
 block content
 	h1 Editing '#{record.title}'
 	div
-		form.form-horizontal(role="form",action='/admin/#{model.modelName}/#{record._id}/save',method='post')
+		form.form-horizontal(role="form",action='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/save',method='post')
 			!= form
 			.form-group
 				.col-lg-offset-2.col-lg-10

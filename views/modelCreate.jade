@@ -3,7 +3,7 @@ extends layout
 block content
 	h1 Create new #{model.singular}
 	div
-		form.form-horizontal(role="form",action='/admin/model/#{model.modelName}/create',method='post')
+		form.form-horizontal(role="form",action='' + linz.get('admin path') + '/model/#{model.modelName}/create',method='post')
 			!= form
 			.form-group
 				.col-lg-offset-2.col-lg-10

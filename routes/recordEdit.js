@@ -15,7 +15,7 @@ var route = function (req, res) {
 			form: editForm.toHTML(function (name, object) {
 				return helpers.bootstrapField(name, object);
 			}),
-			cancelLink: req.linz.options.adminPath + '/model/' + req.linz.model.modelName + '/list'
+			cancelLink: req.linz.get('admin path') + '/model/' + req.linz.model.modelName + '/list'
 		});
 
 	});

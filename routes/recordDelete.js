@@ -4,7 +4,7 @@ var route = function (req, res) {
 
 	req.linz.model.findOneAndRemove({_id: req.linz.record._id}, function (err, doc) {
 
-		return res.redirect(req.linz.options.adminPath + '/model/' + req.linz.model.modelName + '/list');
+		return res.redirect(req.linz.get('admin path') + '/model/' + req.linz.model.modelName + '/list');
 
 	});
 

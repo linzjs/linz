@@ -5,4 +5,4 @@ block content
 	ul.nav.nav-pills.nav-stacked
 		each model in models
 			li
-				a(href='/admin/model/#{model.modelName}/list') #{model.label}
+				a(href='' + linz.get('admin path') + '/model/#{model.modelName}/list') #{model.label}

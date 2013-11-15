@@ -17,8 +17,7 @@ var route = function (req, res) {
 				req.linz.model.update({ _id: req.params.id }, { $set: form.data}, function (error, count, raw) {
 
 					if (!error) {
-						// return res.redirect(req.linz.options.adminPath + '/model/' + req.linz.model.modelName + '/list');
-						return res.redirect(req.linz.options.adminPath + '/' + req.linz.model.modelName + '/' + req.params.id + '/overview');
+						return res.redirect(req.linz.get('admin path') + '/' + req.linz.model.modelName + '/' + req.params.id + '/overview');
 					} else {
 						return res.send('There was an error saving the model. Please use the back button and try again.');
 					}

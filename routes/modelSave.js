@@ -20,7 +20,7 @@ var route = function (req, res) {
 						return res.send('There was an error saving the model. ' + err + '. Please hit the back button, amend the error and try again.');
 					}
 
-					return res.redirect(req.linz.options.adminPath + '/' + req.linz.model.modelName + '/' + doc._id + '/overview');
+					return res.redirect(req.linz.get('admin path') + '/' + req.linz.model.modelName + '/' + doc._id + '/overview');
 
 				});
 

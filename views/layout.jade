@@ -13,7 +13,7 @@ html(lang="en")
 		.container
 			.navbar.navbar-default
 				.navbar-header
-					a.navbar-brand(href='/admin') Linz
+					a.navbar-brand(href=linz.get('admin path')) Linz
 				.navbar-collapse.collapse
 					ul.nav.navbar-nav
 						each val,index in linzNavigation
@@ -23,4 +23,4 @@ html(lang="en")
 			block content
 
 		script(src='//code.jquery.com/jquery.js')
-		script(src='/admin/public/js/bootstrap.js')
+		script(src='' + linz.get('admin path') + '/public/js/bootstrap.js')
