@@ -13,7 +13,7 @@ html(lang="en")
 		.container
 			.navbar.navbar-default
 				.navbar-header
-					a.navbar-brand(href=linz.get('admin path')) Linz
+					a.navbar-brand(href=linz.get('admin path'))= linz.get('admin title')
 				.navbar-collapse.collapse
 					ul.nav.navbar-nav
 						each val,index in linzNavigation
