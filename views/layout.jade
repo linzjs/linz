@@ -5,13 +5,14 @@ html(lang="en")
 		meta(name='viewport', content='width=device-width, initial-scale=1.0')
 		link(href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.css', rel='stylesheet')
 		link(href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.css', rel='stylesheet')
+		link(href='' + linz.get('admin path') + '/css/linz-admin.css', rel='stylesheet')
 		style.
 			body {
 				margin: 30px;
 			}
 	body
-		.container
-			.navbar.navbar-default
+		.navbar.navbar-fixed-top.navbar-inverse
+			.container
 				.navbar-header
 					a.navbar-brand(href=linz.get('admin path'))= linz.get('admin title')
 				.navbar-collapse.collapse
@@ -19,7 +20,10 @@ html(lang="en")
 						each val,index in linzNavigation
 							li
 								a(href=val.href)= val.name
+					form.navbar-form.navbar-right
+						a.btn.btn-default(href=linz.get('admin path') + '/logout') Logout
 
+		.container
 			block content
 
 		script(src='//code.jquery.com/jquery.js')
