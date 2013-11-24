@@ -1,0 +1,15 @@
+body {
+  padding-top: 50px;
+}
+.navbar-inverse.linz-navbar-inverse {
+  background: #333;
+}
+.navbar-inverse.linz-navbar-inverse .navbar-brand {
+  color: #fff;
+}
+.navbar-inverse.linz-navbar-inverse .navbar-nav > li > a {
+  color: #fff;
+}
+.navbar-inverse.linz-navbar-inverse .navbar-form {
+  padding-right: 0;
+}

@@ -19,6 +19,7 @@
     "winston": "~0.7.2",
     "passport": "~0.1",
     "passport-local": "~0.1",
-    "bunyan": "~0.22.0"
+    "bunyan": "~0.22.0",
+    "stylus": "~0.40.3"
   }
 }

@@ -3,15 +3,13 @@ html(lang="en")
 	head
 		title= pageTitle
 		meta(name='viewport', content='width=device-width, initial-scale=1.0')
-		link(href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.css', rel='stylesheet')
-		link(href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.css', rel='stylesheet')
-		link(href='' + linz.get('admin path') + '/css/linz-admin.css', rel='stylesheet')
-		style.
-			body {
-				margin: 30px;
-			}
+		link(href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css', rel='stylesheet')
+		link(href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap-theme.min.css', rel='stylesheet')
+		link(href='' + linz.get('admin path') + '/public/css/linz-admin.css', rel='stylesheet')
+		if (linz.get('theme') === 'watermelon')
+			link(href='' + linz.get('admin path') + '/public/css/linz-admin-watermelon.css', rel='stylesheet')
 	body
-		.navbar.navbar-fixed-top.navbar-inverse
+		.navbar.navbar-inverse.navbar-fixed-top.linz-navbar-inverse(role='navigation')
 			.container
 				.navbar-header
 					a.navbar-brand(href=linz.get('admin path'))= linz.get('admin title')
@@ -20,11 +18,13 @@ html(lang="en")
 						each val,index in linzNavigation
 							li
 								a(href=val.href)= val.name
-					form.navbar-form.navbar-right
-						a.btn.btn-default(href=linz.get('admin path') + '/logout') Logout
+					.navbar-right
+						ul.nav.navbar-nav
+							li
+								a(href=linz.get('admin path') + '/logout') Logout
 
-		.container
+		.container.linz-container
 			block content
 
 		script(src='//code.jquery.com/jquery.js')
-		script(src='' + linz.get('admin path') + '/public/js/bootstrap.js')
+		script(src='//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js')
