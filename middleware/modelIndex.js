@@ -9,11 +9,21 @@ module.exports = function (model) {
 
 		async.series([
 
-			// grab the columns
+			// grab the columns and append them to the model, i.e. req.linz.model.columns
 			function (cb) {
 
 				req.linz.model.getColumns(function (err, columns) {
-					req.linz.columns = columns;
+					req.linz.model.columns = columns;
+					cb(null);
+				});
+
+			},
+
+			// grab the actions and append them to the model, i.e req.linz.model.modelActions
+			function (cb) {
+
+				req.linz.model.getModelActions(function (err, modelActions) {
+					req.linz.model.modelActions = modelActions;
 					cb(null);
 				});
 

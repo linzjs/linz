@@ -1,24 +1,6 @@
 extends layout
 
 block content
-	h1
-		a(href='' + linz.get('admin path') + '/model/#{model.modelName}/list')= model.label
-		span
-			a.btn.btn-primary.pull-right(href='' + linz.get('admin path') + '/model/#{model.modelName}/new') Create a new #{model.singular}
-	div.alert.alert-info There are #{count} records.
-	if count > 0
-		table.table.table-striped.table-hover
-			thead
-				tr
-					th Actions
-					for column in columns
-						th= column.label
-			tbody
-				for record in records
-					tr
-						td
-							div.btn-group
-								a.btn.btn-default(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/delete') Delete
-								a.btn.btn-default(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/edit') Edit
-						each val in Object.keys(columns)
-							td!= columns[val].renderer(record[val], record, model.modelName, linz)
+	include modelIndex/header
+	include modelIndex/summary
+	include modelIndex/records
