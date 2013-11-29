@@ -1,9 +1,11 @@
-watermelon = #e93854;
+$watermelon = #e93854;
+$watermelon-dark = darken($watermelon, 30%);
+$purple = #6c1f85;
 
 .navbar-inverse.linz-navbar-inverse {
 
-	background: watermelon;
-	border-color: darken(watermelon, 30%);
+	background: $watermelon;
+	border-color: $watermelon-dark;
 
 	.navbar-brand {
 		color: #FFF;
@@ -15,33 +17,46 @@ watermelon = #e93854;
 
 }
 
-.container.linz-container {
+h1, h2, h3, h4, h5, h1 > a {
+	color: $purple;
+}
 
-	h1 > a {
-		color: #9e37c0;
+.alert-info {
+	background: #CFFFE3;
+	border-color: #8ae6b0;
+	color: #56b17c;
+}
+
+.btn {
+	box-shadow: none;
+	text-shadow: none;
+}
+
+.btn-default {
+	background: #EEE;
+	border-color: darken(#EEE, 20%);
+}
+
+.btn-primary {
+	background: $purple;
+	border-color: darken($purple, 20%);
+	color: #FFF;
+}
+
+.login {
+
+	h1 {
+
+		color: $purple;
+
 	}
-	
-	.alert-info {
 
-		background: #CFFFE3;
-		border-color: #8ae6b0;
-		color: #56b17c;
+	form {
 
-	}
+		background: $watermelon;
+		border: 1px solid $watermelon-dark;
 
-	.btn {
-
-		text-shadow: none;
-		box-shadow: none;
-
-	}
-
-	.btn-primary {
-
-		background: #6c1f85;
 		color: #FFF;
-
-		border: none;
 
 	}
 
