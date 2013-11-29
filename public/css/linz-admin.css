@@ -14,3 +14,16 @@ body {
 .navbar-inverse.linz-navbar-inverse .navbar-form {
   padding-right: 0;
 }
+.centered {
+  float: none;
+  margin: 0 auto;
+}
+.login h1 {
+  padding: 0 30px;
+  font-size: 32px;
+}
+.login form {
+  padding: 26px 30px;
+  background: #eee;
+  border-radius: 6px;
+}
