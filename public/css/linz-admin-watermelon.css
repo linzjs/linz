@@ -8,20 +8,44 @@
 .navbar-inverse.linz-navbar-inverse .navbar-nav > li > a {
   color: #fff;
 }
-.container.linz-container h1 > a {
-  color: #9e37c0;
+.navbar-inverse.linz-navbar-inverse .navbar-nav > .open > a {
+  background: #b6142e;
 }
-.container.linz-container .alert-info {
+.navbar-inverse.linz-navbar-inverse .navbar-nav > .dropdown > a .caret {
+  border-top-color: #fff;
+  border-bottom-color: #fff;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h1 > a {
+  color: #6c1f85;
+}
+.alert-info {
   background: #cfffe3;
   border-color: #8ae6b0;
   color: #56b17c;
 }
-.container.linz-container .btn {
-  text-shadow: none;
+.btn {
   box-shadow: none;
+  text-shadow: none;
 }
-.container.linz-container .btn-primary {
+.btn-default {
+  background: #eee;
+  border-color: #bebebe;
+}
+.btn-primary {
   background: #6c1f85;
+  border-color: #56196a;
   color: #fff;
-  border: none;
+}
+.login h1 {
+  color: #6c1f85;
+}
+.login form {
+  background: #e93854;
+  border: 1px solid #b6142e;
+  color: #fff;
 }

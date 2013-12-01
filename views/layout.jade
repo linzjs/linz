@@ -1,3 +1,5 @@
+include mixins/navigation
+
 doctype 5
 html(lang="en")
 	head
@@ -6,7 +8,7 @@ html(lang="en")
 		link(href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css', rel='stylesheet')
 		link(href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap-theme.min.css', rel='stylesheet')
 		link(href='' + linz.get('admin path') + '/public/css/linz-admin.css', rel='stylesheet')
-		if (linz.get('theme') === 'watermelon')
+		if (linz.get('admin theme') === 'watermelon')
 			link(href='' + linz.get('admin path') + '/public/css/linz-admin-watermelon.css', rel='stylesheet')
 	body
 		.navbar.navbar-inverse.navbar-fixed-top.linz-navbar-inverse(role='navigation')
@@ -15,9 +17,13 @@ html(lang="en")
 					a.navbar-brand(href=linz.get('admin path'))= linz.get('admin title')
 				.navbar-collapse.collapse
 					ul.nav.navbar-nav
-						each val,index in linzNavigation
-							li
-								a(href=val.href)= val.name
+						each node,index in linzNavigation
+							if node.children && node.children.length
+								mixin dropdown(node)
+							else
+								li
+									a(href=node.href)= node.name
+
 					.navbar-right
 						ul.nav.navbar-nav
 							li

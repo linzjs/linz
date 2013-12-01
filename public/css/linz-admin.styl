@@ -1,25 +1,49 @@
 
+@import variables
+
 body {
 
 	padding-top: 50px;
-	color: #555;
+	color: $colour-background;
 
 }
 
 .navbar-inverse.linz-navbar-inverse {
 
-	background: #555;
+	background: $colour-background;
 
 	.navbar-brand {
 		color: #FFF;
 	}
 
-	.navbar-nav > li > a {
+	.navbar-nav > li > a, .navbar-nav > li > a > b {
 		color: #FFF;
+		text-shadow: none;
 	}
 
 	.navbar-form {
 		padding-right: 0;
 	}
 
+}
+
+.centered {
+	float: none;
+	margin: 0 auto;
+}
+
+.login {
+
+	h1 {
+		padding: 0 30px;
+		font-size: 32px;
+	}
+
+	form {
+
+		padding: 26px 30px;
+		background: lighten($colour-background, 90%);
+		border-radius: 6px;
+
+	}
 }
