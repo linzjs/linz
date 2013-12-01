@@ -1,0 +1,8 @@
+mixin dropdown(node)
+	li.dropdown
+		a.dropdown-toggle(href=node.href, data-toggle='dropdown')= node.name
+			b.caret
+		ul.dropdown-menu
+			each childNode,childIndex in node.children
+				li
+					a(href=childNode.href)= childNode.name
