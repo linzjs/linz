@@ -18,6 +18,12 @@ module.exports = function responseTime(logPath, options) {
 
 		var start = Date.now();
 
+		if (req.linz === undefined) req.linz = {};
+		if (req.linz.responseTime === undefined) req.linz.responseTime = {};
+
+		// put this into req, so it can be tracked by other middleware
+		req.linz.responseTime.start = start;
+
 		res.on('finish', function () {
 
 			var duration = Date.now() - start;
