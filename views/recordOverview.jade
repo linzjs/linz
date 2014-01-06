@@ -6,6 +6,9 @@ block content
 			.btn-group.pull-right
 				a.btn.btn-primary(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/edit') Edit
 				a.btn.btn-default(href='' + linz.get('admin path') + '/model/#{model.modelName}/list') View all #{model.label}
-	ul
-		each val, index in model.schema.paths
-			li= index + ': ' + record[index]
+	if overviewBody
+		div!= overviewBody
+	else
+		ul
+			each val, index in model.schema.paths
+				li= index + ': ' + record[index]
