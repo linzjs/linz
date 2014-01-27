@@ -1,4 +1,5 @@
 
+var async = require('async');
 
 /* GET /admin/:model/:id/overview */
 var route = function (req, res) {
