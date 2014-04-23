@@ -1,25 +1,22 @@
 "use strict";
 
-var routes = require('./routes'),
-	express = require('express'),
+/**
+ * Load required modules
+ */
+var	express = require('express'),
 	bodyParser = require('body-parser'),
 	cookieParser = require('cookie-parser'),
 	expressSession = require('express-session'),
-	routesManager = require('./lib/router'),
 	path = require('path'),
-	helpers = require('./lib/helpers'),
-	middleware = require('./middleware'),
 	moment = require('moment'),
 	events = require('events'),
 	passport = require('passport'),
 	LocalStrategy = require('passport-local').Strategy,
-	passportHelpers = require('./lib/helpers-passport'),
-	bunyan = require('bunyan'),
-	debugModels = require('debug')('linz:models'),
-	debugGeneral = require('debug')('linz:general'),
-	debugSet = require('debug')('linz:set');
+	bunyan = require('bunyan');
 
-// Linz constructor
+/**
+ * Linz constructor
+ */
 function Linz () {
 
 	// internal properties
@@ -34,9 +31,20 @@ function Linz () {
 var linz = module.exports = exports = new Linz;
 
 /**
+ * Define local variables used by the Linz class
+ */
+var	routesManager = require('./lib/router'),
+	passportHelpers = require('./lib/helpers-passport'),
+	helpersModels = require('./lib/helpers-models'),
+	debugModels = require('debug')('linz:models'),
+	debugGeneral = require('debug')('linz:general'),
+	debugSet = require('debug')('linz:set');
+
+/**
  * Expose linz modules
  */
 linz.formtools = require('./lib/formtools');
+linz.middleware = require('./middleware-public')
 
 /**
  * Linz inherits from EventEmitter for Linz.prototype.on('event') handling
@@ -150,7 +158,7 @@ Linz.prototype.loadModels = function () {
 	var modelsPath = this.get('models path');
 
 	try {
-		this.set('models', require('./lib/formtools/models-load')(modelsPath));
+		this.set('models', helpersModels.loadModels(modelsPath));
 		debugModels('Loaded models from directory, %s', modelsPath);
 	} catch (e) {
 		debugModels('Error when loading models from directory, %s (%s)', modelsPath, e.toString());
@@ -175,10 +183,10 @@ Linz.prototype.defaultConfiguration = function () {
 	this.set('admin title', 'Linz', false);
 
 	// setup the router
-	this.router = routesManager.getRouter(this);
+	this.router = routesManager.getRouter();
 
 	// assign the admin routes
-	routesManager.setupAdminRoutes(this);
+	routesManager.setupAdminRoutes();
 
 	// assign the model CRUD routes
 	routesManager.setupModelRoutes(this.models);
@@ -408,22 +416,4 @@ Linz.prototype.logger = function (options) {
 
 	return this.loggers[options.name];
 
-};
-
-/**
-* Built-in middleware which is optional for the user to use
-*
-*/
-Linz.prototype.responseTime = function (path, options) {
-	
-	// define the settings on Linz
-	this.enable('request logging');
-	this.set('request log path', path);
-	this.set('request log options', options);
-
-	// setup the admin route for this
-	routesManager.setupLoggingRoutes(path);
-
-	// return the middleware so that express can 'use' it
-	return middleware.responseTime(path, options);
 };

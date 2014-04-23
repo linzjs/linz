@@ -1,5 +1,5 @@
 var fs = require('fs'),
-	path = require('path')
+	path = require('path'),
 	files = fs.readdirSync(__dirname);
 
 // load in each file within this directory and attach it to exports

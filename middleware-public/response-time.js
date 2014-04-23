@@ -1,7 +1,26 @@
 var winston = require('winston'),
-	path = require('path');
+	path = require('path'),
+	linz = require('../');
 
-module.exports = function responseTime(logPath, options) {
+/**
+* Built-in middleware which is optional for the user to use
+*
+*/
+module.exports = function (path, options) {
+	
+	// define the settings on Linz
+	linz.enable('request logging');
+	linz.set('request log path', path);
+	linz.set('request log options', options);
+
+	// setup the admin route for this
+	// routesManager.setupLoggingRoutes(path);
+
+	// return the middleware so that express can 'use' it
+	return responseTimeMiddleware(path, options);
+};
+
+function responseTimeMiddleware (logPath, options) {
 
 	options = options || {};
 
