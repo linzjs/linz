@@ -8,7 +8,7 @@ var route = {
 	},
 
 	post: function (req, res) {
-		res.render(req.linz.views + 'post');
+		res.redirect(req.linz.get('admin path'));
 	}
 
 };
