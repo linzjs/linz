@@ -87,7 +87,10 @@ Linz.prototype.init = function () {
 	this.app = _app;
 	this.mongoose = _mongoose;
 
-	// apply default options
+	// apply default linz options
+	this.options(require('./lib/defaults'));
+
+	// overlay runtime options, these will override linz defaults
 	this.options(_options);
 
 	this.on('admin path', function () {
