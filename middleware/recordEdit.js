@@ -1,4 +1,5 @@
-var util = require('util');
+var util = require('util'),
+	async = require('async');
 
 module.exports = function () {
 
@@ -6,13 +7,34 @@ module.exports = function () {
 
 		req.linz.model = req.linz.get('models')[req.params.model];
 
-		// simply return all docs
-		req.linz.model.findById(req.params.id, function (err, doc) {
+		async.series([
 
-			if (!err) {
-				req.linz.record = doc;
-			}
+			function (cb) {
 
+				req.linz.model.getFieldLabels(function (err, fieldLabels) {
+					req.linz.model.fieldLabels = fieldLabels;
+					cb(null);
+				});
+
+			},
+
+			function (cb) {
+
+				// simply return all docs
+				req.linz.model.findById(req.params.id, function (err, doc) {
+
+					if (!err) {
+						req.linz.record = doc;
+						cb(null);
+					}
+
+				});
+
+			},
+
+		], function () {
+
+			// call the next middleware
 			next();
 
 		});
