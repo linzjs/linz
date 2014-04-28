@@ -5,8 +5,6 @@ module.exports = function () {
 	return function (req, res, next) {
 
 		req.linz.model = req.linz.get('models')[req.params.model];
-		console.log(req.linz.get('models'));
-		console.log(req.params.model);
 
 		// simply return all docs
 		req.linz.model.findById(req.params.id, function (err, doc) {
