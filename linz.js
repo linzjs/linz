@@ -38,7 +38,8 @@ var	routesManager = require('./lib/router'),
 	helpersModels = require('./lib/helpers-models'),
 	debugModels = require('debug')('linz:models'),
 	debugGeneral = require('debug')('linz:general'),
-	debugSet = require('debug')('linz:set');
+	debugSet = require('debug')('linz:set'),
+	error = require('./lib/errors');
 
 /**
  * Expose linz modules
@@ -131,6 +132,7 @@ Linz.prototype.configure = function() {
 	this.mountAdmin();
 	this.loadModels();
 	this.bootstrapExpressLocals();
+	this.checkSetup();
 
 	// expose app
 	this.set('app', this.app);
@@ -395,6 +397,18 @@ Linz.prototype.buildNavigation = function () {
 	return nav;
 
 }
+
+/**
+ * Check the setup of linz and make sure we've got everything we require
+ * @return {[type]} [description]
+ */
+Linz.prototype.checkSetup = function() {
+
+	if (this.get('user model') === undefined) {
+		error.log('You must define a user model');
+	}
+
+};
 
 /**
 * Create a logger which you can use in your applications.
