@@ -70,10 +70,13 @@ Linz.prototype.init = function () {
 		var arg = arguments[i];
 
 		if (arg.constructor.name === 'Mongoose') {
+            debugGeneral('Using passed in mongoose object');
 			_mongoose = arg;
 		} else if (arg.constructor.name === 'Function' && typeof arg === 'function') {
+            debugGeneral('Using passed in express app');
 			_app = arg;
 		} else  if (arg.constructor.name === 'Object' && typeof arg === 'object') {
+            debugGeneral('Found options configuration object');
 			_options = arg;
 		}
 
@@ -234,8 +237,8 @@ Linz.prototype.bootstrapExpress = function () {
 	this.app.use(cookieParser());
 
 	// need to hook session in here as it must be before passport.initialize
-	if (typeof this.get('session') === 'function') {
-		this.app.use(this.get('session'));
+	if (typeof this.get('session middleware') === 'function') {
+		this.app.use(this.get('session middleware'));
 	} else {
 		this.app.use(expressSession({ secret: 'linzcookiesecret' }));
 	}
@@ -413,7 +416,7 @@ Linz.prototype.checkSetup = function() {
 /**
 * Create a logger which you can use in your applications.
 * Linz uses bunyan internally and exposes this method to easily create logs within your application.
-* 
+*
 * @param {String|Object} options
 * @return an instance of the logger
 * @api public
