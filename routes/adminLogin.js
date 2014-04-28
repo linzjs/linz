@@ -8,7 +8,7 @@ var route = {
 	},
 
 	post: function (req, res) {
-		res.redirect(req.linz.get('admin path'));
+		res.redirect((req.linz.get('admin path') === '' ? '/': req.linz.get('admin path')));
 	}
 
 };

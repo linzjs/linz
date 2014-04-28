@@ -4,7 +4,7 @@ var path = require('path');
 var route = function (req, res) {
 
 	req.logout();
-	res.redirect(req.linz.get('admin path'));
+	res.redirect((req.linz.get('admin path') === '' ? '/': req.linz.get('admin path')));
 
 };
 
