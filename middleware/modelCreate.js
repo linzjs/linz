@@ -6,7 +6,14 @@ module.exports = function (model) {
 
 		req.linz.model = req.linz.get('models')[req.params.model];
 
-		next();
+		// add the field labels to the model
+		req.linz.model.getFieldLabels(function (err, fieldLabels) {
+
+			req.linz.model.fieldLabels = fieldLabels;
+
+			next();
+
+		});
 
 	}
 
