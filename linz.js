@@ -45,7 +45,7 @@ var	routesManager = require('./lib/router'),
  * Expose linz modules
  */
 linz.formtools = require('./lib/formtools');
-linz.middleware = require('./middleware-public')
+linz.middleware = require('./middleware-public');
 
 /**
  * Linz inherits from EventEmitter for Linz.prototype.on('event') handling
@@ -185,11 +185,6 @@ Linz.prototype.defaultConfiguration = function () {
 
 	debugGeneral('Setting up the default configuration');
 
-	// setup the default admin path, unless already defined
-	this.set('admin path', '/admin', false);
-
-	this.set('admin title', 'Linz', false);
-
 	// setup the router
 	this.router = routesManager.getRouter();
 
@@ -304,7 +299,7 @@ Linz.prototype.set = function (setting, val, override) {
 	}
 
 	// can only set the following values once
-	var onceOnly = ['admin path', 'models path', 'admin title'];
+	var onceOnly = ['models path'];
 
 	if (onceOnly.indexOf(setting) >= 0 && this.settings[setting] !== undefined) {
 		return debugSet('You can only set \'' + setting + '\' once. Ignoring set this time.');
