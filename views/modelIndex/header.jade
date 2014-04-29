@@ -1,7 +1,20 @@
-h1
-	a(href='' + linz.get('admin path') + '/model/#{model.modelName}/list')= model.label
-	for action in model.grid.actions
-		a.btn.btn-default.pull-right(href='' + linz.get('admin path') + '/model/#{model.modelName}/#{action.action}')= action.label
-	if model.grid.canCreate
-		span.create
-			a.btn.btn-primary.pull-right(href='' + linz.get('admin path') + '/model/#{model.modelName}/new') Create a new #{model.singular}
+.row.grid-header
+	.col-md-6.col-xs-12
+		h1
+			a(href='' + linz.get('admin path') + '/model/#{model.modelName}/list')= model.label
+		if model.grid.sortBy.length
+			ul.sort.nav.nav-pills
+				li.dropdown
+					a(data-toggle='dropdown') Sort by...
+					ul.dropdown-menu(role='menu')
+						for sortField in model.grid.sortBy
+							li
+								a(data-sort-field='' + sortField.field + '')= sortField['label']
+
+	.col-md-6.col-xs-12
+		.actions
+			for action in model.grid.actions
+				a.btn.btn-default.pull-right(href='' + linz.get('admin path') + '/model/#{model.modelName}/#{action.action}')= action.label
+			if model.grid.canCreate
+				span.create
+					a.btn.btn-primary.pull-right(href='' + linz.get('admin path') + '/model/#{model.modelName}/new') Create a new #{model.singular}

@@ -13,7 +13,9 @@ module.exports = function (model) {
 			function (cb) {
 
 				req.linz.model.getGrid(function (err, grid) {
+
 					req.linz.model.grid = grid;
+
 					cb(null);
 				});
 
@@ -22,8 +24,20 @@ module.exports = function (model) {
 			// find the docs
 			function (cb) {
 
-				// simply return all docs
-				req.linz.model.find({}, function (err, docs) {
+				var query = req.linz.model.find({});
+
+				// sort by the chosen sort field, or use the first sortBy option as the default
+				if (!req.query.sort && req.linz.model.grid.sortBy.length) {
+
+					query.sort(req.linz.model.grid.sortBy[0].field);
+
+				} else if (req.query.sort) {
+
+					query.sort(req.query.sort);
+					
+				}
+
+				query.exec(function (err, docs) {
 
 					if (!err) req.linz.records = docs;
 					cb(null);
