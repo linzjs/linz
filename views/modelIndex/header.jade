@@ -2,5 +2,6 @@ h1
 	a(href='' + linz.get('admin path') + '/model/#{model.modelName}/list')= model.label
 	for action in model.modelActions
 		a.btn.btn-default.pull-right(href='' + linz.get('admin path') + '/model/#{model.modelName}/#{action.action}')= action.label
-	span
-		a.btn.btn-primary.pull-right(href='' + linz.get('admin path') + '/model/#{model.modelName}/new') Create a new #{model.singular}
+	if model.grid.canCreate
+		span.create
+			a.btn.btn-primary.pull-right(href='' + linz.get('admin path') + '/model/#{model.modelName}/new') Create a new #{model.singular}
