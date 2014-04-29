@@ -10,7 +10,8 @@ if records.length > 0
 				tr
 					td
 						div.btn-group
-							a.btn.btn-default(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/delete') Delete
+							if model.grid.canDelete
+								a.btn.btn-default(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/delete') Delete
 							a.btn.btn-default(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/edit') Edit
 					each val in Object.keys(model.grid.columns)
 						td!= model.grid.columns[val].renderer(record[val], record, model.modelName, linz)
