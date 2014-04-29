@@ -2,5 +2,6 @@ extends layout
 
 block content
 	include modelIndex/header
-	include modelIndex/summary
+	if model.grid.showSummary
+		include modelIndex/summary
 	include modelIndex/records
