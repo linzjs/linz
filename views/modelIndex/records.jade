@@ -3,7 +3,7 @@ if records.length > 0
 		thead
 			tr
 				th Actions
-				for column in model.columns
+				for column in model.grid.columns
 					th= column.label
 		tbody
 			for record in records
@@ -12,5 +12,5 @@ if records.length > 0
 						div.btn-group
 							a.btn.btn-default(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/delete') Delete
 							a.btn.btn-default(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/edit') Edit
-					each val in Object.keys(model.columns)
-						td!= model.columns[val].renderer(record[val], record, model.modelName, linz)
+					each val in Object.keys(model.grid.columns)
+						td!= model.grid.columns[val].renderer(record[val], record, model.modelName, linz)

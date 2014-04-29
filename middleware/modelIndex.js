@@ -7,13 +7,13 @@ module.exports = function (model) {
 
 		req.linz.model = req.linz.get('models')[req.params.model];
 
-		async.series([
+		async.parallel([
 
-			// grab the columns and append them to the model, i.e. req.linz.model.columns
+			// grab the grid object and append it to the model, i.e. req.linz.model.grid.columns
 			function (cb) {
 
-				req.linz.model.getColumns(function (err, columns) {
-					req.linz.model.columns = columns;
+				req.linz.model.getGrid(function (err, grid) {
+					req.linz.model.grid = grid;
 					cb(null);
 				});
 
@@ -44,7 +44,7 @@ module.exports = function (model) {
 
 		], function () {
 
-			// ndext middleware
+			// next middleware
 			next();
 
 		});
