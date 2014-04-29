@@ -2,16 +2,19 @@ if records.length > 0
 	table.table.table-striped.table-hover
 		thead
 			tr
-				th Actions
+				if model.grid.canDelete || model.grid.canEdit
+					th Actions
 				for column in model.grid.columns
 					th= column.label
 		tbody
 			for record in records
 				tr
-					td
-						div.btn-group
-							if model.grid.canDelete
-								a.btn.btn-default(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/delete') Delete
-							a.btn.btn-default(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/edit') Edit
+					if model.grid.canDelete || model.grid.canEdit
+						td
+							div.btn-group
+								if model.grid.canDelete
+									a.btn.btn-default(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/delete') Delete
+								if model.grid.canEdit
+									a.btn.btn-default(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/edit') Edit
 					each val in Object.keys(model.grid.columns)
 						td!= model.grid.columns[val].renderer(record[val], record, model.modelName, linz)
