@@ -19,16 +19,6 @@ module.exports = function (model) {
 
 			},
 
-			// grab the actions and append them to the model, i.e req.linz.model.modelActions
-			function (cb) {
-
-				req.linz.model.getModelActions(function (err, modelActions) {
-					req.linz.model.modelActions = modelActions;
-					cb(null);
-				});
-
-			},
-
 			// find the docs
 			function (cb) {
 

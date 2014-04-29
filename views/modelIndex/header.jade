@@ -1,6 +1,6 @@
 h1
 	a(href='' + linz.get('admin path') + '/model/#{model.modelName}/list')= model.label
-	for action in model.modelActions
+	for action in model.grid.actions
 		a.btn.btn-default.pull-right(href='' + linz.get('admin path') + '/model/#{model.modelName}/#{action.action}')= action.label
 	if model.grid.canCreate
 		span.create
