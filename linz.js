@@ -165,12 +165,7 @@ Linz.prototype.loadModels = function () {
 
 	var modelsPath = this.get('models path');
 
-	try {
-		this.set('models', helpersModels.loadModels(modelsPath));
-		debugModels('Loaded models from directory, %s', modelsPath);
-	} catch (e) {
-		debugModels('Error when loading models from directory, %s (%s)', modelsPath, e.toString());
-	}
+	this.set('models', helpersModels.loadModels(modelsPath));
 
 };
 
