@@ -160,6 +160,13 @@ Linz.prototype.configure = function() {
 */
 Linz.prototype.loadModels = function () {
 
+	// extend the mongoose types
+	helpersModels.extendTypes();
+
+	if (!this.get('load models')) {
+		return this.set('models', []);
+	}
+
 	// set the default models path
 	this.set('models path', path.resolve(this.get('cwd'), 'models'), false);
 
