@@ -11,10 +11,12 @@ module.exports = function () {
 
 			function (cb) {
 
-				req.linz.model.getFieldLabels(function (err, fieldLabels) {
-					req.linz.model.fieldLabels = fieldLabels;
-					cb(null);
-				});
+                req.linz.model.getForm(function(err,form){
+
+                    req.linz.model.form = form;
+                    cb(null);
+
+                });
 
 			},
 
