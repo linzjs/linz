@@ -2,17 +2,17 @@ var forms = require('forms'),
 	fields = forms.fields,
 	validators = forms.validtors,
 	widgets = forms.widgets,
-	helpers = require('../lib/helpers-form');
+	formtools = require('../lib/formtools');
 
 /* GET /admin/model/:model/create */
 var route = function (req, res) {
 
-	helpers.generateFormFromModel(req.linz.model, {}, function (editForm) {
+	formtools.form.generateFormFromModel(req.linz.model, {}, function (editForm) {
 
 		res.render(req.linz.views + '/modelCreate.jade', {
 			model: req.linz.model,
 			form: editForm.toHTML(function (name, object) {
-				return helpers.bootstrapField(name, object);
+				return formtools.form.bootstrapField(name, object);
 			}),
 			cancelLink: req.linz.get('admin path') + '/model/' + req.linz.model.modelName + '/list'
 		});
