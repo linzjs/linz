@@ -7,7 +7,7 @@ var forms = require('forms'),
 /* GET /admin/:model/:id/overview */
 var route = function (req, res) {
 
-	helpers.generateFormFromModel(req.linz.model, req.linz.record, function (editForm) {
+	helpers.generateFormFromModel(req.linz.model, req.linz.record, 'edit', function (editForm) {
 
 		res.render(req.linz.views + '/recordEdit.jade', {
 			model: req.linz.model,

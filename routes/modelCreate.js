@@ -7,7 +7,7 @@ var forms = require('forms'),
 /* GET /admin/model/:model/create */
 var route = function (req, res) {
 
-	helpers.generateFormFromModel(req.linz.model, {}, function (editForm) {
+	helpers.generateFormFromModel(req.linz.model, {}, 'create', function (editForm) {
 
 		res.render(req.linz.views + '/modelCreate.jade', {
 			model: req.linz.model,
