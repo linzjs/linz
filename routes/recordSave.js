@@ -7,7 +7,7 @@ var forms = require('forms'),
 /* GET /admin/:model/:id/overview */
 var route = function (req, res) {
 
-	formtools.form.generateFormFromModel(req.linz.model, {}, function (editForm) {
+	formtools.form.generateFormFromModel(req.linz.model, {}, 'edit', function (editForm) {
 
 		editForm.handle(req, {
 			success: function (form) {
