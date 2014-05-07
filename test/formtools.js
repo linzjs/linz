@@ -194,7 +194,7 @@ describe('formtools', function () {
                     columns: {
                         firstName: {
                             label: 'Name',
-                            renderer: linz.formtools.cellRenderers.linkRenderer
+                            renderer: linz.formtools.cellRenderers.overviewLink
                         },
                         email: 'Email',
                         username: 'Username',
@@ -278,22 +278,18 @@ describe('formtools', function () {
 
             describe('columns', function () {
 
-                describe('columns defaults', function () {
+                describe('with columns defaults', function () {
 
                     it('should have a title', function () {
                         gridOpts.columns.title.should.be.an.instanceOf(Object).and.have.property('label', 'Label');
                     });
 
                     it('should have a link renderer for title', function () {
-                        gridOpts.columns.title.should.be.an.instanceOf(Object).and.have.property('renderer', linz.formtools.cellRenderers.linkRenderer);
+                        gridOpts.columns.title.should.be.an.instanceOf(Object).and.have.property('renderer', linz.formtools.cellRenderers.overviewLink);
                     });
 
                     it('should have a status', function () {
                         gridOpts.columns.status.should.be.an.instanceOf(Object).and.have.property('label', 'Status');
-                    });
-
-                    it('should have a string renderer for status', function () {
-                        gridOpts.columns.status.should.be.an.instanceOf(Object).and.have.property('renderer', linz.formtools.cellRenderers.stringRenderer);
                     });
 
                     it('should have a published date', function () {
@@ -301,7 +297,7 @@ describe('formtools', function () {
                     });
 
                     it('should have a date renderer for title', function () {
-                        gridOpts.columns.publishDate.should.be.an.instanceOf(Object).and.have.property('renderer', linz.formtools.cellRenderers.dateRenderer);
+                        gridOpts.columns.publishDate.should.be.an.instanceOf(Object).and.have.property('renderer', linz.formtools.cellRenderers.date);
                     });
 
                     it('should have a created date', function () {
@@ -309,12 +305,12 @@ describe('formtools', function () {
                     });
 
                     it('should have a link renderer for created date', function () {
-                        gridOpts.columns.dateCreated.should.be.an.instanceOf(Object).and.have.property('renderer', linz.formtools.cellRenderers.dateRenderer);
+                        gridOpts.columns.dateCreated.should.be.an.instanceOf(Object).and.have.property('renderer', linz.formtools.cellRenderers.date);
                     });
 
                 }); // end describe('columns defaults')
 
-                describe("column overrides", function () {
+                describe("allowing column overrides", function () {
 
                     it('should overrides default column fields', function () {
                         // ensure default column fields are cleared
@@ -324,11 +320,91 @@ describe('formtools', function () {
                     it('should set custom fields', function () {
                         overridesGridOpts.columns.firstName.should.have.property({
                             label: 'Name',
-                            renderer: linz.formtools.cellRenderers.linkRenderer
+                            renderer: linz.formtools.cellRenderers.overviewLink
                         });
                     });
 
                 }); // end describe('column overrides')
+
+                describe("using cell renderer", function () {
+
+                    describe("array", function () {
+
+                        it("format an array of strings", function (done) {
+
+                            linz.formtools.cellRenderers.array(['one','two','three'], [], PostModel, function (err, result) {
+
+                                (err === null).should.be.ok;
+                                result.should.equal('one,<br>two,<br>three');
+                                done();
+
+                            });
+
+                        });
+
+                    });
+
+                    describe("date", function () {
+
+                        it("format a date object", function (done) {
+
+                            linz.formtools.cellRenderers.date(new Date(2014,0,1,0,0,0), [], PostModel, function (err, result) {
+
+                                (err === null).should.be.ok;
+                                result.should.equal('We 01/01/2014');
+                                done();
+
+                            });
+
+                        });
+
+                    });
+
+                    describe("link", function () {
+
+                        it("format a string with a link to the overview", function (done) {
+
+                            linz.formtools.cellRenderers.overviewLink('label', {_id: '1'}, PostModel.modelName, function (err, result) {
+
+                                (err === null).should.be.ok;
+                                result.should.equal('<a href="' + linz.get('admin path') + '/PostModel/1/overview">label</a>');
+                                done();
+
+                            });
+
+                        });
+
+                    });
+
+                    describe("default", function () {
+
+                        it("format an array of strings", function (done) {
+
+                            linz.formtools.cellRenderers.default(['one','two','three'], [], PostModel, function (err, result) {
+
+                                (err === null).should.be.ok;
+                                result.should.equal('one,<br>two,<br>three');
+                                done();
+
+                            });
+
+                        });
+
+                        it("format a date object", function (done) {
+
+                            linz.formtools.cellRenderers.default(new Date(2014,0,1,0,0,0), [], PostModel, function (err, result) {
+
+                                (err === null).should.be.ok;
+                                result.should.equal('We 01/01/2014');
+                                done();
+
+                            });
+
+                        });
+
+                    });
+
+                });
 
             })// end describe('columns')
 
