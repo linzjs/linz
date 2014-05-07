@@ -30,5 +30,9 @@
     "express-session": "1.0.x",
     "printf": "0.2.x",
     "chalk": "~0.4.0"
+  },
+  "devDependencies": {
+    "should": "3.3.1",
+    "mocha": "1.18.2"
   }
 }

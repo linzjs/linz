@@ -2,12 +2,12 @@ var forms = require('forms'),
 	fields = forms.fields,
 	validators = forms.validtors,
 	widgets = forms.widgets,
-	helpers = require('../lib/helpers-form');
+	formtools = require('../lib/formtools');
 
 /* GET /admin/:model/:id/overview */
 var route = function (req, res) {
 
-	helpers.generateFormFromModel(req.linz.model, {}, function (editForm) {
+	formtools.form.generateFormFromModel(req.linz.model, {}, 'create', function (editForm) {
 
 		editForm.handle(req, {
 			success: function (form) {
