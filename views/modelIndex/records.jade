@@ -17,4 +17,4 @@ if records.length > 0
 								if model.grid.canEdit
 									a.btn.btn-default(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/edit') Edit
 					each val in Object.keys(model.grid.columns)
-						td!= model.grid.columns[val].renderer(record[val], record, model.modelName, linz)
+						td!= record[val]
