@@ -228,7 +228,14 @@ describe('formtools', function () {
                         disabled: true
                     },
                     description: {
-                        type: 'text'
+                        type: 'text',
+                        fieldset: 'Fieldset',
+                        create: {
+                            fieldset: 'Create fieldset'
+                        },
+                        edit: {
+                            fieldset: 'Edit fieldset'
+                        }
                     },
                     groups: {
                         list: list
@@ -261,6 +268,14 @@ describe('formtools', function () {
 
                     PostModel.getForm(function (err, result) {
                         formOpts = result;
+                        cb(null);
+                    });
+                },
+
+                function (cb) {
+
+                    OverridesPostModel.getForm(function (err, result) {
+                        overridesFormOpts = result;
                         cb(null);
                     });
                 }
@@ -477,6 +492,11 @@ describe('formtools', function () {
                         (formOpts['description'].list === undefined).should.equal.true;
                     });
 
+                    it('should default fieldset to undefined, if none provided', function () {
+                        (formOpts['firstName'].fieldset === undefined).should.be.ok;
+                        formOpts['firstName'].should.have.property('fieldset');
+                    });
+
                 });
             }); // end describe('form default')
 
@@ -498,6 +518,16 @@ describe('formtools', function () {
 
                     it('should override disabled', function () {
                         formOpts['firstName'].create.disabled.should.be.true;
+                    });
+
+                    it('should inherit from fieldset', function () {
+                        formOpts['firstName'].create.should.have.property('fieldset');
+                        (formOpts['firstName'].create.fieldset === undefined).should.be.ok;
+                    });
+
+                    it('should override from fieldset', function () {
+                        overridesFormOpts['description'].create.should.have.property('fieldset');
+                        overridesFormOpts['description'].create.fieldset.should.equal('Create fieldset');
                     });
 
     			});
@@ -522,6 +552,16 @@ describe('formtools', function () {
 
                     it('should override disabled', function () {
                         formOpts['firstName'].edit.disabled.should.be.true;
+                    });
+
+                    it('should inherit from fieldset', function () {
+                        formOpts['firstName'].edit.should.have.property('fieldset');
+                        (formOpts['firstName'].edit.fieldset === undefined).should.be.ok;
+                    });
+
+                    it('should override from fieldset', function () {
+                        overridesFormOpts['description'].edit.should.have.property('fieldset');
+                        overridesFormOpts['description'].edit.fieldset.should.equal('Edit fieldset');
                     });
 
                 });
