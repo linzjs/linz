@@ -70,7 +70,7 @@ module.exports = function (model) {
                     async.each(Object.keys(req.linz.model.grid.columns), function (column, columnDone) {
 
                         // call the cell renderer and update the content with the result
-                        req.linz.model.grid.columns[column].renderer(records[index][column], records[index], req.linz.model.modelName, function (err, value) {
+                        req.linz.model.grid.columns[column].renderer(records[index][column], records[index], column, req.linz.model.modelName, function (err, value) {
 
                             if (!err) {
                                 records[index][column] = value;
