@@ -69,17 +69,44 @@ module.exports = function (model) {
                     // loop through each column
                     async.each(Object.keys(req.linz.model.grid.columns), function (column, columnDone) {
 
-                        // call the cell renderer and update the content with the result
-                        req.linz.model.grid.columns[column].renderer(records[index][column], records[index], column, req.linz.model.modelName, function (err, value) {
 
-                            if (!err) {
-                                records[index][column] = value;
-                            }
 
-                            return columnDone(err);
+                        if (!req.linz.model.grid.columns[column].virtual) {
 
-                        });
+                        if(column === 'rm'){
+                            console.log('running default');
+                        }
 
+                            // call the cell renderer and update the content with the result
+                            req.linz.model.grid.columns[column].renderer(records[index][column], records[index], column, req.linz.model.modelName, function (err, value) {
+
+                                if (!err) {
+                                    records[index][column] = value;
+                                }
+
+                                return columnDone(err);
+
+                            });
+
+
+                        } else {
+
+                        if(column === 'rm'){
+                            console.log('virutla: ' + req.linz.model.grid.columns[column].virtual);
+                            console.log('running custom');
+                        }
+
+                            req.linz.model.grid.columns[column].renderer(function (err, value) {
+
+                                if (!err) {
+                                    records[index][column] = value;
+                                }
+
+                                return columnDone(err);
+
+                            });
+
+                        }
 
                     }, function (err) {
 

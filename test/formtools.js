@@ -201,6 +201,12 @@ describe('formtools', function () {
                         bActive: 'Is active',
                         groups: {
                             label: 'Groups'
+                        },
+                        sendWelcomeEmail: {
+                            label: 'Welcome email',
+                            renderer: function sendWelcomeEmailRenderer(callback) {
+                               callback(null,'success');
+                            }
                         }
                     },
                     sortBy: ['firstName','lastName','dateModified'],
@@ -332,7 +338,7 @@ describe('formtools', function () {
 
                         it("format an array of strings", function (done) {
 
-                            linz.formtools.cellRenderers.array(['one','two','three'], [], PostModel, function (err, result) {
+                            linz.formtools.cellRenderers.array(['one','two','three'], [], 'firstName', PostModel, function (err, result) {
 
                                 (err === null).should.be.ok;
                                 result.should.equal('one,<br>two,<br>three');
@@ -348,7 +354,7 @@ describe('formtools', function () {
 
                         it("format a date object", function (done) {
 
-                            linz.formtools.cellRenderers.date(new Date(2014,0,1,0,0,0), [], PostModel, function (err, result) {
+                            linz.formtools.cellRenderers.date(new Date(2014,0,1,0,0,0), [], 'firstName', PostModel, function (err, result) {
 
                                 (err === null).should.be.ok;
                                 result.should.equal('We 01/01/2014');
@@ -364,7 +370,7 @@ describe('formtools', function () {
 
                         it("format a string with a link to the overview", function (done) {
 
-                            linz.formtools.cellRenderers.overviewLink('label', {_id: '1'}, PostModel.modelName, function (err, result) {
+                            linz.formtools.cellRenderers.overviewLink('label', {_id: '1'}, 'firstName', PostModel.modelName, function (err, result) {
 
                                 (err === null).should.be.ok;
                                 result.should.equal('<a href="' + linz.get('admin path') + '/PostModel/1/overview">label</a>');
@@ -380,7 +386,7 @@ describe('formtools', function () {
 
                         it("format an array of strings", function (done) {
 
-                            linz.formtools.cellRenderers.default(['one','two','three'], [], PostModel, function (err, result) {
+                            linz.formtools.cellRenderers.default(['one','two','three'], [], 'firstName', PostModel, function (err, result) {
 
                                 (err === null).should.be.ok;
                                 result.should.equal('one,<br>two,<br>three');
@@ -392,7 +398,7 @@ describe('formtools', function () {
 
                         it("format a date object", function (done) {
 
-                            linz.formtools.cellRenderers.default(new Date(2014,0,1,0,0,0), [], PostModel, function (err, result) {
+                            linz.formtools.cellRenderers.default(new Date(2014,0,1,0,0,0), [], 'firstName', PostModel, function (err, result) {
 
                                 (err === null).should.be.ok;
                                 result.should.equal('We 01/01/2014');
@@ -488,6 +494,32 @@ describe('formtools', function () {
                 }); // end describe('overrides sorting')
 
             }); // end describe('sorting')
+
+            describe('virtual columns',function () {
+
+                it('should not set virtual for fields that are defined in schema', function () {
+                    (overridesGridOpts.columns.firstName.virtual === undefined).should.be.true;
+                });
+
+                it('should set virtual to true for fields that are not defined in schema', function () {
+                    overridesGridOpts.columns.sendWelcomeEmail.virtual.should.be.true;
+                });
+
+                it('should execute the custom cell renderer', function (done) {
+                    var result = overridesGridOpts.columns.sendWelcomeEmail.renderer(function (err, value) {
+
+                        if (err) {
+                            throw err;
+                        }
+
+                        value.should.equal('success');
+
+                        done();
+
+                    });
+                });
+
+            }); // end describe('virtual columns')
 
         }); // end  describe('grid')
 
