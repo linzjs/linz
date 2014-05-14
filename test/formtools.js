@@ -192,6 +192,7 @@ describe('formtools', function () {
             OverridesPostSchema.plugin(formtools.plugin, {
                 grid: {
                     columns: {
+                        title: 'Label',
                         firstName: {
                             label: 'Name',
                             renderer: linz.formtools.cellRenderers.overviewLink
@@ -204,7 +205,8 @@ describe('formtools', function () {
                         },
                         sendWelcomeEmail: {
                             label: 'Welcome email',
-                            renderer: function sendWelcomeEmailRenderer(callback) {
+                            virtual: true,
+                            renderer: function sendWelcomeEmailRenderer(record, fieldName, model, callback) {
                                callback(null,'success');
                             }
                         }
@@ -290,7 +292,7 @@ describe('formtools', function () {
                         gridOpts.columns.title.should.be.an.instanceOf(Object).and.have.property('label', 'Label');
                     });
 
-                    it('should have a link renderer for title', function () {
+                    it('should have a overview link renderer for title', function () {
                         gridOpts.columns.title.should.be.an.instanceOf(Object).and.have.property('renderer', linz.formtools.cellRenderers.overviewLink);
                     });
 
@@ -320,7 +322,7 @@ describe('formtools', function () {
 
                     it('should overrides default column fields', function () {
                         // ensure default column fields are cleared
-                        (overridesGridOpts.columns.title === undefined).should.be.true;
+                        (overridesGridOpts.columns.status === undefined).should.be.true;
                     });
 
                     it('should set custom fields', function () {
@@ -328,6 +330,10 @@ describe('formtools', function () {
                             label: 'Name',
                             renderer: linz.formtools.cellRenderers.overviewLink
                         });
+                    });
+
+                    it('should default to overview link rendered for title, if renderer is not provided', function () {
+                        overridesGridOpts.columns.title.renderer.name.should.equal('overviewLinkRenderer');
                     });
 
                 }); // end describe('column overrides')
@@ -497,16 +503,12 @@ describe('formtools', function () {
 
             describe('virtual columns',function () {
 
-                it('should not set virtual for fields that are defined in schema', function () {
-                    (overridesGridOpts.columns.firstName.virtual === undefined).should.be.true;
+                it('should assign custom cell renderer for virtual column', function () {
+                    overridesGridOpts.columns.sendWelcomeEmail.renderer.name.should.equal('sendWelcomeEmailRenderer');
                 });
 
-                it('should set virtual to true for fields that are not defined in schema', function () {
-                    overridesGridOpts.columns.sendWelcomeEmail.virtual.should.be.true;
-                });
-
-                it('should execute the custom cell renderer', function (done) {
-                    var result = overridesGridOpts.columns.sendWelcomeEmail.renderer(function (err, value) {
+                it('should execute custom cell renderer for virtual column', function (done) {
+                    overridesGridOpts.columns.sendWelcomeEmail.renderer({}, 'sendWelcomeEmail', 'mmsUser', function (err, value) {
 
                         if (err) {
                             throw err;
@@ -517,6 +519,89 @@ describe('formtools', function () {
                         done();
 
                     });
+                });
+
+                it('should throw an error if custom renderer is not provided for virtual column', function () {
+
+                    var ErrorVirtualColumnsSchema,
+                        ErrorVirtualColumnsModel;
+
+                    ErrorVirtualColumnsSchema = new mongoose.Schema({
+                        firstName: String,
+                        lastName: String,
+                        username: String,
+                        password: String,
+                        bActive: {
+                            type: Boolean,
+                            default: true
+                        },
+                        description: String,
+                        groups: String
+                    });
+
+                    try {
+
+                        ErrorVirtualColumnsSchema.plugin(formtools.plugin, {
+                            grid: {
+                                columns: {
+                                    title: 'Label',
+                                    firstName: {
+                                        label: 'Name',
+                                        renderer: linz.formtools.cellRenderers.overviewLink
+                                    },
+                                    email: 'Email',
+                                    username: 'Username',
+                                    bActive: 'Is active',
+                                    groups: {
+                                        label: 'Groups'
+                                    },
+                                    sendWelcomeEmail: {
+                                        label: 'Welcome email',
+                                        virtual: true
+                                    }
+                                },
+                                sortBy: ['firstName','lastName','dateModified'],
+                                canCreate: false,
+                                canEdit: false,
+                                canDelete: false,
+                                showSummary: false
+                            },
+                            form: {
+                                firstName: {
+                                    label: 'First Name',
+                                    helpText: 'Enter your first name',
+                                    create: {
+                                        visible: false,
+                                        disabled: true
+                                    },
+                                    edit: {
+                                        visible: false,
+                                        disabled: true
+                                    }
+                                },
+                                password: {
+                                    label: 'Password',
+                                    visible: false,
+                                    disabled: true
+                                },
+                                description: {
+                                    type: 'text'
+                                },
+                                groups: {
+                                    list: list
+                                },
+                                dateModified: {
+                                    label: 'Date modified'
+                                }
+                            }
+                        });
+
+                    } catch (e) {
+
+                        e.message.should.equal('Renderer attribute is missing for virtual column options.grid.columns.sendWelcomeEmail');
+
+                    }
+
                 });
 
             }); // end describe('virtual columns')

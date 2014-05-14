@@ -64,49 +64,33 @@ module.exports = function (model) {
 
                     // turn each mongoose record, into a plain javascript object
                     // otherwise it won't accept a string in a field of type Date
-                    records[index] = records[index].toObject();
+                    records[index] = records[index].toObject({ virtuals: true});
 
                     // loop through each column
                     async.each(Object.keys(req.linz.model.grid.columns), function (column, columnDone) {
 
+                        var args = [];
 
-
+                        // value is not applicable for virtual column
                         if (!req.linz.model.grid.columns[column].virtual) {
-
-                        if(column === 'rm'){
-                            console.log('running default');
+                            args.push(records[index][column]);
                         }
 
-                            // call the cell renderer and update the content with the result
-                            req.linz.model.grid.columns[column].renderer(records[index][column], records[index], column, req.linz.model.modelName, function (err, value) {
+                        args.push(records[index]);
+                        args.push(column);
+                        args.push(req.linz.model.modelName);
+                        args.push(function (err, value) {
 
-                                if (!err) {
-                                    records[index][column] = value;
-                                }
+                            if (!err) {
+                                records[index][column] = value;
+                            }
 
-                                return columnDone(err);
+                            return columnDone(err);
 
-                            });
+                        });
 
-
-                        } else {
-
-                        if(column === 'rm'){
-                            console.log('virutla: ' + req.linz.model.grid.columns[column].virtual);
-                            console.log('running custom');
-                        }
-
-                            req.linz.model.grid.columns[column].renderer(function (err, value) {
-
-                                if (!err) {
-                                    records[index][column] = value;
-                                }
-
-                                return columnDone(err);
-
-                            });
-
-                        }
+                        // call the cell renderer and update the content with the result
+                        req.linz.model.grid.columns[column].renderer.apply(this,args);
 
                     }, function (err) {
 
