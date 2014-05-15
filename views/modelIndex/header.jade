@@ -5,12 +5,11 @@
 		if model.grid.sortBy.length
 			ul.sort.nav.nav-pills
 				li.dropdown
-					a(data-toggle='dropdown') Sort by...
+					a(data-toggle='dropdown', role='button', class="btn btn-default") Sort by
 					ul.dropdown-menu(role='menu')
 						for sortField in model.grid.sortBy
 							li
 								a(data-sort-field='' + sortField.field + '')= sortField['label']
-
 	.col-md-6.col-xs-12
 		.actions
 			for action in model.grid.actions

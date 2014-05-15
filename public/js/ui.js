@@ -27,6 +27,38 @@ function modelIndex () {
 
     });
 
+    $('.control-delete').click(function () {
+
+        if (confirm('Are you sure you want to this new record?')) {
+            return true;
+        }
+        return false;
+
+    });
+
+    $('.control-checkAll').click(function () {
+
+        var isChecked = $(this).is(':checked');
+        $('.checked-record').prop('checked',isChecked);
+
+    });
+
+    $('.control-addFilter').click(function () {
+
+        var selectedTxt = $(this).html(),
+            selectedVal = $(this).attr('data-filter-field'),
+            selectOptions = $(this).parents('ul').html();
+
+        var filterOption = '<div class="input-group"><div class="input-group-btn"><button class="btn btn-default">' + selectedTxt
+                            + '</button><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="caret"></span></button>'
+                            + '<ul role="menu" class="dropdown-menu">'
+                            + selectOptions
+                            + '</ul></div><input type="text" class="form-control"></div>';
+
+        return false;
+
+    })
+
     function updateLocation () {
 
         var queryString = '';
