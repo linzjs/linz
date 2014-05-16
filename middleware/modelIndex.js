@@ -27,8 +27,38 @@ module.exports = function (model) {
 
 			},
 
+            // get the filters
+            function (cb) {
+
+                async.each(Object.keys(req.linz.model.grid.filters), function (fieldName, filtersDone) {
+
+                    if (req.linz.model.grid.filters[fieldName].filter.formControls) {
+                        return filtersDone(null);
+                    }
+
+                    // call the filter renderer and update the content with the result
+                    req.linz.model.grid.filters[fieldName].filter.renderer(fieldName, function (err, result) {
+
+                        if (!err) {
+                            req.linz.model.grid.filters[fieldName].filter.formControls = result;
+                        }
+
+                        return filtersDone(err);
+
+                    });
+
+                }, function (err) {
+
+                    return cb(err);
+
+                });
+
+            },
+
 			// find the docs
 			function (cb) {
+
+                // check if there are any filters
 
 				var query = req.linz.model.find({});
 

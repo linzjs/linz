@@ -2,14 +2,22 @@
 	.col-md-6.col-xs-12
 		h1
 			a(href='' + linz.get('admin path') + '/model/#{model.modelName}/list')= model.label
-		if model.grid.sortBy.length
-			ul.sort.nav.nav-pills
+		ul.sort.nav.nav-pills
+			if model.grid.sortBy.length
 				li.dropdown
 					a(data-toggle='dropdown', role='button', class="btn btn-default") Sort by
 					ul.dropdown-menu(role='menu')
 						for sortField in model.grid.sortBy
 							li
 								a(data-sort-field='' + sortField.field + '')= sortField['label']
+			if Object.keys(model.grid.filters).length
+				li.dropdown.addFilterBtn
+					a(data-toggle='dropdown', role='button', class="btn btn-default") Add filter
+					ul.dropdown-menu(role='menu')
+						for filterField, key in model.grid.filters
+							li
+								a.control-addFilter(data-filter-field='' + key + '')= filterField['label']
+								span.controlField!= filterField.filter.formControls
 	.col-md-6.col-xs-12
 		.actions
 			for action in model.grid.actions
@@ -17,3 +25,12 @@
 			if model.grid.canCreate
 				span.create
 					a.btn.btn-primary.pull-right(href='' + linz.get('admin path') + '/model/#{model.modelName}/new') Create a new #{model.singular}
+.filters
+	template(id="filter")
+		.row
+			.col-md-5.col-xs-12
+				.input-group
+					.input-group-btn
+						button.btn.btn-default.filterName Action
+			.col-md-1.col-xs-1
+				span.glyphicon.glyphicon-remove

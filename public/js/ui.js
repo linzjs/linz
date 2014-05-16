@@ -45,19 +45,47 @@ function modelIndex () {
 
     $('.control-addFilter').click(function () {
 
-        var selectedTxt = $(this).html(),
-            selectedVal = $(this).attr('data-filter-field'),
-            selectOptions = $(this).parents('ul').html();
+        var filter = $(this),
+            filterText = filter.html(),
+            filterVal = filter.attr('data-filter-field'),
+            filterFormControl = filter.siblings('.controlField');
 
-        var filterOption = '<div class="input-group"><div class="input-group-btn"><button class="btn btn-default">' + selectedTxt
-                            + '</button><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="caret"></span></button>'
-                            + '<ul role="menu" class="dropdown-menu">'
-                            + selectOptions
-                            + '</ul></div><input type="text" class="form-control"></div>';
+        if (supportsTemplate) {
+
+            var content = document.querySelector('#filter').content.cloneNode(true);
+
+            // update template with filter content
+            content.querySelector('.filterName').textContent = filterText;
+
+            for (var i=0; i < filterFormControl[0].childNodes.length; i++) {
+
+                // clone the child nodes for filter form control to add to the input group
+                content.querySelector('.input-group').appendChild(filterFormControl[0].childNodes[i].cloneNode(true));
+
+            }
+
+            document.querySelector('.filters').appendChild(document.importNode(content, true));
+
+        } else {
+
+            // fallback support for browsers that don't support html5 template tag
+            var filterOption = '<div class="row"><div class="col-md-5 col-xs-12"><div class="input-group"><div class="input-group-btn"><button class="btn btn-default filterName">' + filterText
+                                + '<\/button><\/div>' + filterFormControl.html() + '<\/div></div></div>';
+
+            $('.filters').append(filterOption);
+
+        }
+
+        // hide dropdown for 'Add filter'
+        $(this).parents('li.dropdown').removeClass('open');
 
         return false;
 
-    })
+    });
+
+    function supportsTemplate() {
+        return 'content' in document.createElement('template');
+    }
 
     function updateLocation () {
 

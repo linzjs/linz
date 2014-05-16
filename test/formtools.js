@@ -215,7 +215,33 @@ describe('formtools', function () {
                     canCreate: false,
                     canEdit: false,
                     canDelete: false,
-                    showSummary: false
+                    showSummary: false,
+                    filters: {
+                        firstName: 'First name',
+                        lastName: {
+                            filter: {
+                                renderer: function customFilterRenderer (callback) {
+                                    callback(null, '<input type="text" name="' + fieldName + '">');
+                                },
+
+                                filter: function customFilterFilter (form, callback) {
+                                    callback(null, { firstname: form[fieldName] });
+                                }
+                            }
+                        },
+                        dateCreated: {
+                            label: 'Date created',
+                            filter: linz.formtools.filters.date
+                        },
+                        dateModified: {
+                            label: 'Date modified',
+                            filter: linz.formtools.filters.dateRange
+                        },
+                        bActive: {
+                            label: 'Is Active?',
+                            filter: linz.formtools.filters.checkbox
+                        }
+                    }
                 },
                 form: {
                     firstName: {
@@ -605,6 +631,101 @@ describe('formtools', function () {
                 });
 
             }); // end describe('virtual columns')
+
+            describe('filters', function () {
+
+                describe('setting filters', function () {
+
+                    it('should convert a key name with string value in the filters to an object', function () {
+                        overridesGridOpts.filters.firstName.should.have.property('label', 'First name');
+                    });
+
+                    it('should default to key name if a label is not provided in the filters object', function () {
+                        overridesGridOpts.filters.lastName.should.have.property('label', 'lastName');
+                    });
+
+                    it('should set default filter if none provided', function () {
+                        overridesGridOpts.filters.firstName.filter.should.equal(linz.formtools.filters.default);
+                    });
+
+                    it('should set custom filter & renderer if provided', function () {
+                        (overridesGridOpts.filters.lastName.filter.renderer.name === 'customFilterRenderer' && overridesGridOpts.filters.lastName.filter.filter.name === 'customFilterFilter').should.be.true;
+                    });
+
+                });
+
+                describe('using linz filter', function () {
+
+                    describe('default filter', function () {
+
+                        it('should render text input field', function (done) {
+                            var fieldName = 'firstName';
+                            linz.formtools.filters.default.renderer(fieldName,function (err, result) {
+                                result.should.equal('<input type="text" name="' + fieldName + '" class="form-control">');
+                                done();
+                            });
+
+                        });
+
+                    });
+
+                    describe('text filter', function () {
+
+                        it('should render text input field', function (done) {
+                            var fieldName = 'firstName';
+                            linz.formtools.filters.text.renderer(fieldName,function (err, result) {
+                                result.should.equal('<input type="text" name="' + fieldName + '" class="form-control">');
+                                done();
+                            });
+
+                        });
+
+                    });
+
+                    describe('date filter', function () {
+
+                        it('should render date input field', function (done) {
+                            var fieldName = 'dateCreated';
+                            linz.formtools.filters.date.renderer(fieldName,function (err, result) {
+                                result.should.equal('<input type="date" name="' + fieldName + '" class="form-control">');
+                                done();
+                            });
+
+                        });
+
+                    });
+
+                    describe('dateRange filter', function () {
+
+                        it('should render 2 date input fields', function (done) {
+                            var fieldName = 'dateModified';
+                            linz.formtools.filters.dateRange.renderer(fieldName,function (err, result) {
+                                result.should.equal('<input type="date" name="' + fieldName + '_dateFrom" class="form-control" style="width:50%;"><input type="date" name="' + fieldName + '_dateTo" class="form-control" style="width:50%;">');
+                                done();
+                            });
+
+                        });
+
+                    });
+
+                    describe('checkbox filter', function () {
+
+                        it('should render checkbox input field', function (done) {
+                            var fieldName = 'dateModified';
+                            linz.formtools.filters.checkbox.renderer(fieldName,function (err, result) {
+                                result.should.equal('<input type="checkbox" name="' + fieldName + '" class="form-control">');
+                                done();
+                            });
+
+                        });
+
+                    });
+
+                });
+
+
+
+            }); // end describe('filters')
 
         }); // end  describe('grid')
 

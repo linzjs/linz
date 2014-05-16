@@ -43,3 +43,9 @@ body {
   margin-top: 20px;
   margin-bottom: 10px;
 }
+.addFilterBtn .controlField {
+  display: none;
+}
+.filters .row {
+  padding: 8px 20px;
+}
