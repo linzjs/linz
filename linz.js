@@ -46,6 +46,7 @@ var	routesManager = require('./lib/router'),
  */
 linz.formtools = require('./lib/formtools');
 linz.middleware = require('./middleware-public');
+linz.api = require('./lib/api');
 
 /**
  * Linz inherits from EventEmitter for Linz.prototype.on('event') handling

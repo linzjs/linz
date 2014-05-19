@@ -1,13 +1,10 @@
-var forms = require('forms'),
-	fields = forms.fields,
-	validators = forms.validtors,
-	widgets = forms.widgets,
-	formtools = require('../lib/formtools');
+var formist = require('formist'),
+	linz = require('../');
 
 /* GET /admin/:model/:id/overview */
 var route = function (req, res) {
 
-	formtools.form.generateFormFromModel(req.linz.model, {}, 'edit', function (editForm) {
+	linz.formtools.form.generateFormFromModel(req.linz.model, {}, 'edit', function (editForm) {
 
 		editForm.handle(req, {
 			success: function (form) {
