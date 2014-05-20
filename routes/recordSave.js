@@ -4,33 +4,33 @@ var formist = require('formist'),
 /* GET /admin/:model/:id/overview */
 var route = function (req, res) {
 
-	linz.formtools.form.generateFormFromModel(req.linz.model, {}, 'edit', function (editForm) {
+    req.linz.model.findById(req.params.id).exec(function (err, record) {
 
-		editForm.handle(req, {
-			success: function (form) {
+        if (err) {
+            return next(err);
+        }
 
-				var m = new req.linz.model(form.data);
+        // loop over each key in the body
+        // update each field passed to us (as long as its from the schema)
+        Object.keys(req.linz.model.schema.paths).forEach(function (field) {
 
-				req.linz.model.update({ _id: req.params.id }, { $set: form.data}, function (error, count, raw) {
+            if (field !== '_id' && req.body[field] !== undefined) {
+                record[field] = req.body[field];
+            }
 
-					if (!error) {
-						return res.redirect(req.linz.get('admin path') + '/' + req.linz.model.modelName + '/' + req.params.id + '/overview');
-					} else {
-						return res.send('There was an error saving the model. Please use the back button and try again.');
-					}
+        });
 
-				});
+        record.save(function (saveError, updatedDocument) {
 
-			},
-			error: function (form) {
-				return res.send('There was an error inspecting the model data. Please try again.');
-			},
-			empty: function (form) {
-				return res.send('No form data was posted. Please try again.');
-			}
-		});
+            if (saveError) {
+                return next(saveError);
+            }
 
-	});
+            return res.redirect(linz.api.getAdminLink(req.linz.model.modelName, 'overview', updatedDocument._id));
+
+        });
+
+    });
 
 };
 

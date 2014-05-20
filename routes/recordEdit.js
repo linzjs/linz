@@ -9,10 +9,9 @@ var route = function (req, res) {
 		res.render(req.linz.views + '/recordEdit.jade', {
 			model: req.linz.model,
 			record: req.linz.record,
-			form: editForm.toHTML(function (name, object) {
-				return formtools.form.bootstrapField(name, object);
-			}),
-			cancelLink: req.linz.get('admin path') + '/model/' + req.linz.model.modelName + '/list'
+			form: editForm.render(),
+            actionUrl: linz.api.getAdminLink(req.linz.model.modelName, 'save', req.linz.record._id),
+			cancelUrl: linz.api.getAdminLink(req.linz.model.modelName)
 		});
 
 	});
