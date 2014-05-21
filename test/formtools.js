@@ -157,6 +157,7 @@ describe('formtools', function () {
 					firstName: {
 						label: 'First Name',
                         helpText: 'Enter your first name',
+                        required: true,
                         create: {
                             visible: false,
                             disabled: true
@@ -527,6 +528,14 @@ describe('formtools', function () {
 
                     it('should set widget, if provided', function () {
                         formOpts['states'].widget.should.equal('multipleSelect');
+                    });
+
+                    it('should set disabled, if provided', function () {
+                        formOpts['states'].required.should.equal(false);
+                    });
+
+                    it('should default disabled to false, if none provided', function () {
+                        formOpts['firstName'].required.should.equal(true);
                     });
 
                 });
