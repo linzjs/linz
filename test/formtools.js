@@ -129,6 +129,11 @@ describe('formtools', function () {
             list = {
                 'one' : 'option 1',
                 'two' : 'option 2'
+            },
+            states = {
+                'sa': 'South Australia',
+                'qld': 'Queensland',
+                'nt': 'Northern Territory'
             };
 
         before(function (done) {
@@ -143,7 +148,8 @@ describe('formtools', function () {
                     default: true
                 },
                 description: String,
-                groups: String
+                groups: String,
+                states: Array
 			});
 
 			PostSchema.plugin(formtools.plugin, {
@@ -170,6 +176,10 @@ describe('formtools', function () {
                     },
 					groups: {
                         list: list
+                    },
+                    states: {
+                        list: states,
+                        widget: 'multipleSelect'
                     }
 				}
 			});
@@ -186,7 +196,8 @@ describe('formtools', function () {
                     default: true
                 },
                 description: String,
-                groups: String
+                groups: String,
+                states: Array
             });
 
             OverridesPostSchema.plugin(formtools.plugin, {
@@ -242,6 +253,14 @@ describe('formtools', function () {
                     },
                     dateModified: {
                         label: 'Date modified'
+                    },
+                    states: {
+                        create: {
+                            widget: 'createWidget'
+                        },
+                        edit: {
+                            widget: 'editWidget'
+                        }
                     }
                 }
             });
@@ -497,6 +516,19 @@ describe('formtools', function () {
                         formOpts['firstName'].should.have.property('fieldset');
                     });
 
+                    it('should set fieldset, if provided', function () {
+                        overridesFormOpts['description'].fieldset.should.equal('Fieldset');
+                    });
+
+                    it('should default widget to undefined, if none provided', function () {
+                        (formOpts['firstName'].widget === undefined).should.be.ok;
+                        formOpts['firstName'].should.have.property('widget');
+                    });
+
+                    it('should set widget, if provided', function () {
+                        formOpts['states'].widget.should.equal('multipleSelect');
+                    });
+
                 });
             }); // end describe('form default')
 
@@ -528,6 +560,16 @@ describe('formtools', function () {
                     it('should override from fieldset', function () {
                         overridesFormOpts['description'].create.should.have.property('fieldset');
                         overridesFormOpts['description'].create.fieldset.should.equal('Create fieldset');
+                    });
+
+                    it('should inherit widget', function () {
+                        formOpts['description'].create.should.have.property('widget');
+                        (formOpts['description'].create.widget === undefined).should.be.ok;
+                    });
+
+                    it('should override widget', function () {
+                        overridesFormOpts['states'].create.should.have.property('widget');
+                        overridesFormOpts['states'].create.widget.should.equal('createWidget');
                     });
 
     			});
@@ -562,6 +604,16 @@ describe('formtools', function () {
                     it('should override from fieldset', function () {
                         overridesFormOpts['description'].edit.should.have.property('fieldset');
                         overridesFormOpts['description'].edit.fieldset.should.equal('Edit fieldset');
+                    });
+
+                    it('should inherit widget', function () {
+                        formOpts['description'].edit.should.have.property('widget');
+                        (formOpts['description'].edit.widget === undefined).should.be.ok;
+                    });
+
+                    it('should override widget', function () {
+                        overridesFormOpts['states'].edit.should.have.property('widget');
+                        overridesFormOpts['states'].edit.widget.should.equal('editWidget');
                     });
 
                 });
