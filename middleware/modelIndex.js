@@ -5,11 +5,12 @@ module.exports = function (model) {
 
 	return function (req, res, next) {
 
-        var records = [];
+        var records = [],
+            filters = {};
 
         // set the model on linz
 		req.linz.model = req.linz.get('models')[req.params.model];
-
+console.log(req.body);
 		async.series([
 
 			// grab the grid object and append it to the model, i.e. req.linz.model.grid.columns
@@ -27,7 +28,7 @@ module.exports = function (model) {
 
 			},
 
-            // get the filters
+            // render the filters
             function (cb) {
 
                 async.each(Object.keys(req.linz.model.grid.filters), function (fieldName, filtersDone) {
@@ -55,12 +56,51 @@ module.exports = function (model) {
 
             },
 
+            // get the filters
+            function (cb) {
+
+                // check if there are any filters in the form post
+                if (!Object.keys(req.body).length) {
+                    return cb(null);
+                }
+
+                async.each(Object.keys(req.body), function (fieldName, filtersDone) {
+
+                    if (!req.body[fieldName]) {
+                        return filtersDone(null);
+                    }
+
+                    // call the filter renderer and update the content with the result
+                    req.linz.model.grid.filters[fieldName].filter.filter(fieldName, req.body, function (err, result) {
+
+                        if (!err) {
+
+                            filters = req.linz.model.addSearchFilter(filters, result);
+
+                            console.log(filters);
+                        }
+
+                        return filtersDone(err);
+
+                    });
+
+                }, function (err) {
+
+                    return cb(err);
+
+                });
+
+            },
+
 			// find the docs
 			function (cb) {
 
-                // check if there are any filters
+                // consolidate filters into query
+                if (Object.keys(filters).length) {
+                    filters = req.linz.model.setFiltersAsQuery(filters);
+                }
 
-				var query = req.linz.model.find({});
+				var query = req.linz.model.find(filters);
 
 				// sort by the chosen sort field, or use the first sortBy option as the default
 				if (!req.query.sort && req.linz.model.grid.sortBy.length) {

@@ -1,5 +1,6 @@
 var should = require('should'),
-    linz = require('../linz');
+    linz = require('../linz'),
+    moment = require('moment');
 
 linz.init({
     'mongo': 'mongodb://127.0.0.1/mongoose-formtools-test',
@@ -661,23 +662,39 @@ describe('formtools', function () {
                         it('should render text input field', function (done) {
                             var fieldName = 'firstName';
                             linz.formtools.filters.default.renderer(fieldName,function (err, result) {
-                                result.should.equal('<input type="text" name="' + fieldName + '" class="form-control">');
+                                result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control">');
                                 done();
                             });
 
+                        });
+
+                        it('should create filter using regex matching one search keyword', function () {
+                           var fieldName = 'firstName';
+                           linz.formtools.filters.default.filter(fieldName,{ 'firstName': ['john'] }, function (err, result) {
+                               result.should.have.property(fieldName, { $regex: /john/ig});
+                           });
+                        });
+
+                        it('should create filter using regex matching multiple keywords using OR condition', function () {
+                           var fieldName = 'firstName';
+                           linz.formtools.filters.default.filter(fieldName,{ 'firstName': ['john','jane'] }, function (err, result) {
+                               result.should.have.property(fieldName, { $regex: /john|jane/ig});
+                           });
+                        });
+
+                        it('should create filter using regex matching multiple keyword phrases using OR condition', function () {
+                           var fieldName = 'firstName';
+                           linz.formtools.filters.default.filter(fieldName,{ 'firstName': ['john doyle','jane doyle'] }, function (err, result) {
+                               result.should.have.property(fieldName, { $regex: /john doyle|jane doyle/ig});
+                           });
                         });
 
                     });
 
                     describe('text filter', function () {
 
-                        it('should render text input field', function (done) {
-                            var fieldName = 'firstName';
-                            linz.formtools.filters.text.renderer(fieldName,function (err, result) {
-                                result.should.equal('<input type="text" name="' + fieldName + '" class="form-control">');
-                                done();
-                            });
-
+                        it('should be the same as default filter', function () {
+                            (linz.formtools.filters.text === linz.formtools.filters.default).should.be.true;
                         });
 
                     });
@@ -687,8 +704,57 @@ describe('formtools', function () {
                         it('should render date input field', function (done) {
                             var fieldName = 'dateCreated';
                             linz.formtools.filters.date.renderer(fieldName,function (err, result) {
-                                result.should.equal('<input type="date" name="' + fieldName + '" class="form-control">');
+                                result.should.equal('<input type="date" name="' + fieldName + '[]" class="form-control">');
                                 done();
+                            });
+
+                        });
+
+                        it('should return a filter object for a single date input', function () {
+
+                            var fieldName = 'dateCreated',
+                                filterDates = ['2014-05-16'];
+                            linz.formtools.filters.date.filter(fieldName,{ 'dateCreated': filterDates }, function (err, result) {
+                                result.should.have.property(fieldName, {
+                                    $gte: moment(filterDates[0], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates[0], 'YYYY-MM-DD').endOf('day').toDate()
+                                });
+                            });
+
+                        });
+
+                        it('should return a filter object for multiple date inputs', function () {
+
+                            var fieldName = 'dateCreated',
+                                filterDates = ['2014-05-16','2014-05-18','2014-05-20'];
+
+                            linz.formtools.filters.date.filter(fieldName,{ 'dateCreated': filterDates }, function (err, result) {
+                               result.should.have.property(fieldName, [
+                                        { $gte: moment(filterDates[0], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates[0], 'YYYY-MM-DD').endOf('day').toDate() },
+                                        { $gte: moment(filterDates[1], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates[1], 'YYYY-MM-DD').endOf('day').toDate() },
+                                        { $gte: moment(filterDates[2], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates[2], 'YYYY-MM-DD').endOf('day').toDate() }
+
+                                ]);
+                            });
+
+                        });
+
+                        it('should throw error if date field is empty', function () {
+
+                            var fieldName = 'dateCreated',
+                                filterDates = [];
+                            linz.formtools.filters.date.filter(fieldName,{ 'dateCreated': filterDates }, function (err, result) {
+                                err.message.should.equal('Date field is empty');
+                            });
+
+                        });
+
+                        it('should throw error if a date in one the multiple date filters is not a valid date', function () {
+
+                            var fieldName = 'dateCreated',
+                                filterDates = ['2014-05-16','2014-05-18','test date'];
+
+                            linz.formtools.filters.date.filter(fieldName,{ 'dateCreated': filterDates }, function (err, result) {
+                                err.message.should.equal('One of the dates is invalid');
                             });
 
                         });
@@ -700,30 +766,238 @@ describe('formtools', function () {
                         it('should render 2 date input fields', function (done) {
                             var fieldName = 'dateModified';
                             linz.formtools.filters.dateRange.renderer(fieldName,function (err, result) {
-                                result.should.equal('<input type="date" name="' + fieldName + '_dateFrom" class="form-control" style="width:50%;"><input type="date" name="' + fieldName + '_dateTo" class="form-control" style="width:50%;">');
+                                result.should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;"><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;">');
                                 done();
+                            });
+
+                        });
+
+                        it('should return a filter object for a date range filter', function () {
+                            var fieldName = 'dateCreated',
+                                filterDates = { dateCreated: { dateFrom: ['2014-05-16'], dateTo: ['2014-05-17'] } };
+
+                            linz.formtools.filters.dateRange.filter(fieldName, filterDates, function (err, result) {
+                               result.should.have.property(fieldName, { $gte: moment(filterDates.dateCreated.dateFrom[0], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates.dateCreated.dateTo[0], 'YYYY-MM-DD').endOf('day').toDate() });
+                            });
+                        });
+
+                        it('should return a filter object using OR opertor when filtering on multiple date range inputs', function () {
+
+                            var fieldName = 'dateCreated',
+                                filterDates = { dateCreated: { dateFrom: ['2014-05-16','2014-05-18','2014-05-20'], dateTo: ['2014-05-16','2014-05-18','2014-05-20'] } };
+
+                            linz.formtools.filters.dateRange.filter(fieldName, filterDates, function (err, result) {
+
+                               result.should.have.property(fieldName, [
+                                        { $gte: moment(filterDates.dateCreated.dateFrom[0], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates.dateCreated.dateTo[0], 'YYYY-MM-DD').endOf('day').toDate() },
+                                        { $gte: moment(filterDates.dateCreated.dateFrom[1], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates.dateCreated.dateTo[1], 'YYYY-MM-DD').endOf('day').toDate() },
+                                        { $gte: moment(filterDates.dateCreated.dateFrom[2], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates.dateCreated.dateTo[2], 'YYYY-MM-DD').endOf('day').toDate() }
+                                ]);
+
+                            });
+
+                        });
+
+                        it('should throw error if dateTo is missing from the date range filter', function () {
+
+                            var fieldName = 'dateCreated',
+                                filterDates = { dateCreated: { dateFrom: ['2014-05-16'] } };
+
+                            linz.formtools.filters.dateRange.filter(fieldName, filterDates, function (err, result) {
+                                err.message.should.equal('One of the date fields is empty');
+                            });
+
+                        });
+
+                        it('should throw error if dateTo is empty in the date range filter', function () {
+
+                            var fieldName = 'dateCreated',
+                                filterDates = { dateCreated: { dateFrom: ['2014-05-16'], dateTo: [] } };
+
+                            linz.formtools.filters.dateRange.filter(fieldName, filterDates, function (err, result) {
+                                err.message.should.equal('One of the date fields is empty');
+                            });
+
+                        });
+
+                        it('should throw error if one of date is invalid in one of multiple date range filters', function () {
+
+                            var fieldName = 'dateCreated',
+                                filterDates = { dateCreated: { dateFrom: ['2014-05-16','2014-05-20'], dateTo: ['2014-05-17','test date'] } };
+
+                            linz.formtools.filters.dateRange.filter(fieldName, filterDates, function (err, result) {
+                                err.message.should.equal('One of the dates is invalid');
                             });
 
                         });
 
                     });
 
-                    describe('checkbox filter', function () {
+                    describe('boolean filter', function () {
 
                         it('should render checkbox input field', function (done) {
                             var fieldName = 'dateModified';
-                            linz.formtools.filters.checkbox.renderer(fieldName,function (err, result) {
-                                result.should.equal('<input type="checkbox" name="' + fieldName + '" class="form-control">');
+                            linz.formtools.filters.boolean.renderer(fieldName,function (err, result) {
+                                result.should.equal('<input type="radio" name="' + fieldName + '" class="form-control" value="true">Yes <input type="radio" name="' + fieldName + '" class="form-control" value="false">No');
                                 done();
                             });
+                        });
 
+                        it('should return a filter object containing a field name and a boolean as the value', function () {
+                            var fieldName = 'bActive';
+                            linz.formtools.filters.boolean.filter(fieldName,{ 'bActive': 'true' }, function (err, result) {
+                               result.should.have.property(fieldName, true);
+                            });
                         });
 
                     });
 
                 });
 
+                describe('add search filter', function () {
 
+                    var filters = [];
+
+                    it('should handle string filter', function () {
+
+                        var filter = { firstName: 'john' };
+
+                        filters = OverridesPostModel.addSearchFilter(filters, filter);
+
+                        filters.should.have.properties({
+                            firstName: ['john']
+                        });
+
+                    });
+
+                    it('should handle object filter', function () {
+
+                        var filter = { firstName: { $regex: /john/ig } };
+
+                        filters = OverridesPostModel.addSearchFilter(filters, filter);
+
+                        filters.should.have.properties({
+                            firstName: ['john',{ $regex: /john/ig }]
+                        });
+
+                    });
+
+                    it('should handle array filter', function () {
+
+                        var filter = { dateCreated: [
+                            { '$gte': moment('2014-05-16', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-16', 'YYYY-MM-DD').endOf('day').toDate() },
+                            { '$gte': moment('2014-05-20', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-20', 'YYYY-MM-DD').endOf('day').toDate() },
+                            { '$gte': moment('2014-05-24', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-24', 'YYYY-MM-DD').endOf('day').toDate() }
+                        ]};
+
+                        filters = OverridesPostModel.addSearchFilter(filters, filter);
+
+                        filters.should.have.properties({
+                            firstName: ['john',{ $regex: /john/ig }],
+                            dateCreated: [
+                                { '$gte': moment('2014-05-16', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-16', 'YYYY-MM-DD').endOf('day').toDate() },
+                                { '$gte': moment('2014-05-20', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-20', 'YYYY-MM-DD').endOf('day').toDate() },
+                                { '$gte': moment('2014-05-24', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-24', 'YYYY-MM-DD').endOf('day').toDate() }
+                            ]
+                        });
+
+                    });
+
+                    it('should append value to existing filters if already defined', function () {
+
+                        var filter = { dateCreated: [
+                            { '$gte': moment('2014-05-28', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-24', 'YYYY-MM-DD').endOf('day').toDate() }
+                        ]};
+
+                        filters = OverridesPostModel.addSearchFilter(filters, filter);
+
+                        filters.should.have.properties({
+                            firstName: ['john',{ $regex: /john/ig }],
+                            dateCreated: [
+                                { '$gte': moment('2014-05-16', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-16', 'YYYY-MM-DD').endOf('day').toDate() },
+                                { '$gte': moment('2014-05-20', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-20', 'YYYY-MM-DD').endOf('day').toDate() },
+                                { '$gte': moment('2014-05-24', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-24', 'YYYY-MM-DD').endOf('day').toDate() },
+                                { '$gte': moment('2014-05-28', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-24', 'YYYY-MM-DD').endOf('day').toDate() }
+                            ]
+                        });
+
+                    });
+
+                    it('should handle multiple fields in filter', function () {
+
+                        var filter = {
+                            dateCreated: [
+                                { '$gte': moment('2014-06-04', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-06-04', 'YYYY-MM-DD').endOf('day').toDate() }
+                            ],
+                            bActive: true,
+                            group: ['bdm','rm']
+                        };
+
+                        filters = OverridesPostModel.addSearchFilter(filters, filter);
+
+                        filters.should.have.properties({
+                            firstName: ['john',{ $regex: /john/ig }],
+                            dateCreated: [
+                                { '$gte': moment('2014-05-16', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-16', 'YYYY-MM-DD').endOf('day').toDate() },
+                                { '$gte': moment('2014-05-20', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-20', 'YYYY-MM-DD').endOf('day').toDate() },
+                                { '$gte': moment('2014-05-24', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-24', 'YYYY-MM-DD').endOf('day').toDate() },
+                                { '$gte': moment('2014-05-28', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-24', 'YYYY-MM-DD').endOf('day').toDate() },
+                                { '$gte': moment('2014-06-04', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-06-04', 'YYYY-MM-DD').endOf('day').toDate() }
+                            ],
+                            bActive: [true],
+                            group: ['bdm','rm']
+                        });
+
+                    });
+
+                });
+
+                describe('set filters as query', function () {
+
+                    var filters = {
+                        firstName: 'john',
+                        lastName: ['smith', { $regex: /doyle|johnson/ig }],
+                        dateCreated: [
+                            { '$gte': moment('2014-05-16', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-16', 'YYYY-MM-DD').endOf('day').toDate() },
+                            { '$gte': moment('2014-05-20', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-20', 'YYYY-MM-DD').endOf('day').toDate() },
+                            { '$gte': moment('2014-05-24', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-24', 'YYYY-MM-DD').endOf('day').toDate() }
+                        ]
+                    };
+                    var result = {};
+
+                    it('should convert filters to query', function () {
+
+                        result = OverridesPostModel.setFiltersAsQuery(filters);
+
+                        result.should.have.properties({
+                            firstName: 'john',
+                            $and: [
+                                {
+                                    $or: [
+                                            { lastName: 'smith'},
+                                            { lastName: { $regex: /doyle|johnson/ig } }
+                                    ]
+                                },
+                                {
+                                    $or: [
+                                            { dateCreated: { '$gte': moment('2014-05-16', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-16', 'YYYY-MM-DD').endOf('day').toDate() } },
+                                            { dateCreated: { '$gte': moment('2014-05-20', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-20', 'YYYY-MM-DD').endOf('day').toDate() } },
+                                            { dateCreated: { '$gte': moment('2014-05-24', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-24', 'YYYY-MM-DD').endOf('day').toDate() } }
+                                    ]
+                                }
+                            ]
+                        });
+
+                    });
+
+                    it('should execute the query in mongoose find() with no error', function (done) {
+                        OverridesPostModel.find(result, function (err, result) {
+                            (err === null).should.be.true;
+                            done();
+                        });
+                    });
+
+                });
 
             }); // end describe('filters')
 

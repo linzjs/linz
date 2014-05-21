@@ -64,7 +64,7 @@ function modelIndex () {
 
             }
 
-            document.querySelector('.filters').appendChild(document.importNode(content, true));
+            document.querySelector('.filter-list').appendChild(document.importNode(content, true));
 
         } else {
 
@@ -72,7 +72,7 @@ function modelIndex () {
             var filterOption = '<div class="row"><div class="col-md-5 col-xs-12"><div class="input-group"><div class="input-group-btn"><button class="btn btn-default filterName">' + filterText
                                 + '<\/button><\/div>' + filterFormControl.html() + '<\/div></div></div>';
 
-            $('.filters').append(filterOption);
+            $('.filter-list').append(filterOption);
 
         }
 

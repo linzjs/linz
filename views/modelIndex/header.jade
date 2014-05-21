@@ -16,7 +16,7 @@
 					ul.dropdown-menu(role='menu')
 						for filterField, key in model.grid.filters
 							li
-								a.control-addFilter(data-filter-field='' + key + '')= filterField['label']
+								a.control-addFilter(data-filter-field='' + key + '', data-filter-selected='' + form[key] + '')= filterField['label']
 								span.controlField!= filterField.filter.formControls
 	.col-md-6.col-xs-12
 		.actions
@@ -25,7 +25,9 @@
 			if model.grid.canCreate
 				span.create
 					a.btn.btn-primary.pull-right(href='' + linz.get('admin path') + '/model/#{model.modelName}/new') Create a new #{model.singular}
-.filters
+form.filters(method="post")
+	.filter-list
+	button.btn.btn-default(type="submit") Filter
 	template(id="filter")
 		.row
 			.col-md-5.col-xs-12
