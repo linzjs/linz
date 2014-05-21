@@ -129,6 +129,11 @@ describe('formtools', function () {
             list = {
                 'one' : 'option 1',
                 'two' : 'option 2'
+            },
+            states = {
+                'sa': 'South Australia',
+                'qld': 'Queensland',
+                'nt': 'Northern Territory'
             };
 
         before(function (done) {
@@ -143,7 +148,8 @@ describe('formtools', function () {
                     default: true
                 },
                 description: String,
-                groups: String
+                groups: String,
+                states: Array
 			});
 
 			PostSchema.plugin(formtools.plugin, {
@@ -151,6 +157,7 @@ describe('formtools', function () {
 					firstName: {
 						label: 'First Name',
                         helpText: 'Enter your first name',
+                        required: true,
                         create: {
                             visible: false,
                             disabled: true
@@ -170,6 +177,10 @@ describe('formtools', function () {
                     },
 					groups: {
                         list: list
+                    },
+                    states: {
+                        list: states,
+                        widget: 'multipleSelect'
                     }
 				}
 			});
@@ -186,7 +197,8 @@ describe('formtools', function () {
                     default: true
                 },
                 description: String,
-                groups: String
+                groups: String,
+                states: Array
             });
 
             OverridesPostSchema.plugin(formtools.plugin, {
@@ -228,13 +240,28 @@ describe('formtools', function () {
                         disabled: true
                     },
                     description: {
-                        type: 'text'
+                        type: 'text',
+                        fieldset: 'Fieldset',
+                        create: {
+                            fieldset: 'Create fieldset'
+                        },
+                        edit: {
+                            fieldset: 'Edit fieldset'
+                        }
                     },
                     groups: {
                         list: list
                     },
                     dateModified: {
                         label: 'Date modified'
+                    },
+                    states: {
+                        create: {
+                            widget: 'createWidget'
+                        },
+                        edit: {
+                            widget: 'editWidget'
+                        }
                     }
                 }
             });
@@ -261,6 +288,14 @@ describe('formtools', function () {
 
                     PostModel.getForm(function (err, result) {
                         formOpts = result;
+                        cb(null);
+                    });
+                },
+
+                function (cb) {
+
+                    OverridesPostModel.getForm(function (err, result) {
+                        overridesFormOpts = result;
                         cb(null);
                     });
                 }
@@ -477,6 +512,32 @@ describe('formtools', function () {
                         (formOpts['description'].list === undefined).should.equal.true;
                     });
 
+                    it('should default fieldset to undefined, if none provided', function () {
+                        (formOpts['firstName'].fieldset === undefined).should.be.ok;
+                        formOpts['firstName'].should.have.property('fieldset');
+                    });
+
+                    it('should set fieldset, if provided', function () {
+                        overridesFormOpts['description'].fieldset.should.equal('Fieldset');
+                    });
+
+                    it('should default widget to undefined, if none provided', function () {
+                        (formOpts['firstName'].widget === undefined).should.be.ok;
+                        formOpts['firstName'].should.have.property('widget');
+                    });
+
+                    it('should set widget, if provided', function () {
+                        formOpts['states'].widget.should.equal('multipleSelect');
+                    });
+
+                    it('should set disabled, if provided', function () {
+                        formOpts['states'].required.should.equal(false);
+                    });
+
+                    it('should default disabled to false, if none provided', function () {
+                        formOpts['firstName'].required.should.equal(true);
+                    });
+
                 });
             }); // end describe('form default')
 
@@ -498,6 +559,26 @@ describe('formtools', function () {
 
                     it('should override disabled', function () {
                         formOpts['firstName'].create.disabled.should.be.true;
+                    });
+
+                    it('should inherit from fieldset', function () {
+                        formOpts['firstName'].create.should.have.property('fieldset');
+                        (formOpts['firstName'].create.fieldset === undefined).should.be.ok;
+                    });
+
+                    it('should override from fieldset', function () {
+                        overridesFormOpts['description'].create.should.have.property('fieldset');
+                        overridesFormOpts['description'].create.fieldset.should.equal('Create fieldset');
+                    });
+
+                    it('should inherit widget', function () {
+                        formOpts['description'].create.should.have.property('widget');
+                        (formOpts['description'].create.widget === undefined).should.be.ok;
+                    });
+
+                    it('should override widget', function () {
+                        overridesFormOpts['states'].create.should.have.property('widget');
+                        overridesFormOpts['states'].create.widget.should.equal('createWidget');
                     });
 
     			});
@@ -522,6 +603,26 @@ describe('formtools', function () {
 
                     it('should override disabled', function () {
                         formOpts['firstName'].edit.disabled.should.be.true;
+                    });
+
+                    it('should inherit from fieldset', function () {
+                        formOpts['firstName'].edit.should.have.property('fieldset');
+                        (formOpts['firstName'].edit.fieldset === undefined).should.be.ok;
+                    });
+
+                    it('should override from fieldset', function () {
+                        overridesFormOpts['description'].edit.should.have.property('fieldset');
+                        overridesFormOpts['description'].edit.fieldset.should.equal('Edit fieldset');
+                    });
+
+                    it('should inherit widget', function () {
+                        formOpts['description'].edit.should.have.property('widget');
+                        (formOpts['description'].edit.widget === undefined).should.be.ok;
+                    });
+
+                    it('should override widget', function () {
+                        overridesFormOpts['states'].edit.should.have.property('widget');
+                        overridesFormOpts['states'].edit.widget.should.equal('editWidget');
                     });
 
                 });

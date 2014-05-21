@@ -14,7 +14,6 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "moment": "2.6.x",
-    "forms": "git://github.com/smebberson/forms.git",
     "async": "0.7.x",
     "winston": "~0.7.2",
     "passport": "0.2.x",
@@ -22,17 +21,19 @@
     "bunyan": "0.22.x",
     "stylus": "~0.40.3",
     "jade": "~1.1.5",
-    "debug": "0.8.x",
+    "debug": "0.7.4",
     "mongoose": "3.8.x",
     "express": "4.0.x",
     "body-parser": "1.0.x",
     "cookie-parser": "1.0.x",
     "express-session": "1.0.x",
     "printf": "0.2.x",
-    "chalk": "~0.4.0"
+    "chalk": "~0.4.0",
+    "formist": "0.1.7"
   },
   "devDependencies": {
     "should": "3.3.1",
-    "mocha": "1.18.2"
+    "mocha": "1.18.2",
+    "chai": "1.9.1"
   }
 }
