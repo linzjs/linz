@@ -11,6 +11,10 @@ function modelIndex () {
         query.sort = sort[1];
     }
 
+    if ($('input.selectedFilters').val().length > 0) {
+        toggleFilterBox('show');
+    }
+
     $('[data-sort-field]').click(function () {
 
         var sortField = $(this).attr('data-sort-field');
@@ -48,7 +52,7 @@ function modelIndex () {
         var filter = $(this),
             filterText = filter.html(),
             filterVal = filter.attr('data-filter-field'),
-            filterFormControl = filter.siblings('.controlField'),
+            filterFormControl = filter.siblings('.controlField').html(),
             aFilters;
 
         if (supportsTemplate) {
@@ -56,23 +60,16 @@ function modelIndex () {
             var content = document.querySelector('#filter').content.cloneNode(true);
 
             // update template with filter content
-            content.querySelector('.filterName').textContent = filterText;
-
-            for (var i=0; i < filterFormControl[0].childNodes.length; i++) {
-
-                // clone the child nodes for filter form control to add to the input group
-                content.querySelector('.input-group').appendChild(filterFormControl[0].childNodes[i].cloneNode(true));
-
-            }
-
+            content.querySelector('.filter-name').textContent = filterText;
+            content.querySelector('.filter-control').innerHTML = content.querySelector('.filter-control').innerHTML + filterFormControl;
+            content.querySelector('.glyphicon-remove').setAttribute('data-filter-field', $(this).attr('data-filter-field'));
             document.querySelector('.filter-list').appendChild(document.importNode(content, true));
 
         } else {
 
             // fallback support for browsers that don't support html5 template tag
-            var filterOption = '<div class="row"><div class="col-md-5 col-xs-12"><div class="input-group"><div class="input-group-btn"><button class="btn btn-default filterName">' + filterText
-                                + '<\/button><\/div>' + filterFormControl.html() + '<\/div></div></div>';
-
+            $('.filter-name').html(filterText);
+            $('.filter-control').append(filterFormControl);
             $('.filter-list').append(filterOption);
 
         }
@@ -90,11 +87,65 @@ function modelIndex () {
 
         aFilters.push(filterVal);
 
-        $('input.selectedFilters').val(aFilters.join());
+        $('.selectedFilters').val(aFilters.join());
+
+        toggleFilterBox('show');
+
+        assignRemoveButton();
 
         return false;
 
     });
+
+    assignRemoveButton();
+
+
+    function removeFomList (list, value, separator) {
+        separator = separator || ",";
+
+        var values = list.split(separator);
+
+        for(var i = 0 ; i < values.length ; i++) {
+            if(values[i] == value) {
+              values.splice(i, 1);
+              return values.join(separator);
+            }
+        }
+
+        return list;
+
+    }
+
+    function assignRemoveButton (queryObj) {
+
+        // remove all event listener
+        $('.glyphicon-remove').unbind();
+
+        // re-assign listeners including any new ones added to DOM after page load
+        $('.glyphicon-remove').click(function () {
+
+            var filteredField = $(this).attr('data-filter-field');
+            var selectedFilters = $('.selectedFilters').val();
+            selectedFilters = removeFomList(selectedFilters, filteredField)
+
+            $('.selectedFilters').val(selectedFilters);
+
+            if (selectedFilters.length <= 0) {
+                // since there are no filters, let's refresh the page to clear the filtered result
+                location.reload();
+            }
+
+            $(this).parents('.form-group').remove();
+        });
+    }
+
+    function toggleFilterBox(showOrHide) {
+        if (showOrHide) {
+            $('.filters').show();
+        } else {
+            $('.filters').hide();
+        }
+    }
 
     function supportsTemplate() {
         return 'content' in document.createElement('template');

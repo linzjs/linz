@@ -25,14 +25,15 @@
 			if model.grid.canCreate
 				span.create
 					a.btn.btn-primary.pull-right(href='' + linz.get('admin path') + '/model/#{model.modelName}/new') Create a new #{model.singular}
-form.filters(method="post")
+form.form-horizontal.filters(method='post', role='form')
 	input.selectedFilters(type='hidden', name='selectedFilters', value='' + ((form.selectedFilters) ? form.selectedFilters : '') + '')
 	.filter-list
 		if model.grid.activeFilters
-			for activeFilter, index in model.grid.activeFilters
-				for filterControl in activeFilter
+			for activeFilter, fieldName in model.grid.activeFilters
+				for filterControl in activeFilter.controls
 					include filter
-	button.btn.btn-default(type="submit") Filter
+	.form-group
+		.col-sm-offset-2.col-sm-10
+			button.btn.btn-default(type="submit") Filter now
 	template(id="filter")
 		include filter
-script var filters = !{JSON.stringify(form)};

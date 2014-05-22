@@ -78,8 +78,10 @@ module.exports = function (model) {
                     req.linz.model.grid.filters[fieldName].filter.bind(fieldName, req.body, function (err, result) {
 
                         if (!err) {
-                            var filterLabel = req.linz.model.grid.filters[fieldName].label;
-                            req.linz.model.grid.activeFilters[filterLabel] = result;
+                            req.linz.model.grid.activeFilters[fieldName] = {
+                                label: req.linz.model.grid.filters[fieldName].label,
+                                controls: result
+                            }
                         }
 
                         return filtersDone(err);

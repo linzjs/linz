@@ -1,8 +1,5 @@
-.row
-	.col-md-5.col-xs-12
-		.input-group
-			.input-group-btn
-				button.btn.btn-default.filterName= index
-			!= filterControl
-	.col-md-1.col-xs-1
-		span.glyphicon.glyphicon-remove
+.form-group
+	label.col-sm-2.control-label.filter-name(for='' + ((fieldName) ? fieldName: '') + '')= (( model.grid.activeFilters[fieldName] && model.grid.activeFilters[fieldName].label) ? model.grid.activeFilters[fieldName].label: '')
+	.col-sm-4.filter-control
+		!= filterControl
+		span.glyphicon.glyphicon-remove(data-filter-field='' + ((fieldName) ? fieldName: '') + '')

@@ -687,24 +687,24 @@ describe('formtools', function () {
                             });
                         });
 
-                        it('should create filter using regex matching one search keyword', function () {
+                        it('should create filter using regex matching one keyword search', function () {
                            var fieldName = 'firstName';
                            linz.formtools.filters.default.filter(fieldName,{ 'firstName': ['john'] }, function (err, result) {
                                result.should.have.property(fieldName, { $regex: /john/ig});
                            });
                         });
 
-                        it('should create filter using regex matching multiple keywords using OR condition', function () {
+                        it('should create filter using regex matching multiple keywords search', function () {
                            var fieldName = 'firstName';
-                           linz.formtools.filters.default.filter(fieldName,{ 'firstName': ['john','jane'] }, function (err, result) {
-                               result.should.have.property(fieldName, { $regex: /john|jane/ig});
+                           linz.formtools.filters.default.filter(fieldName,{ 'firstName': ['john william'] }, function (err, result) {
+                               result.should.have.property(fieldName, { $regex: /john william/ig});
                            });
                         });
 
-                        it('should create filter using regex matching multiple keyword phrases using OR condition', function () {
+                        it('should create filter using regex (OR) matching for multiple filters on the same field', function () {
                            var fieldName = 'firstName';
-                           linz.formtools.filters.default.filter(fieldName,{ 'firstName': ['john doyle','jane doyle'] }, function (err, result) {
-                               result.should.have.property(fieldName, { $regex: /john doyle|jane doyle/ig});
+                           linz.formtools.filters.default.filter(fieldName,{ 'firstName': ['john','jane'] }, function (err, result) {
+                               result.should.have.property(fieldName, { $regex: /john|jane/ig});
                            });
                         });
 
@@ -898,7 +898,7 @@ describe('formtools', function () {
                         it('should render checkbox input field', function (done) {
                             var fieldName = 'dateModified';
                             linz.formtools.filters.boolean.renderer(fieldName,function (err, result) {
-                                result.should.equal('<input type="radio" name="' + fieldName + '" class="form-control" value="true">Yes <input type="radio" name="' + fieldName + '" class="form-control" value="false">No');
+                                result.should.equal('<label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="true"> Yes</label><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="false"> No</label>');
                                 done();
                             });
                         });
@@ -914,7 +914,7 @@ describe('formtools', function () {
                             var fieldName = 'bActive';
                             linz.formtools.filters.boolean.bind(fieldName, { 'bActive': 'true' },function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
-                                result[0].should.equal('<input type="radio" name="' + fieldName + '" class="form-control" value="true" checked>Yes <input type="radio" name="' + fieldName + '" class="form-control" value="false">No');
+                                result[0].should.equal('<label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="true" checked> Yes</label><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="false"> No</label>');
                                 done();
                             });
                         });
@@ -923,7 +923,7 @@ describe('formtools', function () {
                             var fieldName = 'bActive';
                             linz.formtools.filters.boolean.bind(fieldName, { 'bActive': 'false' },function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
-                                result[0].should.equal('<input type="radio" name="' + fieldName + '" class="form-control" value="true">Yes <input type="radio" name="' + fieldName + '" class="form-control" value="false" checked>No');
+                                result[0].should.equal('<label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="true"> Yes</label><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="false" checked> No</label>');
                                 done();
                             });
                         });
