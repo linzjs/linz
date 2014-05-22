@@ -48,7 +48,8 @@ function modelIndex () {
         var filter = $(this),
             filterText = filter.html(),
             filterVal = filter.attr('data-filter-field'),
-            filterFormControl = filter.siblings('.controlField');
+            filterFormControl = filter.siblings('.controlField'),
+            aFilters;
 
         if (supportsTemplate) {
 
@@ -78,6 +79,18 @@ function modelIndex () {
 
         // hide dropdown for 'Add filter'
         $(this).parents('li.dropdown').removeClass('open');
+
+        var selectedFilters = $('input.selectedFilters').val();
+
+        if (selectedFilters) {
+            aFilters = $('input.selectedFilters').val().split();
+        } else {
+            aFilters = [];
+        }
+
+        aFilters.push(filterVal);
+
+        $('input.selectedFilters').val(aFilters.join());
 
         return false;
 

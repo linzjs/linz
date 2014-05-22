@@ -221,12 +221,12 @@ describe('formtools', function () {
                         firstName: 'First name',
                         lastName: {
                             filter: {
-                                renderer: function customFilterRenderer (callback) {
-                                    callback(null, '<input type="text" name="' + fieldName + '">');
+                                renderer: function customFilterRenderer (fieldName, callback) {
+                                    callback(null, '<input type="text" name="test1"><input type="text" name="test2">');
                                 },
 
-                                filter: function customFilterFilter (form, callback) {
-                                    callback(null, { firstname: form[fieldName] });
+                                filter: function customFilterFilter (fieldName, form, callback) {
+                                    callback(null, { firstName: [form.test1, form.test2], lastName: 'doyle' });
                                 }
                             }
                         },
@@ -668,6 +668,25 @@ describe('formtools', function () {
 
                         });
 
+                        it('should render text input field with form value', function (done) {
+                            var fieldName = 'firstName';
+                            linz.formtools.filters.default.bind(fieldName, { firstName: ['john'] },function (err, result) {
+                                result.should.be.instanceof(Array).and.have.lengthOf(1);
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="john">');
+                                done();
+                            });
+                        });
+
+                        it('should render multiple text input fields with form values if there are multiple filters on the same field', function (done) {
+                            var fieldName = 'firstName';
+                            linz.formtools.filters.default.bind(fieldName, { firstName: ['john','jane'] },function (err, result) {
+                                result.should.be.instanceof(Array).and.have.lengthOf(2);
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="john">');
+                                result[1].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="jane">');
+                                done();
+                            });
+                        });
+
                         it('should create filter using regex matching one search keyword', function () {
                            var fieldName = 'firstName';
                            linz.formtools.filters.default.filter(fieldName,{ 'firstName': ['john'] }, function (err, result) {
@@ -708,6 +727,26 @@ describe('formtools', function () {
                                 done();
                             });
 
+                        });
+
+                        it('should render date input field with form value', function (done) {
+                            var fieldName = 'dateCreated';
+                            linz.formtools.filters.date.bind(fieldName, { dateCreated: ['2014-05-16'] },function (err, result) {
+                                result.should.be.instanceof(Array).and.have.lengthOf(1);
+                                result[0].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-16">');
+                                done();
+                            });
+
+                        });
+
+                        it('should render multiple date input fields with form values if there are multiple filters on the same field', function (done) {
+                            var fieldName = 'dateCreated';
+                            linz.formtools.filters.date.bind(fieldName, { dateCreated: ['2014-05-16','2014-05-17'] },function (err, result) {
+                                result.should.be.instanceof(Array).and.have.lengthOf(2);
+                                result[0].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-16">');
+                                result[1].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-17">');
+                                done();
+                            });
                         });
 
                         it('should return a filter object for a single date input', function () {
@@ -770,6 +809,27 @@ describe('formtools', function () {
                                 done();
                             });
 
+                        });
+
+                        it('should render date range input fields with form values', function () {
+                            var fieldName = 'dateCreated',
+                                filterDates = { dateCreated: { dateFrom: ['2014-05-16'], dateTo: ['2014-05-17'] } };
+
+                            linz.formtools.filters.dateRange.bind(fieldName, filterDates, function (err, result) {
+                                result.should.be.instanceof(Array).and.have.lengthOf(1);
+                                result[0].should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[0] + '"><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[0] + '">');
+                            });
+                        });
+
+                        it('should render multiple date range input fields with form values for multiple filters on the same field', function () {
+                            var fieldName = 'dateCreated',
+                                filterDates = { dateCreated: { dateFrom: ['2014-05-16','2014-05-18'], dateTo: ['2014-05-17','2014-05-19'] } };
+
+                            linz.formtools.filters.dateRange.bind(fieldName, filterDates, function (err, result) {
+                                result.should.be.instanceof(Array).and.have.lengthOf(2);
+                                result[0].should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[0] + '"><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[0] + '">');
+                                result[1].should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[1] + '"><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[1] + '">');
+                            });
                         });
 
                         it('should return a filter object for a date range filter', function () {
@@ -850,7 +910,46 @@ describe('formtools', function () {
                             });
                         });
 
+                        it('should render checkbox input field with form value of true', function (done) {
+                            var fieldName = 'bActive';
+                            linz.formtools.filters.boolean.bind(fieldName, { 'bActive': 'true' },function (err, result) {
+                                result.should.be.instanceof(Array).and.have.lengthOf(1);
+                                result[0].should.equal('<input type="radio" name="' + fieldName + '" class="form-control" value="true" checked>Yes <input type="radio" name="' + fieldName + '" class="form-control" value="false">No');
+                                done();
+                            });
+                        });
+
+                        it('should render checkbox input field with form value of false', function (done) {
+                            var fieldName = 'bActive';
+                            linz.formtools.filters.boolean.bind(fieldName, { 'bActive': 'false' },function (err, result) {
+                                result.should.be.instanceof(Array).and.have.lengthOf(1);
+                                result[0].should.equal('<input type="radio" name="' + fieldName + '" class="form-control" value="true">Yes <input type="radio" name="' + fieldName + '" class="form-control" value="false" checked>No');
+                                done();
+                            });
+                        });
+
                     });
+
+                });
+
+                describe('custom filter', function () {
+
+                   it('should render custom filter', function (done) {
+                        overridesGridOpts.filters.lastName.filter.renderer('lastName', function(err, result) {
+                            result.should.equal('<input type="text" name="test1"><input type="text" name="test2">');
+                            done();
+                        });
+                   });
+
+                   it('should return custom filter', function (done) {
+                        overridesGridOpts.filters.lastName.filter.filter('lastName', { test1: 'john', test2: 'jane'}, function(err, result) {
+                            result.should.have.properties({
+                                firstName: ['john','jane'],
+                                lastName: 'doyle'
+                            });
+                            done();
+                        });
+                   });
 
                 });
 
@@ -946,6 +1045,30 @@ describe('formtools', function () {
                             ],
                             bActive: [true],
                             group: ['bdm','rm']
+                        });
+
+                    });
+
+                    it('should handle custom filter', function () {
+
+                        overridesGridOpts.filters.lastName.filter.filter('lastName',{test1: 'john', test2: 'jane'}, function (err, result) {
+
+                            filters = OverridesPostModel.addSearchFilter(filters, result);
+
+                            filters.should.have.properties({
+                                firstName: ['john',{ $regex: /john/ig },'john','jane'],
+                                dateCreated: [
+                                    { '$gte': moment('2014-05-16', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-16', 'YYYY-MM-DD').endOf('day').toDate() },
+                                    { '$gte': moment('2014-05-20', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-20', 'YYYY-MM-DD').endOf('day').toDate() },
+                                    { '$gte': moment('2014-05-24', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-24', 'YYYY-MM-DD').endOf('day').toDate() },
+                                    { '$gte': moment('2014-05-28', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-24', 'YYYY-MM-DD').endOf('day').toDate() },
+                                    { '$gte': moment('2014-06-04', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-06-04', 'YYYY-MM-DD').endOf('day').toDate() }
+                                ],
+                                bActive: [true],
+                                group: ['bdm','rm'],
+                                lastName: ['doyle']
+                            });
+
                         });
 
                     });

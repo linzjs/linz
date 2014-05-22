@@ -10,7 +10,7 @@ module.exports = function (model) {
 
         // set the model on linz
 		req.linz.model = req.linz.get('models')[req.params.model];
-console.log(req.body);
+
 		async.series([
 
 			// grab the grid object and append it to the model, i.e. req.linz.model.grid.columns
@@ -56,19 +56,53 @@ console.log(req.body);
 
             },
 
+            // render the active filters
+            function (cb) {
+
+                // check if there are any filters in the form post
+                if (!req.body.selectedFilters) {
+                    // clear req cache
+                    req.linz.model.grid.activeFilters = {};
+                    return cb(null);
+                }
+
+                req.linz.model.grid.activeFilters = {};
+
+                async.each(req.body.selectedFilters.split(','), function (fieldName, filtersDone) {
+
+                    if (req.linz.model.grid.filters[fieldName].filter.activeFormControls) {
+                        return filtersDone(null);
+                    }
+
+                    // call the filter binder to render active filter form controls with form value added
+                    req.linz.model.grid.filters[fieldName].filter.bind(fieldName, req.body, function (err, result) {
+
+                        if (!err) {
+                            var filterLabel = req.linz.model.grid.filters[fieldName].label;
+                            req.linz.model.grid.activeFilters[filterLabel] = result;
+                        }
+
+                        return filtersDone(err);
+
+                    });
+
+                }, function (err) {
+
+                    return cb(err);
+
+                });
+
+            },
+
             // get the filters
             function (cb) {
 
                 // check if there are any filters in the form post
-                if (!Object.keys(req.body).length) {
+                if (!req.body.selectedFilters) {
                     return cb(null);
                 }
 
-                async.each(Object.keys(req.body), function (fieldName, filtersDone) {
-
-                    if (!req.body[fieldName]) {
-                        return filtersDone(null);
-                    }
+                async.each(req.body.selectedFilters.split(','), function (fieldName, filtersDone) {
 
                     // call the filter renderer and update the content with the result
                     req.linz.model.grid.filters[fieldName].filter.filter(fieldName, req.body, function (err, result) {
@@ -77,7 +111,6 @@ console.log(req.body);
 
                             filters = req.linz.model.addSearchFilter(filters, result);
 
-                            console.log(filters);
                         }
 
                         return filtersDone(err);

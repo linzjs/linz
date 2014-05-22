@@ -16,7 +16,7 @@
 					ul.dropdown-menu(role='menu')
 						for filterField, key in model.grid.filters
 							li
-								a.control-addFilter(data-filter-field='' + key + '', data-filter-selected='' + form[key] + '')= filterField['label']
+								a.control-addFilter(data-filter-field='' + key + '')= filterField['label']
 								span.controlField!= filterField.filter.formControls
 	.col-md-6.col-xs-12
 		.actions
@@ -26,13 +26,13 @@
 				span.create
 					a.btn.btn-primary.pull-right(href='' + linz.get('admin path') + '/model/#{model.modelName}/new') Create a new #{model.singular}
 form.filters(method="post")
+	input.selectedFilters(type='hidden', name='selectedFilters', value='' + ((form.selectedFilters) ? form.selectedFilters : '') + '')
 	.filter-list
+		if model.grid.activeFilters
+			for activeFilter, index in model.grid.activeFilters
+				for filterControl in activeFilter
+					include filter
 	button.btn.btn-default(type="submit") Filter
 	template(id="filter")
-		.row
-			.col-md-5.col-xs-12
-				.input-group
-					.input-group-btn
-						button.btn.btn-default.filterName Action
-			.col-md-1.col-xs-1
-				span.glyphicon.glyphicon-remove
+		include filter
+script var filters = !{JSON.stringify(form)};

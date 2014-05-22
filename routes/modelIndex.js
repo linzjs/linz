@@ -7,7 +7,7 @@ var route = function (req, res) {
 		model: req.linz.model,
 		records: req.linz.records,
         bDevelopment: process.env.NODE_ENV,
-        form: req.body
+        form: req.body || {}
 	});
 
 };
