@@ -708,6 +708,13 @@ describe('formtools', function () {
                            });
                         });
 
+                        it('should trim leading and trailing spaces on search keywords and any additional one between words', function () {
+                           var fieldName = 'firstName';
+                           linz.formtools.filters.default.filter(fieldName,{ 'firstName': ['   john    william   '] }, function (err, result) {
+                               result.should.have.property(fieldName, { $regex: /john william/ig});
+                           });
+                        });
+
                     });
 
                     describe('text filter', function () {
@@ -926,6 +933,73 @@ describe('formtools', function () {
                                 result[0].should.equal('<label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="true"> Yes</label><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="false" checked> No</label>');
                                 done();
                             });
+                        });
+
+                    });
+
+                    describe('fulltext filter', function () {
+
+                        it('should render text input field', function (done) {
+                            var fieldName = 'firstName';
+                            linz.formtools.filters.fulltext.renderer(fieldName,function (err, result) {
+                                result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control">');
+                                done();
+                            });
+
+                        });
+
+                        it('should render text input field with form value', function (done) {
+                            var fieldName = 'firstName';
+                            linz.formtools.filters.fulltext.bind(fieldName, { firstName: ['john'] },function (err, result) {
+                                result.should.be.instanceof(Array).and.have.lengthOf(1);
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="john">');
+                                done();
+                            });
+                        });
+
+                        it('should render multiple text input fields with form values if there are multiple filters on the same field', function (done) {
+                            var fieldName = 'firstName';
+                            linz.formtools.filters.fulltext.bind(fieldName, { firstName: ['john','jane'] },function (err, result) {
+                                result.should.be.instanceof(Array).and.have.lengthOf(2);
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="john">');
+                                result[1].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="jane">');
+                                done();
+                            });
+                        });
+
+                        it('should create filter using regex matching one keyword search', function () {
+                           var fieldName = 'firstName';
+                           linz.formtools.filters.fulltext.filter(fieldName,{ 'firstName': ['john'] }, function (err, result) {
+                               result.should.have.property(fieldName, { $regex: /john/ig});
+                           });
+                        });
+
+                        it('should create filter using regex OR matching multiple keywords search', function () {
+                           var fieldName = 'firstName';
+                           linz.formtools.filters.fulltext.filter(fieldName,{ 'firstName': ['john william'] }, function (err, result) {
+                               result.should.have.property(fieldName, { $regex: /john|william/ig});
+                           });
+                        });
+
+                        it('should handle multiple spaces between search keywords', function () {
+                           var fieldName = 'firstName';
+                           linz.formtools.filters.fulltext.filter(fieldName,{ 'firstName': ['john    william'] }, function (err, result) {
+                               result.should.have.property(fieldName, { $regex: /john|william/ig});
+                           });
+                        });
+
+                        it('should handle trim leading and trailing spaces on search keywords', function () {
+                           var fieldName = 'firstName';
+                           linz.formtools.filters.fulltext.filter(fieldName,{ 'firstName': ['   john    william   '] }, function (err, result) {
+                               result.should.have.property(fieldName, { $regex: /john|william/ig});
+                           });
+                        });
+
+                        it('should create filter using regex OR matching for multiple keyword filters on the same field', function () {
+                           var fieldName = 'firstName';
+                           linz.formtools.filters.fulltext.filter(fieldName,{ 'firstName': ['john','jane'] }, function (err, result) {
+                               result.should.have.property(fieldName, { $regex: /john|jane/ig});
+                           });
                         });
 
                     });
