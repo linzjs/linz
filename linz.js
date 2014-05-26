@@ -46,6 +46,8 @@ var	routesManager = require('./lib/router'),
  */
 linz.formtools = require('./lib/formtools');
 linz.middleware = require('./middleware-public');
+linz.utils = require('./lib/utils');
+
 
 /**
  * Linz inherits from EventEmitter for Linz.prototype.on('event') handling
@@ -274,6 +276,8 @@ Linz.prototype.bootstrapExpressLocals = function () {
 	this.app.locals['adminPath'] = this.get('admin path');
 
 	this.app.locals['adminTitle'] = this.get('admin title');
+
+    this.app.locals['env'] = process.env.NODE_ENV || 'development';
 
 };
 

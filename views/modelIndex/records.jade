@@ -3,25 +3,27 @@ if records.length > 0
 		table.table.table-striped.table-hover
 			thead
 				tr
+					th #
 					th
-						input(type="checkbox", name="checkAll", value="1", class="control-checkAll")
+						input.control-checkAll(type="checkbox")
 					if model.grid.canDelete || model.grid.canEdit
 						th Actions
 					for column in model.grid.columns
 						th= column.label
 			tbody
-				for record in records
+				for record, index in records
 					tr
-						th
-							input.checked-record(type="checkbox", name="checked-record", value="#{record._id}")
+						td= index+1
+						td
+							input.checked-record(type="checkbox", name="ids[]", value="#{record._id}")
 						if model.grid.canDelete || model.grid.canEdit
 							td
 								div.btn-group
-									if model.grid.canDelete
-										a.btn.btn-default.control-delete(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/delete')
-											span(class="glyphicon glyphicon-trash")
 									if model.grid.canEdit
 										a.btn.btn-default.control-edit(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/edit')
 											span(class="glyphicon glyphicon-pencil")
+									if model.grid.canDelete
+										a.btn.btn-default.control-delete(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/delete')
+											span(class="glyphicon glyphicon-trash")
 						each val in Object.keys(model.grid.columns)
 							td!= record[val]

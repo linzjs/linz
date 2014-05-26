@@ -43,3 +43,27 @@ body {
   margin-top: 20px;
   margin-bottom: 10px;
 }
+.addFilterBtn .controlField {
+  display: none;
+}
+.filters {
+  display: none;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  padding: 26px 0;
+  margin: 10px 0 20px;
+}
+.filters .form-control {
+  display: inline-block;
+}
+.filters .control-label {
+  font-weight: normal;
+}
+.filters .glyphicon-remove {
+  position: absolute;
+  top: 8px;
+  right: -10px;
+}
+template {
+  display: none;
+}

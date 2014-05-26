@@ -5,7 +5,8 @@ module.exports = function (model) {
 
 	return function (req, res, next) {
 
-        var records = [];
+        var records = [],
+            filters = {};
 
         // set the model on linz
 		req.linz.model = req.linz.get('models')[req.params.model];
@@ -27,19 +28,121 @@ module.exports = function (model) {
 
 			},
 
+            // render the filters
+            function (cb) {
+
+                async.each(Object.keys(req.linz.model.grid.filters), function (fieldName, filtersDone) {
+
+                    if (req.linz.model.grid.filters[fieldName].filter.formControls) {
+                        return filtersDone(null);
+                    }
+
+                    // call the filter renderer and update the content with the result
+                    req.linz.model.grid.filters[fieldName].filter.renderer(fieldName, function (err, result) {
+
+                        if (!err) {
+                            req.linz.model.grid.filters[fieldName].filter.formControls = result;
+                        }
+
+                        return filtersDone(err);
+
+                    });
+
+                }, function (err) {
+
+                    return cb(err);
+
+                });
+
+            },
+
+            // render the active filters
+            function (cb) {
+
+                req.linz.model.grid.activeFilters = {};
+
+                // check if there are any filters in the form post
+                if (!req.body.selectedFilters) {
+                    return cb(null);
+                }
+
+                async.each(req.body.selectedFilters.split(','), function (fieldName, filtersDone) {
+
+                    if (req.linz.model.grid.filters[fieldName].filter.activeFormControls) {
+                        return filtersDone(null);
+                    }
+
+                    // call the filter binder to render active filter form controls with form value added
+                    req.linz.model.grid.filters[fieldName].filter.bind(fieldName, req.body, function (err, result) {
+
+                        if (!err) {
+                            req.linz.model.grid.activeFilters[fieldName] = {
+                                label: req.linz.model.grid.filters[fieldName].label,
+                                controls: result
+                            }
+                        }
+
+                        return filtersDone(err);
+
+                    });
+
+                }, function (err) {
+
+                    return cb(err);
+
+                });
+
+            },
+
+            // get the filters
+            function (cb) {
+
+                // check if there are any filters in the form post
+                if (!req.body.selectedFilters) {
+                    return cb(null);
+                }
+
+                async.each(req.body.selectedFilters.split(','), function (fieldName, filtersDone) {
+
+                    // call the filter renderer and update the content with the result
+                    req.linz.model.grid.filters[fieldName].filter.filter(fieldName, req.body, function (err, result) {
+
+                        if (!err) {
+
+                            filters = req.linz.model.addSearchFilter(filters, result);
+
+                        }
+
+                        return filtersDone(err);
+
+                    });
+
+                }, function (err) {
+
+                    return cb(err);
+
+                });
+
+            },
+
 			// find the docs
 			function (cb) {
 
-				var query = req.linz.model.find({});
+                // consolidate filters into query
+                if (Object.keys(filters).length) {
+                    filters = req.linz.model.setFiltersAsQuery(filters);
+                }
+
+				var query = req.linz.model.find(filters);
 
 				// sort by the chosen sort field, or use the first sortBy option as the default
-				if (!req.query.sort && req.linz.model.grid.sortBy.length) {
+				if (!req.body.sort && req.linz.model.grid.sortBy.length) {
 
 					query.sort(req.linz.model.grid.sortBy[0].field);
 
-				} else if (req.query.sort) {
+				} else if (req.body.sort) {
 
-					query.sort(req.query.sort);
+					query.sort(req.body.sort);
 
 				}
 

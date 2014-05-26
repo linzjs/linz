@@ -2,14 +2,36 @@
 	.col-md-6.col-xs-12
 		h1
 			a(href='' + linz.get('admin path') + '/model/#{model.modelName}/list')= model.label
-		if model.grid.sortBy.length
-			ul.sort.nav.nav-pills
+		ul.sort.nav.nav-pills
+			if model.grid.sortBy.length
 				li.dropdown
 					a(data-toggle='dropdown', role='button', class="btn btn-default") Sort by
 					ul.dropdown-menu(role='menu')
+						if form.sort
+							li.disabled
+								for sortField in model.grid.sortBy
+									if '-' + sortField.field === form.sort
+										a!= sortField.label + ' <em>(descending)</em>'
+									else if sortField.field === form.sort
+										a!= sortField.label + ' <em>(ascending)</em>'
+							li.divider
 						for sortField in model.grid.sortBy
 							li
-								a(data-sort-field='' + sortField.field + '')= sortField['label']
+								a(data-sort-field='' + sortField.field + '')
+									if '-' + sortField.field === form.sort
+										!= sortField.label + ' <em>(ascending)</em>'
+									else if sortField.field === form.sort
+										!= sortField.label + ' <em>(descending)</em>'
+									else
+										!= sortField.label
+			if Object.keys(model.grid.filters).length
+				li.dropdown.addFilterBtn
+					a(data-toggle='dropdown', role='button', class="btn btn-default") Add filter
+					ul.dropdown-menu(role='menu')
+						for filterField, key in model.grid.filters
+							li
+								a.control-addFilter(data-filter-field='' + key + '')= filterField['label']
+								span.controlField!= filterField.filter.formControls
 	.col-md-6.col-xs-12
 		.actions
 			for action in model.grid.actions
@@ -17,3 +39,16 @@
 			if model.grid.canCreate
 				span.create
 					a.btn.btn-primary.pull-right(href='' + linz.get('admin path') + '/model/#{model.modelName}/new') Create a new #{model.singular}
+form.form-horizontal.filters(method='post', role='form')
+	input.selectedFilters(type='hidden', name='selectedFilters', value='' + ((form.selectedFilters) ? form.selectedFilters : '') + '')
+	input.selectedSort(type='hidden', name='sort', value='' + ((form.sort) ? form.sort : model.grid.sortBy[0].field ) + '')
+	.filter-list
+		if model.grid.activeFilters
+			for activeFilter, fieldName in model.grid.activeFilters
+				for filterControl in activeFilter.controls
+					include filter
+	.form-group
+		.col-sm-offset-2.col-sm-10
+			button.btn.btn-default(type="submit") Filter now
+	template(id="filter")
+		include filter

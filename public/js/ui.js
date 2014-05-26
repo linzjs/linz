@@ -1,29 +1,26 @@
 
 function modelIndex () {
 
-    var query = {
-            sort: null
-        },
-        sortRegex = /sort=(.+)&?/,
-        sort = window.location.search.match(sortRegex);
-
-    if (sort) {
-        query.sort = sort[1];
+    if ($('.selectedFilters').val().length > 0) {
+        toggleFilterBox('show');
     }
 
     $('[data-sort-field]').click(function () {
 
-        var sortField = $(this).attr('data-sort-field');
+        var sort = $('.selectedSort').val(),
+            sortField = $(this).attr('data-sort-field');
 
-        if (query.sort === sortField) {
+        if (sort === sortField) {
             sortField = '-' + sortField;
         }
 
-        // update the query object, as that will be used to render the window.location string
-        query.sort = sortField;
+        // update hidden sort field in the filter form
+        $('.selectedSort').val(sortField);
 
-        // okay, let's update our page location
-        updateLocation();
+        // post form
+        $('.filters')[0].submit();
+
+        return false;
 
     });
 
@@ -32,6 +29,7 @@ function modelIndex () {
         if (confirm('Are you sure you want to this new record?')) {
             return true;
         }
+
         return false;
 
     });
@@ -45,34 +43,107 @@ function modelIndex () {
 
     $('.control-addFilter').click(function () {
 
-        var selectedTxt = $(this).html(),
-            selectedVal = $(this).attr('data-filter-field'),
-            selectOptions = $(this).parents('ul').html();
+        var filter = $(this),
+            filterText = filter.html(),
+            filterVal = filter.attr('data-filter-field'),
+            filterFormControl = filter.siblings('.controlField').html(),
+            aFilters;
 
-        var filterOption = '<div class="input-group"><div class="input-group-btn"><button class="btn btn-default">' + selectedTxt
-                            + '</button><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="caret"></span></button>'
-                            + '<ul role="menu" class="dropdown-menu">'
-                            + selectOptions
-                            + '</ul></div><input type="text" class="form-control"></div>';
+        if (supportsTemplate) {
+
+            var content = document.querySelector('#filter').content.cloneNode(true);
+
+            // update template with filter content
+            content.querySelector('.filter-name').textContent = filterText;
+            content.querySelector('.filter-control').innerHTML = content.querySelector('.filter-control').innerHTML + filterFormControl;
+            content.querySelector('.glyphicon-remove').setAttribute('data-filter-field', $(this).attr('data-filter-field'));
+            document.querySelector('.filter-list').appendChild(document.importNode(content, true));
+
+        } else {
+
+            // fallback support for browsers that don't support html5 template tag
+            // TODO: requires testing in IE browsers
+            $('.filter-name').html(filterText);
+            $('.filter-control').append(filterFormControl);
+            $('.filter-list').append(filterOption);
+
+        }
+
+        // hide dropdown for 'Add filter'
+        $(this).parents('li.dropdown').removeClass('open');
+
+        var selectedFilters = $('.selectedFilters').val();
+
+        if (selectedFilters) {
+            aFilters = $('.selectedFilters').val().split();
+        } else {
+            aFilters = [];
+        }
+
+        aFilters.push(filterVal);
+
+        $('.selectedFilters').val(aFilters.join());
+
+        toggleFilterBox('show');
+
+        assignRemoveButton();
 
         return false;
 
-    })
+    });
 
-    function updateLocation () {
+    assignRemoveButton();
 
-        var queryString = '';
 
-        // append sort if there is one
-        if (query.sort) {
-            queryString = 'sort=' + query.sort;
+    function removeFomList (list, value, separator) {
+        separator = separator || ",";
+
+        var values = list.split(separator);
+
+        for(var i = 0 ; i < values.length ; i++) {
+            if(values[i] == value) {
+              values.splice(i, 1);
+              return values.join(separator);
+            }
         }
 
-        // add the required ?
-        queryString = '?' + queryString;
+        return list;
 
-        window.location = window.location.origin + window.location.pathname + queryString;
+    }
 
+    function assignRemoveButton (queryObj) {
+
+        // remove all event listener
+        $('.glyphicon-remove').unbind();
+
+        // re-assign listeners including any new ones added to DOM after page load
+        $('.glyphicon-remove').click(function () {
+
+            var filteredField = $(this).attr('data-filter-field');
+            var selectedFilters = $('.selectedFilters').val();
+            selectedFilters = removeFomList(selectedFilters, filteredField)
+
+            $('.selectedFilters').val(selectedFilters);
+
+            if (selectedFilters.length <= 0) {
+                // since there are no filters, let's post the form to clear all filters except the sorting
+                $('.filters')[0].submit();
+            }
+
+            $(this).parents('.form-group').remove();
+        });
+    }
+
+    function toggleFilterBox(showOrHide) {
+        if (showOrHide) {
+            $('.filters').show();
+        } else {
+            $('.filters').hide();
+        }
+    }
+
+    function supportsTemplate() {
+        return 'content' in document.createElement('template');
     }
 
 }
