@@ -59,14 +59,12 @@ module.exports = function (model) {
             // render the active filters
             function (cb) {
 
+                req.linz.model.grid.activeFilters = {};
+
                 // check if there are any filters in the form post
                 if (!req.body.selectedFilters) {
-                    // clear req cache
-                    req.linz.model.grid.activeFilters = {};
                     return cb(null);
                 }
-
-                req.linz.model.grid.activeFilters = {};
 
                 async.each(req.body.selectedFilters.split(','), function (fieldName, filtersDone) {
 

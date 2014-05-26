@@ -224,9 +224,11 @@ describe('formtools', function () {
                                 renderer: function customFilterRenderer (fieldName, callback) {
                                     callback(null, '<input type="text" name="test1"><input type="text" name="test2">');
                                 },
-
                                 filter: function customFilterFilter (fieldName, form, callback) {
                                     callback(null, { firstName: [form.test1, form.test2], lastName: 'doyle' });
+                                },
+                                bind:  function customFilterBinder (fieldName, form, callback) {
+                                    callback(null, ['<input type="text" name="test1" value="' + form.test1 + '"><input type="text" name="test2" value="' + form.test2 + '">']);
                                 }
                             }
                         },
@@ -649,8 +651,8 @@ describe('formtools', function () {
                         overridesGridOpts.filters.firstName.filter.should.equal(linz.formtools.filters.default);
                     });
 
-                    it('should set custom filter & renderer if provided', function () {
-                        (overridesGridOpts.filters.lastName.filter.renderer.name === 'customFilterRenderer' && overridesGridOpts.filters.lastName.filter.filter.name === 'customFilterFilter').should.be.true;
+                    it('should set custom filter, renderer & bind functions if provided', function () {
+                        (overridesGridOpts.filters.lastName.filter.renderer.name === 'customFilterRenderer' && overridesGridOpts.filters.lastName.filter.filter.name === 'customFilterFilter' && overridesGridOpts.filters.lastName.filter.bind.name === 'customFilterBinder').should.be.true;
                     });
 
                 });
