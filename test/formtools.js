@@ -135,9 +135,20 @@ describe('formtools', function () {
                 'sa': 'South Australia',
                 'qld': 'Queensland',
                 'nt': 'Northern Territory'
-            };
+            },
+            CategoriesSchema,
+            CategoriesModel;
 
         before(function (done) {
+
+            CategoriesSchema = new mongoose.Schema({
+                label: String,
+                alias: String
+            });
+
+            CategoriesSchema.plugin(formtools.plugin, {});
+
+            CategoriesModel = mongoose.model('CategoriesModel', CategoriesSchema);
 
 			PostSchema = new mongoose.Schema({
 				firstName: String,
@@ -150,7 +161,11 @@ describe('formtools', function () {
                 },
                 description: String,
                 groups: String,
-                states: Array
+                states: Array,
+                category: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'CategoriesModel'
+                }
 			});
 
 			PostSchema.plugin(formtools.plugin, {
@@ -183,6 +198,11 @@ describe('formtools', function () {
                     states: {
                         list: states,
                         widget: 'multipleSelect'
+                    },
+                    category: {
+                        filter: {
+                            alias: 'specific-value'
+                        }
                     }
 				}
 			});
@@ -200,7 +220,11 @@ describe('formtools', function () {
                 },
                 description: String,
                 groups: String,
-                states: Array
+                states: Array,
+                category: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'CategoriesModel'
+                }
             });
 
             OverridesPostSchema.plugin(formtools.plugin, {
@@ -302,6 +326,21 @@ describe('formtools', function () {
                         },
                         edit: {
                             widget: 'editWidget'
+                        }
+                    },
+                    category: {
+                        filter: {
+                            alias: 'specific-value'
+                        },
+                        create: {
+                            filter: {
+                                alias: 'specific-value-create'
+                            }
+                        },
+                        edit: {
+                            filter: {
+                                alias: 'specific-value-edit'
+                            }
                         }
                     }
                 }
@@ -1345,6 +1384,14 @@ describe('formtools', function () {
                         formOpts['firstName'].should.have.property('placeholder');
                     });
 
+                    it('should set filter, if provided', function () {
+                        formOpts['category'].filter.should.eql({alias:'specific-value'});
+                    });
+
+                    it('should default filter to undefined, if none provided', function () {
+                        formOpts['firstName'].should.have.property('filter');
+                    });
+
                 });
             }); // end describe('form default')
 
@@ -1396,6 +1443,14 @@ describe('formtools', function () {
                     it('should override placeholder', function () {
                         overridesFormOpts['firstName'].create.should.have.property('placeholder');
                         overridesFormOpts['firstName'].create.placeholder.should.equal('Enter your first name (create)');
+                    });
+
+                    it('should inherit filter', function () {
+                        formOpts['category'].create.filter.should.eql({alias:'specific-value'});
+                    });
+
+                    it('should override filter', function () {
+                        overridesFormOpts['category'].create.filter.should.eql({alias:'specific-value-create'});
                     });
 
     			});
@@ -1450,6 +1505,14 @@ describe('formtools', function () {
                     it('should override placeholder', function () {
                         overridesFormOpts['firstName'].edit.should.have.property('placeholder');
                         overridesFormOpts['firstName'].edit.placeholder.should.equal('Enter your first name (edit)');
+                    });
+
+                    it('should inherit filter', function () {
+                        formOpts['category'].edit.filter.should.eql({alias:'specific-value'});
+                    });
+
+                    it('should override filter', function () {
+                        overridesFormOpts['category'].edit.filter.should.eql({alias:'specific-value-edit'});
                     });
 
                 });
