@@ -5,7 +5,10 @@ html(lang="en")
 	head
 		title= pageTitle
 		meta(name='viewport', content='width=device-width, initial-scale=1.0')
-		link(href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css', rel='stylesheet')
+		if (env === 'development')
+			link(href='' + linz.get('admin path') + '/public/css/bootstrap.min.css', rel='stylesheet')
+		else
+			link(href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css', rel='stylesheet')
 		link(href='' + linz.get('admin path') + '/public/css/linz-admin.css', rel='stylesheet')
 		if (linz.get('admin theme') === 'watermelon')
 			link(href='' + linz.get('admin path') + '/public/css/linz-admin-watermelon.css', rel='stylesheet')
@@ -31,7 +34,11 @@ html(lang="en")
 		.container.linz-container
 			block content
 
-		script(src='//code.jquery.com/jquery.js')
-		script(src='//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js')
+		if (env === 'development')
+			script(src='' + linz.get('admin path') + '/public/js/jquery.min.js')
+			script(src='' + linz.get('admin path') + '/public/js/bootstrap.min.js')
+		else
+			script(src='//code.jquery.com/jquery.js')
+			script(src='//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js')
 		script(src='' + linz.get('admin path') + '/public/js/ui.js')
 		block script
