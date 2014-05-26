@@ -277,6 +277,8 @@ Linz.prototype.bootstrapExpressLocals = function () {
 
 	this.app.locals['adminTitle'] = this.get('admin title');
 
+    this.app.locals['env'] = process.env.NODE_ENV || 'development';
+
 };
 
 Linz.prototype.options = function (opts) {

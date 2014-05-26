@@ -5,7 +5,7 @@ html(lang="en")
 	head
 		title= pageTitle
 		meta(name='viewport', content='width=device-width, initial-scale=1.0')
-		if (bDevelopment)
+		if (env === 'development')
 			link(href='' + linz.get('admin path') + '/public/css/bootstrap.min.css', rel='stylesheet')
 		else
 			link(href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css', rel='stylesheet')
@@ -34,7 +34,7 @@ html(lang="en")
 		.container.linz-container
 			block content
 
-		if (bDevelopment)
+		if (env === 'development')
 			script(src='' + linz.get('admin path') + '/public/js/jquery.min.js')
 			script(src='' + linz.get('admin path') + '/public/js/bootstrap.min.js')
 		else
