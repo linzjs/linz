@@ -157,6 +157,7 @@ describe('formtools', function () {
 				form: {
 					firstName: {
 						label: 'First Name',
+                        placeholder: 'Enter your first name',
                         helpText: 'Enter your first name',
                         required: true,
                         create: {
@@ -261,14 +262,17 @@ describe('formtools', function () {
                 form: {
                     firstName: {
                         label: 'First Name',
+                        placeholder: 'Enter your first name',
                         helpText: 'Enter your first name',
                         create: {
                             visible: false,
-                            disabled: true
+                            disabled: true,
+                            placeholder: 'Enter your first name (create)'
                         },
                         edit: {
                             visible: false,
-                            disabled: true
+                            disabled: true,
+                            placeholder: 'Enter your first name (edit)'
                         }
                     },
                     password: {
@@ -1325,6 +1329,22 @@ describe('formtools', function () {
                         formOpts['firstName'].required.should.equal(true);
                     });
 
+                    it('should set disabled, if provided', function () {
+                        formOpts['states'].required.should.equal(false);
+                    });
+
+                    it('should default disabled to false, if none provided', function () {
+                        formOpts['firstName'].required.should.equal(true);
+                    });
+
+                    it('should set placeholder, if provided', function () {
+                        formOpts['firstName'].placeholder.should.equal('Enter your first name');
+                    });
+
+                    it('should default placeholder to undefined, if none provided', function () {
+                        formOpts['firstName'].should.have.property('placeholder');
+                    });
+
                 });
             }); // end describe('form default')
 
@@ -1366,6 +1386,16 @@ describe('formtools', function () {
                     it('should override widget', function () {
                         overridesFormOpts['states'].create.should.have.property('widget');
                         overridesFormOpts['states'].create.widget.should.equal('createWidget');
+                    });
+
+                    it('should inherit placeholder', function () {
+                        formOpts['firstName'].create.should.have.property('placeholder');
+                        formOpts['firstName'].create.placeholder.should.equal('Enter your first name');
+                    });
+
+                    it('should override placeholder', function () {
+                        overridesFormOpts['firstName'].create.should.have.property('placeholder');
+                        overridesFormOpts['firstName'].create.placeholder.should.equal('Enter your first name (create)');
                     });
 
     			});
@@ -1410,6 +1440,16 @@ describe('formtools', function () {
                     it('should override widget', function () {
                         overridesFormOpts['states'].edit.should.have.property('widget');
                         overridesFormOpts['states'].edit.widget.should.equal('editWidget');
+                    });
+
+                    it('should inherit placeholder', function () {
+                        formOpts['firstName'].edit.should.have.property('placeholder');
+                        formOpts['firstName'].edit.placeholder.should.equal('Enter your first name');
+                    });
+
+                    it('should override placeholder', function () {
+                        overridesFormOpts['firstName'].edit.should.have.property('placeholder');
+                        overridesFormOpts['firstName'].edit.placeholder.should.equal('Enter your first name (edit)');
                     });
 
                 });
