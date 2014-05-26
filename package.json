@@ -29,7 +29,8 @@
     "express-session": "1.0.x",
     "printf": "0.2.x",
     "chalk": "~0.4.0",
-    "formist": "0.1.8"
+    "formist": "0.1.8",
+    "clone": "0.1.15"
   },
   "devDependencies": {
     "should": "3.3.1",
