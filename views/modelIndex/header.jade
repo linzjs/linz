@@ -5,7 +5,9 @@
 		ul.sort.nav.nav-pills
 			if model.grid.sortBy.length
 				li.dropdown
-					a(data-toggle='dropdown', role='button', class="btn btn-default") Sort by
+					a(data-toggle='dropdown', role='button', class="btn btn-default")
+						span.glyphicon.glyphicon-sort
+						| Sort
 					ul.dropdown-menu(role='menu')
 						if form.sort
 							li.disabled
@@ -26,7 +28,9 @@
 										!= sortField.label
 			if Object.keys(model.grid.filters).length
 				li.dropdown.addFilterBtn
-					a(data-toggle='dropdown', role='button', class="btn btn-default") Add filter
+					a(data-toggle='dropdown', role='button', class="btn btn-default")
+						span.glyphicon.glyphicon-filter
+						| Filter
 					ul.dropdown-menu(role='menu')
 						for filterField, key in model.grid.filters
 							li

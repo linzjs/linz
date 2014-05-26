@@ -699,7 +699,7 @@ describe('formtools', function () {
                         it('should render text input field', function (done) {
                             var fieldName = 'firstName';
                             linz.formtools.filters.default.renderer(fieldName,function (err, result) {
-                                result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control">');
+                                result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" required>');
                                 done();
                             });
 
@@ -709,7 +709,7 @@ describe('formtools', function () {
                             var fieldName = 'firstName';
                             linz.formtools.filters.default.bind(fieldName, { firstName: ['john'] },function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
-                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="john">');
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="john" required>');
                                 done();
                             });
                         });
@@ -718,8 +718,8 @@ describe('formtools', function () {
                             var fieldName = 'firstName';
                             linz.formtools.filters.default.bind(fieldName, { firstName: ['john','jane'] },function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(2);
-                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="john">');
-                                result[1].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="jane">');
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="john" required>');
+                                result[1].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="jane" required>');
                                 done();
                             });
                         });
@@ -767,7 +767,7 @@ describe('formtools', function () {
                         it('should render date input field', function (done) {
                             var fieldName = 'dateCreated';
                             linz.formtools.filters.date.renderer(fieldName,function (err, result) {
-                                result.should.equal('<input type="date" name="' + fieldName + '[]" class="form-control">');
+                                result.should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" required>');
                                 done();
                             });
 
@@ -777,7 +777,7 @@ describe('formtools', function () {
                             var fieldName = 'dateCreated';
                             linz.formtools.filters.date.bind(fieldName, { dateCreated: ['2014-05-16'] },function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
-                                result[0].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-16">');
+                                result[0].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-16" required>');
                                 done();
                             });
 
@@ -787,8 +787,8 @@ describe('formtools', function () {
                             var fieldName = 'dateCreated';
                             linz.formtools.filters.date.bind(fieldName, { dateCreated: ['2014-05-16','2014-05-17'] },function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(2);
-                                result[0].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-16">');
-                                result[1].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-17">');
+                                result[0].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-16" required>');
+                                result[1].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-17" required>');
                                 done();
                             });
                         });
@@ -849,7 +849,7 @@ describe('formtools', function () {
                         it('should render 2 date input fields', function (done) {
                             var fieldName = 'dateModified';
                             linz.formtools.filters.dateRange.renderer(fieldName,function (err, result) {
-                                result.should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;"><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;">');
+                                result.should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" required><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" required>');
                                 done();
                             });
 
@@ -861,7 +861,7 @@ describe('formtools', function () {
 
                             linz.formtools.filters.dateRange.bind(fieldName, filterDates, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
-                                result[0].should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[0] + '"><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[0] + '">');
+                                result[0].should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[0] + '" required><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[0] + '" required>');
                             });
                         });
 
@@ -871,8 +871,8 @@ describe('formtools', function () {
 
                             linz.formtools.filters.dateRange.bind(fieldName, filterDates, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(2);
-                                result[0].should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[0] + '"><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[0] + '">');
-                                result[1].should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[1] + '"><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[1] + '">');
+                                result[0].should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[0] + '" required><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[0] + '" required>');
+                                result[1].should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[1] + '" required><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[1] + '" required>');
                             });
                         });
 
@@ -942,7 +942,7 @@ describe('formtools', function () {
                         it('should render checkbox input field', function (done) {
                             var fieldName = 'dateModified';
                             linz.formtools.filters.boolean.renderer(fieldName,function (err, result) {
-                                result.should.equal('<label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="true"> Yes</label><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="false"> No</label>');
+                                result.should.equal('<label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="true" required> Yes</label><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="false" required> No</label>');
                                 done();
                             });
                         });
@@ -958,7 +958,7 @@ describe('formtools', function () {
                             var fieldName = 'bActive';
                             linz.formtools.filters.boolean.bind(fieldName, { 'bActive': 'true' },function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
-                                result[0].should.equal('<label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="true" checked> Yes</label><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="false"> No</label>');
+                                result[0].should.equal('<label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="true" checked required> Yes</label><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="false" required> No</label>');
                                 done();
                             });
                         });
@@ -967,7 +967,7 @@ describe('formtools', function () {
                             var fieldName = 'bActive';
                             linz.formtools.filters.boolean.bind(fieldName, { 'bActive': 'false' },function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
-                                result[0].should.equal('<label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="true"> Yes</label><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="false" checked> No</label>');
+                                result[0].should.equal('<label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="true" required> Yes</label><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="false" checked required> No</label>');
                                 done();
                             });
                         });
@@ -979,7 +979,7 @@ describe('formtools', function () {
                         it('should render text input field', function (done) {
                             var fieldName = 'firstName';
                             linz.formtools.filters.fulltext.renderer(fieldName,function (err, result) {
-                                result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control">');
+                                result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" required>');
                                 done();
                             });
 
@@ -989,7 +989,7 @@ describe('formtools', function () {
                             var fieldName = 'firstName';
                             linz.formtools.filters.fulltext.bind(fieldName, { firstName: ['john'] },function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
-                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="john">');
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="john" required>');
                                 done();
                             });
                         });
@@ -998,8 +998,8 @@ describe('formtools', function () {
                             var fieldName = 'firstName';
                             linz.formtools.filters.fulltext.bind(fieldName, { firstName: ['john','jane'] },function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(2);
-                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="john">');
-                                result[1].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="jane">');
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="john" required>');
+                                result[1].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="jane" required>');
                                 done();
                             });
                         });

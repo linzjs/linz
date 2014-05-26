@@ -17,10 +17,10 @@ function modelIndex () {
         // update hidden sort field in the filter form
         $('.selectedSort').val(sortField);
 
-        // post form
-        $('.filters')[0].submit();
+        // trigger validation and post form if there are no validation errors
+        $('.filters').find(':submit').click();
 
-        return false;
+        return true;
 
     });
 
