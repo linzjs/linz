@@ -1,33 +1,26 @@
 
 function modelIndex () {
 
-    var query = {
-            sort: null
-        },
-        sortRegex = /sort=(.+)&?/,
-        sort = window.location.search.match(sortRegex);
-
-    if (sort) {
-        query.sort = sort[1];
-    }
-
-    if ($('input.selectedFilters').val().length > 0) {
+    if ($('.selectedFilters').val().length > 0) {
         toggleFilterBox('show');
     }
 
     $('[data-sort-field]').click(function () {
 
-        var sortField = $(this).attr('data-sort-field');
+        var sort = $('.selectedSort').val(),
+            sortField = $(this).attr('data-sort-field');
 
-        if (query.sort === sortField) {
+        if (sort === sortField) {
             sortField = '-' + sortField;
         }
 
-        // update the query object, as that will be used to render the window.location string
-        query.sort = sortField;
+        // update hidden sort field in the filter form
+        $('.selectedSort').val(sortField);
 
-        // okay, let's update our page location
-        updateLocation();
+        // post form
+        $('.filters')[0].submit();
+
+        return false;
 
     });
 
@@ -36,6 +29,7 @@ function modelIndex () {
         if (confirm('Are you sure you want to this new record?')) {
             return true;
         }
+
         return false;
 
     });
@@ -68,6 +62,7 @@ function modelIndex () {
         } else {
 
             // fallback support for browsers that don't support html5 template tag
+            // TODO: requires testing in IE browsers
             $('.filter-name').html(filterText);
             $('.filter-control').append(filterFormControl);
             $('.filter-list').append(filterOption);
@@ -77,10 +72,10 @@ function modelIndex () {
         // hide dropdown for 'Add filter'
         $(this).parents('li.dropdown').removeClass('open');
 
-        var selectedFilters = $('input.selectedFilters').val();
+        var selectedFilters = $('.selectedFilters').val();
 
         if (selectedFilters) {
-            aFilters = $('input.selectedFilters').val().split();
+            aFilters = $('.selectedFilters').val().split();
         } else {
             aFilters = [];
         }
@@ -131,8 +126,8 @@ function modelIndex () {
             $('.selectedFilters').val(selectedFilters);
 
             if (selectedFilters.length <= 0) {
-                // since there are no filters, let's refresh the page to clear the filtered result
-                location.reload();
+                // since there are no filters, let's post the form to clear all filters except the sorting
+                $('.filters')[0].submit();
             }
 
             $(this).parents('.form-group').remove();
@@ -149,22 +144,6 @@ function modelIndex () {
 
     function supportsTemplate() {
         return 'content' in document.createElement('template');
-    }
-
-    function updateLocation () {
-
-        var queryString = '';
-
-        // append sort if there is one
-        if (query.sort) {
-            queryString = 'sort=' + query.sort;
-        }
-
-        // add the required ?
-        queryString = '?' + queryString;
-
-        window.location = window.location.origin + window.location.pathname + queryString;
-
     }
 
 }
