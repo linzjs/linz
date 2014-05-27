@@ -1,14 +1,18 @@
 var formist = require('formist'),
-	linz = require('../');
+	linz = require('../'),
+    model = require('../lib/formtools/model');
 
 /* GET /admin/:model/:id/overview */
-var route = function (req, res) {
+var route = function (req, res, next) {
 
     req.linz.model.findById(req.params.id).exec(function (err, record) {
 
         if (err) {
             return next(err);
         }
+
+        // clean the body
+        model.clean(req.body, req.linz.model);
 
         // loop over each key in the body
         // update each field passed to us (as long as its from the schema)
@@ -20,7 +24,7 @@ var route = function (req, res) {
 
         });
 
-        record.save(function (saveError, updatedDocument) {
+        record.save(req, function (saveError, updatedDocument) {
 
             if (saveError) {
                 return next(saveError);
