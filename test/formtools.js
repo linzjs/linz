@@ -127,10 +127,10 @@ describe('formtools', function () {
             overridesGridOpts,
             formOpts,
             overridesFormOpts,
-            list = {
-                'one' : 'option 1',
-                'two' : 'option 2'
-            },
+            list = [
+                { label: 'option 1', value: 'one'},
+                { label: 'option 2', value: 'two'},
+            ],
             states = {
                 'sa': 'South Australia',
                 'qld': 'Queensland',
@@ -298,6 +298,10 @@ describe('formtools', function () {
                         bActive: {
                             label: 'Is Active?',
                             filter: linz.formtools.filters.checkbox
+                        },
+                        groups: {
+                            label: 'Groups',
+                            filter: linz.formtools.filters.list(list)
                         }
                     }
                 },
@@ -1104,6 +1108,53 @@ describe('formtools', function () {
                            linz.formtools.filters.fulltext.filter(fieldName,{ 'firstName': ['john','jane'] }, function (err, result) {
                                result.should.have.property(fieldName, { $regex: /john|jane/ig});
                            });
+                        });
+
+                    });
+
+                    describe('list filter', function () {
+
+                        it('should render a select field', function (done) {
+                            var fieldName = 'groups';
+                            overridesGridOpts.filters.groups.filter.renderer(fieldName,function (err, result) {
+                                result.should.equal('<select name="' + fieldName + '[]" class="form-control multiselect"><option value="one">option 1</option><option value="two">option 2</option></select>');
+                                done();
+                            });
+                        });
+
+                        it('should render a select field with multiple selection option attribute', function (done) {
+                            var fieldName = 'groups',
+                                listFilter = linz.formtools.filters.list(list,true);
+                            listFilter.renderer(fieldName,function (err, result) {
+                                result.should.equal('<select name="' + fieldName + '[]" class="form-control multiselect" multiple><option value="one">option 1</option><option value="two">option 2</option></select>');
+                                done();
+                            });
+                        });
+
+                        it('should throw error is list attribute is missing', function () {
+                            try {
+                                var listFilter = linz.formtools.filters.list();
+                            } catch (e) {
+                                e.message.should.equal('List paramenter is missing for the list filter');
+                            }
+
+                        });
+
+                        it('should return a filter using $in operator for OR matching on the selected values', function (done) {
+                            var fieldName = 'groups';
+                            overridesGridOpts.filters.groups.filter.filter(fieldName, { groups: list}, function (err, result) {
+                                result.should.have.property(fieldName, { $in: list });
+                                done();
+                            });
+                        });
+
+                        it('should render select field with form values selected', function (done) {
+                            var fieldName = 'groups';
+                            overridesGridOpts.filters.groups.filter.bind(fieldName,{ groups: ['one'] }, function (err, result) {
+                                result.should.be.instanceof(Array).and.have.lengthOf(1);
+                                result[0].should.equal('<select name="' + fieldName + '[]" class="form-control multiselect"><option value="one" selected>option 1</option><option value="two">option 2</option></select>');
+                                done();
+                            });
                         });
 
                     });
