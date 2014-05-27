@@ -165,6 +165,10 @@ describe('formtools', function () {
                 category: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: 'CategoriesModel'
+                },
+                secondCategory: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'CategoriesModel'
                 }
 			});
 
@@ -200,8 +204,22 @@ describe('formtools', function () {
                         widget: 'multipleSelect'
                     },
                     category: {
-                        filter: {
-                            alias: 'specific-value'
+                        query: {
+                            filter: {
+                                alias: 'specific-value'
+                            }
+                        }
+                    },
+                    secondCategory: {
+                        query: {
+                            filter: {
+                                alias: 'second-value'
+                            },
+                            sort: 'sort',
+                            select: 'select',
+                            label: function () {
+
+                            }
                         }
                     }
 				}
@@ -329,17 +347,23 @@ describe('formtools', function () {
                         }
                     },
                     category: {
-                        filter: {
-                            alias: 'specific-value'
+                        query: {
+                            filter: {
+                                alias: 'specific-value'
+                            }
                         },
                         create: {
-                            filter: {
-                                alias: 'specific-value-create'
+                            query: {
+                                filter: {
+                                    alias: 'specific-value-create'
+                                }
                             }
                         },
                         edit: {
-                            filter: {
-                                alias: 'specific-value-edit'
+                            query: {
+                                filter: {
+                                    alias: 'specific-value-edit'
+                                }
                             }
                         }
                     }
@@ -1384,12 +1408,40 @@ describe('formtools', function () {
                         formOpts['firstName'].should.have.property('placeholder');
                     });
 
-                    it('should set filter, if provided', function () {
-                        formOpts['category'].filter.should.eql({alias:'specific-value'});
+                    it('should set query, if provided', function () {
+                        formOpts['secondCategory'].should.have.property('query');
+                        formOpts['secondCategory'].query.should.have.property('filter');
+                        formOpts['secondCategory'].query.filter.should.eql({alias:'second-value'});
+                        formOpts['secondCategory'].query.should.have.property('sort');
+                        formOpts['secondCategory'].query.sort.should.equal('sort');
+                        formOpts['secondCategory'].query.should.have.property('select');
+                        formOpts['secondCategory'].query.select.should.equal('select');
+                        formOpts['secondCategory'].query.should.have.property('label');
+                        (typeof formOpts['secondCategory'].query.label === 'function').should.equal(true);
                     });
 
-                    it('should default filter to undefined, if none provided', function () {
-                        formOpts['firstName'].should.have.property('filter');
+                    it('should default query to default object, if none provided', function () {
+                        formOpts['username'].should.have.property('query');
+                        formOpts['username'].query.should.have.property('filter');
+                        formOpts['username'].query.should.have.property('sort');
+                        formOpts['username'].query.should.have.property('select');
+                        formOpts['username'].query.should.have.property('label');
+                        (formOpts['username'].query.filter === undefined).should.equal(true);
+                        (formOpts['username'].query.sort === undefined).should.equal(true);
+                        (formOpts['username'].query.select === undefined).should.equal(true);
+                        (formOpts['username'].query.label === undefined).should.equal(true);
+                    });
+
+                    it('should set default query properties, if not all provided', function () {
+                        formOpts['category'].should.have.property('query');
+                        formOpts['category'].query.should.have.property('filter');
+                        formOpts['category'].query.should.have.property('sort');
+                        formOpts['category'].query.should.have.property('select');
+                        formOpts['category'].query.should.have.property('label');
+                        formOpts['category'].query.filter.should.eql({alias:'specific-value'});
+                        (formOpts['category'].query.sort === undefined).should.equal(true);
+                        (formOpts['category'].query.select === undefined).should.equal(true);
+                        (formOpts['category'].query.label === undefined).should.equal(true);
                     });
 
                 });
@@ -1445,12 +1497,51 @@ describe('formtools', function () {
                         overridesFormOpts['firstName'].create.placeholder.should.equal('Enter your first name (create)');
                     });
 
-                    it('should inherit filter', function () {
-                        formOpts['category'].create.filter.should.eql({alias:'specific-value'});
+                    it('should inherit query, if provided', function () {
+                        formOpts['secondCategory'].create.should.have.property('query');
+                        formOpts['secondCategory'].create.query.should.have.property('filter');
+                        formOpts['secondCategory'].create.query.filter.should.eql({alias:'second-value'});
+                        formOpts['secondCategory'].create.query.should.have.property('sort');
+                        formOpts['secondCategory'].create.query.sort.should.equal('sort');
+                        formOpts['secondCategory'].create.query.should.have.property('select');
+                        formOpts['secondCategory'].create.query.select.should.equal('select');
+                        formOpts['secondCategory'].create.query.should.have.property('label');
+                        (typeof formOpts['secondCategory'].create.query.label === 'function').should.equal(true);
                     });
 
-                    it('should override filter', function () {
-                        overridesFormOpts['category'].create.filter.should.eql({alias:'specific-value-create'});
+                    it('should default query to default object, if none provided', function () {
+                        formOpts['username'].create.should.have.property('query');
+                        formOpts['username'].create.query.should.have.property('filter');
+                        formOpts['username'].create.query.should.have.property('sort');
+                        formOpts['username'].create.query.should.have.property('select');
+                        formOpts['username'].create.query.should.have.property('label');
+                        (formOpts['username'].create.query.filter === undefined).should.equal(true);
+                        (formOpts['username'].create.query.sort === undefined).should.equal(true);
+                        (formOpts['username'].create.query.select === undefined).should.equal(true);
+                        (formOpts['username'].create.query.label === undefined).should.equal(true);
+                    });
+
+                    it('should set default query properties, if not all provided', function () {
+                        formOpts['category'].create.should.have.property('query');
+                        formOpts['category'].create.query.should.have.property('filter');
+                        formOpts['category'].create.query.should.have.property('sort');
+                        formOpts['category'].create.query.should.have.property('select');
+                        formOpts['category'].create.query.should.have.property('label');
+                        formOpts['category'].create.query.filter.should.eql({alias:'specific-value'});
+                        (formOpts['category'].create.query.sort === undefined).should.equal(true);
+                        (formOpts['category'].create.query.select === undefined).should.equal(true);
+                        (formOpts['category'].create.query.label === undefined).should.equal(true);
+                    });
+
+                    it('should override query', function () {
+                        overridesFormOpts['category'].create.should.have.property('query');
+                        overridesFormOpts['category'].create.query.filter.should.eql({alias:'specific-value-create'});
+                        formOpts['category'].create.query.should.have.property('sort');
+                        formOpts['category'].create.query.should.have.property('select');
+                        formOpts['category'].create.query.should.have.property('label');
+                        (formOpts['category'].create.query.sort === undefined).should.equal(true);
+                        (formOpts['category'].create.query.select === undefined).should.equal(true);
+                        (formOpts['category'].create.query.label === undefined).should.equal(true);
                     });
 
     			});
@@ -1507,12 +1598,51 @@ describe('formtools', function () {
                         overridesFormOpts['firstName'].edit.placeholder.should.equal('Enter your first name (edit)');
                     });
 
-                    it('should inherit filter', function () {
-                        formOpts['category'].edit.filter.should.eql({alias:'specific-value'});
+                    it('should inherit query, if provided', function () {
+                        formOpts['secondCategory'].edit.should.have.property('query');
+                        formOpts['secondCategory'].edit.query.should.have.property('filter');
+                        formOpts['secondCategory'].edit.query.filter.should.eql({alias:'second-value'});
+                        formOpts['secondCategory'].edit.query.should.have.property('sort');
+                        formOpts['secondCategory'].edit.query.sort.should.equal('sort');
+                        formOpts['secondCategory'].edit.query.should.have.property('select');
+                        formOpts['secondCategory'].edit.query.select.should.equal('select');
+                        formOpts['secondCategory'].edit.query.should.have.property('label');
+                        (typeof formOpts['secondCategory'].edit.query.label === 'function').should.equal(true);
                     });
 
-                    it('should override filter', function () {
-                        overridesFormOpts['category'].edit.filter.should.eql({alias:'specific-value-edit'});
+                    it('should default query to default object, if none provided', function () {
+                        formOpts['username'].edit.should.have.property('query');
+                        formOpts['username'].edit.query.should.have.property('filter');
+                        formOpts['username'].edit.query.should.have.property('sort');
+                        formOpts['username'].edit.query.should.have.property('select');
+                        formOpts['username'].edit.query.should.have.property('label');
+                        (formOpts['username'].edit.query.filter === undefined).should.equal(true);
+                        (formOpts['username'].edit.query.sort === undefined).should.equal(true);
+                        (formOpts['username'].edit.query.select === undefined).should.equal(true);
+                        (formOpts['username'].edit.query.label === undefined).should.equal(true);
+                    });
+
+                    it('should set default query properties, if not all provided', function () {
+                        formOpts['category'].edit.should.have.property('query');
+                        formOpts['category'].edit.query.should.have.property('filter');
+                        formOpts['category'].edit.query.should.have.property('sort');
+                        formOpts['category'].edit.query.should.have.property('select');
+                        formOpts['category'].edit.query.should.have.property('label');
+                        formOpts['category'].edit.query.filter.should.eql({alias:'specific-value'});
+                        (formOpts['category'].edit.query.sort === undefined).should.equal(true);
+                        (formOpts['category'].edit.query.select === undefined).should.equal(true);
+                        (formOpts['category'].edit.query.label === undefined).should.equal(true);
+                    });
+
+                    it('should override query', function () {
+                        overridesFormOpts['category'].edit.should.have.property('query');
+                        overridesFormOpts['category'].edit.query.filter.should.eql({alias:'specific-value-edit'});
+                        overridesFormOpts['category'].edit.query.should.have.property('sort');
+                        overridesFormOpts['category'].edit.query.should.have.property('select');
+                        overridesFormOpts['category'].edit.query.should.have.property('label');
+                        (overridesFormOpts['category'].edit.query.sort === undefined).should.equal(true);
+                        (overridesFormOpts['category'].edit.query.select === undefined).should.equal(true);
+                        (overridesFormOpts['category'].edit.query.label === undefined).should.equal(true);
                     });
 
                 });
