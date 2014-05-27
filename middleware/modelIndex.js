@@ -33,7 +33,7 @@ module.exports = function (model) {
 
                 async.each(Object.keys(req.linz.model.grid.filters), function (fieldName, filtersDone) {
 
-                    if (req.linz.model.grid.filters[fieldName].filter.formControls) {
+                    if (req.linz.model.grid.filters[fieldName].formControls) {
                         return filtersDone(null);
                     }
 
@@ -41,7 +41,7 @@ module.exports = function (model) {
                     req.linz.model.grid.filters[fieldName].filter.renderer(fieldName, function (err, result) {
 
                         if (!err) {
-                            req.linz.model.grid.filters[fieldName].filter.formControls = result;
+                            req.linz.model.grid.filters[fieldName].formControls = result;
                         }
 
                         return filtersDone(err);
@@ -67,10 +67,6 @@ module.exports = function (model) {
                 }
 
                 async.each(req.body.selectedFilters.split(','), function (fieldName, filtersDone) {
-
-                    if (req.linz.model.grid.filters[fieldName].filter.activeFormControls) {
-                        return filtersDone(null);
-                    }
 
                     // call the filter binder to render active filter form controls with form value added
                     req.linz.model.grid.filters[fieldName].filter.bind(fieldName, req.body, function (err, result) {

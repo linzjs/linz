@@ -35,7 +35,7 @@
 						for filterField, key in model.grid.filters
 							li
 								a.control-addFilter(data-filter-field='' + key + '')= filterField['label']
-								span.controlField!= filterField.filter.formControls
+								span.controlField!= filterField.formControls
 	.col-md-6.col-xs-12
 		.actions
 			for action in model.grid.actions
