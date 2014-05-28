@@ -838,7 +838,7 @@ describe('formtools', function () {
                         it('should render date input field', function (done) {
                             var fieldName = 'dateCreated';
                             linz.formtools.filters.date.renderer(fieldName,function (err, result) {
-                                result.should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" required>');
+                                result.should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" data-ui-datepicker="true" required>');
                                 done();
                             });
 
@@ -848,7 +848,7 @@ describe('formtools', function () {
                             var fieldName = 'dateCreated';
                             linz.formtools.filters.date.bind(fieldName, { dateCreated: ['2014-05-16'] },function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
-                                result[0].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-16" required>');
+                                result[0].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-16" data-ui-datepicker="true" required>');
                                 done();
                             });
 
@@ -858,8 +858,8 @@ describe('formtools', function () {
                             var fieldName = 'dateCreated';
                             linz.formtools.filters.date.bind(fieldName, { dateCreated: ['2014-05-16','2014-05-17'] },function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(2);
-                                result[0].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-16" required>');
-                                result[1].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-17" required>');
+                                result[0].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-16" data-ui-datepicker="true" required>');
+                                result[1].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-17" data-ui-datepicker="true" required>');
                                 done();
                             });
                         });
@@ -920,7 +920,7 @@ describe('formtools', function () {
                         it('should render 2 date input fields', function (done) {
                             var fieldName = 'dateModified';
                             linz.formtools.filters.dateRange.renderer(fieldName,function (err, result) {
-                                result.should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" required><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" required>');
+                                result.should.equal('<span><input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" data-ui-datepicker="true" required></span><span><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" data-ui-datepicker="true" required></span>');
                                 done();
                             });
 
@@ -932,7 +932,7 @@ describe('formtools', function () {
 
                             linz.formtools.filters.dateRange.bind(fieldName, filterDates, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
-                                result[0].should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[0] + '" required><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[0] + '" required>');
+                                result[0].should.equal('<span><input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[0] + '" data-ui-datepicker="true" required></span><span><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[0] + '" data-ui-datepicker="true" required></span>');
                             });
                         });
 
@@ -942,8 +942,8 @@ describe('formtools', function () {
 
                             linz.formtools.filters.dateRange.bind(fieldName, filterDates, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(2);
-                                result[0].should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[0] + '" required><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[0] + '" required>');
-                                result[1].should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[1] + '" required><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[1] + '" required>');
+                                result[0].should.equal('<span><input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[0] + '" data-ui-datepicker="true" required></span><span><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[0] + '" data-ui-datepicker="true" required></span>');
+                                result[1].should.equal('<span><input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[1] + '" data-ui-datepicker="true" required></span><span><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[1] + '" data-ui-datepicker="true" required></span>');
                             });
                         });
 
