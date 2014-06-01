@@ -160,6 +160,7 @@ describe('formtools', function () {
                     default: true
                 },
                 description: String,
+                favourites: Array,
                 groups: String,
                 states: Array,
                 category: {
@@ -195,6 +196,11 @@ describe('formtools', function () {
 					},
                     description: {
                         type: 'text'
+                    },
+                    favourites: {
+                        transform: function (value, mode) {
+                            return value;
+                        }
                     },
 					groups: {
                         list: list
@@ -237,6 +243,7 @@ describe('formtools', function () {
                     default: true
                 },
                 description: String,
+                favourites: Array,
                 groups: String,
                 states: Array,
                 category: {
@@ -334,6 +341,21 @@ describe('formtools', function () {
                         },
                         edit: {
                             fieldset: 'Edit fieldset'
+                        }
+                    },
+                    favourites: {
+                        transform: function transformFavourites (value, mode) {
+                            return value;
+                        },
+                        create: {
+                            transform: function transformFavouritesCreate (value, mode) {
+                                return value;
+                            }
+                        },
+                        edit: {
+                            transform: function transformFavouritesEdit(value, mode) {
+                                return value;
+                            }
                         }
                     },
                     groups: {
@@ -1495,6 +1517,16 @@ describe('formtools', function () {
                         (formOpts['category'].query.label === undefined).should.equal(true);
                     });
 
+                    it('should set transform if provided', function () {
+                        formOpts['favourites'].should.have.property('transform');
+                        (typeof formOpts['favourites'].transform === 'function').should.equal(true);
+                    });
+
+                    it('should set transform to undefined, if none provided', function () {
+                        formOpts['category'].should.have.property('transform');
+                        (formOpts['category'].transform === undefined).should.equal(true);
+                    });
+
                 });
             }); // end describe('form default')
 
@@ -1593,6 +1625,19 @@ describe('formtools', function () {
                         (formOpts['category'].create.query.sort === undefined).should.equal(true);
                         (formOpts['category'].create.query.select === undefined).should.equal(true);
                         (formOpts['category'].create.query.label === undefined).should.equal(true);
+                    });
+
+                    it('should inherit transform', function () {
+                        formOpts['category'].create.should.have.property('transform');
+                        (formOpts['category'].create.transform === undefined).should.equal(true);
+                    });
+
+                    it('should override transform', function () {
+                        overridesFormOpts['favourites'].should.have.property('transform');
+                        (typeof overridesFormOpts['favourites'].transform === 'function').should.equal(true);
+                        overridesFormOpts['favourites'].create.should.have.property('transform');
+                        (typeof overridesFormOpts['favourites'].create.transform === 'function').should.equal(true);
+                        overridesFormOpts['favourites'].create.transform.name.should.equal('transformFavouritesCreate');
                     });
 
     			});
@@ -1694,6 +1739,19 @@ describe('formtools', function () {
                         (overridesFormOpts['category'].edit.query.sort === undefined).should.equal(true);
                         (overridesFormOpts['category'].edit.query.select === undefined).should.equal(true);
                         (overridesFormOpts['category'].edit.query.label === undefined).should.equal(true);
+                    });
+
+                    it('should inherit transform', function () {
+                        formOpts['category'].edit.should.have.property('transform');
+                        (formOpts['category'].edit.transform === undefined).should.equal(true);
+                    });
+
+                    it('should override transform', function () {
+                        overridesFormOpts['favourites'].should.have.property('transform');
+                        (typeof overridesFormOpts['favourites'].transform === 'function').should.equal(true);
+                        overridesFormOpts['favourites'].edit.should.have.property('transform');
+                        (typeof overridesFormOpts['favourites'].edit.transform === 'function').should.equal(true);
+                        overridesFormOpts['favourites'].edit.transform.name.should.equal('transformFavouritesEdit');
                     });
 
                 });
