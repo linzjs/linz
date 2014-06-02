@@ -1,19 +1,73 @@
 var formist = require('formist'),
 	linz = require('../'),
-    model = require('../lib/formtools/model');
+    model = require('../lib/formtools/model'),
+    async = require('async'),
+    utils = require('../lib/utils');
 
 /* GET /admin/:model/:id/overview */
-var route = function (req, res) {
+var route = function (req, res, next) {
 
-    var m = new req.linz.model(model.clean(req.body, req.linz.model));
+    async.waterfall([
 
-    m.save(req, function (err, doc) {
+        function (done) {
 
-        if (err) {
-            return res.send('There was an error saving the model. ' + err + '. Please hit the back button, amend the error and try again.');
+            req.linz.model.getForm(function(err,form){
+
+                // retrieve form information, for use in next function
+                req.linz.model.form = form;
+
+                // we're done
+                return done(null, form);
+
+            });
+
+        },
+
+        function (form, done) {
+
+            // clean the body
+            model.clean(req.body, req.linz.model);
+
+            // loop over each key in the body
+            // update each field passed to us (as long as its from the schema)
+            Object.keys(req.linz.model.schema.paths).forEach(function (field) {
+
+                if (field !== '_id' && req.body[field] !== undefined) {
+
+                    if (form[field].transform) {
+
+                        // merge create object back into form object (overrides)
+                        utils.merge(form[field], form[field]['create'] || {});
+
+                        req.body[field] = form[field].transform(req.body[field], 'beforeSave');
+                    }
+
+                }
+
+            });
+
+            return done(null, req.body);
+
         }
 
-        return res.redirect(linz.api.getAdminLink(req.linz.model.modelName, 'overview', doc._id));
+
+    ], function (err, newModel) {
+
+        if (err) {
+            return next(err);
+        }
+
+        var m = new req.linz.model(newModel);
+
+        m.save(req, function (err, doc) {
+
+            if (err) {
+                return next(err);
+            }
+
+            return res.redirect(linz.api.getAdminLink(req.linz.model.modelName, 'overview', doc._id));
+
+        });
 
     });
 
