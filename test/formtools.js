@@ -393,6 +393,14 @@ describe('formtools', function () {
                             }
                         }
                     }
+                },
+                overview: {
+                    actions: [
+                        {
+                            action: 'url/slug',
+                            label: 'Custom action'
+                        }
+                    ]
                 }
             });
 
@@ -426,6 +434,20 @@ describe('formtools', function () {
 
                     OverridesPostModel.getForm(function (err, result) {
                         overridesFormOpts = result;
+                        cb(null);
+                    });
+                },
+
+                function (cb) {
+                    PostModel.getOverview(function (err, result) {
+                        overviewOpts = result;
+                        cb(null);
+                    });
+                },
+
+                function (cb) {
+                    OverridesPostModel.getOverview(function (err, result) {
+                        overridesOverviewOpts = result;
                         cb(null);
                     });
                 }
@@ -1760,6 +1782,33 @@ describe('formtools', function () {
 
         }); // end describe('form')
 
+        describe('overview', function () {
+
+            describe('actions', function () {
+
+                it('should default to []', function () {
+
+                    (overviewOpts).should.be.ok;
+                    overviewOpts.should.have.property('actions');
+                    overviewOpts.actions.should.eql([]);
+
+                });
+
+                it('should allow overrides', function () {
+
+                    (overridesOverviewOpts).should.be.ok;
+                    overridesOverviewOpts.should.have.property('actions');
+                    overridesOverviewOpts.actions.should.be.an.instanceOf(Array);
+                    overridesOverviewOpts.actions.should.have.length(1);
+                    overridesOverviewOpts.actions[0].should.be.an.Object;
+                    overridesOverviewOpts.actions[0].should.have.property('action');
+                    overridesOverviewOpts.actions[0].should.have.property('label');
+
+                });
+
+            }); // end describe('actions')
+
+        }); // end describe('overview')
 
 	});
 
