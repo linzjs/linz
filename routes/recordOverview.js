@@ -19,7 +19,7 @@ var route = function (req, res) {
 
 			}
 
-			req.linz.model.overview.renderer.call(this, req.linz.record, req.linz.model, req.linz, function (err, content) {
+			req.linz.model.overview.renderer.call(this, req.linz.record, req.linz.model, function (err, content) {
 				locals.overviewBody = content;
 				callback(null);
 			});

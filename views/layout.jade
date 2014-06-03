@@ -40,6 +40,10 @@ html(lang="en")
 		else
 			script(src='//code.jquery.com/jquery.js')
 			script(src='//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js')
+
+		script(src='' + linz.get('admin path') + '/public/js/modernizr.custom.min.js')
 		script(src='' + linz.get('admin path') + '/public/js/ui.js')
+
 		script(src='' + linz.get('admin path') + '/public/js/validator.min.js')
+		script. loadLibraries('#{linz.get('admin path')}');
 		block script

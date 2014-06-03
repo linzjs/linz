@@ -127,10 +127,10 @@ describe('formtools', function () {
             overridesGridOpts,
             formOpts,
             overridesFormOpts,
-            list = {
-                'one' : 'option 1',
-                'two' : 'option 2'
-            },
+            list = [
+                { label: 'option 1', value: 'one'},
+                { label: 'option 2', value: 'two'},
+            ],
             states = {
                 'sa': 'South Australia',
                 'qld': 'Queensland',
@@ -160,6 +160,7 @@ describe('formtools', function () {
                     default: true
                 },
                 description: String,
+                favourites: Array,
                 groups: String,
                 states: Array,
                 category: {
@@ -195,6 +196,11 @@ describe('formtools', function () {
 					},
                     description: {
                         type: 'text'
+                    },
+                    favourites: {
+                        transform: function (value, mode) {
+                            return value;
+                        }
                     },
 					groups: {
                         list: list
@@ -237,6 +243,7 @@ describe('formtools', function () {
                     default: true
                 },
                 description: String,
+                favourites: Array,
                 groups: String,
                 states: Array,
                 category: {
@@ -298,6 +305,10 @@ describe('formtools', function () {
                         bActive: {
                             label: 'Is Active?',
                             filter: linz.formtools.filters.checkbox
+                        },
+                        groups: {
+                            label: 'Groups',
+                            filter: linz.formtools.filters.list(list)
                         }
                     }
                 },
@@ -330,6 +341,21 @@ describe('formtools', function () {
                         },
                         edit: {
                             fieldset: 'Edit fieldset'
+                        }
+                    },
+                    favourites: {
+                        transform: function transformFavourites (value, mode) {
+                            return value;
+                        },
+                        create: {
+                            transform: function transformFavouritesCreate (value, mode) {
+                                return value;
+                            }
+                        },
+                        edit: {
+                            transform: function transformFavouritesEdit(value, mode) {
+                                return value;
+                            }
                         }
                     },
                     groups: {
@@ -834,7 +860,7 @@ describe('formtools', function () {
                         it('should render date input field', function (done) {
                             var fieldName = 'dateCreated';
                             linz.formtools.filters.date.renderer(fieldName,function (err, result) {
-                                result.should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" required>');
+                                result.should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" data-ui-datepicker="true" required>');
                                 done();
                             });
 
@@ -844,7 +870,7 @@ describe('formtools', function () {
                             var fieldName = 'dateCreated';
                             linz.formtools.filters.date.bind(fieldName, { dateCreated: ['2014-05-16'] },function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
-                                result[0].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-16" required>');
+                                result[0].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-16" data-ui-datepicker="true" required>');
                                 done();
                             });
 
@@ -854,8 +880,8 @@ describe('formtools', function () {
                             var fieldName = 'dateCreated';
                             linz.formtools.filters.date.bind(fieldName, { dateCreated: ['2014-05-16','2014-05-17'] },function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(2);
-                                result[0].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-16" required>');
-                                result[1].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-17" required>');
+                                result[0].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-16" data-ui-datepicker="true" required>');
+                                result[1].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-17" data-ui-datepicker="true" required>');
                                 done();
                             });
                         });
@@ -916,7 +942,7 @@ describe('formtools', function () {
                         it('should render 2 date input fields', function (done) {
                             var fieldName = 'dateModified';
                             linz.formtools.filters.dateRange.renderer(fieldName,function (err, result) {
-                                result.should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" required><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" required>');
+                                result.should.equal('<span><input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" data-ui-datepicker="true" required></span><span><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" data-ui-datepicker="true" required></span>');
                                 done();
                             });
 
@@ -928,7 +954,7 @@ describe('formtools', function () {
 
                             linz.formtools.filters.dateRange.bind(fieldName, filterDates, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
-                                result[0].should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[0] + '" required><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[0] + '" required>');
+                                result[0].should.equal('<span><input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[0] + '" data-ui-datepicker="true" required></span><span><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[0] + '" data-ui-datepicker="true" required></span>');
                             });
                         });
 
@@ -938,8 +964,8 @@ describe('formtools', function () {
 
                             linz.formtools.filters.dateRange.bind(fieldName, filterDates, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(2);
-                                result[0].should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[0] + '" required><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[0] + '" required>');
-                                result[1].should.equal('<input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[1] + '" required><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[1] + '" required>');
+                                result[0].should.equal('<span><input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[0] + '" data-ui-datepicker="true" required></span><span><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[0] + '" data-ui-datepicker="true" required></span>');
+                                result[1].should.equal('<span><input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[1] + '" data-ui-datepicker="true" required></span><span><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[1] + '" data-ui-datepicker="true" required></span>');
                             });
                         });
 
@@ -1104,6 +1130,53 @@ describe('formtools', function () {
                            linz.formtools.filters.fulltext.filter(fieldName,{ 'firstName': ['john','jane'] }, function (err, result) {
                                result.should.have.property(fieldName, { $regex: /john|jane/ig});
                            });
+                        });
+
+                    });
+
+                    describe('list filter', function () {
+
+                        it('should render a select field', function (done) {
+                            var fieldName = 'groups';
+                            overridesGridOpts.filters.groups.filter.renderer(fieldName,function (err, result) {
+                                result.should.equal('<select name="' + fieldName + '[]" class="form-control multiselect"><option value="one">option 1</option><option value="two">option 2</option></select>');
+                                done();
+                            });
+                        });
+
+                        it('should render a select field with multiple selection option attribute', function (done) {
+                            var fieldName = 'groups',
+                                listFilter = linz.formtools.filters.list(list,true);
+                            listFilter.renderer(fieldName,function (err, result) {
+                                result.should.equal('<select name="' + fieldName + '[]" class="form-control multiselect" multiple><option value="one">option 1</option><option value="two">option 2</option></select>');
+                                done();
+                            });
+                        });
+
+                        it('should throw error is list attribute is missing', function () {
+                            try {
+                                var listFilter = linz.formtools.filters.list();
+                            } catch (e) {
+                                e.message.should.equal('List paramenter is missing for the list filter');
+                            }
+
+                        });
+
+                        it('should return a filter using $in operator for OR matching on the selected values', function (done) {
+                            var fieldName = 'groups';
+                            overridesGridOpts.filters.groups.filter.filter(fieldName, { groups: list}, function (err, result) {
+                                result.should.have.property(fieldName, { $in: list });
+                                done();
+                            });
+                        });
+
+                        it('should render select field with form values selected', function (done) {
+                            var fieldName = 'groups';
+                            overridesGridOpts.filters.groups.filter.bind(fieldName,{ groups: ['one'] }, function (err, result) {
+                                result.should.be.instanceof(Array).and.have.lengthOf(1);
+                                result[0].should.equal('<select name="' + fieldName + '[]" class="form-control multiselect"><option value="one" selected>option 1</option><option value="two">option 2</option></select>');
+                                done();
+                            });
                         });
 
                     });
@@ -1444,6 +1517,16 @@ describe('formtools', function () {
                         (formOpts['category'].query.label === undefined).should.equal(true);
                     });
 
+                    it('should set transform if provided', function () {
+                        formOpts['favourites'].should.have.property('transform');
+                        (typeof formOpts['favourites'].transform === 'function').should.equal(true);
+                    });
+
+                    it('should set transform to undefined, if none provided', function () {
+                        formOpts['category'].should.have.property('transform');
+                        (formOpts['category'].transform === undefined).should.equal(true);
+                    });
+
                 });
             }); // end describe('form default')
 
@@ -1542,6 +1625,19 @@ describe('formtools', function () {
                         (formOpts['category'].create.query.sort === undefined).should.equal(true);
                         (formOpts['category'].create.query.select === undefined).should.equal(true);
                         (formOpts['category'].create.query.label === undefined).should.equal(true);
+                    });
+
+                    it('should inherit transform', function () {
+                        formOpts['category'].create.should.have.property('transform');
+                        (formOpts['category'].create.transform === undefined).should.equal(true);
+                    });
+
+                    it('should override transform', function () {
+                        overridesFormOpts['favourites'].should.have.property('transform');
+                        (typeof overridesFormOpts['favourites'].transform === 'function').should.equal(true);
+                        overridesFormOpts['favourites'].create.should.have.property('transform');
+                        (typeof overridesFormOpts['favourites'].create.transform === 'function').should.equal(true);
+                        overridesFormOpts['favourites'].create.transform.name.should.equal('transformFavouritesCreate');
                     });
 
     			});
@@ -1643,6 +1739,19 @@ describe('formtools', function () {
                         (overridesFormOpts['category'].edit.query.sort === undefined).should.equal(true);
                         (overridesFormOpts['category'].edit.query.select === undefined).should.equal(true);
                         (overridesFormOpts['category'].edit.query.label === undefined).should.equal(true);
+                    });
+
+                    it('should inherit transform', function () {
+                        formOpts['category'].edit.should.have.property('transform');
+                        (formOpts['category'].edit.transform === undefined).should.equal(true);
+                    });
+
+                    it('should override transform', function () {
+                        overridesFormOpts['favourites'].should.have.property('transform');
+                        (typeof overridesFormOpts['favourites'].transform === 'function').should.equal(true);
+                        overridesFormOpts['favourites'].edit.should.have.property('transform');
+                        (typeof overridesFormOpts['favourites'].edit.transform === 'function').should.equal(true);
+                        overridesFormOpts['favourites'].edit.transform.name.should.equal('transformFavouritesEdit');
                     });
 
                 });
