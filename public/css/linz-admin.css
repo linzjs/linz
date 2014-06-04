@@ -71,19 +71,29 @@ body {
 template {
   display: none;
 }
+.bv-form .help-block {
+  margin-bottom: 0;
+}
+
+.nav-tabs li.bv-tab-success>a {
+  color: #3c763d;
+}
+
+.nav-tabs li.bv-tab-error>a {
+  color: #a94442;
+}
+
 .linz-container header {
   overflow: hidden;
 }
-.linz-container header h1 {
-  float: left;
+
 }
 .linz-container header .actions {
   float: right;
   margin-top: 20px;
   margin-right: 5px;
 }
-.linz-container header .custom-actions {
-  float: right;
+
   margin-top: 20px;
 }
 .linz-container .overview-body {
