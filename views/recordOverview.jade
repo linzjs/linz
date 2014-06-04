@@ -1,14 +1,22 @@
 extends layout
 
 block content
-	h1= record.title
-		span
-			.btn-group.pull-right
-				a.btn.btn-primary(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/edit') Edit
-				a.btn.btn-default(href='' + linz.get('admin path') + '/model/#{model.modelName}/list') View all #{model.label}
-	if overviewBody
-		div!= overviewBody
-	else
-		ul
-			each val, index in model.schema.paths
-				li= index + ': ' + record[index]
+	header
+		h1= record.title
+		if model.overview.actions.length
+			.custom-actions
+				for action in model.overview.actions
+					.btn-group
+						a.btn.btn-default(href='' + linz.get('admin path') + '/model/#{model.modelName}/#{record._id}/#{action.action}')= action.label
+		.actions
+			span
+				.btn-group
+					a.btn.btn-primary(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/edit') Edit
+					a.btn.btn-default(href='' + linz.get('admin path') + '/model/#{model.modelName}/list') View all #{model.label}
+	.overview-body
+		if overviewBody
+			div!= overviewBody
+		else
+			ul
+				each val, index in model.schema.paths
+					li= index + ': ' + record[index]

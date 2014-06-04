@@ -71,3 +71,21 @@ body {
 template {
   display: none;
 }
+.linz-container header {
+  overflow: hidden;
+}
+.linz-container header h1 {
+  float: left;
+}
+.linz-container header .actions {
+  float: right;
+  margin-top: 20px;
+  margin-right: 5px;
+}
+.linz-container header .custom-actions {
+  float: right;
+  margin-top: 20px;
+}
+.linz-container .overview-body {
+  clear: left;
+}
