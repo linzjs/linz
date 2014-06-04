@@ -98,3 +98,7 @@ template {
 .linz-container .overview-body {
   clear: left;
 }
+.googleMap {
+  width: 600px;
+  height: 300px;
+}
