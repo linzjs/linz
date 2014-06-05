@@ -395,12 +395,34 @@ describe('formtools', function () {
                     }
                 },
                 overview: {
+                    canEdit: false,
+                    canDelete: false,
+                    viewAll: false,
                     actions: [
                         {
                             action: 'url/slug',
                             label: 'Custom action'
                         }
-                    ]
+                    ],
+                    summary: {
+                        fields: {
+                            dateCreated: {
+                                label: 'Date created',
+                                renderer: function customCellRenderer (val, record, fieldName, model, callback) {
+                                    return callback(null);
+                                }
+                            },
+                            dateModified: {
+                                label: 'Date modified'
+                            },
+                            firstName: {
+                                label: 'First name'
+                            }
+                        }
+                    },
+                    body: function bodyRenderer (record, callback) {
+                        return callback('body content');
+                    }
                 }
             });
 
@@ -1784,9 +1806,9 @@ describe('formtools', function () {
 
         describe('overview', function () {
 
-            describe('actions', function () {
+            describe('defaults',function () {
 
-                it('should default to []', function () {
+                it('actions should default to []', function () {
 
                     (overviewOpts).should.be.ok;
                     overviewOpts.should.have.property('actions');
@@ -1794,7 +1816,63 @@ describe('formtools', function () {
 
                 });
 
-                it('should allow overrides', function () {
+                it('canEdit should default to true', function () {
+
+                    (overviewOpts).should.be.ok;
+                    overviewOpts.should.have.property('canEdit');
+                    overviewOpts.canEdit.should.eql(true);
+
+                });
+
+                it('canDelete should default to true', function () {
+
+                    (overviewOpts).should.be.ok;
+                    overviewOpts.should.have.property('canDelete');
+                    overviewOpts.canDelete.should.eql(true);
+
+                });
+
+                it('viewAll should default to true', function () {
+
+                    (overviewOpts).should.be.ok;
+                    overviewOpts.should.have.property('viewAll');
+                    overviewOpts.canDelete.should.eql(true);
+
+                });
+
+                it('should contain a fields object {dateModified, dateCreated} and a renderer function', function () {
+
+                    (overviewOpts).should.be.ok;
+                    overviewOpts.should.have.property('summary');
+                    overviewOpts.summary.should.have.property('fields');
+                    overviewOpts.summary.fields.should.have.properties({
+                        dateCreated: {
+                            label: 'Date created',
+                            renderer: linz.formtools.cellRenderers.date
+                        },
+                        dateModified: {
+                            label: 'Date modified',
+                            renderer: linz.formtools.cellRenderers.date
+                        }
+                    });
+                    overviewOpts.summary.should.have.property('renderer');
+                    overviewOpts.summary.renderer.should.be.type('function');
+                    overviewOpts.summary.renderer.name.should.equal('defaultSummaryRenderer');
+
+                });
+
+                it('body should default to undefined', function () {
+
+                    (overviewOpts).should.be.ok;
+                    (overviewOpts.body === undefined).should.be.true;
+
+                });
+
+            }); // end describe('defaults')
+
+            describe('overrides', function () {
+
+                it('should overrides actions', function () {
 
                     (overridesOverviewOpts).should.be.ok;
                     overridesOverviewOpts.should.have.property('actions');
@@ -1806,7 +1884,107 @@ describe('formtools', function () {
 
                 });
 
-            }); // end describe('actions')
+                it('should overrides canEdit', function () {
+                    overridesOverviewOpts.canEdit.should.equal(false);
+                });
+
+                it('should overrides canDelete', function () {
+                    overridesOverviewOpts.canEdit.should.equal(false);
+                });
+
+                it('should overrides viewAll', function () {
+                    overridesOverviewOpts.viewAll.should.equal(false);
+                });
+
+                describe('overrrides summary', function () {
+
+                    it('should overrides summary fields and define a default renderer for fields and summary', function () {
+
+                        overridesOverviewOpts.summary.fields.dateCreated.should.have.property('label','Date created');
+                        overridesOverviewOpts.summary.fields.dateCreated.should.have.property('renderer');
+                        overridesOverviewOpts.summary.fields.dateCreated.renderer.should.be.type('function');
+                        overridesOverviewOpts.summary.fields.dateCreated.renderer.name.should.equal('customCellRenderer');
+
+                        overridesOverviewOpts.summary.fields.dateModified.should.have.property('label','Date modified');
+                        overridesOverviewOpts.summary.fields.dateModified.should.have.property('renderer');
+                        overridesOverviewOpts.summary.fields.dateModified.renderer.should.be.type('function');
+                        overridesOverviewOpts.summary.fields.dateModified.renderer.name.should.equal('dateRenderer');
+
+                        overridesOverviewOpts.summary.fields.firstName.should.have.property('label','First name');
+                        overridesOverviewOpts.summary.fields.firstName.should.have.property('renderer');
+                        overridesOverviewOpts.summary.fields.firstName.renderer.should.be.type('function');
+                        overridesOverviewOpts.summary.fields.firstName.renderer.name.should.equal('defaultRenderer');
+
+                        overridesOverviewOpts.summary.should.have.property('renderer');
+                        overridesOverviewOpts.summary.renderer.should.be.type('function');
+                        overridesOverviewOpts.summary.renderer.name.should.equal('defaultSummaryRenderer')
+
+                    });
+
+                    it('should overrides summary renderer', function (done) {
+
+                        OverridesOverviewSummarySchema = new mongoose.Schema({ label: String });
+                        OverridesOverviewSummarySchema.plugin(formtools.plugin, {
+                            overview: {
+                                summary: {
+                                    renderer: function customSummaryRenderer (model, record, callback) {
+                                        return callback(null);
+                                    }
+                                }
+                            }
+                        });
+
+                        OverridesOverviewSummarySchema = mongoose.model('OverridesOverviewSummary', OverridesOverviewSummarySchema);
+
+                        OverridesOverviewSummarySchema.getOverview(function (err, result) {
+
+                            if (err) {
+                                return done(err);
+                            }
+
+                            result.summary.should.have.property('renderer');
+                            result.summary.renderer.should.be.type('function');
+                            result.summary.renderer.name.should.equal('customSummaryRenderer');
+
+                            return done();
+                        });
+
+                    });
+
+                }); // describe('summary')
+
+
+                describe('errors', function () {
+
+                    it('should throw error renderer or fields is not provided in the summary', function () {
+
+                        OverridesOverviewSummarySchema1 = new mongoose.Schema({ label: String });
+
+                        should(function () {
+                            OverridesOverviewSummarySchema1.plugin(formtools.plugin, {
+                              overview: {
+                                  summary: {
+                                      something: ''
+                                  }
+                              }
+                            });
+                        }).throw('overview.summary.renderer is required if overview.summary.fields is not defined');
+
+                    });
+
+                });
+
+
+
+            }); // end describe('overrides')
+
+            describe('renderers', function () {
+
+                it('should have a default summary renderer', function () {
+
+                });
+
+            });
 
         }); // end describe('overview')
 

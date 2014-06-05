@@ -1,0 +1,10 @@
+<div class="panel panel-default">
+    <div class="panel-heading">{{label}}</div>
+    {{#if fields}}
+        <ul class="list-group">
+            {{#fields}}
+            <li class="list-group-item"><strong>{{label}}:</strong> {{value}}</li>
+            {{/fields}}
+        </ul>
+    {{/if}}
+</div>
