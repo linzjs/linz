@@ -590,6 +590,34 @@ describe('formtools', function () {
 
                     });
 
+                    describe("link", function () {
+
+                        it("format a url starting with http", function (done) {
+
+                            linz.formtools.cellRenderers.url('http://www.google.com', {}, 'firstName', PostModel.modelName, function (err, result) {
+
+                                (err === null).should.be.ok;
+                                result.should.equal('<a href="http://www.google.com" target="_blank">http://www.google.com</a>');
+                                done();
+
+                            });
+
+                        });
+
+                        it("format a url string without http", function (done) {
+
+                            linz.formtools.cellRenderers.url('www.google.com', {}, 'firstName', PostModel.modelName, function (err, result) {
+
+                                (err === null).should.be.ok;
+                                result.should.equal('<a href="http://www.google.com" target="_blank">www.google.com</a>');
+                                done();
+
+                            });
+
+                        });
+
+                    });
+
                     describe("default", function () {
 
                         it("format an array of strings", function (done) {
