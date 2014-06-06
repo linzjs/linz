@@ -405,6 +405,7 @@ describe('formtools', function () {
                         }
                     ],
                     summary: {
+                        label: 'Quick overview',
                         fields: {
                             dateCreated: {
                                 label: 'Date created',
@@ -1840,26 +1841,36 @@ describe('formtools', function () {
 
                 });
 
-                it('should contain a fields object {dateModified, dateCreated} and a renderer function', function () {
+                describe('summary', function () {
 
-                    (overviewOpts).should.be.ok;
-                    overviewOpts.should.have.property('summary');
-                    overviewOpts.summary.should.have.property('fields');
-                    overviewOpts.summary.fields.should.have.properties({
-                        dateCreated: {
-                            label: 'Date created',
-                            renderer: linz.formtools.cellRenderers.date
-                        },
-                        dateModified: {
-                            label: 'Date modified',
-                            renderer: linz.formtools.cellRenderers.date
-                        }
+                    it('should have a label that defaults to "Summary"', function () {
+                        (overviewOpts).should.be.ok;
+                        overviewOpts.should.have.property('summary');
+                        overviewOpts.summary.should.have.property('label');
+                        overviewOpts.summary.label.should.be.equal('Summary');
                     });
-                    overviewOpts.summary.should.have.property('renderer');
-                    overviewOpts.summary.renderer.should.be.type('function');
-                    overviewOpts.summary.renderer.name.should.equal('defaultSummaryRenderer');
+
+                    it('should contain a fields object {dateModified, dateCreated} and a renderer function', function () {
+
+                        overviewOpts.summary.should.have.property('fields');
+                        overviewOpts.summary.fields.should.have.properties({
+                            dateCreated: {
+                                label: 'Date created',
+                                renderer: linz.formtools.cellRenderers.date
+                            },
+                            dateModified: {
+                                label: 'Date modified',
+                                renderer: linz.formtools.cellRenderers.date
+                            }
+                        });
+                        overviewOpts.summary.should.have.property('renderer');
+                        overviewOpts.summary.renderer.should.be.type('function');
+                        overviewOpts.summary.renderer.name.should.equal('defaultSummaryRenderer');
+
+                    });
 
                 });
+
 
                 it('body should default to undefined', function () {
 
@@ -1896,7 +1907,11 @@ describe('formtools', function () {
                     overridesOverviewOpts.viewAll.should.equal(false);
                 });
 
-                describe('overrrides summary', function () {
+                describe('summary', function () {
+
+                    it('should overrides label', function () {
+                        overridesOverviewOpts.summary.label.should.equal('Quick overview');
+                    });
 
                     it('should overrides summary fields and define a default renderer for fields and summary', function () {
 
