@@ -23,7 +23,3 @@ block content
 	.overview-body
 		if overviewBody
 			div!= overviewBody
-		else
-			ul
-				each val, index in model.schema.paths
-					li= index + ': ' + record[index]
