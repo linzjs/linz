@@ -6,37 +6,42 @@ $(document).ready(function () {
         editingIndex,
         formHtml = {},
         editingFor,
-        listTemplate;
+        listTemplate,
+        mode;
+
+    var setLabel = function (document) {
+
+        if (!document.label) {
+
+             if (document.title) {
+                document.label = document.title
+            }
+
+            if (document.firstName) {
+
+                document.label = document.firstName;
+
+                if (document.surname) {
+                    document.label += ' ' + document.surname;
+                }
+
+                if (document.lastName) {
+                    document.label += ' ' + document.lastName;
+                }
+
+            }
+
+        }
+
+        return document;
+
+    };
 
     var drawDocuments = function (documentArrayInstance, documents) {
 
         // loop through each document and ensure there is a label
         for (var i = 0; i < documents.length; i++) {
-
-            var d = documents[i];
-
-            if (!d.label) {
-
-                 if (d.title) {
-                    d.label = d.title
-                }
-
-                if (d.firstName) {
-
-                    d.label = d.firstName;
-
-                    if (d.surname) {
-                        d.label += ' ' + d.surname;
-                    }
-
-                    if (d.lastName) {
-                        d.label += ' ' + d.lastName;
-                    }
-
-                }
-
-            }
-
+            documents[i] = setLabel(documents[i]);
         }
 
         documents = { documents: documents };
@@ -45,6 +50,8 @@ $(document).ready(function () {
 
         // now bind the documents, handle the edit button
         $('[data-document-field-for="' + documentArrayInstance + '"]').find('a[data-document-action="edit"]').click(function () {
+
+            mode = 'editing';
 
             editingFor = documentArrayInstance;
 
@@ -56,6 +63,24 @@ $(document).ready(function () {
             editingObject = editingArray[editingIndex];
 
             editDocument(documentArrayInstance);
+
+        });
+
+        // now bind the documents, handle the edit button
+        $('[data-document-field-for="' + documentArrayInstance + '"]').find('a[data-document-action="remove"]').click(function () {
+
+            mode = 'removing';
+
+            editingFor = documentArrayInstance;
+
+            editingIndex = $(this).parent().attr('data-document-index');
+
+            // now grab the array if there already is one and turn it into a JavaScript object
+            editingArray = JSON.parse($('[data-document-field-for="' + documentArrayInstance + '"]').find('input[type="hidden"][name="' + documentArrayInstance + '"]').val());
+
+            editingObject = setLabel(editingArray[editingIndex]);
+
+            removeDocument(documentArrayInstance);
 
         });
 
@@ -72,9 +97,14 @@ $(document).ready(function () {
 
     };
 
-    var closeDocument = function () {
+    var removeDocument = function (editingFor) {
+
+        $('#documentsModal .modal-body form').html(Handlebars.compile('Are you sure you would like to delete \'{{label}}\'?')(editingObject));
 
         toggleModal();
+
+        // prevent the button from submitting the form
+        return false;
 
     };
 
@@ -92,7 +122,53 @@ $(document).ready(function () {
         // now update the view
         drawDocuments(editingFor, editingArray);
 
+        reset();
+
         toggleModal();
+
+    };
+
+    var deleteDocument = function () {
+
+        editingArray.splice(editingIndex, 1);
+
+        // now grab the array if there already is one and turn it into a JavaScript object
+        $('input[type="hidden"][name="' + editingFor + '"]').val(JSON.stringify(editingArray));
+
+        // now update the view
+        drawDocuments(editingFor, editingArray);
+
+        reset();
+
+        toggleModal();
+
+    };
+
+    var saveAction = function () {
+
+        if (mode === 'editing') {
+            saveDocument();
+        } else {
+            deleteDocument();
+        }
+
+    };
+
+    var closeAction = function () {
+
+        reset();
+
+        toggleModal();
+
+    };
+
+    var reset = function () {
+
+        editingFor = undefined;
+        editingIndex = undefined;
+        editingArray = undefined;
+        editingObject = undefined;
+        mode = undefined;
 
     };
 
@@ -122,8 +198,8 @@ $(document).ready(function () {
     // if we have a document array, wire-up the close and save buttons
     if (daInstances) {
 
-        $('#documentsModal .btn-save').click(saveDocument);
-        $('#documentsModal .btn-cancel').click(closeDocument);
+        $('#documentsModal .btn-save').click(saveAction);
+        $('#documentsModal .btn-cancel').click(closeAction);
 
         listTemplate = Handlebars.compile($('template.document-array-list').clone().html());
 
@@ -142,6 +218,7 @@ $(document).ready(function () {
             // clear out persitence fields
             editingObject = {};
             editingInstance = undefined;
+            mode = 'editing';
 
             // which field are we editing for?
             editingFor = $(parent).attr('data-document-field-for');
