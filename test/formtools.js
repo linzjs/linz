@@ -137,7 +137,8 @@ describe('formtools', function () {
                 'nt': 'Northern Territory'
             },
             CategoriesSchema,
-            CategoriesModel;
+            CategoriesModel,
+            CommentsSchema;
 
         before(function (done) {
 
@@ -149,6 +150,11 @@ describe('formtools', function () {
             CategoriesSchema.plugin(formtools.plugin, {});
 
             CategoriesModel = mongoose.model('CategoriesModel', CategoriesSchema);
+
+            CommentsSchema = new mongoose.Schema({
+                body: String,
+                by: String
+            });
 
 			PostSchema = new mongoose.Schema({
 				firstName: String,
@@ -170,7 +176,8 @@ describe('formtools', function () {
                 secondCategory: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: 'CategoriesModel'
-                }
+                },
+                comments: [CommentsSchema]
 			});
 
 			PostSchema.plugin(formtools.plugin, {
@@ -1547,6 +1554,16 @@ describe('formtools', function () {
                     it('should set transform to undefined, if none provided', function () {
                         formOpts['category'].should.have.property('transform');
                         (formOpts['category'].transform === undefined).should.equal(true);
+                    });
+
+                    it('should set schema to undefined, if none provided', function () {
+                        formOpts['username'].should.have.property('schema');
+                        (formOpts['username'].schema === undefined).should.equal(true);
+                    });
+
+                    it('should set schema if provided', function () {
+                        formOpts['comments'].should.have.property('schema');
+                        formOpts['comments'].schema.should.be.an.Object;
                     });
 
                 });

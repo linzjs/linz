@@ -1,0 +1,19 @@
+mixin documentarray()
+	template.document-array-list
+		ul {{#documents}}
+			li(data-document-index="{{@index}}")
+				a(data-document-action="edit") (edit)
+				a(data-document-action="remove") (remove)
+				| {{label}}
+			| {{/documents}}
+	#documentsModal.modal.fade
+		.modal-dialog
+			.modal-content
+				.modal-header
+					button.close(type="button") &times;
+					h4.modal-title Modal title
+				.modal-body
+					form.form-horizontal
+				.modal-footer
+					button.btn.btn-primary.btn-save(type="button") Save
+					button.btn.btn-default.btn-cancel(type="button") Cancel

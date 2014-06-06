@@ -1,11 +1,18 @@
+include mixins/documentarray
 extends layout
 
 block content
 	h1 Editing '#{record.title}'
 	div
-		form.form-horizontal(role="form",action='#{actionUrl}',method='post')
+		form.form-horizontal.model(role='form',action='#{actionUrl}',method='post')
 			!= form
 			.form-group
 				.col-sm-offset-2.col-sm-10
 					button.btn.btn-primary(type='submit') Save
 					a.btn.btn-link(href='#{cancelUrl}') or cancel
+		mixin documentarray()
+
+block script
+	script(src='' + linz.get('admin path') + '/public/js/handlebars.js')
+	script(src='' + linz.get('admin path') + '/public/js/jquery.binddata.js')
+	script(src='' + linz.get('admin path') + '/public/js/documentarray.js')

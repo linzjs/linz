@@ -2,7 +2,8 @@ var formist = require('formist'),
 	linz = require('../'),
     model = require('../lib/formtools/model'),
     async = require('async'),
-    utils = require('../lib/utils');
+    utils = require('../lib/utils'),
+    formUtils = require('../lib/formtools/utils');
 
 /* GET /admin/:model/:id/overview */
 var route = function (req, res, next) {
@@ -34,12 +35,20 @@ var route = function (req, res, next) {
 
                 if (field !== '_id' && req.body[field] !== undefined) {
 
+                    // merge create object back into form object (overrides)
+                    utils.merge(form[field], form[field]['create'] || {});
+
+                    if (formUtils.schemaType(req.linz.model.schema.paths[field]) === 'documentarray') {
+
+                        // turn the json into an object
+                        req.body[field] = JSON.parse(req.body[field]);
+
+                    }
+
                     if (form[field].transform) {
 
-                        // merge create object back into form object (overrides)
-                        utils.merge(form[field], form[field]['create'] || {});
-
                         req.body[field] = form[field].transform(req.body[field], 'beforeSave');
+
                     }
 
                 }

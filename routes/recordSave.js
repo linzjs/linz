@@ -2,7 +2,8 @@ var formist = require('formist'),
 	linz = require('../'),
     model = require('../lib/formtools/model'),
     async = require('async'),
-    utils = require('../lib/utils');
+    utils = require('../lib/utils'),
+    formUtils = require('../lib/formtools/utils');
 
 /* GET /admin/:model/:id/overview */
 var route = function (req, res, next) {
@@ -43,8 +44,16 @@ var route = function (req, res, next) {
                         // merge edit object back into form object (overrides)
                         utils.merge(form[field], form[field]['edit'] || {});
 
+                        if (formUtils.schemaType(req.linz.model.schema.paths[field]) === 'documentarray') {
+
+                            // turn the json into an object
+                            req.body[field] = JSON.parse(req.body[field]);
+
+                        }
+
                         // go through the transform function if one exists
                         record[field] = (form[field].transform) ? form[field].transform(req.body[field], 'beforeSave') : req.body[field];
+
                     }
 
                 });
