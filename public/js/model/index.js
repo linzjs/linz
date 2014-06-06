@@ -1,5 +1,7 @@
 (function () {
 
+    linz.addDeleteConfirmation();
+
     if ($('.selectedFilters').val().length > 0) {
         toggleFilterBox('show');
     }
@@ -20,16 +22,6 @@
         $('.filters').find(':submit').click();
 
         return true;
-
-    });
-
-    $('.control-delete').click(function () {
-
-        if (confirm('Are you sure you want to this new record?')) {
-            return true;
-        }
-
-        return false;
 
     });
 
