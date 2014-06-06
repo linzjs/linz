@@ -43,11 +43,27 @@ $(document).ready(function () {
 
         $('[data-document-field-for="' + documentArrayInstance + '"] .documents').html(listTemplate(documents));
 
+        // now bind the documents, handle the edit button
+        $('[data-document-field-for="' + documentArrayInstance + '"]').find('a[data-document-action="edit"]').click(function () {
+
+            editingFor = documentArrayInstance;
+
+            editingIndex = $(this).parent().attr('data-document-index');
+
+            // now grab the array if there already is one and turn it into a JavaScript object
+            editingArray = JSON.parse($('[data-document-field-for="' + documentArrayInstance + '"]').find('input[type="hidden"][name="' + documentArrayInstance + '"]').val());
+
+            editingObject = editingArray[editingIndex];
+
+            editDocument(documentArrayInstance);
+
+        });
+
     };
 
-    var editDocument = function (editingForm) {
+    var editDocument = function (editingFor) {
 
-        $('#documentsModal .modal-body form').html(formHtml[editingFor]).binddata(editingObject);
+        $('#documentsModal .modal-body form').html(retrieveForm(editingFor)).binddata(editingObject);
 
         toggleModal();
 
@@ -87,6 +103,19 @@ $(document).ready(function () {
 
     };
 
+    var retrieveForm = function (editingFor) {
+
+        if (!formHtml[editingFor]) {
+
+            // now grab the form HTML
+            formHtml[editingFor] = $('[data-document-field-for="' + editingFor + '"]').find('template').clone().html();
+
+        }
+
+        return formHtml[editingFor];
+
+    };
+
     // do we have any documentarrays to take care of?
     var daInstances = $('[data-document-field-for]');
 
@@ -105,25 +134,27 @@ $(document).ready(function () {
         var documentArrayInstance = $(el).attr('data-document-field-for');
 
         // handle the create button
-        $(el, '[data-document-action="create"]').click(function () {
+        $('[data-document-field-for="' + documentArrayInstance + '"] [data-document-action="create"]').click(function () {
+
+            // parent scope
+            parent = $(this).parent();
 
             // clear out persitence fields
             editingObject = {};
             editingInstance = undefined;
 
             // which field are we editing for?
-            editingFor = $(this).attr('data-document-field-for');
+            editingFor = $(parent).attr('data-document-field-for');
 
             // now grab the array if there already is one and turn it into a JavaScript object
-            editingArray = JSON.parse($(this).children('input[type="hidden"][name="' + editingFor + '"]').val());
-
-            // now grab the form HTML
-            formHtml[editingFor] = $(this).children('template').clone().html();
+            editingArray = JSON.parse($(parent).children('input[type="hidden"][name="' + editingFor + '"]').val());
 
             // now pop the form
             editDocument(editingFor);
 
         });
+
+        retrieveForm(documentArrayInstance);
 
         drawDocuments(documentArrayInstance, JSON.parse($(el).children('input[type="hidden"][name="' + documentArrayInstance + '"]').val()));
 

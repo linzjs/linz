@@ -49,8 +49,12 @@
 
     var getElementType = function($el) {
         var type = $el.attr('type');
-        if (type == null) {
-            type = $el[0].tagName.toLowerCase();
+        try {
+            if (type == null) {
+                type = $el[0].tagName.toLowerCase();
+            }
+        } catch (e) {
+            type = 'null';
         }
         return type;
     };
@@ -157,6 +161,7 @@
         var type = getElementType($el);
 
         switch (type) {
+            case 'null':
             case 'hidden':
             case 'text':
             case 'select':
