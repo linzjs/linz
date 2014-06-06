@@ -2,9 +2,11 @@ mixin documentarray()
 	template.document-array-list
 		ul {{#documents}}
 			li(data-document-index="{{@index}}")
-				a(data-document-action="edit") (edit)
-				a(data-document-action="remove") (remove)
-				| {{label}}
+				a.btn.btn-default(data-document-action="edit")
+					span.glyphicon.glyphicon-pencil
+				a.btn.btn-default(data-document-action="remove")
+					span.glyphicon.glyphicon-trash
+				span {{label}}
 			| {{/documents}}
 	#documentsModal.modal.fade
 		.modal-dialog
