@@ -125,3 +125,7 @@ template {
   float: none;
   width: 100%;
 }
+.googleMap {
+  width: 600px;
+  height: 300px;
+}

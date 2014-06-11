@@ -48,7 +48,7 @@
             filterFormControl = filter.siblings('.controlField').html(),
             aFilters;
 
-        if (isTemplateSupported()) {
+        if (linz.isTemplateSupported()) {
 
             var content = document.querySelector('#filter').content.cloneNode(true);
 
@@ -87,7 +87,7 @@
         toggleFilterBox('show');
 
         assignRemoveButton();
-        loadDatepicker();
+        linz.loadDatepicker();
 
         return false;
 
