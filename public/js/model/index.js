@@ -72,7 +72,10 @@
             aFilters = [];
         }
 
-        aFilters.push(filterVal);
+        // only add the filter once
+        if (aFilters.indexOf(filterVal) < 0) {
+            aFilters.push(filterVal);
+        }
 
         $('.selectedFilters').val(aFilters.join());
 

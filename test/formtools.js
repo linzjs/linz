@@ -249,7 +249,8 @@ describe('formtools', function () {
                 category: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: 'CategoriesModel'
-                }
+                },
+                code: Number
             });
 
             OverridesPostSchema.plugin(formtools.plugin, {
@@ -309,6 +310,10 @@ describe('formtools', function () {
                         groups: {
                             label: 'Groups',
                             filter: linz.formtools.filters.list(list)
+                        },
+                        code: {
+                            label: 'Code',
+                            filter: linz.formtools.filters.number
                         }
                     }
                 },
@@ -1254,6 +1259,59 @@ describe('formtools', function () {
 
                     });
 
+                    describe('number filter', function () {
+
+                        it('should render text input field', function (done) {
+                            var fieldName = 'code';
+                            linz.formtools.filters.number.renderer(fieldName,function (err, result) {
+                                result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" required>');
+                                done();
+                            });
+
+                        });
+
+                        it('should render text input field with form value', function (done) {
+                            var fieldName = 'code';
+                            linz.formtools.filters.number.bind(fieldName, { code: ['100'] },function (err, result) {
+                                result.should.be.instanceof(Array).and.have.lengthOf(1);
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="100" required>');
+                                done();
+                            });
+                        });
+
+                        it('should render multiple text input fields with form values if there are multiple filters on the same field', function (done) {
+                            var fieldName = 'code';
+                            linz.formtools.filters.number.bind(fieldName, { code: ['100','200'] },function (err, result) {
+                                result.should.be.instanceof(Array).and.have.lengthOf(2);
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="100" required>');
+                                result[1].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="200" required>');
+                                done();
+                            });
+                        });
+
+                        it('should create filter to match a "one keyword" search', function () {
+                           var fieldName = 'code';
+                           linz.formtools.filters.number.filter(fieldName,{ 'code': ['100'] }, function (err, result) {
+                               result.should.have.property(fieldName, [100]);
+                           });
+                        });
+
+                        it('should create filter to match on a "multiple keywords" search', function () {
+                           var fieldName = 'code';
+                           linz.formtools.filters.number.filter(fieldName,{ 'code': ['100','200'] }, function (err, result) {
+                               result.should.have.property(fieldName, [100,200]);
+                           });
+                        });
+
+                        it('should trim leading and trailing spaces on search keywords and any additional found between words', function () {
+                           var fieldName = 'code';
+                           linz.formtools.filters.number.filter(fieldName,{ 'code': ['100',' 200','300 ', ' 400 ', '  500  '] }, function (err, result) {
+                               result.should.have.property(fieldName, [100,200,300,400,500]);
+                           });
+                        });
+
+                    });
+
                 });
 
                 describe('custom filter', function () {
@@ -1289,6 +1347,18 @@ describe('formtools', function () {
 
                         filters.should.have.properties({
                             firstName: ['john']
+                        });
+
+                    });
+
+                    it('should handle number filter', function () {
+
+                        var filter = { code: '100' };
+
+                        filters = OverridesPostModel.addSearchFilter(filters, filter);
+
+                        filters.should.have.properties({
+                            code: [100]
                         });
 
                     });
