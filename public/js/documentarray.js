@@ -66,7 +66,7 @@ $(document).ready(function () {
 
         });
 
-        // now bind the documents, handle the edit button
+        // now bind the documents, handle the delete button
         $('[data-document-field-for="' + documentArrayInstance + '"]').find('a[data-document-action="remove"]').click(function () {
 
             mode = 'removing';
@@ -88,7 +88,15 @@ $(document).ready(function () {
 
     var editDocument = function (editingFor) {
 
+        // apply the form to the modal
         $('#documentsModal .modal-body form').html(retrieveForm(editingFor)).binddata(editingObject);
+
+        // apply the label to the modal
+        $('#documentsModal .modal-title').html(retrieveLabel(editingFor));
+
+        // update the form buttons to SAVE/CANCEL
+        $('#documentsModal .modal-footer .btn-save').html('Save');
+        $('#documentsModal .modal-footer .btn-cancel').html('Cancel');
 
         toggleModal();
 
@@ -100,6 +108,10 @@ $(document).ready(function () {
     var removeDocument = function (editingFor) {
 
         $('#documentsModal .modal-body form').html(Handlebars.compile('Are you sure you would like to delete \'{{label}}\'?')(editingObject));
+
+        // update the form buttons to YES/NO
+        $('#documentsModal .modal-footer .btn-save').html('Yes');
+        $('#documentsModal .modal-footer .btn-cancel').html('No');
 
         toggleModal();
 
@@ -191,6 +203,12 @@ $(document).ready(function () {
         return formHtml[editingFor];
 
     };
+
+    var retrieveLabel = function (editingFor) {
+
+        return $('[data-document-field-for="' + editingFor + '"]').attr('data-document-field-label');
+
+    }
 
     // do we have any documentarrays to take care of?
     var daInstances = $('[data-document-field-for]');
