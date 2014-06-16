@@ -75,7 +75,6 @@
         }
         value = applyTransforms('get', value, getTransformsForField(propname, transforms));
         setPropValue(bean, propname, value);
-        console.log(propname + ' changed: '+value);
     };
 
     var getTransformsForField = function(name, transforms) {
