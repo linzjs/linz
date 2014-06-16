@@ -219,6 +219,9 @@ $(document).ready(function () {
         $('#documentsModal .btn-save').click(saveAction);
         $('#documentsModal .btn-cancel').click(closeAction);
         $('#documentsModal button.close').click(closeAction);
+        $('#documentsModal').on('shown.bs.modal', function (e) {
+            $('#documentsModal').animate({ scrollTop: 0 }, 'fast');
+        });
 
         listTemplate = Handlebars.compile($('template.document-array-list').clone().html());
 
