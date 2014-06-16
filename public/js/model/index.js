@@ -114,15 +114,23 @@
         // re-assign listeners including any new ones added to DOM after page load
         $('.glyphicon-remove').click(function () {
 
-            var filteredField = $(this).attr('data-filter-field');
-            var selectedFilters = $('.selectedFilters').val();
-            selectedFilters = removeFomList(selectedFilters, filteredField)
+            var filteredField = $(this).attr('data-filter-field'),
+                selectedFilters = $('.selectedFilters').val(),
+                numOfSameFilters = $('.glyphicon-remove[data-filter-field=' + filteredField + ']').length;
 
-            $('.selectedFilters').val(selectedFilters);
+            // ensure there are no multiple filters on the same field, before removing it from the list
+            if (numOfSameFilters <= 1) {
 
-            if (selectedFilters.length <= 0) {
-                // since there are no filters, let's post the form to clear all filters except the sorting
-                $('.filters')[0].submit();
+                selectedFilters = removeFomList(selectedFilters, filteredField)
+
+                $('.selectedFilters').val(selectedFilters);
+
+                if (selectedFilters.length <= 0) {
+                    toggleFilterBox();
+                    // since there are no filters, let's post the form to clear all filters except the sorting
+                    $('.filters')[0].submit();
+                }
+
             }
 
             $(this).parents('.form-group').remove();
