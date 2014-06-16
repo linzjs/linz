@@ -109,6 +109,9 @@ $(document).ready(function () {
 
         $('#documentsModal .modal-body form').html(Handlebars.compile('Are you sure you would like to delete \'{{label}}\'?')(editingObject));
 
+        // apply the label to the modal
+        $('#documentsModal .modal-title').html(retrieveLabel(editingFor));
+
         // update the form buttons to YES/NO
         $('#documentsModal .modal-footer .btn-save').html('Yes');
         $('#documentsModal .modal-footer .btn-cancel').html('No');
