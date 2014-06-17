@@ -161,7 +161,7 @@ module.exports = function (model) {
 
 			},
 
-            // check if each doc can be edited and deleted
+            // check if each doc can be edited
             function (cb) {
 
                 // skip this if canEdit is not define for model
@@ -191,7 +191,7 @@ module.exports = function (model) {
 
             },
 
-            // check if each doc can be edited and deleted
+            // check if each doc can be deleted
             function (cb) {
 
                 // skip this if canEdit is not define for model
