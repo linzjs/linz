@@ -15,7 +15,7 @@ block content
 						if model.overview.canEdit
 							a.btn.btn-primary(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/edit') Edit
 						if model.overview.canDelete
-							a.btn.btn-default.control-delete(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/delete') Delete
+							a.btn.btn-default(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/delete', data-linz-control="delete") Delete
 						if model.overview.viewAll
 							a.btn.btn-default(href='' + linz.get('admin path') + '/model/#{model.modelName}/list') View all #{model.label}
 	.overview-summary
