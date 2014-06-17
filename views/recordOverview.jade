@@ -8,15 +8,21 @@ block content
 				for action in model.overview.actions
 					.btn-group
 						a.btn.btn-default(href='' + linz.get('admin path') + '/model/#{model.modelName}/#{record._id}/#{action.action}')= action.label
-		.actions
-			span
-				.btn-group
-					a.btn.btn-primary(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/edit') Edit
-					a.btn.btn-default(href='' + linz.get('admin path') + '/model/#{model.modelName}/list') View all #{model.label}
+		if (model.overview.canEdit || model.overview.canDelete || model.overview.viewAll)
+			.actions
+				span
+					.btn-group
+						if model.overview.canEdit
+							a.btn.btn-primary(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/edit') Edit
+						if model.overview.canDelete
+							a.btn.btn-default.control-delete(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/delete') Delete
+						if model.overview.viewAll
+							a.btn.btn-default(href='' + linz.get('admin path') + '/model/#{model.modelName}/list') View all #{model.label}
+	.overview-summary
+		div!= overviewSummary
 	.overview-body
 		if overviewBody
 			div!= overviewBody
-		else
-			ul
-				each val, index in model.schema.paths
-					li= index + ': ' + record[index]
+
+block script
+	script(src='' + linz.get('admin path') + '/public/js/model/overview.js')

@@ -256,7 +256,8 @@ describe('formtools', function () {
                 category: {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: 'CategoriesModel'
-                }
+                },
+                code: Number
             });
 
             OverridesPostSchema.plugin(formtools.plugin, {
@@ -316,6 +317,10 @@ describe('formtools', function () {
                         groups: {
                             label: 'Groups',
                             filter: linz.formtools.filters.list(list)
+                        },
+                        code: {
+                            label: 'Code',
+                            filter: linz.formtools.filters.number
                         }
                     }
                 },
@@ -402,12 +407,35 @@ describe('formtools', function () {
                     }
                 },
                 overview: {
+                    canEdit: false,
+                    canDelete: false,
+                    viewAll: false,
                     actions: [
                         {
                             action: 'url/slug',
                             label: 'Custom action'
                         }
-                    ]
+                    ],
+                    summary: {
+                        label: 'Quick overview',
+                        fields: {
+                            dateCreated: {
+                                label: 'Date created',
+                                renderer: function customCellRenderer (val, record, fieldName, model, callback) {
+                                    return callback(null);
+                                }
+                            },
+                            dateModified: {
+                                label: 'Date modified'
+                            },
+                            firstName: {
+                                label: 'First name'
+                            }
+                        }
+                    },
+                    body: function bodyRenderer (record, callback) {
+                        return callback('body content');
+                    }
                 }
             });
 
@@ -566,6 +594,82 @@ describe('formtools', function () {
 
                                 (err === null).should.be.ok;
                                 result.should.equal('<a href="' + linz.get('admin path') + '/PostModel/1/overview">label</a>');
+                                done();
+
+                            });
+
+                        });
+
+                    });
+
+                    describe("url", function () {
+
+                        it("format a url starting with http", function (done) {
+
+                            linz.formtools.cellRenderers.url('http://www.google.com', {}, 'firstName', PostModel.modelName, function (err, result) {
+
+                                (err === null).should.be.ok;
+                                result.should.equal('<a href="http://www.google.com" target="_blank">http://www.google.com</a>');
+                                done();
+
+                            });
+
+                        });
+
+                        it("format a url starting with https", function (done) {
+
+                            linz.formtools.cellRenderers.url('https://www.google.com', {}, 'firstName', PostModel.modelName, function (err, result) {
+
+                                (err === null).should.be.ok;
+                                result.should.equal('<a href="https://www.google.com" target="_blank">https://www.google.com</a>');
+                                done();
+
+                            });
+
+                        });
+
+                        it("format a url starting with ftp", function (done) {
+
+                            linz.formtools.cellRenderers.url('ftp://www.google.com', {}, 'firstName', PostModel.modelName, function (err, result) {
+
+                                (err === null).should.be.ok;
+                                result.should.equal('<a href="ftp://www.google.com" target="_blank">ftp://www.google.com</a>');
+                                done();
+
+                            });
+
+                        });
+
+                        it("format a url starting with mailto", function (done) {
+
+                            linz.formtools.cellRenderers.url('mailto:test@example.com', {}, 'firstName', PostModel.modelName, function (err, result) {
+
+                                (err === null).should.be.ok;
+                                result.should.equal('<a href="mailto:test@example.com" target="_blank">mailto:test@example.com</a>');
+                                done();
+
+                            });
+
+                        });
+
+                        it("format a url starting with ftps", function (done) {
+
+                            linz.formtools.cellRenderers.url('ftps://www.google.com', {}, 'firstName', PostModel.modelName, function (err, result) {
+
+                                (err === null).should.be.ok;
+                                result.should.equal('<a href="ftps://www.google.com" target="_blank">ftps://www.google.com</a>');
+                                done();
+
+                            });
+
+                        });
+
+                        it("format a url string without http", function (done) {
+
+                            linz.formtools.cellRenderers.url('www.google.com', {}, 'firstName', PostModel.modelName, function (err, result) {
+
+                                (err === null).should.be.ok;
+                                result.should.equal('<a href="http://www.google.com" target="_blank">www.google.com</a>');
                                 done();
 
                             });
@@ -1210,6 +1314,59 @@ describe('formtools', function () {
 
                     });
 
+                    describe('number filter', function () {
+
+                        it('should render text input field', function (done) {
+                            var fieldName = 'code';
+                            linz.formtools.filters.number.renderer(fieldName,function (err, result) {
+                                result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" required>');
+                                done();
+                            });
+
+                        });
+
+                        it('should render text input field with form value', function (done) {
+                            var fieldName = 'code';
+                            linz.formtools.filters.number.bind(fieldName, { code: ['100'] },function (err, result) {
+                                result.should.be.instanceof(Array).and.have.lengthOf(1);
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="100" required>');
+                                done();
+                            });
+                        });
+
+                        it('should render multiple text input fields with form values if there are multiple filters on the same field', function (done) {
+                            var fieldName = 'code';
+                            linz.formtools.filters.number.bind(fieldName, { code: ['100','200'] },function (err, result) {
+                                result.should.be.instanceof(Array).and.have.lengthOf(2);
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="100" required>');
+                                result[1].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="200" required>');
+                                done();
+                            });
+                        });
+
+                        it('should create filter to match a "one keyword" search', function () {
+                           var fieldName = 'code';
+                           linz.formtools.filters.number.filter(fieldName,{ 'code': ['100'] }, function (err, result) {
+                               result.should.have.property(fieldName, [100]);
+                           });
+                        });
+
+                        it('should create filter to match on a "multiple keywords" search', function () {
+                           var fieldName = 'code';
+                           linz.formtools.filters.number.filter(fieldName,{ 'code': ['100','200'] }, function (err, result) {
+                               result.should.have.property(fieldName, [100,200]);
+                           });
+                        });
+
+                        it('should trim leading and trailing spaces on search keywords and any additional found between words', function () {
+                           var fieldName = 'code';
+                           linz.formtools.filters.number.filter(fieldName,{ 'code': ['100',' 200','300 ', ' 400 ', '  500  '] }, function (err, result) {
+                               result.should.have.property(fieldName, [100,200,300,400,500]);
+                           });
+                        });
+
+                    });
+
                 });
 
                 describe('custom filter', function () {
@@ -1245,6 +1402,18 @@ describe('formtools', function () {
 
                         filters.should.have.properties({
                             firstName: ['john']
+                        });
+
+                    });
+
+                    it('should handle number filter', function () {
+
+                        var filter = { code: '100' };
+
+                        filters = OverridesPostModel.addSearchFilter(filters, filter);
+
+                        filters.should.have.properties({
+                            code: [100]
                         });
 
                     });
@@ -1801,9 +1970,9 @@ describe('formtools', function () {
 
         describe('overview', function () {
 
-            describe('actions', function () {
+            describe('defaults',function () {
 
-                it('should default to []', function () {
+                it('actions should default to []', function () {
 
                     (overviewOpts).should.be.ok;
                     overviewOpts.should.have.property('actions');
@@ -1811,7 +1980,73 @@ describe('formtools', function () {
 
                 });
 
-                it('should allow overrides', function () {
+                it('canEdit should default to true', function () {
+
+                    (overviewOpts).should.be.ok;
+                    overviewOpts.should.have.property('canEdit');
+                    overviewOpts.canEdit.should.eql(true);
+
+                });
+
+                it('canDelete should default to true', function () {
+
+                    (overviewOpts).should.be.ok;
+                    overviewOpts.should.have.property('canDelete');
+                    overviewOpts.canDelete.should.eql(true);
+
+                });
+
+                it('viewAll should default to true', function () {
+
+                    (overviewOpts).should.be.ok;
+                    overviewOpts.should.have.property('viewAll');
+                    overviewOpts.canDelete.should.eql(true);
+
+                });
+
+                describe('summary', function () {
+
+                    it('should have a label that defaults to "Summary"', function () {
+                        (overviewOpts).should.be.ok;
+                        overviewOpts.should.have.property('summary');
+                        overviewOpts.summary.should.have.property('label');
+                        overviewOpts.summary.label.should.be.equal('Summary');
+                    });
+
+                    it('should contain a fields object {dateModified, dateCreated} and a renderer function', function () {
+
+                        overviewOpts.summary.should.have.property('fields');
+                        overviewOpts.summary.fields.should.have.properties({
+                            dateCreated: {
+                                label: 'Date created',
+                                renderer: linz.formtools.cellRenderers.date
+                            },
+                            dateModified: {
+                                label: 'Date modified',
+                                renderer: linz.formtools.cellRenderers.date
+                            }
+                        });
+                        overviewOpts.summary.should.have.property('renderer');
+                        overviewOpts.summary.renderer.should.be.type('function');
+                        overviewOpts.summary.renderer.name.should.equal('defaultSummaryRenderer');
+
+                    });
+
+                });
+
+
+                it('body should default to undefined', function () {
+
+                    (overviewOpts).should.be.ok;
+                    (overviewOpts.body === undefined).should.be.true;
+
+                });
+
+            }); // end describe('defaults')
+
+            describe('overrides', function () {
+
+                it('should overrides actions', function () {
 
                     (overridesOverviewOpts).should.be.ok;
                     overridesOverviewOpts.should.have.property('actions');
@@ -1823,7 +2058,111 @@ describe('formtools', function () {
 
                 });
 
-            }); // end describe('actions')
+                it('should overrides canEdit', function () {
+                    overridesOverviewOpts.canEdit.should.equal(false);
+                });
+
+                it('should overrides canDelete', function () {
+                    overridesOverviewOpts.canEdit.should.equal(false);
+                });
+
+                it('should overrides viewAll', function () {
+                    overridesOverviewOpts.viewAll.should.equal(false);
+                });
+
+                describe('summary', function () {
+
+                    it('should overrides label', function () {
+                        overridesOverviewOpts.summary.label.should.equal('Quick overview');
+                    });
+
+                    it('should overrides summary fields and define a default renderer for fields and summary', function () {
+
+                        overridesOverviewOpts.summary.fields.dateCreated.should.have.property('label','Date created');
+                        overridesOverviewOpts.summary.fields.dateCreated.should.have.property('renderer');
+                        overridesOverviewOpts.summary.fields.dateCreated.renderer.should.be.type('function');
+                        overridesOverviewOpts.summary.fields.dateCreated.renderer.name.should.equal('customCellRenderer');
+
+                        overridesOverviewOpts.summary.fields.dateModified.should.have.property('label','Date modified');
+                        overridesOverviewOpts.summary.fields.dateModified.should.have.property('renderer');
+                        overridesOverviewOpts.summary.fields.dateModified.renderer.should.be.type('function');
+                        overridesOverviewOpts.summary.fields.dateModified.renderer.name.should.equal('dateRenderer');
+
+                        overridesOverviewOpts.summary.fields.firstName.should.have.property('label','First name');
+                        overridesOverviewOpts.summary.fields.firstName.should.have.property('renderer');
+                        overridesOverviewOpts.summary.fields.firstName.renderer.should.be.type('function');
+                        overridesOverviewOpts.summary.fields.firstName.renderer.name.should.equal('defaultRenderer');
+
+                        overridesOverviewOpts.summary.should.have.property('renderer');
+                        overridesOverviewOpts.summary.renderer.should.be.type('function');
+                        overridesOverviewOpts.summary.renderer.name.should.equal('defaultSummaryRenderer')
+
+                    });
+
+                    it('should overrides summary renderer', function (done) {
+
+                        OverridesOverviewSummarySchema = new mongoose.Schema({ label: String });
+                        OverridesOverviewSummarySchema.plugin(formtools.plugin, {
+                            overview: {
+                                summary: {
+                                    renderer: function customSummaryRenderer (model, record, callback) {
+                                        return callback(null);
+                                    }
+                                }
+                            }
+                        });
+
+                        OverridesOverviewSummarySchema = mongoose.model('OverridesOverviewSummary', OverridesOverviewSummarySchema);
+
+                        OverridesOverviewSummarySchema.getOverview(function (err, result) {
+
+                            if (err) {
+                                return done(err);
+                            }
+
+                            result.summary.should.have.property('renderer');
+                            result.summary.renderer.should.be.type('function');
+                            result.summary.renderer.name.should.equal('customSummaryRenderer');
+
+                            return done();
+                        });
+
+                    });
+
+                }); // describe('summary')
+
+
+                describe('errors', function () {
+
+                    it('should throw error renderer or fields is not provided in the summary', function () {
+
+                        OverridesOverviewSummarySchema1 = new mongoose.Schema({ label: String });
+
+                        should(function () {
+                            OverridesOverviewSummarySchema1.plugin(formtools.plugin, {
+                              overview: {
+                                  summary: {
+                                      something: ''
+                                  }
+                              }
+                            });
+                        }).throw('overview.summary.renderer is required if overview.summary.fields is not defined');
+
+                    });
+
+                });
+
+
+
+            }); // end describe('overrides')
+
+            describe('renderers', function () {
+
+                it('should have a default summary renderer', function () {
+
+                });
+
+            });
 
         }); // end describe('overview')
 
