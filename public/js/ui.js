@@ -44,7 +44,7 @@ if (!linz) {
 
         $('.control-delete').click(function () {
 
-            if (confirm('Are you sure you want to this new record?')) {
+            if (confirm('Are you sure you want to delete this record?')) {
                 return true;
             }
 

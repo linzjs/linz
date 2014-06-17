@@ -595,7 +595,7 @@ describe('formtools', function () {
 
                     });
 
-                    describe("link", function () {
+                    describe("url", function () {
 
                         it("format a url starting with http", function (done) {
 
@@ -603,6 +603,54 @@ describe('formtools', function () {
 
                                 (err === null).should.be.ok;
                                 result.should.equal('<a href="http://www.google.com" target="_blank">http://www.google.com</a>');
+                                done();
+
+                            });
+
+                        });
+
+                        it("format a url starting with https", function (done) {
+
+                            linz.formtools.cellRenderers.url('https://www.google.com', {}, 'firstName', PostModel.modelName, function (err, result) {
+
+                                (err === null).should.be.ok;
+                                result.should.equal('<a href="https://www.google.com" target="_blank">https://www.google.com</a>');
+                                done();
+
+                            });
+
+                        });
+
+                        it("format a url starting with ftp", function (done) {
+
+                            linz.formtools.cellRenderers.url('ftp://www.google.com', {}, 'firstName', PostModel.modelName, function (err, result) {
+
+                                (err === null).should.be.ok;
+                                result.should.equal('<a href="ftp://www.google.com" target="_blank">ftp://www.google.com</a>');
+                                done();
+
+                            });
+
+                        });
+
+                        it("format a url starting with mailto", function (done) {
+
+                            linz.formtools.cellRenderers.url('mailto:test@example.com', {}, 'firstName', PostModel.modelName, function (err, result) {
+
+                                (err === null).should.be.ok;
+                                result.should.equal('<a href="mailto:test@example.com" target="_blank">mailto:test@example.com</a>');
+                                done();
+
+                            });
+
+                        });
+
+                        it("format a url starting with ftps", function (done) {
+
+                            linz.formtools.cellRenderers.url('ftps://www.google.com', {}, 'firstName', PostModel.modelName, function (err, result) {
+
+                                (err === null).should.be.ok;
+                                result.should.equal('<a href="ftps://www.google.com" target="_blank">ftps://www.google.com</a>');
                                 done();
 
                             });
