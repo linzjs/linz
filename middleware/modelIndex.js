@@ -6,7 +6,10 @@ module.exports = function (model) {
 	return function (req, res, next) {
 
         var records = [],
-            filters = {};
+            filters = {},
+            totalRecords = 0,
+            pageSize = req.body.pageSize || 20,
+            pageIndex = req.body.page || 1;
 
         // set the model on linz
 		req.linz.model = req.linz.get('models')[req.params.model];
@@ -121,6 +124,21 @@ module.exports = function (model) {
 
             },
 
+            // count the docs
+            function (cb) {
+
+                req.linz.model.count(filters).exec(function (err, docs) {
+
+                    if (!err) {
+                        totalRecords = docs;
+                    }
+
+                    return cb(null);
+
+                });
+
+            },
+
 			// find the docs
 			function (cb) {
 
@@ -141,6 +159,9 @@ module.exports = function (model) {
 					query.sort(req.body.sort);
 
 				}
+
+                // add in paging skip and limit
+                query.skip(pageIndex*pageSize-pageSize).limit(pageSize);
 
 				query.exec(function (err, docs) {
 
@@ -209,7 +230,13 @@ module.exports = function (model) {
 		], function (err, result) {
 
             // map the update records to linz
-            req.linz.records = records;
+            req.linz.records = {
+                records: records,
+                page: pageIndex,
+                total: totalRecords,
+                pages: Math.ceil(totalRecords/pageSize),
+                pageSize: pageSize
+            };
 
 			// next middleware
 			next(err);

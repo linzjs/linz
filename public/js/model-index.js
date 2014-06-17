@@ -142,4 +142,17 @@
         }
     }
 
+    function submitForm() {
+
+        $('.filters')[0].submit();
+
+    };
+
+    /* PAGINATION */
+
+    $('ul.pagination [data-linz-page]').click(function () {
+        $('input.page').val($(this).attr('data-linz-page'));
+        submitForm();
+    });
+
 })();

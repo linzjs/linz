@@ -1,1 +1,7 @@
-div.alert.alert-info There are #{records.length} records.
+div.alert.alert-info
+	p Showing #{from+1} to #{to} of #{total} records.
+	if pagination
+		ul.pagination
+			- for (var i = 0; i < pages; i++)
+				li
+					a(data-linz-page='' + (i+1) + '')= i+1
