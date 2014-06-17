@@ -127,7 +127,12 @@ module.exports = function (model) {
             // count the docs
             function (cb) {
 
-                req.linz.model.count(filters).exec(function (err, docs) {
+                // consolidate filters into query
+                if (Object.keys(filters).length) {
+                    filters = req.linz.model.setFiltersAsQuery(filters);
+                }
+
+                req.linz.model.count(filters, function (err, docs) {
 
                     if (!err) {
                         totalRecords = docs;
@@ -141,11 +146,6 @@ module.exports = function (model) {
 
 			// find the docs
 			function (cb) {
-
-                // consolidate filters into query
-                if (Object.keys(filters).length) {
-                    filters = req.linz.model.setFiltersAsQuery(filters);
-                }
 
 				var query = req.linz.model.find(filters);
 
