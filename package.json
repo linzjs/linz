@@ -30,7 +30,8 @@
     "printf": "0.2.x",
     "chalk": "~0.4.0",
     "formist": "0.1.10",
-    "clone": "0.1.15"
+    "clone": "0.1.15",
+    "handlebars": "2.0.0-alpha.4"
   },
   "devDependencies": {
     "should": "3.3.1",

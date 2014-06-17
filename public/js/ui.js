@@ -40,8 +40,23 @@ if (!linz) {
         return 'content' in document.createElement('template');
     }
 
+    function addDeleteConfirmation () {
+
+        $('.control-delete').click(function () {
+
+            if (confirm('Are you sure you want to delete this record?')) {
+                return true;
+            }
+
+            return false;
+
+        });
+
+    }
+
     linz.loadLibraries = loadLibraries;
     linz.loadDatepicker = loadDatepicker;
     linz.isTemplateSupported = isTemplateSupported;
+    linz.addDeleteConfirmation = addDeleteConfirmation;
 
 })();

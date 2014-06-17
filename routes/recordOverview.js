@@ -11,17 +11,40 @@ var route = function (req, res) {
 
 	async.series([
 
-		function (callback) {
+        function (cb) {
 
-			if (!req.linz.model.overview || !req.linz.model.overview.renderer) {
+            req.linz.model.overview.summary.renderer(req.linz.record, req.linz.model, function (err, content) {
 
-				return callback(null);
+                if (err) {
+                    return cb(err);
+                }
+
+                locals.overviewSummary = content;
+
+                return cb(null);
+
+            });
+
+        },
+
+		function (cb) {
+
+			if (!req.linz.model.overview.body) {
+
+				return cb(null);
 
 			}
 
-			req.linz.model.overview.renderer.call(this, req.linz.record, req.linz.model, function (err, content) {
+			req.linz.model.overview.body(req.linz.record, req.linz.model, function (err, content) {
+
+                if (err) {
+                    return cb(err);
+                }
+
 				locals.overviewBody = content;
-				callback(null);
+
+				return cb(null);
+
 			});
 
 		}
