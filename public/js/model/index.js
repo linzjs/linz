@@ -153,8 +153,8 @@
 
     /* PAGINATION */
 
-    $('ul.pagination [data-linz-page]').click(function () {
-        $('input.page').val($(this).attr('data-linz-page'));
+    $('select.pagination').change(function () {
+        $('input.page').val($(this).val());
         submitForm();
     });
 

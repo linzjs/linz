@@ -129,3 +129,25 @@ template {
   width: 600px;
   height: 300px;
 }
+.alert-summary .content {
+  display: table-row;
+}
+.alert-summary p.records {
+  display: table-cell;
+  padding-right: 10px;
+}
+.alert-summary .pagination {
+  margin: 0;
+  display: table;
+}
+.alert-summary .pagination span {
+  display: table-cell;
+  padding-right: 5px;
+}
+.alert-summary .pagination span.pages {
+  padding-left: 5px;
+}
+.alert-summary .pagination select.form-control {
+  margin: 0;
+  display: table-cell;
+}
