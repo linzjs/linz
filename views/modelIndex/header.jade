@@ -1,7 +1,7 @@
 .row.grid-header
 	.col-md-6.col-xs-12
 		h1
-			a(href='' + linz.get('admin path') + '/model/#{model.modelName}/list')= model.label
+			a(href='' + linz.api.getAdminLink(model))= model.label
 		ul.sort.nav.nav-pills
 			if model.grid.sortBy.length
 				li.dropdown
@@ -39,11 +39,11 @@
 	.col-md-6.col-xs-12
 		.custom-actions
 			for action in model.grid.actions
-				a.btn.btn-default.pull-right(href='' + linz.get('admin path') + '/model/#{model.modelName}/#{action.action}')= action.label
+				a.btn.btn-default.pull-right(href='' + linz.api.getAdminLink(model, action.action))= action.label
 		.actions
 			if model.grid.canCreate
 				span.create
-					a.btn.btn-primary.pull-right(href='' + linz.get('admin path') + '/model/#{model.modelName}/new') Create a new #{model.singular}
+					a.btn.btn-primary.pull-right(href='' + linz.api.getAdminLink(model, 'new')) Create a new #{model.singular}
 form.form-horizontal.filters(method='post', role='form')
 	input.selectedFilters(type='hidden', name='selectedFilters', value='' + ((form.selectedFilters) ? form.selectedFilters : '') + '')
 	input.selectedSort(type='hidden', name='sort', value='' + ((form.sort) ? form.sort : model.grid.sortBy[0].field ) + '')

@@ -255,7 +255,7 @@ Linz.prototype.loadConfigs = function (cb) {
 };
 
 /**
-* Init configs from DB
+* Load config files from linzconfigs collections and create new ones if none are found.
 *
 * @return void
 */
@@ -358,6 +358,9 @@ Linz.prototype.defaultConfiguration = function (cb) {
 
 	// assign the model CRUD routes
 	routesManager.setupModelRoutes(this.models);
+
+    // assign the config CRUD routes
+    routesManager.setupConfigsRoutes();
 
 	// assign the logging routes
 	if (this.get('request logging') === true) routesManager.setupLoggingRoutes();
@@ -559,6 +562,13 @@ Linz.prototype.buildNavigation = function () {
 
 	});
 	nav.push(models);
+
+    // add a reference for configs
+    var configs = {
+        name: 'Configs',
+        href: this.get('admin path') + '/configs/list'
+    };
+    nav.push(configs);
 
 	// add a reference for the logs
 	var logs = {

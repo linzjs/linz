@@ -10,41 +10,39 @@ var route = function (req, res, next) {
 
     async.waterfall([
 
-        function (done) {
+        function (cb) {
 
-            req.linz.model.getForm(function(err,form){
+            req.linz.config.schema.statics.getForm(function(err,form){
 
                 // retrieve form information, for use in next function
-                req.linz.model.form = form;
+                req.linz.config.form = form;
 
                 // we're done
-                return done(null, form);
+                return cb(null, form);
 
             });
 
         },
 
-        function (form, done) {
+        function (form, cb) {
 
-            req.linz.model.findById(req.params.id).exec(function (err, record) {
 
-                if (err) {
-                    return next(err);
-                }
+            var db  = req.linz.mongoose.connection.db;
 
-                // clean the body
-                model.clean(req.body, req.linz.model);
+            db.collection('linzconfigs', function (err, collection) {
+
+                var record = {};
 
                 // loop over each key in the body
                 // update each field passed to us (as long as its from the schema)
-                Object.keys(req.linz.model.schema.paths).forEach(function (field) {
+                Object.keys(req.linz.config.schema.paths).forEach(function (field) {
 
                     if (field !== '_id' && req.body[field] !== undefined) {
 
                         // merge edit object back into form object (overrides)
                         utils.merge(form[field], form[field]['edit'] || {});
 
-                        if (formUtils.schemaType(req.linz.model.schema.paths[field]) === 'documentarray') {
+                        if (formUtils.schemaType(req.linz.config.schema.paths[field]) === 'documentarray') {
 
                             // turn the json into an object
                             req.body[field] = JSON.parse(req.body[field]);
@@ -58,19 +56,23 @@ var route = function (req, res, next) {
 
                 });
 
-                record.save(req, done);
+                record.modifiedBy = req.user._id;
+
+                collection.update({ _id: req.params.config }, {$set: record}, {w:1}, function(err, result) {
+                    return cb(err);
+                });
 
             });
 
         }
 
-    ], function (err, updatedDocument) {
+    ], function (err) {
 
         if (err) {
             return next(err);
         }
 
-        return res.redirect(linz.api.getAdminLink(req.linz.model, 'overview', updatedDocument._id));
+        return res.redirect(linz.api.getAdminLink(req.linz.config, 'overview', req.params.config));
 
     });
 

@@ -20,10 +20,10 @@ if records.length > 0
 							td
 								div.btn-group
 									if model.grid.canEdit
-										a.btn.btn-default.control-edit(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/edit')
+										a.btn.btn-default.control-edit(href='' + linz.api.getAdminLink(model, 'edit', record._id))
 											span(class="glyphicon glyphicon-pencil")
 									if model.grid.canDelete
-										a.btn.btn-default.control-delete(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/delete')
+										a.btn.btn-default.control-delete(href='' + linz.api.getAdminLink(model, 'delete', record._id))
 											span(class="glyphicon glyphicon-trash")
 						each val in Object.keys(model.grid.columns)
 							td!= record[val]
