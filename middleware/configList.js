@@ -39,7 +39,7 @@ module.exports = function () {
                     configKeys = Object.keys(req.linz.configs),
                     filter = { _id: { $in: configKeys } };
 
-                db.collection('linzconfigs', function (err, collection) {
+                db.collection(req.linz.get('configs collection name'), function (err, collection) {
 
                     // find documents matching each of the availabel config schema name
                     collection.find(filter).toArray(function(err, items) {

@@ -255,7 +255,7 @@ Linz.prototype.loadConfigs = function (cb) {
 };
 
 /**
-* Load config files from linzconfigs collections and create new ones if none are found.
+* Load document from configs collection and create new ones if none are found.
 *
 * @return void
 */
@@ -297,7 +297,7 @@ Linz.prototype.initConfigs = function (cb) {
         return value;
     }
 
-    db.collection('linzconfigs', function (err, collection) {
+    db.collection(this.get('configs collection name'), function (err, collection) {
 
         async.each(Object.keys(configs), function (configName, initDone) {
 

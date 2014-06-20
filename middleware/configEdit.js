@@ -29,7 +29,7 @@ module.exports = function () {
 
                 var db  = req.linz.mongoose.connection.db;
 
-                db.collection('linzconfigs', function (err, collection) {
+                db.collection(req.linz.get('configs collection name'), function (err, collection) {
 
                     collection.findOne({ _id: req.params.config}, function (err, doc) {
                         if (err) {
