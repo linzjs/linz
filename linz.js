@@ -265,11 +265,43 @@ Linz.prototype.initConfigs = function (cb) {
     var db = this.mongoose.connection.db,
         configs = this.get('configs');
 
+    var getDefaultValue = function (field) {
+
+        var value = '',
+            fieldType = linz.formtools.utils.schemaType(field);
+
+
+        if (field.defaultValue !== undefined && fieldType !== 'array') {
+
+            // work out the default value and use it
+            if (typeof field.defaultValue !== 'function') {
+                value = field.defaultValue;
+            } else if (typeof field.defaultValue === 'function' && fieldType !== 'documentarray') {
+                value = field.defaultValue();
+            }
+
+        } else if (field.defaultValue === undefined && fieldType === 'datetime') {
+
+            value = (function defaultDate () {
+                var d = new Date();
+                return d.getFullYear() + '-' +
+                        linz.formtools.utils.padWithZero(d.getMonth()+1) + '-' +
+                        linz.formtools.utils.padWithZero(d.getDate()) + 'T' +
+                        linz.formtools.utils.padWithZero(d.getHours()) + ':' +
+                        linz.formtools.utils.padWithZero(d.getMinutes()) + ':' +
+                        '00.000';
+            })();
+
+        }
+
+        return value;
+    }
+
     db.collection('linzconfigs', function (err, collection) {
 
         async.each(Object.keys(configs), function (configName, initDone) {
 
-            collection.findOne({ _id: configName}, function (err, doc) {
+            collection.findOne({ _id: configName }, function (err, doc) {
 
                 if (err) {
                     return initDone(err);
@@ -277,12 +309,34 @@ Linz.prototype.initConfigs = function (cb) {
 
                 if (doc) {
 
-                    // config exists, add config to linz
-                    configs[configName].config = doc;
+                    var updatedDoc = {};
 
-                    debugConfigs('Initialised config %s', configName);
+                    // doc exists, check if there are any new properties
+                    configs[configName].schema.eachPath(function (fieldName, field) {
 
-                    return initDone(err);
+                        if (!doc[fieldName]) {
+                            updatedDoc[fieldName] = getDefaultValue(field);
+                            doc[fieldName] = updatedDoc[fieldName];
+                        }
+
+                    });
+
+                    // update doc with changes
+                    collection.update({ _id: configName }, { $set: updatedDoc }, { w:1 }, function (err, result) {
+
+                        if (err) {
+                            throw new Error('Unable to write config file %s to database. ' + err.message, configName);
+                        }
+
+                        // add config to linz
+                        configs[configName].config = doc;
+
+                        debugConfigs('Initialised config %s', configName);
+
+                        return initDone(err);
+
+                    });
+
 
                 } else {
 
@@ -292,19 +346,7 @@ Linz.prototype.initConfigs = function (cb) {
                     // contruct doc from config schema
                     configs[configName].schema.eachPath(function (fieldName, field) {
 
-                        // work out the default value and use it
-                        if (typeof field.defaultValue !== 'function') {
-                            defaultValue = field.defaultValue;
-                        } else if (typeof field.defaultValue === 'function') {
-                            defaultValue = field.defaultValue();
-                        }
-
-                        if (!defaultValue) {
-                            // set default value to empty string if it is undefined
-                            defaultValue = '';
-                        }
-
-                        newConfig[fieldName] = defaultValue;
+                        newConfig[fieldName] = getDefaultValue(field);
 
                     });
 

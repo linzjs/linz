@@ -56,9 +56,18 @@ var route = function (req, res, next) {
 
                 });
 
+                // update system required data
                 record.modifiedBy = req.user._id;
+                record.dateModified = new Date();
+
 
                 collection.update({ _id: req.params.config }, {$set: record}, {w:1}, function(err, result) {
+
+                    record._id = req.params.config;
+
+                    // update linz with changes to this config
+                    req.linz.get('configs')[req.params.config].config = record;
+
                     return cb(err);
                 });
 

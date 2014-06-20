@@ -15,23 +15,17 @@ module.exports = function () {
                     label: 'Label',
                     renderer: linz.formtools.cellRenderers.overviewLink
                 },
+                _id: {
+                    label: 'Config key',
+                    renderer: linz.formtools.cellRenderers.default
+                },
                 dateModified: {
                     label: 'Modified on',
                     renderer: linz.formtools.cellRenderers.date
                 },
                 modifiedBy: {
                     label: 'Modified by',
-                    renderer: function configReferenceRenderer (val, record, fieldName, model, callback) {
-
-                        if (linz.mongoose.models[linz.get('user model')].findForReference) {
-                            return linz.mongoose.models[linz.get('user model')].findForReference(val,callback);
-                        }
-
-                        linz.mongoose.models[linz.get('user model')].findById(val, function (err, doc) {
-                            return callback(null, (doc) ? doc.title : ((val && val.length) ? val + ' (missing)' : ''));
-                        });
-
-                    }
+                    renderer: linz.formtools.cellRenderers.reference
                 }
             }
         };
@@ -41,16 +35,21 @@ module.exports = function () {
 			// find the configs
 			function (cb) {
 
-                var db  = req.linz.mongoose.connection.db;
+                var db  = req.linz.mongoose.connection.db,
+                    configKeys = Object.keys(req.linz.configs),
+                    filter = { _id: { $in: configKeys } };
 
                 db.collection('linzconfigs', function (err, collection) {
-                    collection.find().toArray(function(err, items) {
+
+                    // find documents matching each of the availabel config schema name
+                    collection.find(filter).toArray(function(err, items) {
 
                         if (err) {
                             return cb(err);
                         }
 
-                        if (!items || (items && items.lenth === 0)) {
+                        if (items.length === 0) {
+                            // return error to skip the next asyn function that inspect the records since none is found.
                             return cb(new Error('No record found.'), items) ;
                         }
 
@@ -99,6 +98,11 @@ module.exports = function () {
             }
 
 		], function (err, records) {
+
+            // handle the returned error when no records are found
+            if (err && err.message === 'No record found.') {
+                err = null;
+            }
 
             // map the update records to linz
             req.linz.records = records;
