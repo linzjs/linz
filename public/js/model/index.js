@@ -177,4 +177,12 @@
         triggerSubmit();
     });
 
+    /* PAGE SIZE */
+
+    $('select.pagination-size').change(function () {
+        $('input.pageSize').val($(this).val());
+        filtersAreDirty = true;
+        triggerSubmit();
+    });
+
 })();

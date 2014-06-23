@@ -289,7 +289,8 @@ describe('formtools', function () {
                     showSummary: false,
                     paging: {
                         active: false,
-                        size: 50
+                        size: 50,
+                        sizes: [25,50,75,100]
                     },
                     filters: {
                         firstName: 'First name',
@@ -767,6 +768,7 @@ describe('formtools', function () {
                         (typeof gridOpts.paging === 'object').should.be.ok;
                         gridOpts.paging.should.have.property.active;
                         gridOpts.paging.should.have.property.size;
+                        gridOpts.paging.should.have.property.sizes;
                     });
 
                     it('paging should be active', function () {
@@ -775,6 +777,10 @@ describe('formtools', function () {
 
                     it('should have a page size of 20', function () {
                         (gridOpts.paging.size === 20).should.be.ok;
+                    });
+
+                    it('should have sizes [20,50,100,200]', function () {
+                        gridOpts.paging.sizes.should.be.eql([20,50,100,200]);
                     });
 
                 }); // end describe('defaults')
@@ -786,15 +792,20 @@ describe('formtools', function () {
                         (typeof overridesGridOpts.paging === 'object').should.be.ok;
                         overridesGridOpts.paging.should.have.property.active;
                         overridesGridOpts.paging.should.have.property.size;
+                        gridOpts.paging.should.have.property.sizes;
                     });
 
                     it('should override active', function () {
                         overridesGridOpts.paging.active.should.be.false;
-                    })
+                    });
 
                     it('should override size', function () {
                         (overridesGridOpts.paging.size === 50).should.be.ok;
-                    })
+                    });
+
+                    it('should override sizes [25,50,75,100]', function () {
+                        overridesGridOpts.paging.sizes.should.be.eql([25,50,75,100]);
+                    });
 
                 }); // end describe('overrides')
 

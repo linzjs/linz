@@ -203,32 +203,48 @@ template{
 .alert-summary {
 
   .content {
-    display: table-row;
+  }
+
+  .form-control {
+    display: inline-block;
   }
 
   p.records {
-    display: table-cell;
-    padding-right: 10px;
+    display: inline-block;
   }
 
   // pagination
   .pagination {
 
-    margin: 0;
-    display: table;
+    margin: 0 0 0 10px;
+    display: inline-block;
 
-    span {
-      display: table-cell;
-      padding-right: 5px;
-    }
-
-    span.pages {
-      padding-left: 5px;
+    & > span {
+      margin-right: 5px;
     }
 
     select.form-control {
       margin: 0;
-      display: table-cell;
+      width: auto;
+    }
+
+    & > span:last-child {
+      margin-left: 5px;
+    }
+
+  }
+
+  .page-size {
+
+    margin: 0 0 0 10px;
+    display: inline-block;
+
+    & > span {
+      margin-right: 5px;
+    }
+
+    select.pagination-size {
+      width: auto;
     }
 
   }

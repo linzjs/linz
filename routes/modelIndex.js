@@ -1,4 +1,4 @@
-
+var linz = require('../');
 
 /* GET /admin/model/:model/list */
 var route = function (req, res) {
@@ -21,6 +21,7 @@ var route = function (req, res) {
         total: total,
         pages: pages,
         pageSize: pageSize,
+        pageSizes: req.linz.model.grid.paging.sizes || linz.get('page sizes'),
         from: pageSize*page-pageSize,
         to: to,
         pagination: (req.linz.model.grid.paging.active === true && total > pageSize)

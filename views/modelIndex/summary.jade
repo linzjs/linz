@@ -10,6 +10,14 @@ div.alert.alert-info.alert-summary
 							option(value=i+1, selected)= i+1
 						else
 							option(value=i+1)= i+1
-				span.pages of #{pages}
+				span.pages of #{pages}.
+			div.page-size
+				span Show
+				select.pagination-size.form-control
+					- for ps in pageSizes
+						if pageSize === ps
+							option(value=ps, selected)= ps
+						else
+							option(value=ps)= ps
 		else
 			p.records #{total} records.
