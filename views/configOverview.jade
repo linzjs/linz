@@ -8,14 +8,14 @@ block content
 				for action in config.overview.actions
 					.btn-group
 						a.btn.btn-default(href='' + linz.api.getAdminLink(config, action.action, record._id))= action.label
-		if (config.overview.canEdit || config.overview.canDelete || config.overview.viewAll)
+		if (config.overview.canEdit || config.overview.viewAll)
 			.actions
 				span
 					.btn-group
 						if config.overview.canEdit
 							a.btn.btn-primary(href='' + linz.api.getAdminLink(config, 'edit', record._id)) Edit
 						if config.overview.viewAll
-							a.btn.btn-default(href='' + linz.api.getAdminLink(config, 'list')) View all #{record.label}
+							a.btn.btn-default(href='' + linz.api.getAdminLink(config, 'list')) View all Configs
 	.overview-summary
 		div!= overviewSummary
 	.overview-body
@@ -23,4 +23,4 @@ block content
 			div!= overviewBody
 
 block script
-	script(src='' + linz.get('admin path') + '/public/js/config/overview.js')
+	script(src='' + linz.get('admin path') + '/public/js/model/overview.js')

@@ -5,7 +5,8 @@ var should = require('should'),
 linz.init({
     'mongo': 'mongodb://127.0.0.1/mongoose-formtools-test',
     'user model': 'user',
-    'load models': false
+    'load models': false,
+    'load configs': false
 });
 
 // setup a basic user model
@@ -590,10 +591,10 @@ describe('formtools', function () {
 
                         it("format a string with a link to the overview", function (done) {
 
-                            linz.formtools.cellRenderers.overviewLink('label', {_id: '1'}, 'firstName', PostModel.modelName, function (err, result) {
+                            linz.formtools.cellRenderers.overviewLink('label', {_id: '1'}, 'firstName', PostModel, function (err, result) {
 
                                 (err === null).should.be.ok;
-                                result.should.equal('<a href="' + linz.get('admin path') + '/PostModel/1/overview">label</a>');
+                                result.should.equal('<a href="' + linz.get('admin path') + '/model/PostModel/1/overview">label</a>');
                                 done();
 
                             });

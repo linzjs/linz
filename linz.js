@@ -140,35 +140,23 @@ Linz.prototype.configure = function() {
     async.series([
 
         function (cb) {
-            _this.defaultConfiguration(cb);
+            return _this.defaultConfiguration(cb);
         },
 
         function (cb) {
-            _this.bootstrapExpress(cb);
+            return _this.bootstrapExpress(cb);
         },
 
         function (cb) {
-            _this.mountAdmin(cb);
+            return _this.mountAdmin(cb);
         },
 
         function (cb) {
-            _this.setupORM(cb);
+            return _this.setupORM(cb);
         },
 
         function (cb) {
-            _this.loadConfigs(cb);
-        },
-
-        function (cb) {
-            _this.loadModels(cb);
-        },
-
-        function (cb) {
-            _this.bootstrapExpressLocals(cb);
-        },
-
-        function (cb) {
-            _this.checkSetup(cb);
+            return _this.loadConfigs(cb);
         },
 
         function (cb) {
@@ -187,8 +175,22 @@ Linz.prototype.configure = function() {
                     _this.initConfigs(cb);
                 });
 
+            } else {
+                return cb(null);
             }
 
+        },
+
+        function (cb) {
+            return _this.loadModels(cb);
+        },
+
+        function (cb) {
+            return _this.bootstrapExpressLocals(cb);
+        },
+
+        function (cb) {
+            return _this.checkSetup(cb);
         }
 
     ]);
@@ -218,7 +220,10 @@ Linz.prototype.setupORM = function (cb) {
 Linz.prototype.loadModels = function (cb) {
 
 	if (!this.get('load models')) {
-		return this.set('models', []);
+
+		this.set('models', []);
+        return cb(null);
+
 	}
 
 	// set the default models path
@@ -240,7 +245,10 @@ Linz.prototype.loadModels = function (cb) {
 Linz.prototype.loadConfigs = function (cb) {
 
     if (!this.get('load configs')) {
-        return this.set('configs', []);
+
+        this.set('configs', []);
+        return cb(null);
+
     }
 
     // set the default configs path
@@ -373,7 +381,7 @@ Linz.prototype.initConfigs = function (cb) {
             });
 
         }, function (err) {
-
+            return cb(err);
         });
 
     });
@@ -433,8 +441,13 @@ Linz.prototype.mountAdmin = function (cb) {
 Linz.prototype.bootstrapExpress = function (cb) {
 
 	// only run once
-	if (this.bBootstrapExpress) return;
-	if (!this.bBootstrapExpress) this.bBootstrapExpress = true;
+	if (this.bBootstrapExpress) {
+        return cb(null);
+    }
+
+	if (!this.bBootstrapExpress) {
+        this.bBootstrapExpress = true;
+    }
 
 	debugGeneral('Bootstrapping express');
 
