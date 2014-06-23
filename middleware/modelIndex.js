@@ -1,5 +1,6 @@
 var util = require('util'),
-	async = require('async');
+	async = require('async'),
+    linz = require('../');
 
 module.exports = function (model) {
 
@@ -8,7 +9,7 @@ module.exports = function (model) {
         var records = [],
             filters = {},
             totalRecords = 0,
-            pageSize = req.body.pageSize || 20,
+            pageSize = req.body.pageSize || linz.get('page size'),
             pageIndex = req.body.page || 1;
 
         // set the model on linz
