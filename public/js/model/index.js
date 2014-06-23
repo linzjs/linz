@@ -1,5 +1,7 @@
 (function () {
 
+    var filtersAreDirty = false;
+
     linz.addDeleteConfirmation();
 
     if ($('.selectedFilters').val().length > 0) {
@@ -18,8 +20,9 @@
         // update hidden sort field in the filter form
         $('.selectedSort').val(sortField);
 
-        // trigger validation and post form if there are no validation errors
-        $('.filters').find(':submit').click();
+        filtersAreDirty = true;
+
+        triggerSubmit();
 
         return true;
 
@@ -29,6 +32,15 @@
 
         var isChecked = $(this).is(':checked');
         $('.checked-record').prop('checked',isChecked);
+
+    });
+
+    $('form.filters button[type="submit"]').click(function (event) {
+
+        // reset the pagination if required
+        if (filtersAreDirty || event.isTrigger === undefined) {
+            $('input.page').val(1);
+        }
 
     });
 
@@ -79,6 +91,8 @@
 
         $('.selectedFilters').val(aFilters.join());
 
+        filtersAreDirty = true;
+
         toggleFilterBox('show');
 
         assignRemoveButton();
@@ -118,6 +132,8 @@
                 selectedFilters = $('.selectedFilters').val(),
                 numOfSameFilters = $('.glyphicon-remove[data-filter-field=' + filteredField + ']').length;
 
+            filtersAreDirty = true;
+
             // ensure there are no multiple filters on the same field, before removing it from the list
             if (numOfSameFilters <= 1) {
 
@@ -128,7 +144,8 @@
                 if (selectedFilters.length <= 0) {
                     toggleFilterBox();
                     // since there are no filters, let's post the form to clear all filters except the sorting
-                    $('.filters')[0].submit();
+                    // submit the form and reset the pagination
+                    triggerSubmit();
                 }
 
             }
@@ -145,17 +162,19 @@
         }
     }
 
-    function submitForm() {
+    // trigger a click of the 'filter' button
+    function triggerSubmit () {
 
-        $('.filters')[0].submit();
+        // click the button
+        $('.filters').find(':submit').click();
 
-    };
+    }
 
     /* PAGINATION */
 
     $('select.pagination').change(function () {
         $('input.page').val($(this).val());
-        submitForm();
+        triggerSubmit();
     });
 
 })();

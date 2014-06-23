@@ -3,6 +3,8 @@
 /* GET /admin/model/:model/list */
 var route = function (req, res) {
 
+    console.log(req.body);
+
     var total = Number(req.linz.records.total),
         pageSize = Number(req.linz.records.pageSize),
         page = Number(req.linz.records.page),
