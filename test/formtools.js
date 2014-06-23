@@ -287,6 +287,10 @@ describe('formtools', function () {
                     canEdit: false,
                     canDelete: false,
                     showSummary: false,
+                    paging: {
+                        active: false,
+                        size: 50
+                    },
                     filters: {
                         firstName: 'First name',
                         lastName: {
@@ -751,6 +755,48 @@ describe('formtools', function () {
                     })
 
                 }); // end describe('overrides actions')
+
+            }); // end describe('action')
+
+            describe('paging', function () {
+
+                describe('defaults', function () {
+
+                    it('paging object should exist', function () {
+                        (gridOpts.paging !== undefined).should.be.ok;
+                        (typeof gridOpts.paging === 'object').should.be.ok;
+                        gridOpts.paging.should.have.property.active;
+                        gridOpts.paging.should.have.property.size;
+                    });
+
+                    it('paging should be active', function () {
+                        gridOpts.paging.active.should.be.true;
+                    });
+
+                    it('should have a page size of 20', function () {
+                        (gridOpts.paging.size === 20).should.be.ok;
+                    });
+
+                }); // end describe('defaults')
+
+                describe('overrides', function () {
+
+                    it('paging object should exist', function () {
+                        (overridesGridOpts.paging !== undefined).should.be.ok;
+                        (typeof overridesGridOpts.paging === 'object').should.be.ok;
+                        overridesGridOpts.paging.should.have.property.active;
+                        overridesGridOpts.paging.should.have.property.size;
+                    });
+
+                    it('should override active', function () {
+                        overridesGridOpts.paging.active.should.be.false;
+                    })
+
+                    it('should override size', function () {
+                        (overridesGridOpts.paging.size === 50).should.be.ok;
+                    })
+
+                }); // end describe('overrides')
 
             }); // end describe('action')
 

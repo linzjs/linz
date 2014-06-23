@@ -9,7 +9,7 @@ module.exports = function (model) {
         var records = [],
             filters = {},
             totalRecords = 0,
-            pageSize = req.body.pageSize || linz.get('page size'),
+            pageSize = linz.get('page size'),
             pageIndex = req.body.page || 1;
 
         // set the model on linz
@@ -25,6 +25,9 @@ module.exports = function (model) {
                     if (!err) {
                         req.linz.model.grid = grid;
                     }
+
+                    // reset the pageSize value
+                    pageSize = req.body.pageSize || req.linz.model.grid.paging.size;
 
 					cb(err);
 
@@ -161,8 +164,11 @@ module.exports = function (model) {
 
 				}
 
-                // add in paging skip and limit
-                query.skip(pageIndex*pageSize-pageSize).limit(pageSize);
+                if (req.linz.model.grid.paging.active === true) {
+                    // add in paging skip and limit
+                    query.skip(pageIndex*pageSize-pageSize).limit(pageSize);
+                }
+
 
 				query.exec(function (err, docs) {
 

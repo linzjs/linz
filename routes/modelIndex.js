@@ -23,7 +23,7 @@ var route = function (req, res) {
         pageSize: pageSize,
         from: pageSize*page-pageSize,
         to: to,
-        pagination: total > pageSize
+        pagination: (req.linz.model.grid.paging.active === true && total > pageSize)
 	});
 
 };
