@@ -129,3 +129,33 @@ template {
   width: 600px;
   height: 300px;
 }
+.alert-summary .form-control {
+  display: inline-block;
+}
+.alert-summary p.records {
+  display: inline-block;
+}
+.alert-summary .pagination {
+  margin: 0 0 0 10px;
+  display: inline-block;
+}
+.alert-summary .pagination > span {
+  margin-right: 5px;
+}
+.alert-summary .pagination select.form-control {
+  margin: 0;
+  width: auto;
+}
+.alert-summary .pagination > span:last-child {
+  margin-left: 5px;
+}
+.alert-summary .page-size {
+  margin: 0 0 0 10px;
+  display: inline-block;
+}
+.alert-summary .page-size > span {
+  margin-right: 5px;
+}
+.alert-summary .page-size select.pagination-size {
+  width: auto;
+}

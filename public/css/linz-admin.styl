@@ -199,3 +199,54 @@ template{
   width: 600px;
   height: 300px;
 }
+
+.alert-summary {
+
+  .content {
+  }
+
+  .form-control {
+    display: inline-block;
+  }
+
+  p.records {
+    display: inline-block;
+  }
+
+  // pagination
+  .pagination {
+
+    margin: 0 0 0 10px;
+    display: inline-block;
+
+    & > span {
+      margin-right: 5px;
+    }
+
+    select.form-control {
+      margin: 0;
+      width: auto;
+    }
+
+    & > span:last-child {
+      margin-left: 5px;
+    }
+
+  }
+
+  .page-size {
+
+    margin: 0 0 0 10px;
+    display: inline-block;
+
+    & > span {
+      margin-right: 5px;
+    }
+
+    select.pagination-size {
+      width: auto;
+    }
+
+  }
+
+}

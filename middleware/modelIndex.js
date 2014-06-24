@@ -1,12 +1,16 @@
 var util = require('util'),
-	async = require('async');
+	async = require('async'),
+    linz = require('../');
 
 module.exports = function (model) {
 
 	return function (req, res, next) {
 
         var records = [],
-            filters = {};
+            filters = {},
+            totalRecords = 0,
+            pageSize = linz.get('page size'),
+            pageIndex = req.body.page || 1;
 
         // set the model on linz
 		req.linz.model = req.linz.get('models')[req.params.model];
@@ -21,6 +25,9 @@ module.exports = function (model) {
                     if (!err) {
                         req.linz.model.grid = grid;
                     }
+
+                    // reset the pageSize value
+                    pageSize = req.body.pageSize || req.linz.model.grid.paging.size;
 
 					cb(err);
 
@@ -121,13 +128,28 @@ module.exports = function (model) {
 
             },
 
-			// find the docs
-			function (cb) {
+            // count the docs
+            function (cb) {
 
                 // consolidate filters into query
                 if (Object.keys(filters).length) {
                     filters = req.linz.model.setFiltersAsQuery(filters);
                 }
+
+                req.linz.model.count(filters, function (err, docs) {
+
+                    if (!err) {
+                        totalRecords = docs;
+                    }
+
+                    return cb(null);
+
+                });
+
+            },
+
+			// find the docs
+			function (cb) {
 
 				var query = req.linz.model.find(filters);
 
@@ -141,6 +163,12 @@ module.exports = function (model) {
 					query.sort(req.body.sort);
 
 				}
+
+                if (req.linz.model.grid.paging.active === true) {
+                    // add in paging skip and limit
+                    query.skip(pageIndex*pageSize-pageSize).limit(pageSize);
+                }
+
 
 				query.exec(function (err, docs) {
 
@@ -209,7 +237,13 @@ module.exports = function (model) {
 		], function (err, result) {
 
             // map the update records to linz
-            req.linz.records = records;
+            req.linz.records = {
+                records: records,
+                page: pageIndex,
+                total: totalRecords,
+                pages: Math.ceil(totalRecords/pageSize),
+                pageSize: pageSize
+            };
 
 			// next middleware
 			next(err);

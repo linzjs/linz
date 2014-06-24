@@ -45,6 +45,8 @@
 				span.create
 					a.btn.btn-primary.pull-right(href='' + linz.get('admin path') + '/model/#{model.modelName}/new') Create a new #{model.singular}
 form.form-horizontal.filters(method='post', role='form')
+	input.page(type='hidden', name='page', value=''+ page +'')
+	input.pageSize(type='hidden', name='pageSize', value=''+ pageSize +'')
 	input.selectedFilters(type='hidden', name='selectedFilters', value='' + ((form.selectedFilters) ? form.selectedFilters : '') + '')
 	input.selectedSort(type='hidden', name='sort', value='' + ((form.sort) ? form.sort : model.grid.sortBy[0].field ) + '')
 	.filter-list
