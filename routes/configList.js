@@ -1,5 +1,3 @@
-var path = require('path');
-
 /* GET /admin/configs/list */
 var route = function (req, res) {
 

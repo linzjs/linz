@@ -19,5 +19,10 @@ block content
 								div.btn-group
 									a.btn.btn-default.control-edit(href='' + linz.api.getAdminLink(configs[Object.keys(configs)[0]], 'edit', record._id))
 										span(class="glyphicon glyphicon-pencil")
+									a.btn.btn-default(href='' + linz.api.getAdminLink(configs[Object.keys(configs)[0]], 'default', record._id), data-linz-control="config-default")
+										span(class="glyphicon glyphicon-refresh")
 							each val in Object.keys(grid.columns)
 								td!= record[val]
+
+block script
+	script(src='' + linz.get('admin path') + '/public/js/config/list.js')

@@ -1,7 +1,7 @@
 
 var async = require('async');
 
-/* GET /admin/:model/:id/overview */
+/* GET /admin/config/:config/overview */
 var route = function (req, res) {
 
 	var locals = {

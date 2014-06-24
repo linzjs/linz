@@ -1,11 +1,8 @@
-var formist = require('formist'),
-	linz = require('../'),
-    model = require('../lib/formtools/model'),
-    async = require('async'),
+var async = require('async'),
     utils = require('../lib/utils'),
     formUtils = require('../lib/formtools/utils');
 
-/* GET /admin/:model/:id/overview */
+/* GET /admin/config/:config/overview */
 var route = function (req, res, next) {
 
     async.waterfall([
@@ -81,7 +78,7 @@ var route = function (req, res, next) {
             return next(err);
         }
 
-        return res.redirect(linz.api.getAdminLink(req.linz.config, 'overview', req.params.config));
+        return res.redirect(req.linz.api.getAdminLink(req.linz.config, 'overview', req.params.config));
 
     });
 

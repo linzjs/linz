@@ -1,5 +1,4 @@
-var linz = require('../'),
-	async = require('async');
+var async = require('async');
 
 module.exports = function () {
 
@@ -13,19 +12,19 @@ module.exports = function () {
             columns: {
                 label: {
                     label: 'Label',
-                    renderer: linz.formtools.cellRenderers.overviewLink
+                    renderer: req.linz.formtools.cellRenderers.overviewLink
                 },
                 _id: {
                     label: 'Config key',
-                    renderer: linz.formtools.cellRenderers.default
+                    renderer: req.linz.formtools.cellRenderers.default
                 },
                 dateModified: {
                     label: 'Modified on',
-                    renderer: linz.formtools.cellRenderers.date
+                    renderer: req.linz.formtools.cellRenderers.date
                 },
                 modifiedBy: {
                     label: 'Modified by',
-                    renderer: linz.formtools.cellRenderers.reference
+                    renderer: req.linz.formtools.cellRenderers.reference
                 }
             }
         };

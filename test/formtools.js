@@ -562,7 +562,7 @@ describe('formtools', function () {
                             linz.formtools.cellRenderers.array(['one','two','three'], [], 'firstName', PostModel, function (err, result) {
 
                                 (err === null).should.be.ok;
-                                result.should.equal('one,<br>two,<br>three');
+                                result.should.equal('one, two, three');
                                 done();
 
                             });
@@ -686,7 +686,7 @@ describe('formtools', function () {
                             linz.formtools.cellRenderers.default(['one','two','three'], [], 'firstName', PostModel, function (err, result) {
 
                                 (err === null).should.be.ok;
-                                result.should.equal('one,<br>two,<br>three');
+                                result.should.equal('one, two, three');
                                 done();
 
                             });

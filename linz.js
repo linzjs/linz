@@ -273,38 +273,6 @@ Linz.prototype.initConfigs = function (cb) {
     var db = this.mongoose.connection.db,
         configs = this.get('configs');
 
-    var getDefaultValue = function (field) {
-
-        var value = '',
-            fieldType = linz.formtools.utils.schemaType(field);
-
-
-        if (field.defaultValue !== undefined && fieldType !== 'array') {
-
-            // work out the default value and use it
-            if (typeof field.defaultValue !== 'function') {
-                value = field.defaultValue;
-            } else if (typeof field.defaultValue === 'function' && fieldType !== 'documentarray') {
-                value = field.defaultValue();
-            }
-
-        } else if (field.defaultValue === undefined && fieldType === 'datetime') {
-
-            value = (function defaultDate () {
-                var d = new Date();
-                return d.getFullYear() + '-' +
-                        linz.formtools.utils.padWithZero(d.getMonth()+1) + '-' +
-                        linz.formtools.utils.padWithZero(d.getDate()) + 'T' +
-                        linz.formtools.utils.padWithZero(d.getHours()) + ':' +
-                        linz.formtools.utils.padWithZero(d.getMinutes()) + ':' +
-                        '00.000';
-            })();
-
-        }
-
-        return value;
-    }
-
     db.collection(this.get('configs collection name'), function (err, collection) {
 
         async.each(Object.keys(configs), function (configName, initDone) {
@@ -323,7 +291,7 @@ Linz.prototype.initConfigs = function (cb) {
                     configs[configName].schema.eachPath(function (fieldName, field) {
 
                         if (!doc[fieldName]) {
-                            updatedDoc[fieldName] = getDefaultValue(field);
+                            updatedDoc[fieldName] = linz.formtools.utils.getDefaultValue(field);
                             doc[fieldName] = updatedDoc[fieldName];
                         }
 
@@ -348,14 +316,11 @@ Linz.prototype.initConfigs = function (cb) {
 
                 } else {
 
-                    var newConfig = {},
-                        defaultValue;
+                    var newConfig = {};
 
                     // contruct doc from config schema
                     configs[configName].schema.eachPath(function (fieldName, field) {
-
-                        newConfig[fieldName] = getDefaultValue(field);
-
+                        newConfig[fieldName] = linz.formtools.utils.getDefaultValue(field);
                     });
 
                     // overwrite _id field with custom id name
