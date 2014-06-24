@@ -1,5 +1,6 @@
 
-var async = require('async');
+var linz = require('../'),
+    async = require('async');
 
 /* GET /admin/config/:config/overview */
 var route = function (req, res) {
@@ -51,7 +52,7 @@ var route = function (req, res) {
 
 	], function (err, results) {
 
-		res.render(req.linz.views + '/configOverview.jade', locals);
+		res.render(linz.views + '/configOverview.jade', locals);
 
 	});
 

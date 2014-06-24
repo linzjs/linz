@@ -1,30 +1,31 @@
-var async = require('async');
+var linz = require('../'),
+    async = require('async');
 
 module.exports = function () {
 
 	return function (req, res, next) {
 
         // set the config on linz
-		req.linz.configs = req.linz.get('configs');
+		req.linz.configs = linz.get('configs');
 
         // construct the grid object
         req.linz.configGrid = {
             columns: {
                 label: {
                     label: 'Label',
-                    renderer: req.linz.formtools.cellRenderers.overviewLink
+                    renderer: linz.formtools.cellRenderers.overviewLink
                 },
                 _id: {
                     label: 'Config key',
-                    renderer: req.linz.formtools.cellRenderers.default
+                    renderer: linz.formtools.cellRenderers.default
                 },
                 dateModified: {
                     label: 'Modified on',
-                    renderer: req.linz.formtools.cellRenderers.date
+                    renderer: linz.formtools.cellRenderers.date
                 },
                 modifiedBy: {
                     label: 'Modified by',
-                    renderer: req.linz.formtools.cellRenderers.reference
+                    renderer: linz.formtools.cellRenderers.reference
                 }
             }
         };
@@ -34,11 +35,11 @@ module.exports = function () {
 			// find the configs
 			function (cb) {
 
-                var db  = req.linz.mongoose.connection.db,
+                var db  = linz.mongoose.connection.db,
                     configKeys = Object.keys(req.linz.configs),
                     filter = { _id: { $in: configKeys } };
 
-                db.collection(req.linz.get('configs collection name'), function (err, collection) {
+                db.collection(linz.get('configs collection name'), function (err, collection) {
 
                     // find documents matching each of the availabel config schema name
                     collection.find(filter).toArray(function(err, items) {

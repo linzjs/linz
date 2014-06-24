@@ -1,20 +1,21 @@
-var async = require('async');
+var linz = require('../'),
+    async = require('async');
 
 module.exports = function () {
 
     return function (req, res, next) {
 
         // set the config on linz
-        req.linz.config = req.linz.get('configs')[req.params.config];
+        req.linz.config = linz.get('configs')[req.params.config];
 
         async.waterfall([
 
             // find the configs
             function (cb) {
 
-                var db  = req.linz.mongoose.connection.db;
+                var db  = linz.mongoose.connection.db;
 
-                db.collection(req.linz.get('configs collection name'), function (err, collection) {
+                db.collection(linz.get('configs collection name'), function (err, collection) {
                     return cb(err, collection);
                 });
 
@@ -38,7 +39,7 @@ module.exports = function () {
 
                 // contruct doc from config schema
                 req.linz.config.schema.eachPath(function (fieldName, field) {
-                    newConfig[fieldName] = req.linz.formtools.utils.getDefaultValue(field);
+                    newConfig[fieldName] = linz.formtools.utils.getDefaultValue(field);
                 });
 
                 // overwrite _id field with custom id name
@@ -51,7 +52,7 @@ module.exports = function () {
                     }
 
                     // add new config to linz
-                    req.linz.get('configs')[req.params.config].config = newConfig;
+                    linz.get('configs')[req.params.config].config = newConfig;
 
                     return cb(null);
 

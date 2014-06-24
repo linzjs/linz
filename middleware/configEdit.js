@@ -1,11 +1,12 @@
-var util = require('util'),
+var linz = require('../'),
+    util = require('util'),
 	async = require('async');
 
 module.exports = function () {
 
 	return function (req, res, next) {
 
-		req.linz.config = req.linz.get('configs')[req.params.config];
+		req.linz.config = linz.get('configs')[req.params.config];
 
 		async.series([
 
@@ -27,9 +28,9 @@ module.exports = function () {
 
 			function (cb) {
 
-                var db  = req.linz.mongoose.connection.db;
+                var db  = linz.mongoose.connection.db;
 
-                db.collection(req.linz.get('configs collection name'), function (err, collection) {
+                db.collection(linz.get('configs collection name'), function (err, collection) {
 
                     collection.findOne({ _id: req.params.config}, function (err, doc) {
                         if (err) {

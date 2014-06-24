@@ -1,4 +1,5 @@
-var async = require('async'),
+var linz = require('../'),
+    async = require('async'),
     utils = require('../lib/utils'),
     formUtils = require('../lib/formtools/utils');
 
@@ -24,9 +25,9 @@ var route = function (req, res, next) {
         function (form, cb) {
 
 
-            var db  = req.linz.mongoose.connection.db;
+            var db  = linz.mongoose.connection.db;
 
-            db.collection(req.linz.get('configs collection name'), function (err, collection) {
+            db.collection(linz.get('configs collection name'), function (err, collection) {
 
                 var record = {};
 
@@ -63,7 +64,7 @@ var route = function (req, res, next) {
                     record._id = req.params.config;
 
                     // update linz with changes to this config
-                    req.linz.get('configs')[req.params.config].config = record;
+                    linz.get('configs')[req.params.config].config = record;
 
                     return cb(err);
                 });
@@ -78,7 +79,7 @@ var route = function (req, res, next) {
             return next(err);
         }
 
-        return res.redirect(req.linz.api.getAdminLink(req.linz.config, 'overview', req.params.config));
+        return res.redirect(linz.api.getAdminLink(req.linz.config, 'overview', req.params.config));
 
     });
 
