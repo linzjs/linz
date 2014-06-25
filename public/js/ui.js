@@ -42,7 +42,12 @@ if (!linz) {
 
     function addDeleteConfirmation () {
 
-        $('.control-delete').click(function () {
+        $('.btn[data-linz-control="delete"]').click(function () {
+
+            if ($(this).attr('data-linz-disabled')) {
+                // no confirmation for disabled button
+                return false;
+            }
 
             if (confirm('Are you sure you want to delete this record?')) {
                 return true;
@@ -54,9 +59,19 @@ if (!linz) {
 
     }
 
+    function addDisabledBtnAlert () {
+
+        $('.btn[data-linz-disabled="true"]').click(function () {
+            alert($(this).attr('data-linz-disabled-message'));
+            return false;
+        });
+
+    }
+
     linz.loadLibraries = loadLibraries;
     linz.loadDatepicker = loadDatepicker;
     linz.isTemplateSupported = isTemplateSupported;
     linz.addDeleteConfirmation = addDeleteConfirmation;
+    linz.addDisabledBtnAlert = addDisabledBtnAlert;
 
 })();

@@ -3,6 +3,7 @@
     var filtersAreDirty = false;
 
     linz.addDeleteConfirmation();
+    linz.addDisabledBtnAlert();
 
     if ($('.selectedFilters').val().length > 0) {
         toggleFilterBox('show');

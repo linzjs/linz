@@ -169,12 +169,16 @@ module.exports = function (model) {
                     query.skip(pageIndex*pageSize-pageSize).limit(pageSize);
                 }
 
-
 				query.exec(function (err, docs) {
 
 					if (!err) {
 
-                        records = docs;
+                        mongooseRecords = docs;
+                        // convert mongoose documents to plain javascript objects
+                        mongooseRecords.forEach(function (record) {
+                            records.push(record.toObject({ virtuals: true}));
+                        });
+
                     }
 
 					cb(err);
@@ -183,15 +187,71 @@ module.exports = function (model) {
 
 			},
 
+            // check if each doc can be edited
+            function (cb) {
+
+                // skip this if canEdit is not define for model
+                if (!mongooseRecords[0].canEdit) {
+                    return cb(null);
+                }
+
+                async.each(Object.keys(mongooseRecords), function (index, recordDone) {
+
+                    mongooseRecords[index].canEdit(function (err, result, message) {
+
+                        if (err) {
+                            return recordDone(err);
+                        }
+
+                        records[index].edit = { disabled: !result, message: message };
+
+                        return recordDone(null);
+
+                    });
+
+                }, function (err) {
+
+                    cb(err);
+
+                });
+
+            },
+
+            // check if each doc can be deleted
+            function (cb) {
+
+                // skip this if canEdit is not define for model
+                if (!mongooseRecords[0].canDelete) {
+                    return cb(null);
+                }
+
+                async.each(Object.keys(mongooseRecords), function (index, recordDone) {
+
+                    mongooseRecords[index].canDelete(function (err, result, message) {
+
+                        if (err) {
+                            return recordDone(err);
+                        }
+
+                        records[index].delete = { disabled: !result, message: message };
+
+                        return recordDone(null);
+
+                    });
+
+                }, function (err) {
+
+                    cb(err);
+
+                });
+
+            },
+
             // create the values for the datagrids for each doc
             function (cb) {
 
                 // loop through each record
                 async.each(Object.keys(records), function (index, recordDone) {
-
-                    // turn each mongoose record, into a plain javascript object
-                    // otherwise it won't accept a string in a field of type Date
-                    records[index] = records[index].toObject({ virtuals: true});
 
                     // loop through each column
                     async.each(Object.keys(req.linz.model.grid.columns), function (column, columnDone) {
