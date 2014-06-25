@@ -297,8 +297,17 @@ Linz.prototype.initConfigs = function (cb) {
 
                     });
 
+                    if (!Object.keys(updatedDoc).length) {
+
+                        configs[configName].config = doc;
+                        debugConfigs('Initialised config %s', configName);
+
+                        // since there are no change, return early
+                        return initDone(null);
+                    }
+
                     // update doc with changes
-                    collection.update({ _id: configName }, { $set: updatedDoc }, { w:1 }, function (err, result) {
+                    return collection.update({ _id: configName }, { $set: updatedDoc }, { w:1 }, function (err, result) {
 
                         if (err) {
                             throw new Error('Unable to write config file %s to database. ' + err.message, configName);
@@ -313,35 +322,32 @@ Linz.prototype.initConfigs = function (cb) {
 
                     });
 
-
-                } else {
-
-                    var newConfig = {};
-
-                    // contruct doc from config schema
-                    configs[configName].schema.eachPath(function (fieldName, field) {
-                        newConfig[fieldName] = linz.formtools.utils.getDefaultValue(field);
-                    });
-
-                    // overwrite _id field with custom id name
-                    newConfig['_id'] = configName;
-
-                    collection.insert(newConfig, {w:1}, function(err, result) {
-
-                        if (err) {
-                            throw new Error('Unable to write config file %s to database. ' + err.message, configName);
-                        }
-
-                        debugConfigs('Initialised config %s', configName);
-
-                        // add new config to linz
-                        configs[configName].config = newConfig;
-
-                        return initDone(null);
-
-                    });
-
                 }
+
+                var newConfig = {};
+
+                // contruct doc from config schema
+                configs[configName].schema.eachPath(function (fieldName, field) {
+                    newConfig[fieldName] = linz.formtools.utils.getDefaultValue(field);
+                });
+
+                // overwrite _id field with custom id name
+                newConfig['_id'] = configName;
+
+                collection.insert(newConfig, {w:1}, function(err, result) {
+
+                    if (err) {
+                        throw new Error('Unable to write config file %s to database. ' + err.message, configName);
+                    }
+
+                    debugConfigs('Initialised config %s', configName);
+
+                    // add new config to linz
+                    configs[configName].config = newConfig;
+
+                    return initDone(null);
+
+                });
 
             });
 

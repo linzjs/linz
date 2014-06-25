@@ -10,6 +10,10 @@
             checkboxField = queryObj.parents('.input-group').find('template').clone().html(),
             inputValue = queryObj.parents('.input-group').find('input[name="add-checkbox"]').val();
 
+        if (!inputValue) {
+            return false;
+        }
+
         // convert this to jquery object to allow dom search below
         checkboxField = $(checkboxField);
         checkboxField.find('input').val(inputValue);

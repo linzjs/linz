@@ -45,10 +45,10 @@ module.exports = function () {
 
 			},
 
-		], function () {
+		], function (err) {
 
 			// call the next middleware
-			return next();
+			return next(err);
 
 		});
 
