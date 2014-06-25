@@ -47,6 +47,11 @@ var route = function (req, res, next) {
 
                         }
 
+                        // handle type conversion here
+                        if (form[field].type === 'array' && typeof req.body[field] === 'string') {
+                            req.body[field] = [req.body[field]];
+                        }
+
                         // go through the transform function if one exists
                         record[field] = (form[field].transform) ? form[field].transform(req.body[field], 'beforeSave') : req.body[field];
 
