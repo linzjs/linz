@@ -37,6 +37,9 @@
 								a.control-addFilter(data-filter-field='' + key + '')= filterField['label']
 								span.controlField!= filterField.formControls
 	.col-md-6.col-xs-12
+		.group-actions
+			for groupAction in model.grid.groupActions
+				a.btn.btn-default.pull-right(href='' + linz.get('admin path') + '/model/#{model.modelName}/#{groupAction.action}' data-toggle="modal" data-target="#groupActionModal")= groupAction.label
 		.custom-actions
 			for action in model.grid.actions
 				a.btn.btn-default.pull-right(href='' + linz.api.getAdminLink(model, action.action))= action.label
@@ -59,3 +62,14 @@ form.form-horizontal.filters(method='post', role='form')
 			button.btn.btn-default(type="submit") Filter now
 	template(id="filter")
 		include filter
+
+.modal.fade#groupActionModal(tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
+	.modal-dialog
+		.modal-content
+			.modal-header
+				button.close(type="button", data-dismiss="modal" aria-hidden="true") &times;
+				h4.modal-title#myModalLabel Modal title
+			.modal-body
+			.modal-footer
+				button.btn.btn-default(type="button", data-dismiss="modal") Close
+				button.btn.btn-primary(type="button", data-dismiss="modal") Sav changes
