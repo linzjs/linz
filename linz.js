@@ -193,7 +193,15 @@ Linz.prototype.configure = function() {
             return _this.checkSetup(cb);
         }
 
-    ]);
+    ], function (err) {
+
+        if (err) {
+            throw err;
+        }
+
+        return _this.emit('initialised');
+
+    });
 
 };
 
