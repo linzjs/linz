@@ -20,10 +20,10 @@ if records.length > 0
 							td
 								div.btn-group
 									if model.grid.canEdit
-										a.btn.btn-default(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/edit', data-linz-control="edit", data-linz-disabled=((record.edit && record.edit.disabled) ? 'true' : false), data-linz-disabled-message=((record.edit && record.edit.disabled) ? record.edit.message : false))
+										a.btn.btn-default(href='' + linz.api.getAdminLink(model, 'edit', record._id), data-linz-control="edit", data-linz-disabled=((record.edit && record.edit.disabled) ? 'true' : false), data-linz-disabled-message=((record.edit && record.edit.disabled) ? record.edit.message : false))
 											span(class="glyphicon glyphicon-pencil")
 									if model.grid.canDelete
-										a.btn.btn-default(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/delete', data-linz-control="delete", data-linz-disabled=((record.delete && record.delete.disabled) ? 'true' : false), data-linz-disabled-message=((record.delete && record.delete.disabled) ? record.delete.message : false))
+										a.btn.btn-default(href='' + linz.api.getAdminLink(model, 'delete', record._id), data-linz-control="delete", data-linz-disabled=((record.delete && record.delete.disabled) ? 'true' : false), data-linz-disabled-message=((record.delete && record.delete.disabled) ? record.delete.message : false))
 											span(class="glyphicon glyphicon-trash")
 						each val in Object.keys(model.grid.columns)
 							td!= record[val]

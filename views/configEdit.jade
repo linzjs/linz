@@ -2,7 +2,7 @@ include mixins/documentarray
 extends layout
 
 block content
-	h1 Editing '#{record.title}'
+	h1 Editing '#{record.label}'
 	div
 		form.form-horizontal.model(role='form',action='#{actionUrl}',method='post')
 			!= form

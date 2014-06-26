@@ -10,8 +10,8 @@ var route = function (req, res) {
 			model: req.linz.model,
 			record: req.linz.record,
 			form: editForm.render(),
-            actionUrl: linz.api.getAdminLink(req.linz.model.modelName, 'save', req.linz.record._id),
-			cancelUrl: linz.api.getAdminLink(req.linz.model.modelName)
+            actionUrl: linz.api.getAdminLink(req.linz.model, 'save', req.linz.record._id),
+			cancelUrl: linz.api.getAdminLink(req.linz.model)
 		});
 
 	});

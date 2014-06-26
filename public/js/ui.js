@@ -64,14 +64,32 @@ if (!linz) {
         $('.btn[data-linz-disabled="true"]').click(function () {
             alert($(this).attr('data-linz-disabled-message'));
             return false;
+
         });
 
     }
+
+    function addConfigDefaultConfirmation () {
+
+        $('.btn[data-linz-control="config-default"]').click(function () {
+
+            if ($(this).attr('data-linz-disabled')) {
+                // no confirmation for disabled button
+                return false;
+            }
+
+            if (confirm('Are you sure you want to reset this config to default?')) {
+                return true;
+            }
+        });
+    }
+
 
     linz.loadLibraries = loadLibraries;
     linz.loadDatepicker = loadDatepicker;
     linz.isTemplateSupported = isTemplateSupported;
     linz.addDeleteConfirmation = addDeleteConfirmation;
     linz.addDisabledBtnAlert = addDisabledBtnAlert;
+    linz.addConfigDefaultConfirmation = addConfigDefaultConfirmation;
 
 })();

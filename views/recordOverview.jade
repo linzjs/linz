@@ -7,17 +7,17 @@ block content
 			.custom-actions
 				for action in model.overview.actions
 					.btn-group
-						a.btn.btn-default(href='' + linz.get('admin path') + '/model/#{model.modelName}/#{record._id}/#{action.action}')= action.label
+						a.btn.btn-default(href='' + linz.api.getAdminLink(model, action.action, record._id))= action.label
 		if (model.overview.canEdit || model.overview.canDelete || model.overview.viewAll)
 			.actions
 				span
 					.btn-group
 						if model.overview.canEdit
-							a.btn.btn-primary(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/edit', data-linz-control="edit", data-linz-disabled=((record.edit && record.edit.disabled) ? 'true' : false), data-linz-disabled-message=((record.edit && record.edit.disabled) ? record.edit.message : false)) Edit
+							a.btn.btn-primary(href='' + linz.api.getAdminLink(model, 'edit', record._id), data-linz-control="edit", data-linz-disabled=((record.edit && record.edit.disabled) ? 'true' : false), data-linz-disabled-message=((record.edit && record.edit.disabled) ? record.edit.message : false)) Edit
 						if model.overview.canDelete
-							a.btn.btn-default(href='' + linz.get('admin path') + '/#{model.modelName}/#{record._id}/delete', data-linz-control="delete", data-linz-disabled=((record.delete && record.delete.disabled) ? 'true' : false), data-linz-disabled-message=((record.delete && record.delete.disabled) ? record.delete.message : false)) Delete
+							a.btn.btn-default(href='' + linz.api.getAdminLink(model, 'delete', record._id), data-linz-control="delete", data-linz-disabled=((record.delete && record.delete.disabled) ? 'true' : false), data-linz-disabled-message=((record.delete && record.delete.disabled) ? record.delete.message : false)) Delete
 						if model.overview.viewAll
-							a.btn.btn-default(href='' + linz.get('admin path') + '/model/#{model.modelName}/list') View all #{model.label}
+							a.btn.btn-default(href='' + linz.api.getAdminLink(model)) View all #{model.label}
 	.overview-summary
 		div!= overviewSummary
 	.overview-body

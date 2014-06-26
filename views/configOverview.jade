@@ -1,0 +1,26 @@
+extends layout
+
+block content
+	header
+		h1= record.label
+		if config.overview.actions.length
+			.custom-actions
+				for action in config.overview.actions
+					.btn-group
+						a.btn.btn-default(href='' + linz.api.getAdminLink(config, action.action, record._id))= action.label
+		if (config.overview.canEdit || config.overview.viewAll)
+			.actions
+				span
+					.btn-group
+						if config.overview.canEdit
+							a.btn.btn-primary(href='' + linz.api.getAdminLink(config, 'edit', record._id)) Edit
+						if config.overview.viewAll
+							a.btn.btn-default(href='' + linz.api.getAdminLink(config, 'list')) View all Configs
+	.overview-summary
+		div!= overviewSummary
+	.overview-body
+		if overviewBody
+			div!= overviewBody
+
+block script
+	script(src='' + linz.get('admin path') + '/public/js/model/overview.js')

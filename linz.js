@@ -12,7 +12,8 @@ var	express = require('express'),
 	events = require('events'),
 	passport = require('passport'),
 	LocalStrategy = require('passport-local').Strategy,
-	bunyan = require('bunyan');
+	bunyan = require('bunyan'),
+    async = require('async');
 
 /**
  * Linz constructor
@@ -36,7 +37,9 @@ var linz = module.exports = exports = new Linz;
 var	routesManager = require('./lib/router'),
 	passportHelpers = require('./lib/helpers-passport'),
 	helpersModels = require('./lib/helpers-models'),
+    helpersConfigs = require('./lib/helpers-configs'),
 	debugModels = require('debug')('linz:models'),
+    debugConfigs = require('debug')('linz:configs'),
 	debugGeneral = require('debug')('linz:general'),
 	debugSet = require('debug')('linz:set'),
 	error = require('./lib/errors');
@@ -132,41 +135,103 @@ Linz.prototype.init = function () {
 
 Linz.prototype.configure = function() {
 
-	this.defaultConfiguration();
-	this.bootstrapExpress();
-	this.mountAdmin();
-	this.loadModels();
-	this.bootstrapExpressLocals();
-	this.checkSetup();
+    var _this = this;
 
-	// expose app
-	this.set('app', this.app);
+    async.series([
 
-	// check for either a connect(ed|ing) mongoose object, or mongoose URI
-	if ([1,2].indexOf(this.mongoose.connection.readyState) < 0) {
+        function (cb) {
+            return _this.defaultConfiguration(cb);
+        },
 
-		if (!this.get('mongo')) {
-			throw new Error('You must either supply a connected mongoose object, or a mongo URI');
-		}
+        function (cb) {
+            return _this.bootstrapExpress(cb);
+        },
 
-		this.mongoose.connect(this.get('mongo'));
+        function (cb) {
+            return _this.mountAdmin(cb);
+        },
 
-	}
+        function (cb) {
+            return _this.setupORM(cb);
+        },
+
+        function (cb) {
+            return _this.loadConfigs(cb);
+        },
+
+        function (cb) {
+
+            _this.set('app', _this.app);
+
+            // check for either a connect(ed|ing) mongoose object, or mongoose URI
+            if ([1,2].indexOf(_this.mongoose.connection.readyState) < 0) {
+
+                if (!_this.get('mongo')) {
+                    throw new Error('You must either supply a connected mongoose object, or a mongo URI');
+                }
+
+                _this.mongoose.connect(_this.get('mongo'));
+                _this.mongoose.connection.on('connected', function () {
+                    _this.initConfigs(cb);
+                });
+
+            } else {
+                return cb(null);
+            }
+
+        },
+
+        function (cb) {
+            return _this.loadModels(cb);
+        },
+
+        function (cb) {
+            return _this.bootstrapExpressLocals(cb);
+        },
+
+        function (cb) {
+            return _this.checkSetup(cb);
+        }
+
+    ], function (err) {
+
+        if (err) {
+            throw err;
+        }
+
+        return _this.emit('initialised');
+
+    });
 
 };
+
+/**
+* Load ORM
+*
+* @return void
+*/
+Linz.prototype.setupORM = function (cb) {
+
+    // extend the mongoose types
+    helpersModels.extendTypes();
+
+    return cb(null);
+
+};
+
 
 /**
 * Search and look for the models folder, then go ahead and load them
 *
 * @return void
 */
-Linz.prototype.loadModels = function () {
-
-	// extend the mongoose types
-	helpersModels.extendTypes();
+Linz.prototype.loadModels = function (cb) {
 
 	if (!this.get('load models')) {
-		return this.set('models', []);
+
+		this.set('models', []);
+        return cb(null);
+
 	}
 
 	// set the default models path
@@ -176,14 +241,139 @@ Linz.prototype.loadModels = function () {
 
 	this.set('models', helpersModels.loadModels(modelsPath));
 
+    return cb(null);
+
 };
+
+/**
+* Search and look for the configs folder, then go ahead and load them
+*
+* @return void
+*/
+Linz.prototype.loadConfigs = function (cb) {
+
+    if (!this.get('load configs')) {
+
+        this.set('configs', []);
+        return cb(null);
+
+    }
+
+    // set the default configs path
+    this.set('configs path', path.resolve(this.get('cwd'), 'configs'), false);
+
+    var configsPath = this.get('configs path');
+
+    this.set('configs', helpersConfigs.loadConfigs(configsPath));
+
+    return cb(null);
+
+};
+
+/**
+* Load document from configs collection and create new ones if none are found.
+*
+* @return void
+*/
+Linz.prototype.initConfigs = function (cb) {
+
+
+    var db = this.mongoose.connection.db,
+        configs = this.get('configs');
+
+    db.collection(this.get('configs collection name'), function (err, collection) {
+
+        async.each(Object.keys(configs), function (configName, initDone) {
+
+            collection.findOne({ _id: configName }, function (err, doc) {
+
+                if (err) {
+                    return initDone(err);
+                }
+
+                if (doc) {
+
+                    var updatedDoc = {};
+
+                    // doc exists, check if there are any new properties
+                    configs[configName].schema.eachPath(function (fieldName, field) {
+
+                        if (!doc[fieldName]) {
+                            updatedDoc[fieldName] = linz.formtools.utils.getDefaultValue(field);
+                            doc[fieldName] = updatedDoc[fieldName];
+                        }
+
+                    });
+
+                    if (!Object.keys(updatedDoc).length) {
+
+                        configs[configName].config = doc;
+                        debugConfigs('Initialised config %s', configName);
+
+                        // since there are no change, return early
+                        return initDone(null);
+                    }
+
+                    // update doc with changes
+                    return collection.update({ _id: configName }, { $set: updatedDoc }, { w:1 }, function (err, result) {
+
+                        if (err) {
+                            throw new Error('Unable to write config file %s to database. ' + err.message, configName);
+                        }
+
+                        // add config to linz
+                        configs[configName].config = doc;
+
+                        debugConfigs('Initialised config %s', configName);
+
+                        return initDone(err);
+
+                    });
+
+                }
+
+                var newConfig = {};
+
+                // contruct doc from config schema
+                configs[configName].schema.eachPath(function (fieldName, field) {
+                    newConfig[fieldName] = linz.formtools.utils.getDefaultValue(field);
+                });
+
+                // overwrite _id field with custom id name
+                newConfig['_id'] = configName;
+
+                collection.insert(newConfig, {w:1}, function(err, result) {
+
+                    if (err) {
+                        throw new Error('Unable to write config file %s to database. ' + err.message, configName);
+                    }
+
+                    debugConfigs('Initialised config %s', configName);
+
+                    // add new config to linz
+                    configs[configName].config = newConfig;
+
+                    return initDone(null);
+
+                });
+
+            });
+
+        }, function (err) {
+            return cb(err);
+        });
+
+    });
+
+};
+
 
 /**
 * Setup the default configuration for Linz
 *
 * @return void
 */
-Linz.prototype.defaultConfiguration = function () {
+Linz.prototype.defaultConfiguration = function (cb) {
 
 	var _this = this;
 
@@ -198,6 +388,9 @@ Linz.prototype.defaultConfiguration = function () {
 	// assign the model CRUD routes
 	routesManager.setupModelRoutes(this.models);
 
+    // assign the config CRUD routes
+    routesManager.setupConfigsRoutes();
+
 	// assign the logging routes
 	if (this.get('request logging') === true) routesManager.setupLoggingRoutes();
 
@@ -207,12 +400,16 @@ Linz.prototype.defaultConfiguration = function () {
 	// place holder for the models, which get loaded in next
 	this.set('models', []);
 
+    return cb(null);
+
 };
 
-Linz.prototype.mountAdmin = function () {
+Linz.prototype.mountAdmin = function (cb) {
 
 	debugGeneral('Mounting Linz on ' + this.get('admin path'));
 	this.app.use(this.get('admin path'), this.router);
+
+    return cb(null);
 };
 
 /**
@@ -220,11 +417,16 @@ Linz.prototype.mountAdmin = function () {
 *
 * @api private
 */
-Linz.prototype.bootstrapExpress = function () {
+Linz.prototype.bootstrapExpress = function (cb) {
 
 	// only run once
-	if (this.bBootstrapExpress) return;
-	if (!this.bBootstrapExpress) this.bBootstrapExpress = true;
+	if (this.bBootstrapExpress) {
+        return cb(null);
+    }
+
+	if (!this.bBootstrapExpress) {
+        this.bBootstrapExpress = true;
+    }
 
 	debugGeneral('Bootstrapping express');
 
@@ -258,6 +460,8 @@ Linz.prototype.bootstrapExpress = function () {
 	// add serialize and deserialize functionality
 	passportHelpers.setupPassport(passport);
 
+    return cb(null);
+
 };
 
 /**
@@ -265,7 +469,7 @@ Linz.prototype.bootstrapExpress = function () {
 *
 * @api private
 */
-Linz.prototype.bootstrapExpressLocals = function () {
+Linz.prototype.bootstrapExpressLocals = function (cb) {
 
 	// expose our settings to the rendering engine
 	this.app.locals['linz'] = this;
@@ -278,6 +482,8 @@ Linz.prototype.bootstrapExpressLocals = function () {
 	this.app.locals['adminTitle'] = this.get('admin title');
 
     this.app.locals['env'] = process.env.NODE_ENV || 'development';
+
+    return cb(null);
 
 };
 
@@ -391,6 +597,13 @@ Linz.prototype.buildNavigation = function () {
 	});
 	nav.push(models);
 
+    // add a reference for configs
+    var configs = {
+        name: 'Configs',
+        href: this.get('admin path') + '/configs/list'
+    };
+    nav.push(configs);
+
 	// add a reference for the logs
 	var logs = {
 		name: 'Logs',
@@ -406,11 +619,13 @@ Linz.prototype.buildNavigation = function () {
  * Check the setup of linz and make sure we've got everything we require
  * @return {[type]} [description]
  */
-Linz.prototype.checkSetup = function() {
+Linz.prototype.checkSetup = function(cb) {
 
 	if (this.get('user model') === undefined) {
 		error.log('You must define a user model');
 	}
+
+    return cb(null);
 
 };
 

@@ -265,7 +265,7 @@ module.exports = function (model) {
 
                         args.push(records[index]);
                         args.push(column);
-                        args.push(req.linz.model.modelName);
+                        args.push(req.linz.model);
                         args.push(function (err, value) {
 
                             if (!err) {

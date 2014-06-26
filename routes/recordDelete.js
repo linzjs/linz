@@ -1,3 +1,4 @@
+var linz = require('../');
 
 /* GET /admin/:model/:id/delete */
 var route = function (req, res, next) {
@@ -9,7 +10,7 @@ var route = function (req, res, next) {
         }
 
         if (!doc) {
-		  return res.redirect(req.linz.get('admin path') + '/model/' + req.linz.model.modelName + '/list');
+		  return res.redirect(linz.api.getAdminLink(req.linz.model));
         }
 
         doc.remove(function (removeErr) {
@@ -18,7 +19,7 @@ var route = function (req, res, next) {
                 return next(removeErr);
             }
 
-            return res.redirect(req.linz.get('admin path') + '/model/' + req.linz.model.modelName + '/list');
+            return res.redirect(linz.api.getAdminLink(req.linz.model));
 
         });
 
