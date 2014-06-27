@@ -171,6 +171,12 @@ module.exports = function (model) {
 
 				query.exec(function (err, docs) {
 
+                    if (!err && docs.length === 0) {
+
+                        return cb(new Error('No records found'));
+
+                    }
+
 					if (!err) {
 
                         mongooseRecords = docs;
@@ -304,6 +310,10 @@ module.exports = function (model) {
                 pages: Math.ceil(totalRecords/pageSize),
                 pageSize: pageSize
             };
+
+            if (err && err.message === 'No records found') {
+                err = null;
+            }
 
 			// next middleware
 			next(err);
