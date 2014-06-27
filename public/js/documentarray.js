@@ -235,10 +235,9 @@ $(document).ready(function () {
         var documentArrayInstance = $(el).attr('data-document-field-for');
 
         // handle the create button
-        $('[data-document-field-for="' + documentArrayInstance + '"] [data-document-action="create"]').click(function () {
+        $('[data-document-field-for="' + documentArrayInstance + '"] [data-document-action="create"]').click(function (event) {
 
-            // parent scope
-            parent = $(this).parent();
+            var parentElem = $(event.target).closest('.documents-container');
 
             // clear out persitence fields
             editingObject = {};
@@ -246,10 +245,10 @@ $(document).ready(function () {
             mode = 'editing';
 
             // which field are we editing for?
-            editingFor = $(parent).attr('data-document-field-for');
+            editingFor = $(parentElem).attr('data-document-field-for');
 
             // now grab the array if there already is one and turn it into a JavaScript object
-            editingArray = JSON.parse($(parent).children('input[type="hidden"][name="' + editingFor + '"]').val());
+            editingArray = JSON.parse($(parentElem).children('input[type="hidden"][name="' + editingFor + '"]').val());
 
             // now pop the form
             editDocument(editingFor);

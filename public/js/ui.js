@@ -7,17 +7,27 @@ if (!linz) {
     function loadLibraries(path) {
 
         // resource loader for fallback support
-        Modernizr.load({
-            test: Modernizr.inputtypes.date,
-            nope: [
-                path + '/public/js/moment.min.js',
-                path + '/public/js/bootstrap-datetimepicker.min.js',
-                path + '/public/css/bootstrap-datetimepicker.min.css'
-            ],
-            complete : function () {
-                loadDatepicker();
+        Modernizr.load([
+            {
+                test: Modernizr.inputtypes.date,
+                nope: [
+                    path + '/public/js/moment.min.js',
+                    path + '/public/js/bootstrap-datetimepicker.min.js',
+                    path + '/public/css/bootstrap-datetimepicker.min.css'
+                ],
+                complete : function () {
+                    loadDatepicker();
+                }
+            },
+            {
+                test: Modernizr.template,
+                nope: [
+                    path + '/public/js/template.js'
+                ]
             }
-        });
+        ]);
+
+
 
     }
 
