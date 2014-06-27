@@ -1363,6 +1363,15 @@ describe('formtools', function () {
                             });
                         });
 
+                        it('should handle array of string literals as the options', function (done) {
+                            var fieldName = 'groups',
+                                listFilter = linz.formtools.filters.list(['one','two'],true);
+                            listFilter.renderer(fieldName,function (err, result) {
+                                result.should.equal('<select name="' + fieldName + '[]" class="form-control multiselect" multiple><option value="one">one</option><option value="two">two</option></select>');
+                                done();
+                            });
+                        });
+
                         it('should throw error is list attribute is missing', function () {
                             try {
                                 var listFilter = linz.formtools.filters.list();
