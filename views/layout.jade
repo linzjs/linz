@@ -17,6 +17,11 @@ html(lang="en")
 		.navbar.navbar-inverse.navbar-fixed-top.linz-navbar-inverse(role='navigation')
 			.container
 				.navbar-header
+					button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+						span.sr-only Toggle navigation
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
 					a.navbar-brand(href=linz.get('admin path'))= linz.get('admin title')
 				.navbar-collapse.collapse
 					ul.nav.navbar-nav
