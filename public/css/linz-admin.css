@@ -38,10 +38,15 @@ body {
   margin-top: 20px;
   vertical-align: top;
 }
-.grid-header .actions {
-  overflow: hidden;
+.grid-header .actions,
+.grid-header .custom-actions,
+.grid-header .group-actions {
+  display: inline-block;
   margin-top: 20px;
   margin-bottom: 10px;
+}
+.grid-header .group-actions {
+  display: none;
 }
 .addFilterBtn .controlField {
   display: none;

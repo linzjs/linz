@@ -5,6 +5,8 @@
     linz.addDeleteConfirmation();
     linz.addDisabledBtnAlert();
 
+    /* FILTERS */
+
     if ($('.selectedFilters').val().length > 0) {
         toggleFilterBox('show');
     }
@@ -26,13 +28,6 @@
         triggerSubmit();
 
         return true;
-
-    });
-
-    $('.control-checkAll').click(function () {
-
-        var isChecked = $(this).is(':checked');
-        $('.checked-record').prop('checked',isChecked);
 
     });
 
@@ -105,6 +100,90 @@
 
     assignRemoveButton();
 
+    /* PAGINATION */
+
+    $('select.pagination').change(function () {
+        $('input.page').val($(this).val());
+        triggerSubmit();
+    });
+
+    /* PAGE SIZE */
+
+    $('select.pagination-size').change(function () {
+        $('input.pageSize').val($(this).val());
+        filtersAreDirty = true;
+        triggerSubmit();
+    });
+
+    /* GROUP ACTIONS */
+
+    $('input[data-linz-control="checked-all"]').click(function () {
+
+        var isChecked = $(this).is(':checked');
+        $('input[data-linz-control="checked-record"]').prop('checked',isChecked);
+
+    });
+
+    // bind event for check-all checkbox to show group action buttons
+    $('input[data-linz-control="checked-all"]').click(function () {
+
+        if ($(this).is(':checked')) {
+            return $('.group-actions').show();
+        }
+
+        $('.group-actions').hide();
+
+    });
+
+    // bind event to checkboxes to show group action buttons when checked
+    $('input[data-linz-control="checked-record"]').click(function () {
+
+        if ($(this).is(':checked')) {
+            return $('.group-actions').show();
+        }
+
+        // check if any of the other checkboxes are checked
+        if ($('input[data-linz-control="checked-record"]:checked').length) {
+            return;
+        }
+
+        // since none are checked, let's close group action buttons
+        $('.group-actions').hide();
+
+    });
+
+    // bind group action buttons
+    $('[data-linz-control="group-action"]').click(function () {
+
+        var queryObj = $(this),
+            url = queryObj.attr('href');
+
+        $('#groupActionModal').modal().find('.modal-dialog').load(url, function () {
+            console.log('helllo');
+        });
+
+       return false;
+    });
+
+    // bind model save button and update the selected ids to modal form
+    $('#groupActionModal').on('shown.bs.modal', function (e) {
+
+        var selectedIDs = [],
+            _this = this;
+
+        $('input[data-linz-control="checked-record"]:checked').each(function () {
+            selectedIDs.push($(this).val());
+        });
+
+        // add selected IDs to hidden field
+        $(_this).find('[data-group-action="ids"]').val(selectedIDs);
+
+        // add form validation
+        $(_this).find('form').bootstrapValidator({});
+
+    });
+
+
 
     function removeFomList (list, value, separator) {
         separator = separator || ",";
@@ -170,20 +249,5 @@
         $('.filters').find(':submit').click();
 
     }
-
-    /* PAGINATION */
-
-    $('select.pagination').change(function () {
-        $('input.page').val($(this).val());
-        triggerSubmit();
-    });
-
-    /* PAGE SIZE */
-
-    $('select.pagination-size').change(function () {
-        $('input.pageSize').val($(this).val());
-        filtersAreDirty = true;
-        triggerSubmit();
-    });
 
 })();

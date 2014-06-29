@@ -5,7 +5,7 @@ if records.length > 0
 				tr
 					th #
 					th
-						input.control-checkAll(type="checkbox")
+						input(type="checkbox", data-linz-control="checked-all")
 					if model.grid.canDelete || model.grid.canEdit
 						th Actions
 					for column in model.grid.columns
@@ -15,7 +15,7 @@ if records.length > 0
 					tr
 						td= from + index + 1
 						td
-							input.checked-record(type="checkbox", name="ids[]", value="#{record._id}")
+							input(type="checkbox", name="ids[]", value="#{record._id}", data-linz-control="checked-record")
 						if model.grid.canDelete || model.grid.canEdit
 							td
 								div.btn-group

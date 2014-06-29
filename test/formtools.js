@@ -328,7 +328,8 @@ describe('formtools', function () {
                             label: 'Code',
                             filter: linz.formtools.filters.number
                         }
-                    }
+                    },
+                    groupActions: [{ label: 'Assign category', action: '/group/category'}]
                 },
                 form: {
                     firstName: {
@@ -759,6 +760,24 @@ describe('formtools', function () {
                 }); // end describe('overrides actions')
 
             }); // end describe('action')
+
+            describe('group actions', function () {
+
+                it('should defaults empty array', function () {
+                    gridOpts.groupActions.should.be.an.instanceof(Array);
+                    gridOpts.groupActions.length.should.equal(0);
+                });
+
+                it('should override group actions', function () {
+                    console.log(overridesGridOpts.groupActions[0]);
+                    overridesGridOpts.groupActions.should.be.an.instanceof(Array);
+                    overridesGridOpts.groupActions[0].should.have.properties({
+                        label: 'Assign category',
+                        action: '/group/category'
+                    });
+                });
+
+            }); // end describe('group actions')
 
             describe('paging', function () {
 
@@ -1340,6 +1359,15 @@ describe('formtools', function () {
                                 listFilter = linz.formtools.filters.list(list,true);
                             listFilter.renderer(fieldName,function (err, result) {
                                 result.should.equal('<select name="' + fieldName + '[]" class="form-control multiselect" multiple><option value="one">option 1</option><option value="two">option 2</option></select>');
+                                done();
+                            });
+                        });
+
+                        it('should handle array of string literals as the options', function (done) {
+                            var fieldName = 'groups',
+                                listFilter = linz.formtools.filters.list(['one','two'],true);
+                            listFilter.renderer(fieldName,function (err, result) {
+                                result.should.equal('<select name="' + fieldName + '[]" class="form-control multiselect" multiple><option value="one">one</option><option value="two">two</option></select>');
                                 done();
                             });
                         });
@@ -2213,14 +2241,6 @@ describe('formtools', function () {
 
 
             }); // end describe('overrides')
-
-            describe('renderers', function () {
-
-                it('should have a default summary renderer', function () {
-
-                });
-
-            });
 
         }); // end describe('overview')
 
