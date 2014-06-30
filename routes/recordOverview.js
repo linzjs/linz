@@ -47,7 +47,65 @@ var route = function (req, res) {
 
 			});
 
-		}
+		},
+
+        function (cb) {
+
+            // the overview renderer doesn't require a mongoose object
+            // but rather an object literal with a few extra properties
+            locals.record = req.linz.record.toObject({ virtuals: true});
+
+            return cb(null);
+
+        },
+
+        // check if doc can be edited
+        function (cb) {
+
+            // skip this if canEdit is not define for model
+            if (!locals.record.canEdit) {
+                return cb(null);
+            }
+
+            locals.record.canEdit(function (err, result, message) {
+
+                if (err) {
+                    return cb(err);
+                }
+
+                record.edit = { disabled: !result, message: message };
+
+                return cb(null);
+
+            });
+
+
+
+        },
+
+        // check if doc can be deleted
+        function (cb) {
+
+            // skip this if canDelete is not define for model
+            if (!locals.record.canDelete) {
+                return cb(null);
+            }
+
+            locals.record.canDelete(function (err, result, message) {
+
+                if (err) {
+                    return cb(err);
+                }
+
+                record.delete = { disabled: !result, message: message };
+
+                return cb(null);
+
+            });
+
+
+
+        }
 
 	], function (err, results) {
 
