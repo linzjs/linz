@@ -298,6 +298,54 @@ module.exports = function (model) {
 
                 });
 
+            },
+
+            // check if we need to process each record again record actions
+            function (cb) {
+
+                if (!req.linz.model.grid.recordActions) {
+                    return cb(null);
+                }
+
+                async.each(req.linz.model.grid.recordActions, function (action, actionDone) {
+
+                    if (!action.disabled) {
+                        return actionDone(null);
+                    }
+
+                    if (typeof action.disabled !== 'function') {
+                        throw new Error('Invalid type for record.action.disabled. It must be a function');
+                    }
+
+                    async.each(records, function (record, recordDone) {
+
+                        action.disabled(record, function (err, isDisabled, message) {
+
+                            if (!record.recordActions) {
+                                record.recordActions = {};
+                            }
+
+                            record.recordActions[action.label] = {
+                                disabled: isDisabled,
+                                message: message
+                            };
+
+                            return recordDone(null);
+
+                        });
+
+                    }, function (err) {
+
+                        return actionDone(err);
+
+                    });
+
+
+                }, function (err) {
+
+                    return cb(err);
+
+                });
             }
 
 		], function (err, result) {

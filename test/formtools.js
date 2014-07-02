@@ -329,7 +329,8 @@ describe('formtools', function () {
                             filter: linz.formtools.filters.number
                         }
                     },
-                    groupActions: [{ label: 'Assign category', action: '/group/category'}]
+                    groupActions: [{ label: 'Assign category', action: 'group/category'}],
+                    recordActions: [{ label: 'Send welcome email', action: 'send-welcome-email'}],
                 },
                 form: {
                     firstName: {
@@ -769,11 +770,27 @@ describe('formtools', function () {
                 });
 
                 it('should override group actions', function () {
-                    console.log(overridesGridOpts.groupActions[0]);
                     overridesGridOpts.groupActions.should.be.an.instanceof(Array);
                     overridesGridOpts.groupActions[0].should.have.properties({
                         label: 'Assign category',
-                        action: '/group/category'
+                        action: 'group/category'
+                    });
+                });
+
+            }); // end describe('group actions')
+
+            describe('record actions', function () {
+
+                it('should defaults empty array', function () {
+                    gridOpts.recordActions.should.be.an.instanceof(Array);
+                    gridOpts.recordActions.length.should.equal(0);
+                });
+
+                it('should override record actions', function () {
+                    overridesGridOpts.recordActions.should.be.an.instanceof(Array);
+                    overridesGridOpts.recordActions[0].should.have.properties({
+                        label: 'Send welcome email',
+                        action: 'send-welcome-email'
                     });
                 });
 
