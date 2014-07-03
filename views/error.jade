@@ -2,7 +2,7 @@ extends layout
 
 block content
 	h1 An error has occured!
-	div.alert.alert-danger(role='alert')= error.message
+	div.alert.alert-danger(role='alert')!= error.message
 
 	if (env === 'development')
 		p= error.stack
