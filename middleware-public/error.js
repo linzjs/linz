@@ -7,6 +7,8 @@ module.exports = function (err, req, res, next) {
         returnUrl: req.headers.referer
     }
 
+    console.error(err);
+
     res.render(linz.views + '/error.jade', {
         error: error
     });
