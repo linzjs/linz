@@ -36,7 +36,7 @@ if records.length > 0
 											a.btn.btn-default(href=linz.api.getAdminLink(model, 'delete', record._id), data-linz-control="delete")
 												span(class="glyphicon glyphicon-trash")
 
-									if model.grid.recordActions
+									if model.grid.recordActions.length
 										div.btn-group
 											button.btn.btn-default.dropdown-toggle(type="button", data-toggle="dropdown")
 												span.caret
