@@ -52,7 +52,7 @@ if (!linz) {
 
     function addDeleteConfirmation () {
 
-        $('.btn[data-linz-control="delete"]').click(function () {
+        $('[data-linz-control="delete"]').click(function () {
 
             if ($(this).attr('data-linz-disabled')) {
                 // no confirmation for disabled button
@@ -71,7 +71,7 @@ if (!linz) {
 
     function addDisabledBtnAlert () {
 
-        $('.btn[data-linz-disabled="true"]').click(function () {
+        $('[data-linz-disabled="true"]').click(function () {
             alert($(this).attr('data-linz-disabled-message'));
             return false;
 
@@ -81,7 +81,7 @@ if (!linz) {
 
     function addConfigDefaultConfirmation () {
 
-        $('.btn[data-linz-control="config-default"]').click(function () {
+        $('[data-linz-control="config-default"]').click(function () {
 
             if ($(this).attr('data-linz-disabled')) {
                 // no confirmation for disabled button

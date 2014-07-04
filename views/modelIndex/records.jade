@@ -19,11 +19,34 @@ if records.length > 0
 						if model.grid.canDelete || model.grid.canEdit
 							td
 								div.btn-group
+
 									if model.grid.canEdit
-										a.btn.btn-default(href='' + linz.api.getAdminLink(model, 'edit', record._id), data-linz-control="edit", data-linz-disabled=((record.edit && record.edit.disabled) ? 'true' : false), data-linz-disabled-message=((record.edit && record.edit.disabled) ? record.edit.message : false))
-											span(class="glyphicon glyphicon-pencil")
+
+										if record.edit && record.edit.disabled
+											a.btn.btn-default(href='', data-linz-control="edit", data-linz-disabled='true', data-linz-disabled-message=record.edit.message)
+										else
+											a.btn.btn-default(href=linz.api.getAdminLink(model, 'edit', record._id), data-linz-control="edit")
+												span(class="glyphicon glyphicon-pencil")
+
 									if model.grid.canDelete
-										a.btn.btn-default(href='' + linz.api.getAdminLink(model, 'delete', record._id), data-linz-control="delete", data-linz-disabled=((record.delete && record.delete.disabled) ? 'true' : false), data-linz-disabled-message=((record.delete && record.delete.disabled) ? record.delete.message : false))
-											span(class="glyphicon glyphicon-trash")
+
+										if record.delete && record.delete.disabled
+											a.btn.btn-default(href='', data-linz-control="delete", data-linz-disabled='true', data-linz-disabled-message=record.delete.message)
+										else
+											a.btn.btn-default(href=linz.api.getAdminLink(model, 'delete', record._id), data-linz-control="delete")
+												span(class="glyphicon glyphicon-trash")
+
+									if model.grid.recordActions.length
+										div.btn-group
+											button.btn.btn-default.dropdown-toggle(type="button", data-toggle="dropdown")
+												span.caret
+											ul.dropdown-menu(role="menu")
+												for action in model.grid.recordActions
+													li
+														if (record.recordActions && record.recordActions[action.label] && record.recordActions[action.label].disabled)
+															a(href='', data-linz-disabled='true', data-linz-disabled-message=record.recordActions[action.label].message)= action.label
+														else
+															a(href=linz.api.getAdminLink(model, action.action, record._id))= action.label
+
 						each val in Object.keys(model.grid.columns)
 							td!= record[val]
