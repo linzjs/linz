@@ -321,9 +321,7 @@ module.exports = function (model) {
 
                         action.disabled(record, function (err, isDisabled, message) {
 
-                            if (!record.recordActions) {
-                                record.recordActions = {};
-                            }
+                            record.recordActions = record.recordActions || {};
 
                             record.recordActions[action.label] = {
                                 disabled: isDisabled,
