@@ -13,6 +13,10 @@ module.exports = {
 
         var User = linz.get('models')[linz.get('user model')];
 
+        if (!User.resetPassword) {
+            throw new Error('resetPassword() is not defined for user model.');
+        }
+
         User.resetPassword(req.body.email, req, next);
 
     }
