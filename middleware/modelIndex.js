@@ -303,7 +303,7 @@ module.exports = function (model) {
             // check if we need to process each record again record actions
             function (cb) {
 
-                if (!req.linz.model.grid.recordActions) {
+                if (!req.linz.model.grid.recordActions.length) {
                     return cb(null);
                 }
 
