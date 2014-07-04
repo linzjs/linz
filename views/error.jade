@@ -5,7 +5,7 @@ block content
 	div.alert.alert-danger(role='alert')!= error.message
 
 	if (env === 'development')
-		p= error.stack
+		pre!= error.stack
 
 	if error.returnUrl
 		a.btn.btn-default(href=error.returnUrl)
