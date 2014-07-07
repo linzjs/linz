@@ -1,9 +1,6 @@
 var linz = require('../');
 
 module.exports = {
-    get: function (req, res, next) {
-        return next();
-    },
 
     post: function (req, res, next) {
 
@@ -13,11 +10,11 @@ module.exports = {
 
         var User = linz.get('models')[linz.get('user model')];
 
-        if (!User.resetPassword) {
-            throw new Error('resetPassword() is not defined for user model.');
+        if (!User.sendPasswordResetEmail) {
+            throw new Error('sendPasswordResetEmail() is not defined for user model.');
         }
 
-        User.resetPassword(req.body.email, req, next);
+        User.sendPasswordResetEmail(req.body.email, req, next);
 
     }
 }

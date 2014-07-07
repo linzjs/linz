@@ -7,9 +7,10 @@ var route = {
 	get: function (req, res) {
 
         // check if resetPassword() is defined for user model
-        var hasResetPassword = linz.get('models')[linz.get('user model')].resetPassword;
-console.log(hasResetPassword);
+        var hasResetPassword = linz.get('models')[linz.get('user model')].sendPasswordResetEmail;
+
 		res.render(req.linz.views + '/adminLogin.jade', { hasResetPassword: hasResetPassword });
+
 	},
 
 	post: function (req, res) {
