@@ -2,7 +2,7 @@ linz = require('../');
 
 module.exports = function (err, req, res, next) {
 
-    console.error(err.stack);
+    console.error(err);
 
     res.render(linz.views + '/error.jade', {
         error: err,

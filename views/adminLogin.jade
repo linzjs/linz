@@ -10,4 +10,7 @@ block content
 			.form-group
 				label(for='password') Password
 				input.form-control(type='password', id='password', name='password', placeholder='Enter your password...', required)
+			if hasResetPassword
+				.form-group
+					a(href=linz.api.getAdminForgotPasswordLink()) Forgot your password?
 			button.btn.btn-primary(type='submit') Sign-in
