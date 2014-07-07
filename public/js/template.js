@@ -1,38 +1,22 @@
-(function templatePolyfill (d) {
+(function detachTemplates (d) {
 
-    // if the browser supports template, we don't need this polyfil
-    if('content' in d.createElement('template')) {
-        return false;
-    }
+    var templates = {};
 
-    // to allow styling
-    document.createElement('template');
+    // loop through and remove template tags from the dom, if they've been marked up with data-linz-template
+    $('[data-linz-template]').each(function () {
 
-    // loop through each instance of a template tag, and shim
-    $(document).ready(function () {
+        var id = $(this).data('linz-template');
 
-        var qPlates = d.getElementsByTagName('template'),
-            plateLen = qPlates.length,
-            elPlate,
-            qContent,
-            contentLen,
-            docContent;
-
-        for(var x=0; x<plateLen; ++x) {
-
-            elPlate = qPlates[x];
-            qContent = elPlate.childNodes;
-            contentLen = qContent.length;
-            docContent = d.createDocumentFragment();
-
-            while(qContent[0]) {
-            docContent.appendChild(qContent[0]);
-            }
-
-            elPlate.content = docContent;
-
+        if (id) {
+            templates[id] = $(this).detach();
         }
 
     });
+
+    if (!window.linz) {
+        window.linz = {};
+    }
+
+    window.linz.templates = templates;
 
 })(document);
