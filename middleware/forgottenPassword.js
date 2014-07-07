@@ -14,7 +14,7 @@ module.exports = {
             throw new Error('sendPasswordResetEmail() is not defined for user model.');
         }
 
-        User.sendPasswordResetEmail(req.body.email, req, next);
+        User.sendPasswordResetEmail(req.body.email, req, res, next);
 
     }
 }

@@ -18,6 +18,10 @@ module.exports = {
                 return next(err);
             }
 
+            if (!doc.verifyPasswordResetHash) {
+                throw new Error('verifyPasswordResetHash() is not defined for user model document.');
+            }
+
             doc.verifyPasswordResetHash(req.params.hash, function (err, isMatch) {
 
                 if (err) {
@@ -54,7 +58,7 @@ module.exports = {
             throw new Error('updatePassword() is not defined for user model.');
         }
 
-        User.updatePassword(req.body.id, req.body.password, req, next);
+        User.updatePassword(req.body.id, req.body.password, req, res, next);
 
     }
 
