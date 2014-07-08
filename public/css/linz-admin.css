@@ -130,6 +130,9 @@ template {
   float: none;
   width: 100%;
 }
+#documentsModal form.form-horizontal .col-sm-offset-2 {
+  margin-left: 0;
+}
 .googleMap {
   width: 600px;
   height: 300px;

@@ -199,7 +199,7 @@ $(document).ready(function () {
         if (!formHtml[editingFor]) {
 
             // now grab the form HTML
-            formHtml[editingFor] = $('[data-document-field-for="' + editingFor + '"]').find('template').clone().html();
+            formHtml[editingFor] = window.linz.templates['document-' + editingFor].clone().html();
 
         }
 

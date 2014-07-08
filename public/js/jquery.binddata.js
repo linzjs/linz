@@ -1,4 +1,5 @@
 (function( $ ) {
+
     var getPropValue = function(bean, propname) {
         var props = propname.split('.');
         var val = bean;
@@ -13,7 +14,7 @@
         var obj = bean;
         for (var i = 0; i < props.length; i++) {
             if (i + 1 >= props.length) {
-                obj[props[i]] = value;
+                obj[props[i]] = trueFalse(value);
             }
             else {
                 if (null == obj[props[i]]) {
@@ -204,6 +205,18 @@
                 $el.val(value);
 
         }
+    };
+
+    var trueFalse = function (tf) {
+
+        if (tf === 'true') {
+            return true;
+        } else if (tf === 'false') {
+            return false;
+        }
+
+        return tf;
+
     };
 
     $.fn.binddata = function(bean, properties) {

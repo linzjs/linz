@@ -18,16 +18,8 @@ if (!linz) {
                 complete : function () {
                     loadDatepicker();
                 }
-            },
-            {
-                test: Modernizr.template,
-                nope: [
-                    path + '/public/js/template.js'
-                ]
             }
         ]);
-
-
 
     }
 

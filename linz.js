@@ -298,7 +298,7 @@ Linz.prototype.initConfigs = function (cb) {
                     // doc exists, check if there are any new properties
                     configs[configName].schema.eachPath(function (fieldName, field) {
 
-                        if (!doc[fieldName]) {
+                        if (doc[fieldName] === undefined) {
                             updatedDoc[fieldName] = linz.formtools.utils.getDefaultValue(field);
                             doc[fieldName] = updatedDoc[fieldName];
                         }
