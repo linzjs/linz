@@ -13,7 +13,8 @@ var	express = require('express'),
 	passport = require('passport'),
 	LocalStrategy = require('passport-local').Strategy,
 	bunyan = require('bunyan'),
-    async = require('async');
+    async = require('async'),
+    lessMiddleware = require('less-middleware');
 
 /**
  * Linz constructor
@@ -448,8 +449,15 @@ Linz.prototype.bootstrapExpress = function (cb) {
 	this.app.use(this.get('admin path'), passport.initialize());
 	this.app.use(this.get('admin path'), passport.session());
 
-	// setup stylus for admin css
-	this.app.use(this.get('admin path') + '/public/', require('stylus').middleware(path.resolve(__dirname, 'public')));
+    if ((process.env.NODE_ENV || 'development') === 'development') {
+        this.app.use(this.get('admin path') + '/public', lessMiddleware(__dirname + '/public', {
+            preprocess: {
+                path: function (pathname, req) {
+                    return pathname.replace(/\/css/, '/src/css');
+                }
+            }
+        }));
+    }
 
 	// setup admin static routes
 	this.app.use(this.get('admin path') + '/public/', express.static(path.resolve(__dirname, 'public')));

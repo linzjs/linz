@@ -9,9 +9,7 @@ html(lang="en")
 			link(href='' + linz.get('admin path') + '/public/css/bootstrap.min.css', rel='stylesheet')
 		else
 			link(href='//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css', rel='stylesheet')
-		link(href='' + linz.get('admin path') + '/public/css/linz-admin.css', rel='stylesheet')
-		if (linz.get('admin theme') === 'watermelon')
-			link(href='' + linz.get('admin path') + '/public/css/linz-admin-watermelon.css', rel='stylesheet')
+		link(href='' + linz.get('admin path') + '/public/css/linz.css', rel='stylesheet')
 		script(src='' + linz.get('admin path') + '/public/js/utils.js')
 	body
 		.navbar.navbar-inverse.navbar-fixed-top.linz-navbar-inverse(role='navigation')
