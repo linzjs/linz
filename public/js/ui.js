@@ -4,6 +4,11 @@ if (!linz) {
 
 (function  () {
 
+    // add form validation
+    $('form[data-linz-validation="true"]').click(function () {
+        $(this).bootstrapValidator({});
+    });
+
     function loadLibraries(path) {
 
         // resource loader for fallback support

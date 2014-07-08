@@ -1,8 +1,5 @@
 (function () {
 
-    // load validation lib
-    $('form.model').bootstrapValidator({});
-
     // add support for checkboxes add button
     $('.btn[data-linz-control="add-checkbox"]').click(function () {
 
