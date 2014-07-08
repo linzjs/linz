@@ -4,7 +4,7 @@ extends layout
 block content
 	h1 Editing '#{record.title}'
 	div
-		form.form-horizontal.model(role='form',action='#{actionUrl}',method='post')
+		form.form-horizontal.model(role='form', action='#{actionUrl}', method='post', data-linz-validation='true')
 			!= form
 			.form-group
 				.col-sm-offset-2.col-sm-10
