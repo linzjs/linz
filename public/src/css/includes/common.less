@@ -1,9 +1,61 @@
+
+// defaults for the body and everything that inherits its values
 body {
 	background: @grey;
 	padding-top: 50px;
+	color: #676A6C;
+	font-family: 'Open Sans', sans-serif;
 }
 
+// utility to center an element in the page
 .centered {
 	float: none;
 	margin: 0 auto;
+}
+
+// links
+a {
+
+	color: @highlight-color;
+
+	&:hover, &:focus {
+		color: @highlight-hover;
+		outline: none;
+	}
+
+}
+
+// buttons
+.btn-primary {
+
+	background: @highlight-background;
+	border: @highlight-border;
+	border-radius: 2px;
+
+	&:hover, &:active {
+		background: @highlight-hover;
+	}
+
+	&:focus, &:active:focus {
+		background: @highlight-hover;
+		outline: thin dotted;
+		outline-offset: -1px;
+	}
+
+}
+
+// panes
+.pane {
+
+	border-top: 4px solid @border;
+	border-bottom: 1px solid @border;
+	padding: 0;
+	background: #FFFFFF;
+
+	h1.title {
+		margin: 0;
+		border-bottom: 1px solid @border;
+		padding: 14px 0px 15px 15px;
+	}
+
 }
