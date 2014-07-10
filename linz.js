@@ -383,6 +383,9 @@ Linz.prototype.defaultConfiguration = function (cb) {
 	// setup the router
 	this.router = routesManager.getRouter();
 
+    // assign the middleware
+    this.app.use(require('./middleware/request')());
+
 	// assign the admin routes
 	routesManager.setupAdminRoutes();
 
@@ -586,12 +589,7 @@ Linz.prototype.buildNavigation = function () {
 	var models = {
 		name: 'Models',
 		href: this.get('admin path') + '/models/list',
-		children: [
-			{
-				'name': 'All',
-				href: this.get('admin path') + '/models/list'
-			}
-		]
+		children: []
 	};
 
 	// add each model to the navigation tree

@@ -86,6 +86,17 @@ if (!linz) {
         });
     }
 
+    (function () {
+
+        // javascript events for the navigation
+        $('[data-linz-nav-toggle]').click(function () {
+
+            $('body').toggleClass('show-nav');
+
+        });
+
+    })();
+
 
     linz.loadLibraries = loadLibraries;
     linz.loadDatepicker = loadDatepicker;

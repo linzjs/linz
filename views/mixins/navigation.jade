@@ -6,3 +6,14 @@ mixin dropdown(node)
 			each childNode,childIndex in node.children
 				li
 					a(href=childNode.href)= childNode.name
+
+mixin submenu(node)
+	a(href=node.href)= node.name
+	ul
+		each childNode,childIndex in node.children
+			if (childNode.href === request.path)
+				li(class='active')
+					a(href=childNode.href)= childNode.name
+			else
+				li
+					a(href=childNode.href)= childNode.name

@@ -1,10 +1,19 @@
 
+html {
+	height: 100%;
+}
+
 // defaults for the body and everything that inherits its values
 body {
 	background: @grey;
-	padding-top: 50px;
+	padding-top: @header-height;
+	height: 100%;
 	color: #676A6C;
 	font-family: 'Open Sans', sans-serif;
+}
+
+.linz-container {
+	min-height: 100%;
 }
 
 // utility to center an element in the page
