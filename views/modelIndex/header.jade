@@ -1,7 +1,41 @@
 .row.grid-header
-	.col-md-6.col-xs-12
-		h1
-			a(href='' + linz.api.getAdminLink(model))= model.label
+	.col-xs-12
+		.model-title
+			h1
+				a(href='' + linz.api.getAdminLink(model))= model.label
+		.model-actions
+			if model.grid.canCreate
+				.actions
+					span.create
+						a.btn.btn-primary(href='' + linz.api.getAdminLink(model, 'new')) Create a new #{model.singular}
+			if model.grid.actions && model.grid.actions.length
+				.custom-actions
+					if model.grid.actions.length === 1
+						for action in model.grid.actions
+							a.btn.btn-default(href='' + linz.api.getAdminLink(model, action.action))= action.label
+					else
+						.dropdown
+							button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+								| Actions&nbsp;
+								span.caret
+							ul.dropdown-menu(role='menu')
+								for action in model.grid.actions
+									li(role='presentation')
+										a(role='menuitem', tabindex='-1', href='' + linz.api.getAdminLink(model, action.action))= action.label
+			if model.grid.groupActions && model.grid.groupActions.length
+				.group-actions
+					if model.grid.groupActions.length === 1
+						a.btn.btn-default(href='' + linz.api.getAdminLink(model, groupAction.action) data-linz-control="group-action" data-target="#groupActionModal")= groupAction.label
+					else
+						.dropdown
+							button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+								| Group actions&nbsp;
+								span.caret
+							ul.dropdown-menu(role='menu')
+								for groupAction in model.grid.groupActions
+									li(role='presentation')
+										a(role='menuitem', tabindex='-1', href='' + linz.api.getAdminLink(model, groupAction.action) data-linz-control='group-action' data-target='#groupActionModal')= groupAction.label
+		.model-filters
 		ul.sort.nav.nav-pills
 			if model.grid.sortBy.length
 				li.dropdown
@@ -36,17 +70,6 @@
 							li
 								a.control-addFilter(data-filter-field='' + key + '')= filterField['label']
 								span.controlField!= filterField.formControls
-	.col-md-6.col-xs-12
-		.group-actions.pull-right
-			for groupAction in model.grid.groupActions
-				a.btn.btn-default.pull-right(href='' + linz.api.getAdminLink(model, groupAction.action) data-linz-control="group-action" data-target="#groupActionModal")= groupAction.label
-		.custom-actions.pull-right
-			for action in model.grid.actions
-				a.btn.btn-default.pull-right(href='' + linz.api.getAdminLink(model, action.action))= action.label
-		.actions.pull-right
-			if model.grid.canCreate
-				span.create
-					a.btn.btn-primary.pull-right(href='' + linz.api.getAdminLink(model, 'new')) Create a new #{model.singular}
 form.form-horizontal.filters(method='post', role='form')
 	input.page(type='hidden', name='page', value=''+ page +'')
 	input.pageSize(type='hidden', name='pageSize', value=''+ pageSize +'')
