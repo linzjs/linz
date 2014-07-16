@@ -2,9 +2,6 @@
 
     var filtersAreDirty = false;
 
-    linz.addDeleteConfirmation();
-    linz.addDisabledBtnAlert();
-
     /* FILTERS */
 
     if ($('.selectedFilters').val().length > 0) {
