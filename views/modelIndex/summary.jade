@@ -1,6 +1,6 @@
-div.alert.alert-info.alert-summary
-	.content
-		if pagination
+if pagination
+	div.alert.alert-info.alert-summary
+		.content
 			p.records Showing #{from+1} to #{to} of #{total} records.
 			div.pagination
 				span Page
@@ -19,5 +19,3 @@ div.alert.alert-info.alert-summary
 							option(value=ps, selected)= ps
 						else
 							option(value=ps)= ps
-		else
-			p.records #{total} records.

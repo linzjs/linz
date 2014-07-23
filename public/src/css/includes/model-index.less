@@ -1,14 +1,30 @@
 
-.model-actions {
+.model-title, .model-actions {
 
-	border-bottom: 1px solid #E7EAEC;
-	margin-bottom: 10px;
-	padding-bottom: 6px;
+	background: #FFF;
+
+}
+
+.model-actions, .options {
 
 	.btn {
+
 		padding-top: 10px;
 		padding-bottom: 10px;
+
+		i.fa {
+
+			margin-right: 5px;
+
+		}
+
 	}
+
+}
+
+.model-actions {
+
+	margin-top: 10px;
 
 	.actions {
 
@@ -44,7 +60,6 @@
 	.group-actions {
 
 		display: block;
-		margin-bottom: 5px;
 
 		.btn, .dropdown > .btn {
 
@@ -58,27 +73,141 @@
 
 }
 
+.options {
+
+	border-bottom: 1px solid #E7EAEC;
+
+	.model-filters, .model-sort {
+
+		display: block;
+
+	}
+
+	.model-filters {
+
+		margin-bottom: 15px;
+
+		.addFilterBtn {
+
+			margin-bottom: 5px;
+
+			a {
+				width: 100%;
+			}
+
+			.controlField {
+				display: none;
+			}
+
+		}
+
+		.filters {
+
+			display: none;
+			margin: 10px 0 20px 25px;
+
+			.filter-control {
+
+				position: relative;
+				display: table;
+				border-collapse: separate;
+				margin-left: -40px;
+				width: 100%;
+				max-width: 500px;
+
+			}
+
+			.control-label {
+				font-weight: normal;
+			}
+
+			.form-control {
+
+				display: table-cell;
+
+			}
+
+			i.fa.fa-times {
+
+				display: table-cell;
+				width: 1%;
+				padding: 0 12px 0 18px;
+
+			}
+
+		}
+
+	}
+
+	.model-sort {
+
+		text-align: center;
+		margin: 5px 0;
+
+		& > div {
+			display: inline-block;
+		}
+
+		.dropdown {
+			margin: 0 4px;
+		}
+
+		.field {
+			text-decoration: underline;
+			cursor: pointer;
+		}
+
+	}
+
+}
+
 @media (min-width: @screen-sm-min) {
 
-	.model-actions {
+	.model-actions, .options {
 
 		.btn {
+
 			padding-top: 6px;
 			padding-bottom: 6px;
+
 		}
+
+	}
+
+	.model-actions {
 
 		.actions {
 			display: inline-block;
 			margin-right: 5px;
+			margin-bottom: 0;
 		}
 
 		.custom-actions {
 			display: inline-block;
 			margin-right: 5px;
+			margin-bottom: 0;
 		}
 
 		.group-actions {
 			display: inline-block;
+		}
+
+	}
+
+	.options {
+
+		.model-filters {
+
+			.addFilterBtn a {
+				width: auto;
+			}
+
+		}
+
+		.model-sort {
+
+			text-align: left;
+
 		}
 
 	}

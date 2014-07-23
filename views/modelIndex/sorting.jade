@@ -1,0 +1,24 @@
+if model.grid.sortBy.length
+	.model-sort
+		div #{total} records sorted by
+		.dropdown
+			.field(data-toggle='dropdown')= sort
+			ul.dropdown-menu(role='menu')
+				if form.sort
+					li.disabled
+						for sortField in model.grid.sortBy
+							if '-' + sortField.field === form.sort
+								a!= sortField.label + ' <em>(descending)</em>'
+							else if sortField.field === form.sort
+								a!= sortField.label + ' <em>(ascending)</em>'
+					li.divider
+				for sortField in model.grid.sortBy
+					li
+						a(data-sort-field='' + sortField.field + '')
+							if '-' + sortField.field === form.sort
+								!= sortField.label + ' <em>(ascending)</em>'
+							else if sortField.field === form.sort
+								!= sortField.label + ' <em>(descending)</em>'
+							else
+								!= sortField.label
+		.direction= ((sortDirection === 'asc') ? 'ascending' : 'descending')

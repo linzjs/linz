@@ -55,7 +55,7 @@
             // update template with filter content
             content.querySelector('.filter-name').textContent = filterText;
             content.querySelector('.filter-control').innerHTML = content.querySelector('.filter-control').innerHTML + filterFormControl;
-            content.querySelector('.glyphicon-remove').setAttribute('data-filter-field', $(this).attr('data-filter-field'));
+            content.querySelector('.fa-times').setAttribute('data-filter-field', $(this).attr('data-filter-field'));
             document.querySelector('.filter-list').appendChild(document.importNode(content, true));
 
         } else {
@@ -64,7 +64,7 @@
             var filterOption = $('#filter').clone();
             filterOption.find('.filter-name').html(filterText);
             filterOption.find('.filter-control').append(filterFormControl);
-            filterOption.find('.glyphicon-remove').attr('data-filter-field',$(this).attr('data-filter-field'));
+            filterOption.find('.fa-times').attr('data-filter-field',$(this).attr('data-filter-field'));
             $('.filter-list').append(filterOption.html());
 
         }
@@ -203,14 +203,14 @@
     function assignRemoveButton (queryObj) {
 
         // remove all event listener
-        $('.glyphicon-remove').unbind();
+        $('.fa-times').unbind();
 
         // re-assign listeners including any new ones added to DOM after page load
-        $('.glyphicon-remove').click(function () {
+        $('.fa-times').click(function () {
 
             var filteredField = $(this).attr('data-filter-field'),
                 selectedFilters = $('.selectedFilters').val(),
-                numOfSameFilters = $('.glyphicon-remove[data-filter-field=' + filteredField + ']').length;
+                numOfSameFilters = $('.fa-times[data-filter-field=' + filteredField + ']').length;
 
             filtersAreDirty = true;
 

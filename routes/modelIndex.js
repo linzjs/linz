@@ -24,7 +24,9 @@ var route = function (req, res) {
         pageSizes: req.linz.model.grid.paging.sizes || linz.get('page sizes'),
         from: pageSize*page-pageSize,
         to: to,
-        pagination: (req.linz.model.grid.paging.active === true && total > pageSize)
+        pagination: (req.linz.model.grid.paging.active === true && total > pageSize),
+        sort: req.linz.model.grid.sortingBy.replace(/-/, ''),
+        sortDirection: ((req.linz.model.grid.sortingBy.charAt(0) === '-') ? 'desc':'asc')
 	});
 
 };

@@ -1,91 +1,37 @@
-.row.grid-header
-	.col-xs-12
-		.model-title
-			h1
-				a(href='' + linz.api.getAdminLink(model))= model.label
-		.model-actions
-			if model.grid.canCreate
-				.actions
-					span.create
-						a.btn.btn-primary(href='' + linz.api.getAdminLink(model, 'new')) Create a new #{model.singular}
-			if model.grid.actions && model.grid.actions.length
-				.custom-actions
-					if model.grid.actions.length === 1
+.model-title
+	h1
+		a(href='' + linz.api.getAdminLink(model))= model.label
+.model-actions
+	if model.grid.canCreate
+		.actions
+			span.create
+				a.btn.btn-primary(href='' + linz.api.getAdminLink(model, 'new'))
+					i.fa.fa-plus
+					| Create a new #{model.singular}
+	if model.grid.actions && model.grid.actions.length
+		.custom-actions
+			if model.grid.actions.length === 1
+				for action in model.grid.actions
+					a.btn.btn-default(href='' + linz.api.getAdminLink(model, action.action))= action.label
+			else
+				.dropdown
+					button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+						| Actions&nbsp;
+						span.caret
+					ul.dropdown-menu(role='menu')
 						for action in model.grid.actions
-							a.btn.btn-default(href='' + linz.api.getAdminLink(model, action.action))= action.label
-					else
-						.dropdown
-							button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
-								| Actions&nbsp;
-								span.caret
-							ul.dropdown-menu(role='menu')
-								for action in model.grid.actions
-									li(role='presentation')
-										a(role='menuitem', tabindex='-1', href='' + linz.api.getAdminLink(model, action.action))= action.label
-			if model.grid.groupActions && model.grid.groupActions.length
-				.group-actions
-					if model.grid.groupActions.length === 1
-						a.btn.btn-default(href='' + linz.api.getAdminLink(model, groupAction.action) data-linz-control="group-action" data-target="#groupActionModal")= groupAction.label
-					else
-						.dropdown
-							button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
-								| Group actions&nbsp;
-								span.caret
-							ul.dropdown-menu(role='menu')
-								for groupAction in model.grid.groupActions
-									li(role='presentation')
-										a(role='menuitem', tabindex='-1', href='' + linz.api.getAdminLink(model, groupAction.action) data-linz-control='group-action' data-target='#groupActionModal')= groupAction.label
-		.model-filters
-		ul.sort.nav.nav-pills
-			if model.grid.sortBy.length
-				li.dropdown
-					a(data-toggle='dropdown', role='button', class="btn btn-default")
-						span.glyphicon.glyphicon-sort
-						| Sort
+							li(role='presentation')
+								a(role='menuitem', tabindex='-1', href='' + linz.api.getAdminLink(model, action.action))= action.label
+	if model.grid.groupActions && model.grid.groupActions.length
+		.group-actions
+			if model.grid.groupActions.length === 1
+				a.btn.btn-default(href='' + linz.api.getAdminLink(model, groupAction.action) data-linz-control="group-action" data-target="#groupActionModal")= groupAction.label
+			else
+				.dropdown
+					button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+						| Group actions&nbsp;
+						span.caret
 					ul.dropdown-menu(role='menu')
-						if form.sort
-							li.disabled
-								for sortField in model.grid.sortBy
-									if '-' + sortField.field === form.sort
-										a!= sortField.label + ' <em>(descending)</em>'
-									else if sortField.field === form.sort
-										a!= sortField.label + ' <em>(ascending)</em>'
-							li.divider
-						for sortField in model.grid.sortBy
-							li
-								a(data-sort-field='' + sortField.field + '')
-									if '-' + sortField.field === form.sort
-										!= sortField.label + ' <em>(ascending)</em>'
-									else if sortField.field === form.sort
-										!= sortField.label + ' <em>(descending)</em>'
-									else
-										!= sortField.label
-			if Object.keys(model.grid.filters).length
-				li.dropdown.addFilterBtn
-					a(data-toggle='dropdown', role='button', class="btn btn-default")
-						span.glyphicon.glyphicon-filter
-						| Filter
-					ul.dropdown-menu(role='menu')
-						for filterField, key in model.grid.filters
-							li
-								a.control-addFilter(data-filter-field='' + key + '')= filterField['label']
-								span.controlField!= filterField.formControls
-form.form-horizontal.filters(method='post', role='form')
-	input.page(type='hidden', name='page', value=''+ page +'')
-	input.pageSize(type='hidden', name='pageSize', value=''+ pageSize +'')
-	input.selectedFilters(type='hidden', name='selectedFilters', value='' + ((form.selectedFilters) ? form.selectedFilters : '') + '')
-	input.selectedSort(type='hidden', name='sort', value='' + ((form.sort) ? form.sort : model.grid.sortBy[0].field ) + '')
-	.filter-list
-		if model.grid.activeFilters
-			for activeFilter, fieldName in model.grid.activeFilters
-				for filterControl in activeFilter.controls
-					include filter
-	.form-group
-		.col-sm-offset-2.col-sm-10
-			button.btn.btn-default(type="submit") Filter now
-	template(id="filter")
-		include filter
-
-.modal.fade#groupActionModal(tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
-	.modal-dialog
-
+						for groupAction in model.grid.groupActions
+							li(role='presentation')
+								a(role='menuitem', tabindex='-1', href='' + linz.api.getAdminLink(model, groupAction.action) data-linz-control='group-action' data-target='#groupActionModal')= groupAction.label

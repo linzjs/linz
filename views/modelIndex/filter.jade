@@ -1,5 +1,5 @@
 .form-group
-	label.col-sm-2.control-label.filter-name(for='' + ((fieldName) ? fieldName: '') + '')= (( model.grid.activeFilters[fieldName] && model.grid.activeFilters[fieldName].label) ? model.grid.activeFilters[fieldName].label: '')
-	.col-sm-4.filter-control
+	label.control-label.filter-name(for='' + ((fieldName) ? fieldName: '') + '')= (( model.grid.activeFilters[fieldName] && model.grid.activeFilters[fieldName].label) ? model.grid.activeFilters[fieldName].label: '')
+	.filter-control
+		i.fa.fa-times(data-filter-field='' + ((fieldName) ? fieldName: '') + '')
 		!= filterControl
-		span.glyphicon.glyphicon-remove(data-filter-field='' + ((fieldName) ? fieldName: '') + '')
