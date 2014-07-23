@@ -3,6 +3,7 @@ if model.grid.sortBy.length
 		div #{total} records sorted by
 		.dropdown
 			.field(data-toggle='dropdown')= sort
+				span.caret
 			ul.dropdown-menu(role='menu')
 				if form.sort
 					li.disabled
