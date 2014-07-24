@@ -24,6 +24,7 @@ if records.length > 0
 
 										if record.edit && record.edit.disabled
 											a.btn.btn-default(href='', data-linz-control="edit", data-linz-disabled='true', data-linz-disabled-message=record.edit.message)
+												span(class="glyphicon glyphicon-pencil")
 										else
 											a.btn.btn-default(href=linz.api.getAdminLink(model, 'edit', record._id), data-linz-control="edit")
 												span(class="glyphicon glyphicon-pencil")
@@ -32,6 +33,7 @@ if records.length > 0
 
 										if record.delete && record.delete.disabled
 											a.btn.btn-default(href='', data-linz-control="delete", data-linz-disabled='true', data-linz-disabled-message=record.delete.message)
+												span(class="glyphicon glyphicon-trash")
 										else
 											a.btn.btn-default(href=linz.api.getAdminLink(model, 'delete', record._id), data-linz-control="delete")
 												span(class="glyphicon glyphicon-trash")
