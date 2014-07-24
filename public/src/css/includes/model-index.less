@@ -141,8 +141,8 @@
 
 	.model-sort {
 
-		text-align: center;
 		padding: 10px 0;
+		text-align: center;
 
 		& > div {
 			display: inline-block;
@@ -162,30 +162,34 @@
 	.model-paging {
 
 		padding: 10px 0 5px 0;
+		text-align: center;
 
-		.form-control, p.records, .pagination, .page-size {
+		.form-control, .records, .pagination, .page-size {
 
 			display: inline-block;
 
 		}
 
-		.pagination, .page-size {
-
-			margin: 0 0 0 10px;
-
-		}
-
-		p.records {
-			margin: 0;
-		}
-
-		.pagination, .page-size, p.records {
+		.pagination, .page-size, .records {
 
 			select.form-control {
 				margin: 0 5px;
 				width: auto;
 			}
 
+		}
+
+		.records {
+
+			display: block;
+			padding: 0 0 10px 0;
+
+		}
+
+		.page-size {
+
+			display: block;
+			padding: 10px 0 0 0;
 		}
 
 	}
@@ -238,6 +242,40 @@
 		.model-sort {
 
 			text-align: left;
+
+		}
+
+		.model-paging {
+
+			text-align: left;
+
+			.records, .page-size {
+				display: inline-block;
+				padding: 0;
+			}
+
+			.records {
+				padding-right: 10px;
+			}
+
+		}
+
+	}
+
+}
+
+@media (min-width: @screen-sm-max) {
+
+	.options {
+
+		.model-sort {
+			float: left;
+		}
+
+		.model-paging {
+
+			float: right;
+			padding: 0;
 
 		}
 
