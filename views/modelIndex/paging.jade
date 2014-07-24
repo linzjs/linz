@@ -1,0 +1,19 @@
+if pagination
+	.model-paging
+		p.records Showing
+			select.pagination.form-control
+				- for (var i = 0; i < pages; i++)
+					if page === i+1
+						option(value=i+1, selected)= i+1
+					else
+						option(value=i+1)= i+1
+		| of #{pages} pages.
+		div.page-size
+			span Show
+			select.pagination-size.form-control
+				- for ps in pageSizes
+					if pageSize === ps
+						option(value=ps, selected)= ps
+					else
+						option(value=ps)= ps
+			span records per page.
