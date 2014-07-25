@@ -46,8 +46,8 @@ html(lang="en")
 							li
 								a(href=node.href)= node.name
 		.wrap
-			.container.linz-container
-				block content
+			block content
+
 
 		if (env === 'development')
 			script(src='' + linz.get('admin path') + '/public/js/jquery.min.js')

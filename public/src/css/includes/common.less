@@ -59,16 +59,34 @@ a {
 
 }
 
+.wrap {
+
+	background: @grey;
+	position: relative;
+	min-height: 100%;
+	transition: 300ms -webkit-transform;
+
+	header {
+
+		border-top: 4px solid @border;
+		border-bottom: 1px solid @border;
+		background: #FFF;
+		padding-bottom: 15px;
+
+	}
+
+}
+
 // panes
 .pane {
 
-	border-top: 4px solid @border;
 	border-bottom: 1px solid @border;
 	padding: 0;
 	background: #FFFFFF;
 
 	h1.title {
 		margin: 0;
+		border-top: 4px solid @border;
 		border-bottom: 1px solid @border;
 		padding: 14px 0px 15px 15px;
 	}
@@ -76,8 +94,6 @@ a {
 }
 
 .linz-container .pane {
-
-	margin-top: 15px;
 
 	header {
 
@@ -92,8 +108,8 @@ a {
 
 	.options {
 
-		background: #FBFBFD;
-		padding: 14px 15px 15px 15px;
+		background: @grey;
+		padding: 14px 0px 15px 0px;
 
 	}
 
@@ -103,7 +119,7 @@ a {
 
 	.linz-container .pane {
 
-		margin-top: 30px;
+		margin-top: 10px;
 
 	}
 
