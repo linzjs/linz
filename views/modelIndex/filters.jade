@@ -1,5 +1,5 @@
-.model-filters
-	if Object.keys(model.grid.filters).length
+if Object.keys(model.grid.filters).length
+	.model-filters
 		.dropdown.addFilterBtn
 			a(data-toggle='dropdown', role='button', class="btn btn-default")
 				i.fa.fa-filter
@@ -10,17 +10,17 @@
 					li
 						a.control-addFilter(data-filter-field='' + key + '')= filterField['label']
 						span.controlField!= filterField.formControls
-	form.filters(method='post', role='form')
-		input.page(type='hidden', name='page', value=''+ page +'')
-		input.pageSize(type='hidden', name='pageSize', value=''+ pageSize +'')
-		input.selectedFilters(type='hidden', name='selectedFilters', value='' + ((form.selectedFilters) ? form.selectedFilters : '') + '')
-		input.selectedSort(type='hidden', name='sort', value='' + ((form.sort) ? form.sort : model.grid.sortBy[0].field ) + '')
-		.filter-list
-			if model.grid.activeFilters
-				for activeFilter, fieldName in model.grid.activeFilters
-					for filterControl in activeFilter.controls
-						include filter
-		.form-group
-			button.btn.btn-default(type="submit") Filter now
-		template(id="filter")
-			include filter
+		form.filters(method='post', role='form')
+			input.page(type='hidden', name='page', value=''+ page +'')
+			input.pageSize(type='hidden', name='pageSize', value=''+ pageSize +'')
+			input.selectedFilters(type='hidden', name='selectedFilters', value='' + ((form.selectedFilters) ? form.selectedFilters : '') + '')
+			input.selectedSort(type='hidden', name='sort', value='' + ((form.sort) ? form.sort : model.grid.sortBy[0].field ) + '')
+			.filter-list
+				if model.grid.activeFilters
+					for activeFilter, fieldName in model.grid.activeFilters
+						for filterControl in activeFilter.controls
+							include filter
+			.form-group
+				button.btn.btn-default(type="submit") Filter now
+			template(id="filter")
+				include filter
