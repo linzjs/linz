@@ -120,6 +120,64 @@ describe('formtools', function () {
 
 	});
 
+    describe('sets model options', function () {
+
+        var postModel,
+            postModelOptions,
+            commentModel,
+            commentModelOptions;
+
+        before(function (done) {
+
+            PostSchema = new mongoose.Schema({ label: String });
+            PostSchema.plugin(formtools.plugin);
+
+            postModel = mongoose.model('postModel', PostSchema);
+
+            postModel.getModelOptions(function (err, result) {
+                postModelOptions = result;
+            });
+
+            CommentSchema = new mongoose.Schema({ label: String });
+            CommentSchema.plugin(formtools.plugin, {
+                model: {
+                    hide: true
+                }
+            });
+
+            commentModel = mongoose.model('commentModel', CommentSchema);
+
+            commentModel.getModelOptions(function (err, result) {
+                commentModelOptions = result;
+                done(null);
+            });
+
+        });
+
+        describe('defaults', function () {
+
+            it('hide to false', function () {
+
+                postModelOptions.should.have.property('hide');
+                postModelOptions.hide.should.equal(false);
+
+            });
+
+        });
+
+        describe('overrides', function () {
+
+            it('hide', function () {
+
+                commentModelOptions.should.have.property('hide');
+                commentModelOptions.hide.should.equal(true);
+
+            });
+
+        });
+
+    });
+
 	describe('scaffolds', function () {
 
         var OverridesPostSchema,

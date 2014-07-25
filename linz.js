@@ -187,6 +187,10 @@ Linz.prototype.configure = function() {
         },
 
         function (cb) {
+            return _this.buildNavigation(cb);
+        },
+
+        function (cb) {
             return _this.bootstrapExpressLocals(cb);
         },
 
@@ -486,7 +490,7 @@ Linz.prototype.bootstrapExpressLocals = function (cb) {
 	this.app.locals['linz'] = this;
 
 	// expose the linz admin navigation
-	this.app.locals['linzNavigation'] = this.buildNavigation();
+	this.app.locals['linzNavigation'] = this.get('navigation');
 
 	this.app.locals['adminPath'] = this.get('admin path');
 
@@ -579,45 +583,87 @@ Linz.prototype.disable = function (setting) {
 *
 * @api private
 */
-Linz.prototype.buildNavigation = function () {
+Linz.prototype.buildNavigation = function (cb) {
 
 	var nav = [],
 		_this = this,
 		linzModels = this.get('models');
 
-	// add a reference for all of the models
-	var models = {
-		name: 'Models',
-		href: this.get('admin path') + '/models/list',
-		children: []
-	};
+    // models, configs and logs
+    async.parallel([
 
-	// add each model to the navigation tree
-	Object.keys(linzModels).forEach(function (model) {
+        function (done) {
 
-		models.children.push({
-			name: linzModels[model].label,
-			href: _this.get('admin path') + '/model/' + model + '/list'
-		});
+            // add a reference for all of the models
+            var models = {
+                name: 'Models',
+                href: _this.get('admin path') + '/models/list',
+                children: []
+            };
 
-	});
-	nav.push(models);
+            async.each(Object.keys(linzModels), function (model, callback) {
 
-    // add a reference for configs
-    var configs = {
-        name: 'Configs',
-        href: this.get('admin path') + '/configs/list'
-    };
-    nav.push(configs);
+                // get the model options
+                linzModels[model].getModelOptions(function (err, options) {
 
-	// add a reference for the logs
-	var logs = {
-		name: 'Logs',
-		href: this.get('admin path') + '/logs/request/list'
-	};
-	nav.push(logs);
+                    if (options.hide === true) {
+                        return callback(null);
+                    }
 
-	return nav;
+                    models.children.push({
+                        name: linzModels[model].label,
+                        href: _this.get('admin path') + '/model/' + model + '/list'
+                    });
+
+                    return callback(null);
+
+                });
+
+
+            }, function (err) {
+
+                nav.push(models);
+                return done();
+
+            });
+
+        },
+
+        function (done) {
+
+            // add a reference for configs
+            var configs = {
+                name: 'Configs',
+                href: _this.get('admin path') + '/configs/list'
+            };
+            nav.push(configs);
+
+            return done(null);
+
+        },
+
+        function (done) {
+
+            // add a reference for the logs
+            var logs = {
+                name: 'Logs',
+                href: _this.get('admin path') + '/logs/request/list'
+            };
+            nav.push(logs);
+
+            return done(null);
+
+        }
+
+    ], function () {
+
+        // set this data on linz
+        _this.set('navigation', nav);
+
+        // return the callback
+        return cb(null);
+
+    });
 
 }
 
