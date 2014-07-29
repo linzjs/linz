@@ -239,14 +239,21 @@ Linz.prototype.loadModels = function (cb) {
 
 	}
 
+    var _this = this;
+
 	// set the default models path
 	this.set('models path', path.resolve(this.get('cwd'), 'models'), false);
 
 	var modelsPath = this.get('models path');
 
-	this.set('models', helpersModels.loadModels(modelsPath));
+    // load in the models (non-standard callback as loadModels handles all errors)
+    helpersModels.loadModels(modelsPath, function (models) {
 
-    return cb(null);
+        _this.set('models', models || []);
+
+        return cb(null);
+
+    });
 
 };
 

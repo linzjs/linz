@@ -1,8 +1,15 @@
 extends layout
 
 block content
-	h1 List of Models
-	ul.nav.nav-pills.nav-stacked
-		each model in models
-			li
-				a(href='' + linz.api.getAdminLin(model)) #{model.label}
+	header
+		.container
+			.row
+				.col-xs-12
+					h1 Models
+	.container.linz-container
+		.pane
+			.body
+				ul.nav.nav-pills.nav-stacked
+					each model in models
+						li
+							a(href='' + linz.api.getAdminLink(model)) #{model.modelName}
