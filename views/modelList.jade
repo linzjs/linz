@@ -6,10 +6,12 @@ block content
 			.row
 				.col-xs-12
 					h1 Models
-	.container.linz-container
+	.container.linz-container.model-list
 		.pane
 			.body
-				ul.nav.nav-pills.nav-stacked
+				.list-group
 					each model in models
-						li
-							a(href='' + linz.api.getAdminLink(model)) #{model.linz.model.plural}
+						a(href='' + linz.api.getAdminLink(model)).list-group-item
+							h2.list-group-item-heading= model.linz.model.plural
+							if model.linz.model.description
+								p.list-group-item-text= model.linz.model.description

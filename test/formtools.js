@@ -146,7 +146,8 @@ describe('formtools', function () {
                 model: {
                     hide: true,
                     label: 'Comment',
-                    plural: 'Comments'
+                    plural: 'Comments',
+                    description: 'Responses to blog posts'
                 }
             });
 
@@ -204,6 +205,13 @@ describe('formtools', function () {
 
             });
 
+            it('description to an empty string', function () {
+
+                postModelOptions.should.have.property('description');
+                postModelOptions.description.should.equal('');
+
+            });
+
         });
 
         describe('overrides', function () {
@@ -226,6 +234,15 @@ describe('formtools', function () {
 
                 commentModelOptions.should.have.property('plural');
                 commentModelOptions.plural.should.equal('Comments');
+
+            });
+
+            it('description', function () {
+
+                postModelOptions.should.have.property('description');
+                postModelOptions.description.should.equal('');
+                commentModelOptions.should.have.property('description');
+                commentModelOptions.description.should.equal('Responses to blog posts');
 
             });
 

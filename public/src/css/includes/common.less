@@ -8,7 +8,7 @@ body {
 	background: @grey;
 	padding-top: @header-height;
 	height: 100%;
-	color: #676A6C;
+	color: @font-color-grey;
 	font-family: 'Open Sans', sans-serif;
 }
 
@@ -20,6 +20,11 @@ body {
 .centered {
 	float: none;
 	margin: 0 auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: @font-color-grey;
+	font-weight: 200;
 }
 
 // links
@@ -130,6 +135,7 @@ a {
 
 		border-top: 2px solid #E7EAEC;
 		background: #FFF;
+		padding: 30px 15px 15px 15px;
 
 		form fieldset {
 
@@ -163,6 +169,12 @@ a {
 	.linz-container .pane {
 
 		margin-top: 10px;
+
+		& > .body {
+
+			padding: 30px 25px 25px 25px;
+
+		}
 
 	}
 
