@@ -2,15 +2,27 @@ include mixins/documentarray
 extends layout
 
 block content
-	h1 Editing '#{record.title}'
-	div
-		form.form-horizontal.model(role='form',action='#{actionUrl}',method='post')
-			!= form
-			.form-group
-				.col-sm-offset-2.col-sm-10
-					button.btn.btn-primary(type='submit') Save
-					a.btn.btn-link(href='#{cancelUrl}') or cancel
-		mixin documentarray()
+	header
+		.container
+			.row
+				.col-xs-12
+					h1 Editing '#{record.title}'
+	.container.linz-container.record-edit
+		.pane
+			.container
+				.row
+					.control-bar
+						button.btn.btn-primary(type='submit') Save
+						a.btn.btn-link(href='#{cancelUrl}') or cancel
+			.body
+				div
+					form.form-horizontal.model(role='form',action='#{actionUrl}',method='post')
+						!= form
+						.form-group.control-bar
+							.col-sm-offset-2.col-sm-10
+								button.btn.btn-primary(type='submit') Save
+								a.btn.btn-link(href='#{cancelUrl}') or cancel
+					mixin documentarray()
 
 block script
 	script(src='' + linz.get('admin path') + '/public/js/handlebars.js')

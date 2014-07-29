@@ -1,4 +1,5 @@
-var linz = require('../');
+var linz = require('../'),
+    inflection = require('inflection');
 
 /* GET /admin/model/:model/list */
 var route = function (req, res) {
@@ -26,7 +27,11 @@ var route = function (req, res) {
         to: to,
         pagination: (req.linz.model.grid.paging.active === true && total > pageSize),
         sort: req.linz.model.grid.sortingBy.replace(/-/, ''),
-        sortDirection: ((req.linz.model.grid.sortingBy.charAt(0) === '-') ? 'desc':'asc')
+        sortDirection: ((req.linz.model.grid.sortingBy.charAt(0) === '-') ? 'desc':'asc'),
+        label: {
+            singular: inflection.humanize(req.linz.model.linz.model.label, true),
+            plural: req.linz.model.linz.model.plural
+        }
 	});
 
 };

@@ -73,6 +73,10 @@ a {
 		background: #FFF;
 		padding-bottom: 15px;
 
+		h1 {
+			font-weight: 200;
+		}
+
 	}
 
 }
@@ -91,15 +95,11 @@ a {
 		padding: 14px 0px 15px 15px;
 	}
 
-	.body {
-
-		padding: 30px 15px 15px 15px;
-
-	}
-
 }
 
 .linz-container .pane {
+
+	background: @grey;
 
 	header {
 
@@ -119,9 +119,40 @@ a {
 
 	}
 
+	.control-bar {
+
+		background: @grey;
+		padding: 15px;
+
+	}
+
 	& > .body {
 
-		margin-top: 30px;
+		border-top: 2px solid #E7EAEC;
+		background: #FFF;
+
+		form fieldset {
+
+			.control-label {
+
+				font-weight: 400;
+
+			}
+
+		}
+
+		form > fieldset:first-child {
+			margin-top: 0;
+		}
+
+		form > fieldset > legend {
+
+			font-weight: 200;
+			font-size: @font-size-h2;
+			border-bottom: none;
+			color: @font-color-grey;
+
+		}
 
 	}
 

@@ -12,4 +12,4 @@ block content
 				ul.nav.nav-pills.nav-stacked
 					each model in models
 						li
-							a(href='' + linz.api.getAdminLink(model)) #{model.modelName}
+							a(href='' + linz.api.getAdminLink(model)) #{model.linz.model.plural}

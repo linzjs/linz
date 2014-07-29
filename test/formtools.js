@@ -125,7 +125,10 @@ describe('formtools', function () {
         var postModel,
             postModelOptions,
             commentModel,
-            commentModelOptions;
+            commentModelOptions,
+            LocationSchema,
+            locationModel,
+            locationModelOptions;
 
         before(function (done) {
 
@@ -141,7 +144,9 @@ describe('formtools', function () {
             CommentSchema = new mongoose.Schema({ label: String });
             CommentSchema.plugin(formtools.plugin, {
                 model: {
-                    hide: true
+                    hide: true,
+                    label: 'Comment',
+                    plural: 'Comments'
                 }
             });
 
@@ -149,6 +154,21 @@ describe('formtools', function () {
 
             commentModel.getModelOptions(function (err, result) {
                 commentModelOptions = result;
+                done(null);
+            });
+
+            LocationSchema = new mongoose.Schema({ label: String });
+            LocationSchema.plugin(formtools.plugin, {
+                model: {
+                    hide: true,
+                    label: 'Location'
+                }
+            });
+
+            locationModel = mongoose.model('locationModel', LocationSchema);
+
+            locationModel.getModelOptions(function (err, result) {
+                locationModelOptions = result;
                 done(null);
             });
 
@@ -163,6 +183,27 @@ describe('formtools', function () {
 
             });
 
+            it('label to an empty string', function () {
+
+                postModelOptions.should.have.property('label');
+                postModelOptions.label.should.equal('');
+
+            });
+
+            it('plural to an empty string', function () {
+
+                postModelOptions.should.have.property('plural');
+                postModelOptions.plural.should.equal('');
+
+            });
+
+            it('plural to a pluralized version of label', function () {
+
+                locationModelOptions.should.have.property('plural');
+                locationModelOptions.plural.should.equal('Locations');
+
+            });
+
         });
 
         describe('overrides', function () {
@@ -171,6 +212,20 @@ describe('formtools', function () {
 
                 commentModelOptions.should.have.property('hide');
                 commentModelOptions.hide.should.equal(true);
+
+            });
+
+            it('label', function () {
+
+                commentModelOptions.should.have.property('label');
+                commentModelOptions.label.should.equal('Comment');
+
+            });
+
+            it('plural', function () {
+
+                commentModelOptions.should.have.property('plural');
+                commentModelOptions.plural.should.equal('Comments');
 
             });
 

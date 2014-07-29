@@ -618,7 +618,7 @@ Linz.prototype.buildNavigation = function (cb) {
                     }
 
                     models.children.push({
-                        name: linzModels[model].label,
+                        name: linzModels[model].linz.model.plural,
                         href: _this.get('admin path') + '/model/' + model + '/list'
                     });
 

@@ -1,13 +1,13 @@
 .model-title
 	h1
-		a(href='' + linz.api.getAdminLink(model))= model.label
+		a(href='' + linz.api.getAdminLink(model))= model.linz.model.plural
 .model-actions
 	if model.grid.canCreate
 		.actions
 			span.create
 				a.btn.btn-primary(href='' + linz.api.getAdminLink(model, 'new'))
 					i.fa.fa-plus
-					| Create a new #{model.singular}
+					| Create a new #{label.singular}
 	if model.grid.actions && model.grid.actions.length
 		.custom-actions
 			if model.grid.actions.length === 1
