@@ -1,12 +1,10 @@
 include mixins/documentarray
 extends layout
 
+block header
+	h1 Create a new #{label.singular}
+
 block content
-	header
-		.container
-			.row
-				.col-xs-12
-					h1 Create a new #{label.singular}
 	.container.linz-container.create.model
 		.pane
 			.container

@@ -1,12 +1,10 @@
 include mixins/documentarray
 extends layout
 
+block header
+	h1 Editing '#{record.title}'
+
 block content
-	header
-		.container
-			.row
-				.col-xs-12
-					h1 Editing '#{record.title}'
 	.container.linz-container.edit.record
 		.pane
 			.container

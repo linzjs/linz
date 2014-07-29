@@ -1,11 +1,9 @@
 extends layout
 
+block header
+	include modelIndex/header
+
 block content
-	header
-		.container
-			.row
-				.col-xs-12
-					include modelIndex/header
 	.container.linz-container.index.model
 		.pane
 			.options

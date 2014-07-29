@@ -1,26 +1,45 @@
 extends layout
 
-block content
-	header
+block header
+	.model-title
 		h1= record.label
-		if config.overview.actions.length
-			.custom-actions
-				for action in config.overview.actions
-					.btn-group
-						a.btn.btn-default(href='' + linz.api.getAdminLink(config, action.action, record._id))= action.label
+	.model-actions
 		if (config.overview.canEdit || config.overview.viewAll)
 			.actions
-				span
-					.btn-group
-						if config.overview.canEdit
-							a.btn.btn-primary(href='' + linz.api.getAdminLink(config, 'edit', record._id)) Edit
-						if config.overview.viewAll
-							a.btn.btn-default(href='' + linz.api.getAdminLink(config, 'list')) View all Configs
-	.overview-summary
-		div!= overviewSummary
-	.overview-body
-		if overviewBody
-			div!= overviewBody
+				if config.overview.canEdit
+					span.edit
+						a.btn.btn-primary(href='' + linz.api.getAdminLink(config, 'edit', record._id))
+							i.fa.fa-edit
+							| Edit
+				if config.overview.viewAll
+					span.back
+						a.btn.btn-default(href='' + linz.api.getAdminLink(config, 'list'))
+							i.fa.fa-chevron-left
+							| View all Configs
+		if config.overview.actions.length
+			.custom-actions
+				if config.overview.actions.length === 1
+					for action in config.overview.actions
+						a.btn.btn-default(href='' + linz.api.getAdminLink(config, action.action, record._id))= action.label
+				else
+					.dropdown
+						button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+							| Actions&nbsp;
+							span.caret
+						ul.dropdown-menu(role='menu')
+							for action in config.overview.actions
+								li(role='presentation')
+									a(role='menuitem', tabindex='-1', href='' + linz.api.getAdminLink(config, action.action))= action.label
+
+block content
+	.container.linz-container.overview.config
+		.pane
+			.body
+				.overview-summary
+					div!= overviewSummary
+				.overview-body
+					if overviewBody
+						div!= overviewBody
 
 block script
 	script(src='' + linz.get('admin path') + '/public/js/model/overview.js')

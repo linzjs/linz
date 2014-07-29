@@ -1,11 +1,9 @@
 extends layout
 
+block header
+	h1 Configs
+
 block content
-	header
-		.container
-			.row
-				.col-xs-12
-					h1 Configs
 	if records.length > 0
 		.container.linz-container.list.config
 			.pane

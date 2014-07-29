@@ -1,0 +1,90 @@
+.linz-container.overview .pane {
+
+	border-bottom: none;
+
+	& > .body {
+
+		background: @grey;
+		border-top: none;
+		padding: 0;
+
+		.panel {
+
+			border: none;
+			border-radius: 0;
+			box-shadow: none;
+
+			.panel-heading {
+
+				border: none;
+				background: @grey;
+				border-bottom: 2px solid @border;
+				font-size: @font-size-h2;
+				font-weight: 200;
+				color: @font-color-grey;
+
+			}
+
+			.panel-body {
+
+				.list-group {
+
+					margin-bottom: 0;
+
+					.list-group-item:first-child {
+						border-top: none;
+					}
+
+					.list-group-item {
+
+						border-left: none;
+						border-right: none;
+						font-weight: 200;
+						border-color: @border;
+
+						strong {
+							font-weight: 600;
+						}
+
+					}
+
+					.list-group-item:last-child {
+						border-bottom: none;
+					}
+
+				}
+
+			}
+
+		}
+
+		form {
+
+			background: #FFF;
+
+			.form-group {
+				padding: 0 15px 0 15px;
+			}
+
+			.form-group.control-bar {
+				padding-top: 15px;
+			}
+
+			& > fieldset > legend {
+
+				background: @grey;
+				border-bottom: 2px solid #E7EAEC;
+				padding: 25px 10px 10px 10px;
+				margin-bottom: 10px;
+
+			}
+
+			& > fieldset:first-child > legend {
+				padding-top: 0;
+			}
+
+		}
+
+	}
+
+}
