@@ -1,5 +1,6 @@
 var linz = require('../'),
-    async = require('async');
+    async = require('async'),
+    moment = require('moment');
 
 var modelExportHelpers = function modelExportHelpers (req, res) {
 
@@ -321,7 +322,7 @@ module.exports = {
             filterFieldNames = filterFieldNames.concat(fields);
 
             // serve .csv file
-            res.setHeader('Content-disposition', 'attachment; filename=test.csv');
+            res.setHeader('Content-disposition', 'attachment; filename=' + Model.label + '-' + moment(Date.now()).format('l').replace(/\//g, '.', 'g') + '.csv');
             res.writeHead(200, { 'Content-Type': 'text/csv' });
 
             // pipe data to response stream
