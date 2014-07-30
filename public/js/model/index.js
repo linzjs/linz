@@ -74,6 +74,12 @@
             buttonContainer: '<div class="btn-group btn-group-multiselect" />'
         });
 
+        // determine if radio or checkboxes were added to the dom, if so, apply a plugin
+         $('input[type="radio"],input[type="checkbox"]', $('.filter-list').children().last()).iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+
         // hide dropdown for 'Add filter'
         $(this).parents('li.dropdown').removeClass('open');
 
@@ -122,15 +128,17 @@
 
     /* GROUP ACTIONS */
 
-    $('input[data-linz-control="checked-all"]').click(function () {
+    $('input[data-linz-control="checked-all"]').on('ifToggled', function () {
 
         var isChecked = $(this).is(':checked');
+
         $('input[data-linz-control="checked-record"]').prop('checked',isChecked);
+        $('input[data-linz-control="checked-record"]').iCheck('update');
 
     });
 
     // bind event for check-all checkbox to show group action buttons
-    $('input[data-linz-control="checked-all"]').click(function () {
+    $('input[data-linz-control="checked-all"]').on('ifToggled', function () {
 
         if ($(this).is(':checked')) {
             return $('.group-actions').show();
