@@ -40,7 +40,8 @@ body {
 }
 .grid-header .actions,
 .grid-header .custom-actions,
-.grid-header .group-actions {
+.grid-header .group-actions,
+.grid-header .export {
   display: inline-block;
   margin-top: 20px;
   margin-bottom: 10px;
@@ -166,4 +167,29 @@ template {
 }
 .alert-summary .page-size select.pagination-size {
   width: auto;
+}
+.modal-footer.actions {
+  margin-top: 0;
+  padding-left: 0;
+  border: none;
+  padding-right: 0;
+  padding-top: 0;
+}
+.modal-footer.actions .selectAll {
+  padding-top: 7px;
+}
+.exportForm .checkbox {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.exportForm .exportFields {
+  overflow: hidden;
+}
+.exportForm .exportFields li {
+  width: 50%;
+  float: left;
+  border-radius: 0;
+}
+.exportForm .exportFields li:nth-child(even) {
+  border-left: none;
 }

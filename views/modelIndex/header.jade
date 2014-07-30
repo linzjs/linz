@@ -37,6 +37,9 @@
 								a.control-addFilter(data-filter-field='' + key + '')= filterField['label']
 								span.controlField!= filterField.formControls
 	.col-md-6.col-xs-12
+		.export.pull-right
+			if model.grid.export.enable
+				a.btn.btn-default.pull-right(href='' + linz.api.getAdminLink(model, model.grid.export.action) data-linz-control="export" data-target="#exportModal")= model.grid.export.label
 		.group-actions.pull-right
 			for groupAction in model.grid.groupActions
 				a.btn.btn-default.pull-right(href='' + linz.api.getAdminLink(model, groupAction.action) data-linz-control="group-action" data-target="#groupActionModal")= groupAction.label
@@ -65,4 +68,6 @@ form.form-horizontal.filters(method='post', role='form')
 
 .modal.fade#groupActionModal(tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
 	.modal-dialog
-
+.modal.fade#exportModal(tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
+	.modal-dialog
+div#modelQuery.hidden!= modelQuery

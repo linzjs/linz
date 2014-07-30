@@ -24,7 +24,8 @@ var route = function (req, res) {
         pageSizes: req.linz.model.grid.paging.sizes || linz.get('page sizes'),
         from: pageSize*page-pageSize,
         to: to,
-        pagination: (req.linz.model.grid.paging.active === true && total > pageSize)
+        pagination: (req.linz.model.grid.paging.active === true && total > pageSize),
+        modelQuery: JSON.stringify(req.body)
 	});
 
 };

@@ -61,7 +61,7 @@ body {
 		vertical-align: top;
 	}
 
-	.actions, .custom-actions, .group-actions {
+	.actions, .custom-actions, .group-actions, .export {
 		display: inline-block;
 		margin-top: 20px;
 		margin-bottom: 10px;
@@ -257,4 +257,37 @@ template{
 
   }
 
+}
+
+.modal-footer.actions {
+  margin-top: 0;
+  padding-left: 0;
+  border: none;
+  padding-right: 0;
+  padding-top: 0;
+
+  .selectAll{
+    padding-top: 7px;
+  }
+}
+
+.exportForm{
+
+  .checkbox{
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .exportFields{
+    overflow: hidden;
+    li {
+      width: 50%;
+      float: left;
+      border-radius: 0;
+
+      &:nth-child(even) {
+        border-left: none;
+      }
+    }
+  }
 }
