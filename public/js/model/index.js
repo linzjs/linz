@@ -69,6 +69,11 @@
 
         }
 
+        // determine if a multiselect was added to the dom, if so, apply the plugin
+        $('.multiselect', $('.filter-list').children().last()).multiselect({
+            buttonContainer: '<div class="btn-group btn-group-multiselect" />'
+        });
+
         // hide dropdown for 'Add filter'
         $(this).parents('li.dropdown').removeClass('open');
 

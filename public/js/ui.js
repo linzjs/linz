@@ -88,12 +88,22 @@ if (!linz) {
 
     (function () {
 
-        // javascript events for the navigation
-        $('[data-linz-nav-toggle]').click(function () {
+        $(document).ready(function () {
 
-            $('body').toggleClass('show-nav');
+            // javascript events for the navigation
+            $('[data-linz-nav-toggle]').click(function () {
+                $('body').toggleClass('show-nav');
+            });
+
+            // initialize multiselect
+            $('.multiselect').not(function (item, el) {
+                return ($(el).closest('span.controlField').length === 1) ? true : false;
+            }).multiselect({
+                buttonContainer: '<div class="btn-group btn-group-multiselect" />'
+            });
 
         });
+
 
     })();
 
