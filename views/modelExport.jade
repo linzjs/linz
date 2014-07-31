@@ -35,19 +35,28 @@ block content
 	script.
 
 		$('[data-linz-control="checked-all"]', $('.exportForm')).click(function () {
+
 			var isChecked = $(this).is(':checked');
 			$('input[data-linz-control="checked-record"]', $('.exportForm')).prop('checked',isChecked);
+
 		});
 
 		$('[data-linz-control="export-save"]', $('.exportForm')).click(function () {
+
 			if (!$('input[data-linz-control="checked-record"]:checked', $('.exportForm')).length) {
 				alert('Please select one or more fields from below to export.');
 				return false;
 			}
+
+			// close modal
+			$('#exportModal').modal('hide');
+
 			return true;
+
 		});
 
 		$('.exportFields').sortable({}).disableSelection();
+
 		$('.exportForm').submit(function (event){
 
 			var selectedFields = [];
