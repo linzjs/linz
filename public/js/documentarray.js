@@ -98,6 +98,20 @@ $(document).ready(function () {
         $('#documentsModal .modal-footer .btn-save').html('Save');
         $('#documentsModal .modal-footer .btn-cancel').html('Cancel');
 
+        // work in the iCheck plugin
+        $('input[type="radio"],input[type="checkbox"]').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+
+        // initialize multiselect
+        $('.multiselect').multiselect({
+            buttonContainer: '<div class="btn-group btn-group-multiselect" />'
+        });
+
+        // add an edit class to the model
+        $('#documentsModal .modal-dialog').addClass('edit');
+
         toggleModal();
 
         // prevent the button from submitting the form
@@ -115,6 +129,8 @@ $(document).ready(function () {
         // update the form buttons to YES/NO
         $('#documentsModal .modal-footer .btn-save').html('Yes');
         $('#documentsModal .modal-footer .btn-cancel').html('No');
+
+        $('#documentsModal .modal-dialog').removeClass('edit');
 
         toggleModal();
 

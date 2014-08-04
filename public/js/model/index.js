@@ -75,7 +75,9 @@
         });
 
         // determine if radio or checkboxes were added to the dom, if so, apply a plugin
-         $('input[type="radio"],input[type="checkbox"]', $('.filter-list').children().last()).iCheck({
+         $('input[type="radio"],input[type="checkbox"]', $('.filter-list').children().last()).not(function (item, el) {
+                return ($(this).closest('.multiselect-container').length === 1) ? true : false;
+            }).iCheck({
             checkboxClass: 'icheckbox_square-green',
             radioClass: 'iradio_square-green'
         });
@@ -149,7 +151,7 @@
     });
 
     // bind event to checkboxes to show group action buttons when checked
-    $('input[data-linz-control="checked-record"]').click(function () {
+    $('input[data-linz-control="checked-record"]').on('ifToggled', function () {
 
         if ($(this).is(':checked')) {
             return $('.group-actions').show();

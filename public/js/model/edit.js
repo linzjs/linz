@@ -28,4 +28,12 @@
         return false;
     });
 
+    // add support for the tab save button, to actually post the form
+    $('.control-bar button[type="submit"]').click(function () {
+
+        // find the form and post it
+        $('form').first().submit();
+
+    });
+
 })();

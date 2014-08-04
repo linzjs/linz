@@ -103,7 +103,7 @@ if (!linz) {
             });
 
             $('input[type="radio"],input[type="checkbox"]').not(function (item, el) {
-                return ($(el).closest('span.controlField').length === 1) ? true : false;
+                return ($(el).closest('span.controlField,.multiselect-container').length === 1) ? true : false;
             }).iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green'

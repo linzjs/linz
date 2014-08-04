@@ -1,3 +1,8 @@
+
+.form-control {
+	border: 1px solid @input-border-color;
+}
+
 .form-control {
 
 	border-radius: 0px;
@@ -19,4 +24,11 @@
 
 .checkbox, .radio, .checkbox-inline, .radio-inline {
 	padding-left: 0;
+}
+
+.form-group.required > label:after {
+
+	content: '*';
+	padding-left: 5px;
+
 }

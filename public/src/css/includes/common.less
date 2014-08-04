@@ -39,6 +39,16 @@ a {
 
 }
 
+.btn-link {
+
+	color: @highlight-color;
+
+	&:hover, &:focus {
+		color: @highlight-hover;
+	}
+
+}
+
 // buttons
 .btn-primary {
 
@@ -56,11 +66,15 @@ a {
 		outline-offset: -1px;
 	}
 
+	&:disabled, &:disabled:hover {
+		background: #a3e1d4;
+	}
+
 }
 
 .btn-default {
 
-	border: 1px solid darken(#FFF, 8%);
+	border: 1px solid @input-border-color;
 	border-radius: 2px;
 
 }
@@ -78,6 +92,29 @@ a {
 		position: absolute;
 		top: 14px;
 		right: 10px;
+
+	}
+
+}
+
+// modal
+.modal-dialog {
+
+	.modal-content {
+
+		// background: #FFF;
+
+		.modal-header {
+
+			h4 {
+				font-size: @font-size-h2;
+			}
+
+			.close {
+				margin-top: 12px;
+			}
+
+		}
 
 	}
 
