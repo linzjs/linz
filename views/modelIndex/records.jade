@@ -7,7 +7,7 @@ if records.length > 0
 					th
 						input(type="checkbox", data-linz-control="checked-all")
 					if model.grid.canDelete || model.grid.canEdit
-						th Actions
+						th.actions Actions
 					for column in model.grid.columns
 						th= column.label
 			tbody
