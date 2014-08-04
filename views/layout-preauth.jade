@@ -9,6 +9,8 @@ html(lang="en")
 		else
 			link(href='//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css', rel='stylesheet')
 		link(href='' + linz.get('admin path') + '/public/css/linz.css', rel='stylesheet')
+		if adminCSSFile !== undefined
+			link(href='' + adminCSSFile, rel='stylesheet')
 
 	body
 		.container
@@ -23,5 +25,7 @@ html(lang="en")
 			script(src='//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js')
 
 		script(src='' + linz.get('admin path') + '/public/js/validator.min.js')
+		if adminJSFile !== undefined
+			script(src='' + adminJSFile)
 
 		block script

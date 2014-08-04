@@ -505,6 +505,10 @@ Linz.prototype.bootstrapExpressLocals = function (cb) {
 
     this.app.locals['env'] = process.env.NODE_ENV || 'development';
 
+    this.app.locals['adminCSSFile'] = this.get('css file');
+
+    this.app.locals['adminJSFile'] = this.get('js file');
+
     return cb(null);
 
 };
