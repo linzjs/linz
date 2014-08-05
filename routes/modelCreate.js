@@ -12,8 +12,8 @@ var route = function (req, res) {
             actionUrl: linz.api.getAdminLink(req.linz.model, 'create'),
             cancelUrl: linz.api.getAdminLink(req.linz.model),
             label: {
-                singular: inflection.humanize(req.linz.model.linz.model.label, true),
-                plural: req.linz.model.linz.model.plural
+                singular: inflection.humanize(req.linz.model.formtools.model.label, true),
+                plural: req.linz.model.formtools.model.plural
             }
 		});
 

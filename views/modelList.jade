@@ -10,6 +10,6 @@ block content
 				.list-group
 					each model in models
 						a(href='' + linz.api.getAdminLink(model)).list-group-item
-							h2.list-group-item-heading= model.linz.model.plural
-							if model.linz.model.description
-								p.list-group-item-text= model.linz.model.description
+							h2.list-group-item-heading= model.formtools.model.plural
+							if model.formtools.model.description
+								p.list-group-item-text= model.formtools.model.description

@@ -10,7 +10,7 @@ var route = function (req, res) {
     // loop through each model, and determine if it should be displayed in list
     async.each(Object.keys(models), function (model, done) {
 
-        if (!models[model].linz.model.hide) {
+        if (!models[model].formtools.model.hide) {
             modelsToShow[model] = models[model];
         }
 

@@ -29,8 +29,8 @@ var route = function (req, res) {
         sort: req.linz.model.grid.sortingBy.replace(/-/, ''),
         sortDirection: ((req.linz.model.grid.sortingBy.charAt(0) === '-') ? 'desc':'asc'),
         label: {
-            singular: inflection.humanize(req.linz.model.linz.model.label, true),
-            plural: req.linz.model.linz.model.plural
+            singular: inflection.humanize(req.linz.model.formtools.model.label, true),
+            plural: req.linz.model.formtools.model.plural
         }
 	});
 
