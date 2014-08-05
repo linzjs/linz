@@ -92,7 +92,13 @@ if (!linz) {
 
             // javascript events for the navigation
             $('[data-linz-nav-toggle]').click(function () {
+
+                // show the navigation
                 $('body').toggleClass('show-nav');
+
+                // scroll back to the top
+                $('body').scrollTop();
+
             });
 
             // initialize multiselect
