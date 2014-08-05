@@ -4,6 +4,35 @@ if (!linz) {
 
 (function  () {
 
+    $(document).ready(function () {
+
+        // javascript events for the navigation
+        $('[data-linz-nav-toggle]').click(function () {
+
+            // show the navigation
+            $('body').toggleClass('show-nav');
+
+            // scroll back to the top
+            $('body').scrollTop();
+
+        });
+
+        // initialize multiselect
+        $('.multiselect').not(function (item, el) {
+            return ($(el).closest('span.controlField').length === 1) ? true : false;
+        }).multiselect({
+            buttonContainer: '<div class="btn-group btn-group-multiselect" />'
+        });
+
+        $('input[type="radio"],input[type="checkbox"]').not(function (item, el) {
+            return ($(el).closest('span.controlField,.multiselect-container').length === 1) ? true : false;
+        }).iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+
+    });
+
     function loadLibraries(path) {
 
         // resource loader for fallback support
@@ -85,41 +114,6 @@ if (!linz) {
             }
         });
     }
-
-    (function () {
-
-        $(document).ready(function () {
-
-            // javascript events for the navigation
-            $('[data-linz-nav-toggle]').click(function () {
-
-                // show the navigation
-                $('body').toggleClass('show-nav');
-
-                // scroll back to the top
-                $('body').scrollTop();
-
-            });
-
-            // initialize multiselect
-            $('.multiselect').not(function (item, el) {
-                return ($(el).closest('span.controlField').length === 1) ? true : false;
-            }).multiselect({
-                buttonContainer: '<div class="btn-group btn-group-multiselect" />'
-            });
-
-            $('input[type="radio"],input[type="checkbox"]').not(function (item, el) {
-                return ($(el).closest('span.controlField,.multiselect-container').length === 1) ? true : false;
-            }).iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green'
-            });
-
-        });
-
-
-    })();
-
 
     linz.loadLibraries = loadLibraries;
     linz.loadDatepicker = loadDatepicker;
