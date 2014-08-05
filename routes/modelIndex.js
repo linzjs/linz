@@ -13,9 +13,9 @@ var route = function (req, res) {
         to = total;
     }
 
-	res.render(req.linz.views + '/modelIndex.jade', {
+	res.render(linz.views + '/modelIndex.jade', {
 		model: req.linz.model,
-        form: req.body || {},
+        form: req.linz.model.formData || {},
 		records: req.linz.records.records,
         page: page,
         total: total,

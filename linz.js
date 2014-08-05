@@ -386,7 +386,7 @@ Linz.prototype.defaultConfiguration = function (cb) {
 	routesManager.setupAdminRoutes();
 
 	// assign the model CRUD routes
-	routesManager.setupModelRoutes(this.models);
+	routesManager.setupModelRoutes();
 
     // assign the config CRUD routes
     routesManager.setupConfigsRoutes();
