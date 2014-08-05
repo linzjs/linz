@@ -143,10 +143,10 @@
     $('input[data-linz-control="checked-all"]').on('ifToggled', function () {
 
         if ($(this).is(':checked')) {
-            return $('.group-actions').show();
+            return $('.group-actions').removeClass('hidden');
         }
 
-        $('.group-actions').hide();
+        $('.group-actions').addClass('hidden');
 
     });
 
@@ -154,7 +154,7 @@
     $('input[data-linz-control="checked-record"]').on('ifToggled', function () {
 
         if ($(this).is(':checked')) {
-            return $('.group-actions').show();
+            return $('.group-actions').removeClass('hidden');
         }
 
         // check if any of the other checkboxes are checked
@@ -163,7 +163,7 @@
         }
 
         // since none are checked, let's close group action buttons
-        $('.group-actions').hide();
+        $('.group-actions').addClass('hidden');
 
     });
 

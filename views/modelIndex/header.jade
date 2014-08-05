@@ -23,7 +23,7 @@
 							li(role='presentation')
 								a(role='menuitem', tabindex='-1', href='' + linz.api.getAdminLink(model, action.action))= action.label
 	if model.grid.groupActions && model.grid.groupActions.length
-		.group-actions(style="display: none;")
+		.group-actions.hidden
 			if model.grid.groupActions.length === 1
 				a.btn.btn-default(href='' + linz.api.getAdminLink(model, groupAction.action) data-linz-control="group-action" data-target="#groupActionModal")= groupAction.label
 			else
