@@ -35,7 +35,7 @@ var route = function (req, res) {
 
 			}
 
-			req.linz.model.overview.body(req.linz.record, req.linz.model, function (err, content) {
+			req.linz.model.overview.body(req, res, req.linz.record, req.linz.model, function (err, content) {
 
                 if (err) {
                     return cb(err);
