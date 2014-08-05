@@ -83,7 +83,7 @@
         });
 
         // hide dropdown for 'Add filter'
-        $(this).parents('li.dropdown').removeClass('open');
+        $(this).parents('.dropdown').removeClass('open');
 
         var selectedFilters = $('.selectedFilters').val();
 
