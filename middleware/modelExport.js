@@ -244,7 +244,7 @@ module.exports = {
                     return next(formErr);
                 }
 
-                var excludedFieldNames = grid.export.exclusion.split(',') + ',__v';
+                var excludedFieldNames = grid.export.exclusions.split(',') + ',__v';
 
                 // get a list of field names
                 req.linz.model.schema.eachPath(function (pathname, schemaType) {

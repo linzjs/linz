@@ -335,7 +335,7 @@ describe('formtools', function () {
                         label: 'Custom export',
                         action: 'custom-export-url',
                         enable: true,
-                        exclusion: '_id,groups'
+                        exclusions: '_id,groups'
                     }
                 },
                 form: {
@@ -766,9 +766,9 @@ describe('formtools', function () {
                         gridOpts.export.action.should.equal('export');
                     });
 
-                    it('export should have an exclusion', function () {
-                        gridOpts.export.should.have.property.exclusion;
-                        gridOpts.export.exclusion.should.equal('_id,dateCreated,dateModified,createdBy,modifiedBy');
+                    it('export should have an exclusions', function () {
+                        gridOpts.export.should.have.property.exclusions;
+                        gridOpts.export.exclusions.should.equal('_id,dateCreated,dateModified,createdBy,modifiedBy');
                     });
 
                 }); // end describe('defaults')
@@ -795,9 +795,9 @@ describe('formtools', function () {
                         overridesGridOpts.export.action.should.equal('custom-export-url');
                     });
 
-                    it('should overwrite the exclusion', function () {
-                        overridesGridOpts.export.should.have.property.exclusion;
-                        overridesGridOpts.export.exclusion.should.equal('_id,groups');
+                    it('should overwrite the exclusions', function () {
+                        overridesGridOpts.export.should.have.property.exclusions;
+                        overridesGridOpts.export.exclusions.should.equal('_id,groups');
                     });
 
                 }); // end describe('overrides')
