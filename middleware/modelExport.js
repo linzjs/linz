@@ -184,7 +184,6 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
             var ids = [],
                 db  = linz.mongoose.connection.db;
 
-
             // compile ids into ObjectId type
             req.body.selectedIds.split(',').forEach(function (id) {
                 ids.push(new db.bsonLib.ObjectID(id));
@@ -236,7 +235,7 @@ module.exports = {
             }
 
             req.linz.model.grid = grid;
-            req.linz.model.grid.export.fields = [];
+            req.linz.model.grid.export.fields = {};
 
             req.linz.model.getForm( function (formErr, form){
 
@@ -244,21 +243,29 @@ module.exports = {
                     return next(formErr);
                 }
 
-                var excludedFieldNames = grid.export.exclusions.split(',') + ',__v';
+
+                var excludedFieldNames = grid.export.exclusions.split(',') + ',__v',
+                    fieldLabels = {};
 
                 // get a list of field names
                 req.linz.model.schema.eachPath(function (pathname, schemaType) {
 
                     if (excludedFieldNames.indexOf(pathname) >= 0) {
-                        // exit if current pathname is one of the exclusion field
+                        // exit if current field name is one of the exclusion fields
                         return;
                     }
 
-                    req.linz.model.grid.export.fields.push({
-                        label: form[pathname].label || pathname,
-                        value: pathname
-                    });
+                    // get a list of fields by the label ready for sorting
+                    fieldLabels[form[pathname].label] = pathname;
 
+                });
+
+                // sort fields by label
+                var sortedFieldsByLabel = Object.keys(fieldLabels).sort();
+
+                // iterate through sorted label and re-constructs in the order of labels
+                sortedFieldsByLabel.forEach(function (label) {
+                    req.linz.model.grid.export.fields[fieldLabels[label]] = label;
                 });
 
                 return next(null);
@@ -315,7 +322,7 @@ module.exports = {
             });
 
             // check if _id is excluded
-            if (grid.export.exclusion.indexOf('_id') >= 0) {
+            if (grid.export.exclusions.indexOf('_id') >= 0) {
                 filterFieldNames.push('-_id');
             }
 

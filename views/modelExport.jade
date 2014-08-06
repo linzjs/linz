@@ -7,9 +7,8 @@ block content
 			h4#myModalLabel.modal-title!= model.grid.export.label
 		div.modal-body
 			div.modal-footer.actions
-				label.checkbox-inline.pull-left.selectAll
-					input(type='checkbox', name='selectAll', data-linz-control='checked-all')
-					| Select all
+				button.btn.btn-default(type='button', class='pull-left', data-linz-control="checked-all") Select <b>all</b>
+				button.btn.btn-default(type='button', class='pull-left', data-linz-control="reset-export") Reset
 				button.btn.btn-primary(type='submit', data-linz-control='export-save') Export
 				button.btn.btn-default(type='button', data-dismiss='modal') Cancel
 
@@ -18,13 +17,9 @@ block content
 			input(type='hidden', name='selectedFields', data-export='fields')
 			input(type='hidden', name='modelQuery', data-export='modelQuery')
 
+			p Drag and drop to re-order the fields.
+
 			ul.exportFields.list-group.clearfix
-				each field in model.grid.export.fields
-					li.list-group-item
-						div.checkbox
-							label
-								input(type='checkbox', value=field.value, data-linz-control='checked-record')
-								= field.label
 
 		div.modal-footer
 			button.btn.btn-primary(type='submit', data-linz-control='export-save') Export
@@ -34,37 +29,152 @@ block content
 	script(src='' + linz.get('admin path') + '/public/js/jquery.ui.touch-punch.min.js')
 	script.
 
-		$('[data-linz-control="checked-all"]', $('.exportForm')).click(function () {
+		(function () {
 
-			var isChecked = $(this).is(':checked');
-			$('input[data-linz-control="checked-record"]', $('.exportForm')).prop('checked',isChecked);
+			var fields = !{JSON.stringify(model.grid.export.fields)},
+				exportCookieName = !{JSON.stringify(model.modelName)} + '_' + 'selectedExportFields',
+				savedFields = mergeFields(getCookie(exportCookieName), fields),
+				bSelectAll = true;
 
-		});
+			drawExportList(savedFields);
 
-		$('[data-linz-control="export-save"]', $('.exportForm')).click(function () {
+			$('[data-linz-control="checked-all"]', $('.exportForm')).click(function () {
 
-			if (!$('input[data-linz-control="checked-record"]:checked', $('.exportForm')).length) {
-				alert('Please select one or more fields from below to export.');
-				return false;
-			}
+				$('input[data-linz-control="export-field"]', $('.exportForm')).prop('checked',bSelectAll);
 
-			// close modal
-			$('#exportModal').modal('hide');
+				bSelectAll = !bSelectAll;
 
-			return true;
+				if (bSelectAll) {
+					$(this).find('b').html('all');
+				} else {
+					$(this).find('b').html('none');
+				}
 
-		});
-
-		$('.exportFields').sortable({}).disableSelection();
-
-		$('.exportForm').submit(function (event){
-
-			var selectedFields = [];
-
-			$(this).find('input:checked').each(function () {
-				selectedFields.push($(this).val());
 			});
 
-			$('[data-export="fields"]').val(selectedFields.join());
+			$('[data-linz-control="reset-export"]', $('.exportForm')).click(function () {
 
-		});
+				var defaultFields = mergeFields('', fields);
+				drawExportList(defaultFields);
+				addExportFieldsToCookies();
+
+			});
+
+			$('[data-linz-control="export-save"]', $('.exportForm')).click(function () {
+
+				if (!$('input[data-linz-control="export-field"]:checked', $('.exportForm')).length) {
+					alert('Please select one or more fields from below to export.');
+					return false;
+				}
+
+				// close modal
+				$('#exportModal').modal('hide');
+
+				return true;
+
+			});
+
+			$('.exportFields').sortable({
+				update: function( event, ui ) {
+					addExportFieldsToCookies();
+				}
+			});
+
+			$('.exportForm').submit(function (event){
+
+				$('[data-export="fields"]').val(getSelectedExportFields().join());
+
+			});
+
+			function drawExportList (list) {
+
+				var html = '';
+
+				list.forEach( function (field) {
+
+					html += '<li class="list-group-item">'
+								+ '<div class="checkbox">'
+									+ '<label>'
+										+ '<input type="checkbox" value="' + field.value + '" data-linz-control="export-field"' + (field.selected ? ' checked' : '') + '> ' + field.label;
+
+				});
+
+				$('.exportFields').html(html);
+
+				$('input[data-linz-control="export-field"]', $('.exportForm')).click(function () {
+					addExportFieldsToCookies();
+				});
+
+			}
+
+			function getSelectedExportFields () {
+
+				var selectedFields = [];
+
+				$('input[data-linz-control="export-field"]:checked', $('.exportForm')).each(function () {
+					selectedFields.push($(this).val());
+				});
+
+				return selectedFields;
+			}
+
+			function addExportFieldsToCookies () {
+
+				setCookie(exportCookieName, getSelectedExportFields(), 30);
+			}
+
+			function mergeFields (selections, master) {
+
+				var mergedFields = [];
+
+				if (selections.length) {
+
+					selections = selections.split(',');
+
+					selections.forEach(function (fieldName) {
+						mergedFields.push({
+							label: master[fieldName] || fieldName,
+							value: fieldName,
+							selected: true
+						});
+					});
+
+				}
+
+				Object.keys(master).forEach(function (fieldName) {
+
+					if (selections.indexOf(fieldName) >= 0) {
+						// field exists, exit!
+						return;
+					}
+
+					mergedFields.push({
+						label: master[fieldName] || fieldName,
+						value: fieldName,
+						selected: false
+					});
+				});
+
+				return mergedFields;
+
+			}
+
+			function setCookie(cname, cvalue, exdays) {
+				var d = new Date();
+				d.setTime(d.getTime() + (exdays*24*60*60*1000));
+				var expires = "expires="+d.toGMTString();
+				document.cookie = cname + "=" + cvalue + "; " + expires;
+			}
+
+			function getCookie(cname) {
+				var name = cname + "=";
+				var ca = document.cookie.split(';');
+				for(var i=0; i<ca.length; i++) {
+					var c = ca[i];
+					while (c.charAt(0)==' ') c = c.substring(1);
+					if (c.indexOf(name) != -1) return c.substring(name.length,c.length);
+				}
+				return "";
+			}
+
+		})();
