@@ -461,6 +461,12 @@ describe('formtools', function () {
                     },
                     groupActions: [{ label: 'Assign category', action: 'group/category'}],
                     recordActions: [{ label: 'Send welcome email', action: 'send-welcome-email'}],
+                    export: {
+                        label: 'Custom export',
+                        action: 'custom-export-url',
+                        enable: true,
+                        exclusions: '_id,groups'
+                    }
                 },
                 form: {
                     firstName: {
@@ -863,6 +869,68 @@ describe('formtools', function () {
                         action: 'send-welcome-email'
                     });
                 });
+
+            }); // end describe('group actions')
+
+            describe('export', function () {
+
+                describe('defaults', function () {
+
+                    it('export object should exist', function () {
+                        (gridOpts.export !== undefined).should.be.ok;
+                        (typeof gridOpts.export === 'object').should.be.ok;
+                    });
+
+                    it('export should be disabled', function () {
+                        gridOpts.export.should.have.property.enable;
+                        gridOpts.export.enable.should.be.false;
+                    });
+
+                    it('export should have a label', function () {
+                        gridOpts.export.should.have.property.label;
+                        gridOpts.export.label.should.equal('Export');
+                    });
+
+                    it('export should have an action', function () {
+                        gridOpts.export.should.have.property.action;
+                        gridOpts.export.action.should.equal('export');
+                    });
+
+                    it('export should have an exclusions', function () {
+                        gridOpts.export.should.have.property.exclusions;
+                        gridOpts.export.exclusions.should.equal('_id,dateCreated,dateModified,createdBy,modifiedBy');
+                    });
+
+                }); // end describe('defaults')
+
+                describe('overrides', function () {
+
+                    it('export object should exist', function () {
+                        (overridesGridOpts.export !== undefined).should.be.ok;
+                        (typeof overridesGridOpts.export === 'object').should.be.ok;
+                    });
+
+                    it('should overwrite enable', function () {
+                        overridesGridOpts.export.should.have.property.enable;
+                        overridesGridOpts.export.enable.should.be.true;
+                    });
+
+                    it('should overwrite label', function () {
+                        overridesGridOpts.export.should.have.property.label;
+                        overridesGridOpts.export.label.should.equal('Custom export');
+                    });
+
+                    it('should overwrite action', function () {
+                        overridesGridOpts.export.should.have.property.action;
+                        overridesGridOpts.export.action.should.equal('custom-export-url');
+                    });
+
+                    it('should overwrite the exclusions', function () {
+                        overridesGridOpts.export.should.have.property.exclusions;
+                        overridesGridOpts.export.exclusions.should.equal('_id,groups');
+                    });
+
+                }); // end describe('overrides')
 
             }); // end describe('group actions')
 

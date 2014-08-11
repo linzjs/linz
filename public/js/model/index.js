@@ -170,9 +170,7 @@
         var queryObj = $(this),
             url = queryObj.attr('href');
 
-        $('#groupActionModal').modal().find('.modal-dialog').load(url, function () {
-            console.log('helllo');
-        });
+        $('#groupActionModal').modal().find('.modal-dialog').load(url, function () {});
 
        return false;
     });
@@ -195,6 +193,35 @@
 
     });
 
+    // bind export button
+    $('[data-linz-control="export"]').click(function () {
+
+        var queryObj = $(this),
+            url = queryObj.attr('href');
+
+        $('#exportModal').modal().find('.modal-dialog').load(url, function () {});
+
+        return false;
+
+    });
+
+    // bind model save button and update the selected ids to modal form
+    $('#exportModal').on('shown.bs.modal', function (e) {
+
+        var selectedIDs = [],
+            _this = this;
+
+        $('input[data-linz-control="checked-record"]:checked').each(function () {
+            selectedIDs.push($(this).val());
+        });
+
+        // add selected IDs to hidden field
+        $(_this).find('[data-export="ids"]').val(selectedIDs);
+
+        // add model form post data for filtering purposes
+        $(_this).find('[data-export="modelQuery"]').val($('#modelQuery').html());
+
+    });
 
 
     function removeFomList (list, value, separator) {

@@ -41,7 +41,8 @@ var route = function (req, res) {
         label: {
             singular: inflection.humanize(req.linz.model.formtools.model.label, true),
             plural: req.linz.model.formtools.model.plural
-        }
+        },
+        modelQuery: JSON.stringify(req.body)
 	});
 
 };

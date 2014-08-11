@@ -75,6 +75,20 @@
 
 	}
 
+	.export {
+
+		display: block;
+		margin-bottom: 5px;
+
+		.btn, .dropdown > .btn {
+
+			display: block;
+			width: 100%;
+
+		}
+
+	}
+
 }
 
 .options {
@@ -269,7 +283,15 @@
 
 		.group-actions {
 			display: inline-block;
+			margin-right: 5px;
 		}
+
+		.export {
+			display: inline-block;
+			margin-right: 5px;
+			margin-bottom: 0;
+		}
+
 
 	}
 
@@ -325,4 +347,56 @@
 
 	}
 
+}
+
+.exportForm{
+
+	.modal-body{
+		padding-left: 30px;
+		padding-right: 30px;
+	}
+
+	.modal-footer{
+		padding-left: 30px;
+		padding-right: 30px;
+	}
+
+	.modal-footer.actions {
+		margin-top: 0;
+		padding-left: 0;
+		border: none;
+		padding-right: 0;
+		padding-top: 0;
+
+		.selectAll{
+			padding-top: 7px;
+		}
+	}
+
+
+	.checkbox{
+		margin-top: 0;
+		margin-bottom: 0;
+		padding-left: 20px;
+
+		label{
+			font-weight: 300;
+		}
+	}
+
+	.exportFields{
+
+		overflow: hidden;
+		margin-bottom: 0;
+
+		li {
+			width: 50%;
+			float: left;
+			border-radius: 0;
+
+			&:nth-child(even) {
+				border-left: none;
+			}
+		}
+	}
 }
