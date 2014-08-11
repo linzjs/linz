@@ -37,6 +37,6 @@
 							li(role='presentation')
 								a(role='menuitem', tabindex='-1', href='' + linz.api.getAdminLink(model, groupAction.action) data-linz-control='group-action' data-target='#groupActionModal')= groupAction.label
 
-	if model.grid.export.enable
+	if model.grid.export && model.grid.export.enable
 		.export
 			a.btn.btn-default(href='' + linz.api.getAdminLink(model, model.grid.export.action) data-linz-control="export" data-target="#exportModal")= model.grid.export.label
