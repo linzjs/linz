@@ -23,6 +23,10 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
             return val;
         }
 
+        if (typeof val === 'number') {
+            return val;
+        }
+
         var Model = linz.get('models')[req.body.modelName];
 
         if (Model.schema.tree[fieldName].ref) {
@@ -62,7 +66,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
         }
 
-        if (linz.utils.isBoolean(val)) {
+        if (typeof val === 'boolean' || 'true,false,yes,no'.indexOf(val) >=0 ) {
             return (linz.utils.asBoolean(val) ? 'Yes' : 'No')
         }
 
