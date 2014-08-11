@@ -29,10 +29,10 @@
     });
 
     // add support for the tab save button, to actually post the form
-    $('.control-bar button[type="submit"]').click(function () {
+    $('.control-bar-top button[type="submit"]').click(function () {
 
-        // find the form and post it
-        $('form').first().submit();
+        // find the form and trigger the submit button
+        $('form').first().find('button[type="submit"]').trigger('click');
 
     });
 
