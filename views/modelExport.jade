@@ -102,7 +102,12 @@ block content
 				$('.exportFields').html(html);
 
 				$('input[data-linz-control="export-field"]', $('.exportForm')).click(function () {
+
 					addExportFieldsToCookies();
+
+					var selectedFields = mergeFields(getCookie(exportCookieName), fields);
+					drawExportList(selectedFields);
+
 				});
 
 			}
