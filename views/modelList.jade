@@ -1,8 +1,15 @@
 extends layout
 
+block header
+	h1 Models
+
 block content
-	h1 List of Models
-	ul.nav.nav-pills.nav-stacked
-		each model in models
-			li
-				a(href='' + linz.api.getAdminLin(model)) #{model.label}
+	.container.linz-container.list.model
+		.pane
+			.body
+				.list-group
+					each model in models
+						a(href='' + linz.api.getAdminLink(model)).list-group-item
+							h2.list-group-item-heading= model.formtools.model.plural
+							if model.formtools.model.description
+								p.list-group-item-text= model.formtools.model.description

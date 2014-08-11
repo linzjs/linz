@@ -29,6 +29,9 @@ module.exports = function  (req, res, next) {
                         // reset the pageSize value
                         pageSize = req.body.pageSize || req.linz.model.grid.paging.size;
 
+                        // holder for the sortingBy value
+                        req.linz.model.grid.sortingBy = {};
+
                         cb(err);
 
                     });
@@ -153,16 +156,21 @@ module.exports = function  (req, res, next) {
 
                     var query = req.linz.model.find(filters);
 
-                    // sort by the chosen sort field, or use the first sortBy option as the default
                     if (!req.body.sort && req.linz.model.grid.sortBy.length) {
 
-                        query.sort(req.linz.model.grid.sortBy[0].field);
+                        req.linz.model.grid.sortingBy = req.linz.model.grid.sortBy[0];
 
-                    } else if (req.body.sort) {
+                    } else {
 
-                        query.sort(req.body.sort);
+                        req.linz.model.grid.sortBy.forEach(function (sort) {
+                            if (sort.field === req.body.sort || '-' + sort.field === req.body.sort) {
+                                req.linz.model.grid.sortingBy = sort;
+                            }
+                        });
 
                     }
+
+                    query.sort(req.body.sort);
 
                     if (req.linz.model.grid.paging.active === true) {
                         // add in paging skip and limit

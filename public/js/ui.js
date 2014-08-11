@@ -4,35 +4,63 @@ if (!linz) {
 
 (function  () {
 
-    // add form validation
-    $('form[data-linz-validation="true"]').click(function () {
-        $(this).bootstrapValidator({});
-    });
+    $(document).ready(function () {
 
-    // add delete prompt
-    $('[data-linz-control="delete"]').click(function () {
+        // javascript events for the navigation
+        $('[data-linz-nav-toggle]').click(function () {
 
-        if ($(this).attr('data-linz-disabled')) {
-            // no confirmation for disabled button
+            // show the navigation
+            $('body').toggleClass('show-nav');
+
+            // scroll back to the top
+            $('body').scrollTop();
+
+        });
+
+        // add form validation
+        $('form[data-linz-validation="true"]').click(function () {
+            $(this).bootstrapValidator({});
+        });
+
+        // add delete prompt
+        $('[data-linz-control="delete"]').click(function () {
+
+            if ($(this).attr('data-linz-disabled')) {
+                // no confirmation for disabled button
+                return false;
+            }
+
+            if (confirm('Are you sure you want to delete this record?')) {
+                return true;
+            }
+
             return false;
-        }
 
-        if (confirm('Are you sure you want to delete this record?')) {
-            return true;
-        }
+        });
 
-        return false;
+        // add disabled alert
+        $('[data-linz-disabled="true"]').click(function () {
+
+            alert($(this).attr('data-linz-disabled-message'));
+            return false;
+
+        });
+
+        // initialize multiselect
+        $('.multiselect').not(function (item, el) {
+            return ($(el).closest('span.controlField').length === 1) ? true : false;
+        }).multiselect({
+            buttonContainer: '<div class="btn-group btn-group-multiselect" />'
+        });
+
+        $('input[type="radio"],input[type="checkbox"]').not(function (item, el) {
+            return ($(el).closest('span.controlField,.multiselect-container').length === 1) ? true : false;
+        }).iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
 
     });
-
-    // add disabled alert
-    $('[data-linz-disabled="true"]').click(function () {
-
-        alert($(this).attr('data-linz-disabled-message'));
-        return false;
-
-    });
-
 
     function loadLibraries(path) {
 
@@ -72,6 +100,35 @@ if (!linz) {
         return 'content' in document.createElement('template');
     }
 
+    function addDeleteConfirmation () {
+
+        $('[data-linz-control="delete"]').click(function () {
+
+            if ($(this).attr('data-linz-disabled')) {
+                // no confirmation for disabled button
+                return false;
+            }
+
+            if (confirm('Are you sure you want to delete this record?')) {
+                return true;
+            }
+
+            return false;
+
+        });
+
+    }
+
+    function addDisabledBtnAlert () {
+
+        $('[data-linz-disabled="true"]').click(function () {
+            alert($(this).attr('data-linz-disabled-message'));
+            return false;
+
+        });
+
+    }
+
     function addConfigDefaultConfirmation () {
 
         $('[data-linz-control="config-default"]').click(function () {
@@ -87,10 +144,11 @@ if (!linz) {
         });
     }
 
-
     linz.loadLibraries = loadLibraries;
     linz.loadDatepicker = loadDatepicker;
     linz.isTemplateSupported = isTemplateSupported;
+    linz.addDeleteConfirmation = addDeleteConfirmation;
+    linz.addDisabledBtnAlert = addDisabledBtnAlert;
     linz.addConfigDefaultConfirmation = addConfigDefaultConfirmation;
 
 })();

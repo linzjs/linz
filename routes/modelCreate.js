@@ -1,4 +1,5 @@
-var linz = require('../');
+var linz = require('../'),
+    inflection = require('inflection');
 
 /* GET /admin/model/:model/create */
 var route = function (req, res) {
@@ -9,7 +10,11 @@ var route = function (req, res) {
 			model: req.linz.model,
 			form: editForm.render(),
             actionUrl: linz.api.getAdminLink(req.linz.model, 'create'),
-            cancelUrl: linz.api.getAdminLink(req.linz.model)
+            cancelUrl: linz.api.getAdminLink(req.linz.model),
+            label: {
+                singular: inflection.humanize(req.linz.model.formtools.model.label, true),
+                plural: req.linz.model.formtools.model.plural
+            }
 		});
 
 	});

@@ -52,7 +52,7 @@
             // update template with filter content
             content.querySelector('.filter-name').textContent = filterText;
             content.querySelector('.filter-control').innerHTML = content.querySelector('.filter-control').innerHTML + filterFormControl;
-            content.querySelector('.glyphicon-remove').setAttribute('data-filter-field', $(this).attr('data-filter-field'));
+            content.querySelector('.fa-times').setAttribute('data-filter-field', $(this).attr('data-filter-field'));
             document.querySelector('.filter-list').appendChild(document.importNode(content, true));
 
         } else {
@@ -61,13 +61,26 @@
             var filterOption = $('#filter').clone();
             filterOption.find('.filter-name').html(filterText);
             filterOption.find('.filter-control').append(filterFormControl);
-            filterOption.find('.glyphicon-remove').attr('data-filter-field',$(this).attr('data-filter-field'));
+            filterOption.find('.fa-times').attr('data-filter-field',$(this).attr('data-filter-field'));
             $('.filter-list').append(filterOption.html());
 
         }
 
+        // determine if a multiselect was added to the dom, if so, apply the plugin
+        $('.multiselect', $('.filter-list').children().last()).multiselect({
+            buttonContainer: '<div class="btn-group btn-group-multiselect" />'
+        });
+
+        // determine if radio or checkboxes were added to the dom, if so, apply a plugin
+         $('input[type="radio"],input[type="checkbox"]', $('.filter-list').children().last()).not(function (item, el) {
+                return ($(this).closest('.multiselect-container').length === 1) ? true : false;
+            }).iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green'
+        });
+
         // hide dropdown for 'Add filter'
-        $(this).parents('li.dropdown').removeClass('open');
+        $(this).parents('.dropdown').removeClass('open');
 
         var selectedFilters = $('.selectedFilters').val();
 
@@ -114,29 +127,31 @@
 
     /* GROUP ACTIONS */
 
-    $('input[data-linz-control="checked-all"]').click(function () {
+    $('input[data-linz-control="checked-all"]').on('ifToggled', function () {
 
         var isChecked = $(this).is(':checked');
+
         $('input[data-linz-control="checked-record"]').prop('checked',isChecked);
+        $('input[data-linz-control="checked-record"]').iCheck('update');
 
     });
 
     // bind event for check-all checkbox to show group action buttons
-    $('input[data-linz-control="checked-all"]').click(function () {
+    $('input[data-linz-control="checked-all"]').on('ifToggled', function () {
 
         if ($(this).is(':checked')) {
-            return $('.group-actions').show();
+            return $('.group-actions').removeClass('hidden');
         }
 
-        $('.group-actions').hide();
+        $('.group-actions').addClass('hidden');
 
     });
 
     // bind event to checkboxes to show group action buttons when checked
-    $('input[data-linz-control="checked-record"]').click(function () {
+    $('input[data-linz-control="checked-record"]').on('ifToggled', function () {
 
         if ($(this).is(':checked')) {
-            return $('.group-actions').show();
+            return $('.group-actions').removeClass('hidden');
         }
 
         // check if any of the other checkboxes are checked
@@ -145,7 +160,7 @@
         }
 
         // since none are checked, let's close group action buttons
-        $('.group-actions').hide();
+        $('.group-actions').addClass('hidden');
 
     });
 
@@ -200,14 +215,14 @@
     function assignRemoveButton (queryObj) {
 
         // remove all event listener
-        $('.glyphicon-remove').unbind();
+        $('.fa-times').unbind();
 
         // re-assign listeners including any new ones added to DOM after page load
-        $('.glyphicon-remove').click(function () {
+        $('.fa-times').click(function () {
 
             var filteredField = $(this).attr('data-filter-field'),
                 selectedFilters = $('.selectedFilters').val(),
-                numOfSameFilters = $('.glyphicon-remove[data-filter-field=' + filteredField + ']').length;
+                numOfSameFilters = $('.fa-times[data-filter-field=' + filteredField + ']').length;
 
             filtersAreDirty = true;
 

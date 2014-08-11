@@ -5,40 +5,59 @@ html(lang="en")
 	head
 		title= pageTitle
 		meta(name='viewport', content='width=device-width, initial-scale=1.0')
+		link(href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700', rel='stylesheet', type='text/css')
 		if (env === 'development')
 			link(href='' + linz.get('admin path') + '/public/css/bootstrap.min.css', rel='stylesheet')
 		else
 			link(href='//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css', rel='stylesheet')
-		link(href='' + linz.get('admin path') + '/public/css/linz-admin.css', rel='stylesheet')
-		if (linz.get('admin theme') === 'watermelon')
-			link(href='' + linz.get('admin path') + '/public/css/linz-admin-watermelon.css', rel='stylesheet')
+		link(href='//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css', rel='stylesheet')
+		link(href='' + linz.get('admin path') + '/public/css/multiselect.min.css', rel='stylesheet')
+		link(href='' + linz.get('admin path') + '/public/css/square/green.css', rel='stylesheet')
+		link(href='' + linz.get('admin path') + '/public/css/linz.css', rel='stylesheet')
+		if adminCSSFile !== undefined
+			link(href='' + adminCSSFile, rel='stylesheet')
 		script(src='' + linz.get('admin path') + '/public/js/utils.js')
 	body
 		.navbar.navbar-inverse.navbar-fixed-top.linz-navbar-inverse(role='navigation')
 			.container
 				.navbar-header
-					button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+					button.navbar-toggle(type='button', data-linz-nav-toggle)
 						span.sr-only Toggle navigation
 						span.icon-bar
 						span.icon-bar
 						span.icon-bar
 					a.navbar-brand(href=linz.get('admin path'))= linz.get('admin title')
-				.navbar-collapse.collapse
+				.navbar-right
 					ul.nav.navbar-nav
-						each node,index in linzNavigation
-							if node.children && node.children.length
-								mixin dropdown(node)
-							else
-								li
-									a(href=node.href)= node.name
+						li
+							a(href=linz.get('admin path') + '/logout') Logout
 
-					.navbar-right
-						ul.nav.navbar-nav
+		nav
+			ul
+				each node,index in linzNavigation
+					if node.children && node.children.length
+						if node.href === request.path
+							li(class='active')
+								mixin submenu(node)
+						else
 							li
-								a(href=linz.get('admin path') + '/logout') Logout
+								mixin submenu(node)
+					else
+						if (node.href === request.path)
+							li(class='active')
+								a(href=node.href)= node.name
+						else
+							li
+								a(href=node.href)= node.name
+		.wrap
+			block page
+				header
+					.container
+						.row
+							.col-xs-12
+								block header
+				block content
 
-		.container.linz-container
-			block content
 
 		if (env === 'development')
 			script(src='' + linz.get('admin path') + '/public/js/jquery.min.js')
@@ -49,8 +68,12 @@ html(lang="en")
 
 		script(src='' + linz.get('admin path') + '/public/js/modernizr.custom.min.js')
 		script(src='' + linz.get('admin path') + '/public/js/validator.min.js')
+		script(src='' + linz.get('admin path') + '/public/js/multiselect.min.js')
+		script(src='' + linz.get('admin path') + '/public/js/icheck.min.js')
 		script(src='' + linz.get('admin path') + '/public/js/ui.js')
 		script(src='' + linz.get('admin path') + '/public/js/template.js')
+		if adminJSFile !== undefined
+			script(src='' + adminJSFile)
 
 		script. linz.loadLibraries('#{linz.get('admin path')}');
 		block script

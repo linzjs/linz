@@ -27,7 +27,6 @@ module.exports = {
 
         var helpers = require('./_modelIndex')(req, res, next);
         helpers.getModelIndex();
-
     }
 
 }

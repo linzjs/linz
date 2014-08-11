@@ -1,0 +1,328 @@
+.model-title, .model-actions {
+
+	background: #FFF;
+
+}
+
+.model-actions, .options {
+
+	.btn {
+
+		padding-top: 10px;
+		padding-bottom: 10px;
+
+		i.fa {
+
+			margin-right: 5px;
+
+		}
+
+	}
+
+}
+
+.model-actions {
+
+	margin-top: 10px;
+
+	.actions {
+
+		display: block;
+		margin-bottom: 5px;
+
+		span {
+
+			display: block;
+			margin-bottom: 5px;
+
+			.btn {
+				display: block;
+			}
+
+		}
+
+		span:last-child {
+			margin-bottom: 0;
+		}
+
+	}
+
+	.custom-actions {
+
+		display: block;
+		margin-bottom: 5px;
+
+		.btn, .dropdown > .btn {
+
+			display: block;
+			width: 100%;
+
+		}
+
+	}
+
+	.group-actions {
+
+		display: block;
+
+		.btn, .dropdown > .btn {
+
+			display: block;
+			width: 100%;
+
+		}
+
+
+	}
+
+}
+
+.options {
+
+	.model-filters, .model-sort {
+
+		display: block;
+
+	}
+
+	.model-filters {
+
+		margin-bottom: 15px;
+
+		.addFilterBtn {
+
+			margin-bottom: 5px;
+
+			a {
+				width: 100%;
+			}
+
+			.controlField {
+				display: none;
+			}
+
+		}
+
+		.filters {
+
+			display: none;
+			margin: 10px 0 20px 25px;
+			border-bottom: 1px solid #E7EAEC;
+
+			.filter-control {
+
+				position: relative;
+				display: table;
+				border-collapse: separate;
+				margin-left: -40px;
+				width: 100%;
+				max-width: 500px;
+
+			}
+
+			.control-label {
+				font-weight: normal;
+			}
+
+			.form-control {
+
+				display: table-cell;
+
+			}
+
+			i.fa.fa-times {
+
+				display: table-cell;
+				width: 1%;
+				padding: 0 12px 0 18px;
+
+			}
+
+		}
+
+	}
+
+	.model-sort {
+
+		padding: 10px 0;
+		text-align: center;
+
+		& > div {
+			display: inline-block;
+		}
+
+		.dropdown {
+			margin: 0 4px;
+		}
+
+		.field {
+			text-decoration: underline;
+			color: @highlight-color;
+			cursor: pointer;
+		}
+
+	}
+
+	.model-paging {
+
+		padding: 10px 0 5px 0;
+		text-align: center;
+
+		.form-control, .records, .pagination, .page-size {
+
+			display: inline-block;
+
+		}
+
+		.pagination, .page-size, .records {
+
+			select.form-control {
+				margin: 0 5px;
+				width: auto;
+			}
+
+		}
+
+		.records {
+
+			display: block;
+			padding: 0 0 10px 0;
+
+		}
+
+		.page-size {
+
+			display: block;
+			padding: 10px 0 0 0;
+		}
+
+	}
+
+}
+
+.body {
+
+	.table {
+
+		margin: 0;
+
+		& > thead > tr > th {
+
+			border-bottom: 1px solid #DDDDDD;
+
+		}
+
+		& > tbody > tr > td {
+
+			border-top: 1px solid #E7EAEC;
+			vertical-align: middle;
+			padding: 12px 8px 12px 8px;
+			font-weight: 200;
+
+		}
+
+		th.actions {
+			min-width: 130px;
+		}
+
+	}
+
+}
+
+@media (min-width: @screen-sm-min) {
+
+	.model-actions, .options {
+
+		.btn {
+
+			padding-top: 6px;
+			padding-bottom: 6px;
+
+		}
+
+	}
+
+	.model-actions {
+
+		.actions {
+
+			display: inline-block;
+			margin-right: 5px;
+			margin-bottom: 0;
+
+			span {
+				display: inline-block;
+				margin-right: 5px;
+			}
+
+			span:last-child {
+				margin-right: 0;
+			}
+
+		}
+
+		.custom-actions {
+			display: inline-block;
+			margin-right: 5px;
+			margin-bottom: 0;
+		}
+
+		.group-actions {
+			display: inline-block;
+		}
+
+	}
+
+	.options {
+
+		.model-filters {
+
+			.addFilterBtn a {
+				width: auto;
+			}
+
+		}
+
+		.model-sort {
+
+			text-align: left;
+
+		}
+
+		.model-paging {
+
+			text-align: left;
+
+			.records, .page-size {
+				display: inline-block;
+				padding: 0;
+			}
+
+			.records {
+				padding-right: 10px;
+			}
+
+		}
+
+	}
+
+}
+
+@media (min-width: @screen-sm-max) {
+
+	.options {
+
+		.model-sort {
+			float: left;
+		}
+
+		.model-paging {
+
+			float: right;
+			padding: 0;
+
+		}
+
+	}
+
+}

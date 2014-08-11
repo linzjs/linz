@@ -1,0 +1,249 @@
+
+html {
+	height: 100%;
+}
+
+// defaults for the body and everything that inherits its values
+body {
+	background: @grey;
+	padding-top: @header-height;
+	height: 100%;
+	color: @font-color-grey;
+	font-family: 'Open Sans', sans-serif;
+}
+
+.linz-container {
+	min-height: 100%;
+}
+
+// utility to center an element in the page
+.centered {
+	float: none;
+	margin: 0 auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: @font-color-grey;
+	font-weight: 200;
+}
+
+// links
+a {
+
+	color: @highlight-color;
+
+	&:hover, &:focus {
+		color: @highlight-hover;
+		outline: none;
+	}
+
+}
+
+.btn-link {
+
+	color: @highlight-color;
+
+	&:hover, &:focus {
+		color: @highlight-hover;
+	}
+
+}
+
+// buttons
+.btn-primary {
+
+	background: @highlight-background;
+	border: @highlight-border;
+	border-radius: 2px;
+
+	&:hover, &:active {
+		background: @highlight-hover;
+	}
+
+	&:focus, &:active:focus {
+		background: @highlight-hover;
+		outline: thin dotted;
+		outline-offset: -1px;
+	}
+
+	&:disabled, &:disabled:hover {
+		background: #a3e1d4;
+	}
+
+}
+
+.btn-default {
+
+	border: 1px solid @input-border-color;
+	border-radius: 2px;
+
+}
+
+.btn-group-multiselect, .btn-group-multiselect .btn {
+	width: 100%;
+}
+
+.btn-group-multiselect .btn {
+
+	text-align: left;
+
+	b.caret {
+
+		position: absolute;
+		top: 14px;
+		right: 10px;
+
+	}
+
+}
+
+// modal
+.modal-dialog {
+
+	.modal-content {
+
+		// background: #FFF;
+
+		.modal-header {
+
+			h4 {
+				font-size: @font-size-h2;
+			}
+
+			.close {
+				margin-top: 12px;
+			}
+
+		}
+
+	}
+
+}
+
+.wrap {
+
+	background: @grey;
+	position: relative;
+	min-height: 100%;
+	transition: 300ms -webkit-transform;
+
+	header {
+
+		border-top: 4px solid @border;
+		border-bottom: 1px solid @border;
+		background: #FFF;
+		padding-bottom: 15px;
+
+		h1 {
+			font-weight: 200;
+		}
+
+	}
+
+}
+
+// panes
+.pane {
+
+	border-bottom: 1px solid @border;
+	padding: 0;
+	background: #FFFFFF;
+
+	h1.title {
+		margin: 0;
+		border-top: 4px solid @border;
+		border-bottom: 1px solid @border;
+		padding: 14px 0px 15px 15px;
+	}
+
+}
+
+.linz-container .pane {
+
+	background: @grey;
+
+	header {
+
+		padding: 14px 15px 15px 15px;
+		border-bottom: 1px solid #E7EAEC;
+
+		h1 {
+			margin: 0;
+		}
+
+	}
+
+	.options {
+
+		background: @grey;
+		padding: 14px 0px 15px 0px;
+
+	}
+
+	.control-bar {
+
+		background: @grey;
+		padding: 15px;
+
+	}
+
+	& > .body {
+
+		border-top: 2px solid #E7EAEC;
+		background: #FFF;
+		padding: 30px 15px 15px 15px;
+
+		form fieldset {
+
+			.control-label {
+
+				font-weight: 400;
+
+			}
+
+		}
+
+		form > fieldset:first-child {
+			margin-top: 0;
+		}
+
+		form > fieldset > legend {
+
+			font-weight: 200;
+			font-size: @font-size-h2;
+			border-bottom: none;
+			color: @font-color-grey;
+
+		}
+
+	}
+
+}
+
+@media (min-width: @screen-sm-min) {
+
+	.linz-container .pane {
+
+		margin-top: 10px;
+
+		& > .body {
+
+			padding: 30px 25px 25px 25px;
+
+		}
+
+	}
+
+}
+
+@media (min-width : 767px) and (max-width : 991px) {
+	.table-responsive {
+		width: 100%;
+		margin-bottom: 15px;
+		overflow-y: hidden;
+		overflow-x: scroll;
+		-ms-overflow-style: -ms-autohiding-scrollbar;
+		border: 1px solid #ddd;
+		-webkit-overflow-scrolling: touch;
+	}
+}

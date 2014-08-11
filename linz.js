@@ -13,7 +13,8 @@ var	express = require('express'),
 	passport = require('passport'),
 	LocalStrategy = require('passport-local').Strategy,
 	bunyan = require('bunyan'),
-    async = require('async');
+    async = require('async'),
+    lessMiddleware = require('less-middleware');
 
 /**
  * Linz constructor
@@ -186,6 +187,10 @@ Linz.prototype.configure = function() {
         },
 
         function (cb) {
+            return _this.buildNavigation(cb);
+        },
+
+        function (cb) {
             return _this.bootstrapExpressLocals(cb);
         },
 
@@ -234,14 +239,21 @@ Linz.prototype.loadModels = function (cb) {
 
 	}
 
+    var _this = this;
+
 	// set the default models path
 	this.set('models path', path.resolve(this.get('cwd'), 'models'), false);
 
 	var modelsPath = this.get('models path');
 
-	this.set('models', helpersModels.loadModels(modelsPath));
+    // load in the models (non-standard callback as loadModels handles all errors)
+    helpersModels.loadModels(modelsPath, function (models) {
 
-    return cb(null);
+        _this.set('models', models || []);
+
+        return cb(null);
+
+    });
 
 };
 
@@ -382,6 +394,9 @@ Linz.prototype.defaultConfiguration = function (cb) {
 	// setup the router
 	this.router = routesManager.getRouter();
 
+    // assign the middleware
+    this.app.use(require('./middleware/request')());
+
 	// assign the admin routes
 	routesManager.setupAdminRoutes();
 
@@ -448,8 +463,15 @@ Linz.prototype.bootstrapExpress = function (cb) {
 	this.app.use(this.get('admin path'), passport.initialize());
 	this.app.use(this.get('admin path'), passport.session());
 
-	// setup stylus for admin css
-	this.app.use(this.get('admin path') + '/public/', require('stylus').middleware(path.resolve(__dirname, 'public')));
+    if ((process.env.NODE_ENV || 'development') === 'development') {
+        this.app.use(this.get('admin path') + '/public', lessMiddleware(__dirname + '/public', {
+            preprocess: {
+                path: function (pathname, req) {
+                    return pathname.replace(/\/css/, '/src/css');
+                }
+            }
+        }));
+    }
 
 	// setup admin static routes
 	this.app.use(this.get('admin path') + '/public/', express.static(path.resolve(__dirname, 'public')));
@@ -475,13 +497,17 @@ Linz.prototype.bootstrapExpressLocals = function (cb) {
 	this.app.locals['linz'] = this;
 
 	// expose the linz admin navigation
-	this.app.locals['linzNavigation'] = this.buildNavigation();
+	this.app.locals['linzNavigation'] = this.get('navigation');
 
 	this.app.locals['adminPath'] = this.get('admin path');
 
 	this.app.locals['adminTitle'] = this.get('admin title');
 
     this.app.locals['env'] = process.env.NODE_ENV || 'development';
+
+    this.app.locals['adminCSSFile'] = this.get('css file');
+
+    this.app.locals['adminJSFile'] = this.get('js file');
 
     return cb(null);
 
@@ -568,50 +594,87 @@ Linz.prototype.disable = function (setting) {
 *
 * @api private
 */
-Linz.prototype.buildNavigation = function () {
+Linz.prototype.buildNavigation = function (cb) {
 
 	var nav = [],
 		_this = this,
 		linzModels = this.get('models');
 
-	// add a reference for all of the models
-	var models = {
-		name: 'Models',
-		href: this.get('admin path') + '/models/list',
-		children: [
-			{
-				'name': 'All',
-				href: this.get('admin path') + '/models/list'
-			}
-		]
-	};
+    // models, configs and logs
+    async.parallel([
 
-	// add each model to the navigation tree
-	Object.keys(linzModels).forEach(function (model) {
+        function (done) {
 
-		models.children.push({
-			name: linzModels[model].label,
-			href: _this.get('admin path') + '/model/' + model + '/list'
-		});
+            // add a reference for all of the models
+            var models = {
+                name: 'Models',
+                href: _this.get('admin path') + '/models/list',
+                children: []
+            };
 
-	});
-	nav.push(models);
+            async.each(Object.keys(linzModels), function (model, callback) {
 
-    // add a reference for configs
-    var configs = {
-        name: 'Configs',
-        href: this.get('admin path') + '/configs/list'
-    };
-    nav.push(configs);
+                // get the model options
+                linzModels[model].getModelOptions(function (err, options) {
 
-	// add a reference for the logs
-	var logs = {
-		name: 'Logs',
-		href: this.get('admin path') + '/logs/request/list'
-	};
-	nav.push(logs);
+                    if (options.hide === true) {
+                        return callback(null);
+                    }
 
-	return nav;
+                    models.children.push({
+                        name: linzModels[model].formtools.model.plural,
+                        href: _this.get('admin path') + '/model/' + model + '/list'
+                    });
+
+                    return callback(null);
+
+                });
+
+
+            }, function (err) {
+
+                nav.push(models);
+                return done();
+
+            });
+
+        },
+
+        function (done) {
+
+            // add a reference for configs
+            var configs = {
+                name: 'Configs',
+                href: _this.get('admin path') + '/configs/list'
+            };
+            nav.push(configs);
+
+            return done(null);
+
+        },
+
+        function (done) {
+
+            // add a reference for the logs
+            var logs = {
+                name: 'Logs',
+                href: _this.get('admin path') + '/logs/request/list'
+            };
+            nav.push(logs);
+
+            return done(null);
+
+        }
+
+    ], function () {
+
+        // set this data on linz
+        _this.set('navigation', nav);
+
+        // return the callback
+        return cb(null);
+
+    });
 
 }
 

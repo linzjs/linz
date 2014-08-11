@@ -1,0 +1,167 @@
+div.navbar.navbar-inverse {
+
+	background: @dark;
+	transition: 300ms -webkit-transform;
+	transition: 300ms -ms-transform;
+	transition: 300ms -moz-transform;
+	transition: 300ms -o-transform;
+	transition: 300ms transform;
+
+	a {
+		color: #FFFFFF;
+	}
+
+	.navbar-header {
+
+		float: left;
+
+		button.navbar-toggle {
+
+			display: block;
+			float: left;
+			margin: 9px 0 0 12px;
+			border: none;
+			transition: 300ms -webkit-transform;
+			transition: 300ms -ms-transform;
+
+
+			@media (min-width: @screen-sm-min) {
+				margin: 9px 6px 0 0;
+			}
+
+			&:focus {
+				background: @dark;
+			}
+
+			&:hover {
+				background: darken(@dark, 5%);
+			}
+
+			&:focus:active {
+				background: @dark;
+			}
+
+		}
+
+		.navbar-brand {
+			margin-left: 0px;
+		}
+
+	}
+
+	.navbar-right {
+
+		float: right;
+
+		@media (max-width: @screen-xs-max) {
+
+			.navbar-nav {
+				margin: 5px -15px;
+			}
+
+		}
+
+	}
+
+	ul.nav li a {
+		color: #b7c5dc;
+	}
+
+}
+
+nav {
+
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: @nav-width;
+	min-height: 100%;
+
+	padding-top: @header-height + 1px;
+
+	overflow: hidden;
+
+	background: lighten(@dark, 2%);
+
+	ul {
+
+		list-style: none;
+		padding: 0;
+
+		& > li {
+
+			position: relative;
+			margin-bottom: 2px;
+			font-weight: 600;
+
+			&.active:before {
+				content: ' ';
+				position: absolute;
+				width: 4px;
+				height: 100%;
+				background: #FFFFFF;
+			}
+
+			a {
+
+				display: block;
+				padding: 10px 6px 10px 14px;
+				background: fade(#FFFFFF, 10%);
+				color: fade(#FFFFFF, 90%);
+
+				&:hover {
+					background: fade(#FFFFFF, 20%);
+					color: #FFFFFF;
+					text-decoration: underline;
+				}
+
+			}
+
+			& > ul {
+
+				margin-top: 2px;
+				padding: 0;
+
+				& > li {
+
+					font-weight: 300;
+
+					a {
+
+						padding-left: 36px;
+
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
+}
+
+.show-nav .wrap {
+	-webkit-transform: translate3d(@nav-width, 0, 0);
+	-ms-transform: translate3d(@nav-width, 0, 0);
+	-moz-transform: translate3d(@nav-width, 0, 0);
+	-o-transform: translate3d(@nav-width, 0, 0);
+	transform: translate3d(@nav-width, 0, 0);
+}
+
+.show-nav .navbar.navbar-inverse {
+	-webkit-transform: translate3d(@nav-width, 0, 0);
+	-ms-transform: translate3d(@nav-width, 0, 0);
+	-moz-transform: translate3d(@nav-width, 0, 0);
+	-o-transform: translate3d(@nav-width, 0, 0);
+	transform: translate3d(@nav-width, 0, 0);
+}
+
+.show-nav div.navbar.navbar-inverse button.navbar-toggle {
+	-webkit-transform: rotate(180deg);
+	-ms-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	-o-transform: rotate(180deg);
+	transform: rotate(180deg);
+}

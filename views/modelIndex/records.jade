@@ -1,13 +1,13 @@
 if records.length > 0
 	div(class="table-responsive")
-		table.table.table-striped.table-hover
+	table.table.table-hover
 			thead
 				tr
 					th #
 					th
 						input(type="checkbox", data-linz-control="checked-all")
 					if model.grid.canDelete || model.grid.canEdit
-						th Actions
+					th.actions Actions
 					for column in model.grid.columns
 						th= column.label
 			tbody

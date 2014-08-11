@@ -1,0 +1,71 @@
+
+.linz-container.edit.record .pane, .linz-container.edit.config .pane, .linz-container.create.model .pane {
+
+	border-bottom: none;
+
+	& > .body {
+
+		background: @grey;
+		border-top: none;
+		padding: 0;
+
+		form {
+
+			background: #FFF;
+
+			.form-group {
+				padding: 0 15px 0 15px;
+			}
+
+			.form-group.control-bar {
+				padding-top: 15px;
+			}
+
+			& > fieldset > legend {
+
+				background: @grey;
+				border-bottom: 2px solid #E7EAEC;
+				padding: 25px 10px 10px 10px;
+				margin-bottom: 10px;
+
+			}
+
+			& > fieldset:first-child > legend {
+				padding-top: 0;
+			}
+
+		}
+
+	}
+
+}
+
+@media (min-width: @screen-sm-min) {
+
+	.linz-container.edit.record .pane, .linz-container.edit.config .pane, .linz-container.create.model .pane {
+
+		& > .body {
+
+			form {
+
+				fieldset {
+
+					margin-bottom: 10px;
+
+					legend {
+						margin-bottom: 30px;
+					}
+
+				}
+
+				.form-group {
+					padding: 0 25px 0 25px;
+				}
+
+			}
+
+		}
+
+	}
+
+}

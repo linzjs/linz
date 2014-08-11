@@ -1,11 +1,26 @@
-var path = require('path');
+var path = require('path'),
+    async = require('async');
 
 /* GET /admin/models/list */
 var route = function (req, res) {
 
-	var models = req.linz.get('models');
+	var models = linz.get('models'),
+        modelsToShow = {};
 
-	res.render(req.linz.views + '/modelList.jade', { models: models });
+    // loop through each model, and determine if it should be displayed in list
+    async.each(Object.keys(models), function (model, done) {
+
+        if (!models[model].formtools.model.hide) {
+            modelsToShow[model] = models[model];
+        }
+
+        return done(null);
+
+    }, function (err) {
+
+        res.render(req.linz.views + '/modelList.jade', { models: modelsToShow });
+
+    });
 
 };
 

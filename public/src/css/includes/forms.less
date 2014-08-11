@@ -1,0 +1,34 @@
+
+.form-control {
+	border: 1px solid @input-border-color;
+}
+
+.form-control {
+
+	border-radius: 0px;
+	box-shadow: none;
+
+	&:focus {
+
+		border-color: @highlight-border;
+		outline: none;
+		box-shadow: 0px 0px 3px 0px fade(@highlight-border, 50%);
+
+	}
+
+}
+
+.btn-group-multiselect, .btn-group-multiselect .btn {
+	width: 100%;
+}
+
+.checkbox, .radio, .checkbox-inline, .radio-inline {
+	padding-left: 0;
+}
+
+.form-group.required > label:after {
+
+	content: '*';
+	padding-left: 5px;
+
+}

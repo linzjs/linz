@@ -1,28 +1,33 @@
 extends layout
 
-block content
+block header
 	h1 Configs
+
+block content
 	if records.length > 0
-		div(class="table-responsive")
-			table.table.table-striped.table-hover
-				thead
-					tr
-						th #
-						th Actions
-						for column in grid.columns
-							th= column.label
-				tbody
-					for record, index in records
-						tr
-							td= index+1
-							td
-								div.btn-group
-									a.btn.btn-default.control-edit(href='' + linz.api.getAdminLink(configs[Object.keys(configs)[0]], 'edit', record._id))
-										span(class="glyphicon glyphicon-pencil")
-									a.btn.btn-default(href='' + linz.api.getAdminLink(configs[Object.keys(configs)[0]], 'default', record._id), data-linz-control="config-default")
-										span(class="glyphicon glyphicon-refresh")
-							each val in Object.keys(grid.columns)
-								td!= record[val]
+		.container.linz-container.list.config
+			.pane
+				.body
+					div(class="table-responsive")
+						table.table.table-hover
+							thead
+								tr
+									th #
+									th Actions
+									for column in grid.columns
+										th= column.label
+							tbody
+								for record, index in records
+									tr
+										td= index+1
+										td
+											div.btn-group
+												a.btn.btn-default.control-edit(href='' + linz.api.getAdminLink(configs[Object.keys(configs)[0]], 'edit', record._id))
+													span(class="glyphicon glyphicon-pencil")
+												a.btn.btn-default(href='' + linz.api.getAdminLink(configs[Object.keys(configs)[0]], 'default', record._id), data-linz-control="config-default")
+													span(class="glyphicon glyphicon-refresh")
+										each val in Object.keys(grid.columns)
+											td!= record[val]
 
 block script
 	script(src='' + linz.get('admin path') + '/public/js/config/list.js')
