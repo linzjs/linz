@@ -8,10 +8,20 @@ var route = function (req, res) {
         pageSize = Number(req.linz.records.pageSize),
         page = Number(req.linz.records.page),
         pages = Number(req.linz.records.pages),
-        to = pageSize*page;
+        to = pageSize*page,
+        sortDirection = '';
 
     if (to > total) {
         to = total;
+    }
+
+    if (Object.keys(req.linz.model.grid.sortingBy).length) {
+
+        if (!req.body.sort) {
+            req.body.sort = req.linz.model.grid.sortingBy.field;
+        }
+
+        sortDirection = ((req.body.sort.charAt(0) === '-') ? 'desc' : 'asc')
     }
 
 	res.render(req.linz.views + '/modelIndex.jade', {
@@ -26,8 +36,8 @@ var route = function (req, res) {
         from: pageSize*page-pageSize,
         to: to,
         pagination: (req.linz.model.grid.paging.active === true && total > pageSize),
-        sort: req.linz.model.grid.sortingBy.replace(/-/, ''),
-        sortDirection: ((req.linz.model.grid.sortingBy.charAt(0) === '-') ? 'desc':'asc'),
+        sort: req.linz.model.grid.sortingBy,
+        sortDirection: sortDirection,
         label: {
             singular: inflection.humanize(req.linz.model.formtools.model.label, true),
             plural: req.linz.model.formtools.model.plural

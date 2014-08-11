@@ -153,11 +153,24 @@ module.exports = function (model) {
 
 				var query = req.linz.model.find(filters);
 
-                req.linz.model.grid.sortingBy = (!req.body.sort && req.linz.model.grid.sortBy.length)
-                    ? req.linz.model.grid.sortBy[0].field
-                    : req.body.sort;
+                req.linz.model.grid.sortingBy = {};
 
-                query.sort(req.linz.model.grid.sortingBy);
+                // work out current selected sort and default to the first sort if none available
+                if (!req.body.sort && req.linz.model.grid.sortBy.length) {
+
+                    req.linz.model.grid.sortingBy = req.linz.model.grid.sortBy[0];
+
+                } else {
+
+                    req.linz.model.grid.sortBy.forEach(function (sort) {
+                        if (sort.field === req.body.sort || '-' + sort.field === req.body.sort) {
+                            req.linz.model.grid.sortingBy = sort;
+                        }
+                    });
+
+                }
+
+                query.sort(req.body.sort);
 
                 if (req.linz.model.grid.paging.active === true) {
                     // add in paging skip and limit
