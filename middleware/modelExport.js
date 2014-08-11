@@ -19,7 +19,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
     var prettifyData = function prettifyData (fieldName, val) {
 
-        if (val === undefined || val === '') {
+        if (val === undefined || val === '' || val === null) {
             return val;
         }
 
