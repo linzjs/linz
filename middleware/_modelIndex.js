@@ -6,11 +6,20 @@ module.exports = function  (req, res, next) {
 
         getModelIndex: function getModelIndex () {
 
+            // set up session control
+            var session = req.session[req.params.model] = req.session[req.params.model] || {};
+            session.grid = session.grid || {};
+            session.grid.formData = session.grid.formData || {};
+
+            if (Object.keys(req.body).length) {
+                session.grid.formData = req.body;
+            }
+
             var records = [],
                 filters = {},
                 totalRecords = 0,
                 pageSize = linz.get('page size'),
-                pageIndex = req.body.page || 1;
+                pageIndex = session.grid.formData.page || 1;
 
             // set the model on linz
             req.linz.model = req.linz.get('models')[req.params.model];
@@ -27,7 +36,7 @@ module.exports = function  (req, res, next) {
                         }
 
                         // reset the pageSize value
-                        pageSize = req.body.pageSize || req.linz.model.grid.paging.size;
+                        pageSize = session.grid.formData.pageSize || req.linz.model.grid.paging.size;
 
                         // holder for the sortingBy value
                         req.linz.model.grid.sortingBy = {};
@@ -72,14 +81,14 @@ module.exports = function  (req, res, next) {
                     req.linz.model.grid.activeFilters = {};
 
                     // check if there are any filters in the form post
-                    if (!req.body.selectedFilters) {
+                    if (!session.grid.formData.selectedFilters) {
                         return cb(null);
                     }
 
-                    async.each(req.body.selectedFilters.split(','), function (fieldName, filtersDone) {
+                    async.each(session.grid.formData.selectedFilters.split(','), function (fieldName, filtersDone) {
 
                         // call the filter binder to render active filter form controls with form value added
-                        req.linz.model.grid.filters[fieldName].filter.bind(fieldName, req.body, function (err, result) {
+                        req.linz.model.grid.filters[fieldName].filter.bind(fieldName, session.grid.formData, function (err, result) {
 
                             if (!err) {
                                 req.linz.model.grid.activeFilters[fieldName] = {
@@ -104,14 +113,14 @@ module.exports = function  (req, res, next) {
                 function (cb) {
 
                     // check if there are any filters in the form post
-                    if (!req.body.selectedFilters) {
+                    if (!session.grid.formData.selectedFilters) {
                         return cb(null);
                     }
 
-                    async.each(req.body.selectedFilters.split(','), function (fieldName, filtersDone) {
+                    async.each(session.grid.formData.selectedFilters.split(','), function (fieldName, filtersDone) {
 
                         // call the filter renderer and update the content with the result
-                        req.linz.model.grid.filters[fieldName].filter.filter(fieldName, req.body, function (err, result) {
+                        req.linz.model.grid.filters[fieldName].filter.filter(fieldName, session.grid.formData, function (err, result) {
 
                             if (!err) {
 
@@ -156,21 +165,21 @@ module.exports = function  (req, res, next) {
 
                     var query = req.linz.model.find(filters);
 
-                    if (!req.body.sort && req.linz.model.grid.sortBy.length) {
+                    if (!session.grid.formData.sort && req.linz.model.grid.sortBy.length) {
 
                         req.linz.model.grid.sortingBy = req.linz.model.grid.sortBy[0];
 
                     } else {
 
                         req.linz.model.grid.sortBy.forEach(function (sort) {
-                            if (sort.field === req.body.sort || '-' + sort.field === req.body.sort) {
+                            if (sort.field === session.grid.formData.sort || '-' + sort.field === session.grid.formData.sort) {
                                 req.linz.model.grid.sortingBy = sort;
                             }
                         });
 
                     }
 
-                    query.sort(req.body.sort);
+                    query.sort(session.grid.formData.sort);
 
                     if (req.linz.model.grid.paging.active === true) {
                         // add in paging skip and limit
@@ -365,13 +374,7 @@ module.exports = function  (req, res, next) {
                     pageSize: pageSize
                 };
 
-                req.linz.model.formData = req.body;
-
-                // add session control data
-                req.session[req.params.model] = req.session[req.params.model] || {};
-                req.session[req.params.model].grid = req.linz.model.grid;
-                req.session[req.params.model].records = req.linz.records;
-                req.session[req.params.model].formData = req.linz.model.formData;
+                req.linz.model.formData = session.grid.formData;
 
                 if (err && err.message === 'No records found') {
                     err = null;
