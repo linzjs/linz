@@ -77,7 +77,7 @@
 
 	.export {
 
-		display: block;
+		display: none;
 		margin-bottom: 5px;
 
 		.btn, .dropdown > .btn {
@@ -286,13 +286,6 @@
 			margin-right: 5px;
 		}
 
-		.export {
-			display: inline-block;
-			margin-right: 5px;
-			margin-bottom: 0;
-		}
-
-
 	}
 
 	.options {
@@ -343,6 +336,20 @@
 			float: right;
 			padding: 0;
 
+		}
+
+	}
+
+}
+
+@media (min-width: @screen-lg-min) {
+
+	.model-actions {
+
+		.export {
+			display: inline-block;
+			margin-right: 5px;
+			margin-bottom: 0;
 		}
 
 	}
