@@ -17,11 +17,11 @@ var route = function (req, res) {
 
     if (Object.keys(req.linz.model.grid.sortingBy).length) {
 
-        if (!req.body.sort) {
-            req.body.sort = req.linz.model.grid.sortingBy.field;
+        if (!req.linz.model.formData.sort) {
+            req.linz.model.formData.sort = req.linz.model.grid.sortingBy.field;
         }
 
-        sortDirection = ((req.body.sort.charAt(0) === '-') ? 'desc' : 'asc')
+        sortDirection = ((req.linz.model.formData.sort.charAt(0) === '-') ? 'desc' : 'asc')
     }
 
 	res.render(linz.views + '/modelIndex.jade', {
@@ -42,7 +42,7 @@ var route = function (req, res) {
             singular: inflection.humanize(req.linz.model.formtools.model.label, true),
             plural: req.linz.model.formtools.model.plural
         },
-        modelQuery: JSON.stringify(req.body)
+        modelQuery: JSON.stringify(req.linz.model.formData)
 	});
 
 };
