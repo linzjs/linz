@@ -169,6 +169,9 @@ module.exports = function  (req, res, next) {
 
                         req.linz.model.grid.sortingBy = req.linz.model.grid.sortBy[0];
 
+                        // set default form sort
+                        session.grid.formData.sort = req.linz.model.grid.sortingBy.field;
+
                     } else {
 
                         req.linz.model.grid.sortBy.forEach(function (sort) {
