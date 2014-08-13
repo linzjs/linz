@@ -9,11 +9,11 @@ if (!linz) {
         // javascript events for the navigation
         $('[data-linz-nav-toggle]').click(function () {
 
-            // show the navigation
-            $('body').toggleClass('show-nav');
-
             // scroll back to the top
-            $('body').scrollTop();
+            $('body').animate({scrollTop:0}, 200, 'swing', function () {
+                // show the navigation
+                $('body').toggleClass('show-nav');
+            });
 
         });
 
