@@ -24,6 +24,7 @@ function Linz () {
 	// internal properties
 	this.settings = {};
 	this.loggers = {};
+    this.plugins = {};
 
 }
 
@@ -52,6 +53,7 @@ linz.formtools = require('./lib/formtools');
 linz.middleware = require('./middleware-public');
 linz.api = require('./lib/api');
 linz.utils = require('./lib/utils');
+linz.plugins = require('./lib/plugins');
 
 /**
  * Linz inherits from EventEmitter for Linz.prototype.on('event') handling
