@@ -35,11 +35,11 @@
 					ul.dropdown-menu(role='menu')
 						for groupAction in model.grid.groupActions
 							li(role='presentation')
+								- groupAction.attributes = groupAction.attributes || {}
 								if groupAction.useModal
-									- groupAction.attributes = groupAction.attributes || {}
 									- groupAction.attributes['data-linz-control'] = 'group-action'
 									- groupAction.attributes['data-target'] = '#groupActionModal'
-								a(role='menuitem' tabindex='-1' href=linz.api.getAdminLink(model, groupAction.action))&attributes((groupAction.attributes) ? groupAction.attributes : {})= groupAction.label
+								a(role='menuitem' tabindex='-1' href=linz.api.getAdminLink(model, groupAction.action))&attributes(groupAction.attributes)= groupAction.label
 
 	if model.grid.export && model.grid.export.enable
 		.export
