@@ -242,6 +242,14 @@ a {
 		&:hover{
 			color: #1ab394;
 		}
+
+		i {
+			min-width: 30px;
+			text-align: center;
+		}
+		span{
+			display: none;
+		}
 	}
 
 	> li.active > a,
@@ -283,6 +291,19 @@ a {
 
 			padding: 30px 25px 25px 25px;
 
+		}
+
+	}
+
+	.nav-tabs {
+
+		> li > a {
+			i {
+				display: none;
+			}
+			span{
+				display: inline-block;
+			}
 		}
 
 	}
