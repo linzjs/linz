@@ -1,6 +1,11 @@
 
 html {
 	height: 100%;
+	font-weight: 200;
+}
+
+strong {
+	font-weight: 600;
 }
 
 // defaults for the body and everything that inherits its values
@@ -251,6 +256,22 @@ a {
 
 }
 
+.alert-text-success {
+	color: #3c763d;
+}
+
+.alert-text-info {
+	color: #31708f;
+}
+
+.alert-text-warning {
+	color: #8a6d3b;
+}
+
+.alert-text-danger{
+	color: #a94442;
+}
+
 
 @media (min-width: @screen-sm-min) {
 
@@ -278,20 +299,4 @@ a {
 		border: 1px solid #ddd;
 		-webkit-overflow-scrolling: touch;
 	}
-}
-
-.alert-text-success {
-	color: #3c763d;
-}
-
-.alert-text-info {
-	color: #31708f;
-}
-
-.alert-text-warning {
-	color: #8a6d3b;
-}
-
-.alert-text-danger{
-	color: #a94442;
 }
