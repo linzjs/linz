@@ -1,6 +1,11 @@
 
 html {
 	height: 100%;
+	font-weight: 200;
+}
+
+strong {
+	font-weight: 600;
 }
 
 // defaults for the body and everything that inherits its values
@@ -237,6 +242,14 @@ a {
 		&:hover{
 			color: #1ab394;
 		}
+
+		i {
+			min-width: 30px;
+			text-align: center;
+		}
+		span{
+			display: none;
+		}
 	}
 
 	> li.active > a,
@@ -251,6 +264,22 @@ a {
 
 }
 
+.alert-text-success {
+	color: #3c763d;
+}
+
+.alert-text-info {
+	color: #31708f;
+}
+
+.alert-text-warning {
+	color: #8a6d3b;
+}
+
+.alert-text-danger{
+	color: #a94442;
+}
+
 
 @media (min-width: @screen-sm-min) {
 
@@ -262,6 +291,19 @@ a {
 
 			padding: 30px 25px 25px 25px;
 
+		}
+
+	}
+
+	.nav-tabs {
+
+		> li > a {
+			i {
+				display: none;
+			}
+			span{
+				display: inline-block;
+			}
 		}
 
 	}
