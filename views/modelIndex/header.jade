@@ -26,7 +26,7 @@
 	if model.grid.groupActions && model.grid.groupActions.length
 		.group-actions.hidden
 			if model.grid.groupActions.length === 1
-				a.btn.btn-default(href='' + linz.api.getAdminLink(model, groupAction.action) data-linz-control="group-action" data-target="#groupActionModal")= groupAction.label
+				a.btn.btn-default(href='' + linz.api.getAdminLink(model, groupAction.action) data-linz-control=((groupAction.useModal) ? 'group-action' : false) data-target=((groupAction.useModal) ? '#groupActionModal' : false) )= groupAction.label
 			else
 				.dropdown
 					button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
@@ -35,7 +35,11 @@
 					ul.dropdown-menu(role='menu')
 						for groupAction in model.grid.groupActions
 							li(role='presentation')
-								a(role='menuitem', tabindex='-1', href='' + linz.api.getAdminLink(model, groupAction.action) data-linz-control='group-action' data-target='#groupActionModal')= groupAction.label
+								- groupAction.attributes = groupAction.attributes || {}
+								if groupAction.useModal
+									- groupAction.attributes['data-linz-control'] = 'group-action'
+									- groupAction.attributes['data-target'] = '#groupActionModal'
+								a(role='menuitem' tabindex='-1' href=linz.api.getAdminLink(model, groupAction.action))&attributes(groupAction.attributes)= groupAction.label
 
 	if model.grid.export && model.grid.export.enable
 		.export
