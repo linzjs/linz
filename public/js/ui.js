@@ -51,13 +51,6 @@ if (!linz) {
             buttonContainer: '<div class="btn-group btn-group-multiselect" />'
         });
 
-        $('input[type="radio"],input[type="checkbox"]').not(function (item, el) {
-            return ($(el).closest('span.controlField,.multiselect-container').length === 1) ? true : false;
-        }).iCheck({
-            checkboxClass: 'icheckbox_square-green',
-            radioClass: 'iradio_square-green'
-        });
-
     });
 
     function loadLibraries(path) {
