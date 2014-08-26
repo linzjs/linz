@@ -68,7 +68,15 @@
 
         // determine if a multiselect was added to the dom, if so, apply the plugin
         $('.multiselect', $('.filter-list').children().last()).multiselect({
-            buttonContainer: '<div class="btn-group btn-group-multiselect" />'
+            buttonContainer: '<div class="btn-group btn-group-multiselect" />',
+            onChange: function (element, checked) {
+                $(element).parents('form').bootstrapValidator('revalidateField', $(element).parents('select'));
+            }
+        });
+
+        // add all form elements to the validator
+        $('.filter-list').children().last().find('.form-control,input[type="checkbox"],input[type="radio"]').each(function () {
+            $('form.filters').bootstrapValidator('addField', $(this).eq(0));
         });
 
         // hide dropdown for 'Add filter'
@@ -260,7 +268,12 @@
 
             }
 
+            $(this).parents('.form-group').each(function () {
+                $('form.filters').bootstrapValidator('removeField', $(this).find('.form-control').eq(0));
+            });
+
             $(this).parents('.form-group').remove();
+
         });
     }
 

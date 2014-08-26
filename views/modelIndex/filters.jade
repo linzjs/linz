@@ -10,7 +10,7 @@ if Object.keys(model.grid.filters).length
 					li
 						a.control-addFilter(data-filter-field='' + key + '')= filterField['label']
 						span.controlField!= filterField.formControls
-		form.filters(method='post', role='form')
+		form.filters(method='post', role='form', data-linz-validation='true')
 			input.page(type='hidden', name='page', value=''+ page +'')
 			input.pageSize(type='hidden', name='pageSize', value=''+ pageSize +'')
 			input.selectedFilters(type='hidden', name='selectedFilters', value='' + ((form.selectedFilters) ? form.selectedFilters : '') + '')
