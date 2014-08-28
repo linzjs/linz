@@ -18,7 +18,9 @@ if (!linz) {
         });
 
         // add form validation
-        $('form[data-linz-validation="true"]').bootstrapValidator({});
+        $('form[data-linz-validation="true"]').bootstrapValidator({
+            excluded: ':disabled'
+        });
 
         // add delete prompt
         $('[data-linz-control="delete"]').click(function () {

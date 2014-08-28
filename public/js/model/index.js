@@ -68,8 +68,26 @@
 
         // determine if a multiselect was added to the dom, if so, apply the plugin
         $('.multiselect', $('.filter-list').children().last()).multiselect({
-            buttonContainer: '<div class="btn-group btn-group-multiselect" />'
+            buttonContainer: '<div class="btn-group btn-group-multiselect" />',
+            onChange: function (element, checked) {
+                $(element).parents('form').bootstrapValidator('revalidateField', $(element).parents('select'));
+            }
         });
+
+        var formControls = $('.filter-list').children().last().find('.form-control,input[type="checkbox"],input[type="radio"]').not(function (index, element) {
+            return $(element).parents('ul.multiselect-container').length > 0;
+        });
+
+        // retrieve only the names of the controls to add
+        if (formControls.length) {
+
+            var uniqueNames = getUniqueFormControlNames(formControls);
+
+            uniqueNames.forEach(function (val, index, array) {
+                $('form.filters').bootstrapValidator('addField', val);
+            });
+
+        }
 
         // hide dropdown for 'Add filter'
         $(this).parents('.dropdown').removeClass('open');
@@ -260,7 +278,29 @@
 
             }
 
+            // remove each .form-control
+            $(this).parents('.form-group').find('.form-control').each(function () {
+                $('form.filters').bootstrapValidator('removeField', $(this).eq(0));
+            });
+
+            var formControls = $(this).parents('.form-group').find('.form-control,input[type="checkbox"],input[type="radio"]').not(function (index, element) {
+                // don't include it, if it has an attribute name of multiselect
+                return $(element).parents('ul.multiselect-container').length > 0;
+            });
+
+            // retrieve only the names of the controls to add
+            if (formControls.length) {
+
+                var uniqueIds = getUniqueFormControlNames(formControls);
+
+                uniqueIds.forEach(function (val, index, array) {
+                    $('form.filters').bootstrapValidator('removeField', val);
+                });
+
+            }
+
             $(this).parents('.form-group').remove();
+
         });
     }
 
@@ -277,6 +317,26 @@
 
         // click the button
         $('.filters').find(':submit').click();
+
+    }
+
+    // given a jquery set, will return an array of unique form control names
+    function getUniqueFormControlNames (fc) {
+
+        var uniqueNames = [];
+
+        var names = fc.map(function () {
+            return this.name;
+        }).get();
+
+        // retrieve only the uniqueNames
+        names.forEach(function (val, index, array) {
+            if (uniqueNames.indexOf(val) < 0) {
+                uniqueNames.push(val);
+            }
+        });
+
+        return uniqueNames;
 
     }
 
