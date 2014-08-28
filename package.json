@@ -34,7 +34,7 @@
     "handlebars": "2.0.0-alpha.4",
     "less-middleware": "1.0.3",
     "inflection": "1.3.8",
-    "mongoose-version": "0.2.4"
+    "mongoose-version": "git://github.com/flashmedia/mongoose-version.git"
   },
   "devDependencies": {
     "should": "3.3.1",
