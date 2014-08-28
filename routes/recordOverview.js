@@ -51,6 +51,26 @@ var route = function (req, res) {
 
         function (cb) {
 
+            if (!req.linz.model.overview.versions) {
+                return cb(null);
+            }
+
+            req.linz.model.overview.versions.renderer(req, res, req.linz.record, req.linz.model, req.linz.model.overview.versions, function (err, content) {
+
+                if (err) {
+                    return cb(err);
+                }
+
+                locals.overviewVersions = content;
+
+                return cb(null);
+
+            });
+
+        },
+
+        function (cb) {
+
             // the overview renderer doesn't require a mongoose object
             // but rather an object literal with a few extra properties
             locals.record = req.linz.record.toObject({ virtuals: true});
@@ -78,8 +98,6 @@ var route = function (req, res) {
                 return cb(null);
 
             });
-
-
 
         },
 

@@ -57,6 +57,25 @@ module.exports = function () {
 
                 });
 
+            },
+
+            function (cb) {
+
+                if (!req.linz.model.getVersionsSettings) {
+                    return cb(null);
+                }
+
+                req.linz.model.getVersionsSettings(function (err, versions) {
+
+                    if (err) {
+                        cb(err);
+                    }
+
+                    req.linz.model.overview.versions = versions;
+
+                    return cb(null);
+
+                });
             }
 
         ], function (err, results) {

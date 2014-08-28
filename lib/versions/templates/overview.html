@@ -1,0 +1,26 @@
+<div class="panel panel-default">
+    <div class="panel-heading">{{label}}</div>
+    <div class="panel-body">
+        {{#if versions}}
+            <ul class="list-group">
+                {{#each versions}}
+                <li class="list-group-item">
+                    <h4>
+                        {{{this.modifiedBy}}} <small>updated this record on {{this.dateModified}}</small>
+                    </h4>
+                    <div class="btn-group">
+						<button type="button" class="btn btn-default" data-linz-control="versions-compare-latest" data-href="{{../adminPath}}/model/{{../modelName}}/{{../pageId}}/verions-compare/{{this._id}}">Compare with latest</button>
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+							<span class="caret"></span>
+							<span class="sr-only">Toggle Dropdown</span>
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							{{{eachHistory ../versions this._id ../this}}}
+						</ul>
+                    </div>
+                </li>
+                {{/each}}
+            </ul>
+        {{/if}}
+    </div>
+</div>
