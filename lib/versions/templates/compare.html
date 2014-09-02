@@ -1,0 +1,27 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">Compare revisions</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+            {{#if diffs}}
+                <table class="table compare-versions">
+                    <tr>
+                        <th class="fieldName">Field name</th>
+                        <th>{{previous.date}} ({{previous.author}})</th>
+                        <th>{{latest.date}} ({{latest.author}})</th>
+                    </tr>
+                    {{{renderDiffs diffs}}}
+                </table>
+            {{else}}
+                <p>There are no changes between these two revisions.</p>
+            {{/if}}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>

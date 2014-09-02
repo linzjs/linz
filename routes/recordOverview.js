@@ -51,11 +51,11 @@ var route = function (req, res) {
 
         function (cb) {
 
-            if (!req.linz.model.overview.versions) {
+            if (!req.linz.model.versions) {
                 return cb(null);
             }
 
-            req.linz.model.overview.versions.renderer(req, res, req.linz.record, req.linz.model, req.linz.model.overview.versions, function (err, content) {
+            req.linz.model.versions.renderer(req, res, req.linz.record, req.linz.model, req.linz.model.versions, function (err, content) {
 
                 if (err) {
                     return cb(err);
