@@ -33,19 +33,6 @@ function Linz () {
 var linz = module.exports = exports = new Linz;
 
 /**
- * Define local variables used by the Linz class
- */
-var	routesManager = require('./lib/router'),
-	passportHelpers = require('./lib/helpers-passport'),
-	helpersModels = require('./lib/helpers-models'),
-    helpersConfigs = require('./lib/helpers-configs'),
-	debugModels = require('debug')('linz:models'),
-    debugConfigs = require('debug')('linz:configs'),
-	debugGeneral = require('debug')('linz:general'),
-	debugSet = require('debug')('linz:set'),
-	error = require('./lib/errors');
-
-/**
  * Expose linz modules
  */
 linz.hbs = require('./lib/hbs-helpers');
@@ -54,6 +41,20 @@ linz.versions = require('./lib/versions'),
 linz.middleware = require('./middleware-public');
 linz.api = require('./lib/api');
 linz.utils = require('./lib/utils');
+
+/**
+ * Define local variables used by the Linz class
+ */
+var routesManager = require('./lib/router'),
+    passportHelpers = require('./lib/helpers-passport'),
+    helpersModels = require('./lib/helpers-models'),
+    helpersConfigs = require('./lib/helpers-configs'),
+    debugModels = require('debug')('linz:models'),
+    debugConfigs = require('debug')('linz:configs'),
+    debugGeneral = require('debug')('linz:general'),
+    debugSet = require('debug')('linz:set'),
+    error = require('./lib/errors');
+
 
 /**
  * Linz inherits from EventEmitter for Linz.prototype.on('event') handling
