@@ -11,7 +11,7 @@
                                 {{{this.authorLink}}} <small>updated this record on {{this.date}}</small>
                             </h4>
                             <div class="btn-group">
-                                <button class="btn btn-default">Roll back</button>
+                                <button type="button" class="btn btn-default" data-target="#linzModal" data-linz-control="versions-rollback" data-href="{{../../adminPath}}/model/{{../../modelName}}/{{../../pageId}}/versions-compare/{{this._id}}/{{../../versions.0._id}}">Roll back</button>
         						<button type="button" class="btn btn-default" data-target="#linzModal" data-linz-control="versions-compare-latest" data-href="{{../../adminPath}}/model/{{../../modelName}}/{{../../pageId}}/versions-compare/{{this._id}}/{{../../versions.0._id}}">Compare with latest</button>
                                 {{#if this.history.length}}
             						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -20,7 +20,7 @@
             						</button>
             						<ul class="dropdown-menu" role="menu">
             							{{#each this.history}}
-                                            <li><a href="{{../../../adminPath}}/model/{{../../../modelName}}/{{../../../pageId}}/versions-compare/{{this._id}}/{{../_id}}" data-linz-control="versions-compare">{{this.date}} ({{this.author}})</a></li>
+                                            <li><a href="{{../../../../adminPath}}/model/{{../../../../modelName}}/{{../../../../pageId}}/versions-compare/{{this._id}}/{{../_id}}" data-linz-control="versions-compare">{{this.date}} ({{this.author}})</a></li>
                                         {{/each}}
             						</ul>
                                 {{/if}}
@@ -36,14 +36,10 @@
 <script>
     linz.addLoadEvent(function () {
 
-        $('[data-linz-control="versions-compare-latest"],[data-linz-control="versions-compare"]').click(function () {
+        $('[data-linz-control="versions-compare-latest"],[data-linz-control="versions-compare"],[data-linz-control="versions-rollback"]').click(function () {
 
             var queryObj = $(this),
-                url = queryObj.attr('href');
-
-            if (queryObj[0].nodeName === 'BUTTON') {
-                url = queryObj.attr('data-href');
-            }
+                url = queryObj[0].nodeName === 'BUTTON' ? queryObj.attr('data-href') : queryObj.attr('href');
 
             $('#linzModal').modal().load(url, function () {});
 
