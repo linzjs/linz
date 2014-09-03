@@ -17,6 +17,15 @@ module.exports = {
 
             req.linz.model = req.linz.get('models')[req.params.model];
             req.linz.diffs = deep.diff(result.previous, result.latest);
+            req.linz.history = {
+                previous: result.previous,
+                latest: result.latest
+            };
+
+            if (!req.linz.diffs) {
+                // there are no change between the 2 versions
+                return next(null);
+            }
 
             // generate text diff for text field
             req.linz.diffs.forEach(function (diff) {
@@ -24,11 +33,6 @@ module.exports = {
                     diff.textDiff = textDiffUtils.diffWords(diff.lhs, diff.rhs);
                 }
             });
-
-            req.linz.history = {
-                previous: result.previous,
-                latest: result.latest
-            };
 
             async.parallel({
 
@@ -58,5 +62,3 @@ module.exports = {
     }
 
 }
-
-
