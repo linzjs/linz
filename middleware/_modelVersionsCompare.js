@@ -76,17 +76,13 @@ module.exports = function (req, res, next) {
 
         getLastest: function (cb) {
 
-            getVersionById(req.params.revisionBId, fieldExclusions, function (err, record) {
-                return cb(err, record);
-            });
+            getVersionById(req.params.revisionBId, fieldExclusions, cb);
 
         },
 
         getPrevious: function (cb) {
 
-            getVersionById(req.params.revisionAId, fieldExclusions, function (err, record) {
-                return cb(err, record);
-            });
+            getVersionById(req.params.revisionAId, fieldExclusions, cb);
 
         },
 
@@ -95,20 +91,12 @@ module.exports = function (req, res, next) {
             async.waterfall([
 
                 function (getValueDone) {
-
-                    getVersionById(req.params.revisionBId, fieldInclusions, function (err, record) {
-                        return getValueDone(err, record);
-                    });
-
+                    getVersionById(req.params.revisionBId, fieldInclusions, getValueDone);
                 },
-
                 getAuthor,
-
                 getDate
 
-            ], function (err, result) {
-                return cb(err, result);
-            });
+            ], cb);
 
         },
 
@@ -117,20 +105,12 @@ module.exports = function (req, res, next) {
             async.waterfall([
 
                 function (getValueDone) {
-
-                    getVersionById(req.params.revisionAId, fieldInclusions, function (err, record) {
-                        return getValueDone(err, record);
-                    });
-
+                    getVersionById(req.params.revisionAId, fieldInclusions, getValueDone);
                 },
-
                 getAuthor,
-
                 getDate
 
-            ], function (err, result) {
-                return cb(err, result);
-            });
+            ], cb);
 
         }
 
