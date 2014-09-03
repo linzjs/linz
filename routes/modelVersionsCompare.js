@@ -1,5 +1,4 @@
-var linz = require('../'),
-    templates = require('../lib/versions/templates');
+var templates = require('../lib/versions/templates');
 
 module.exports = {
 
