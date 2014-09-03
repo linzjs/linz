@@ -4,26 +4,29 @@
         {{#if versions}}
             <ul class="list-group">
                 {{#each versions}}
-                <li class="list-group-item">
-                    <h4>
-                        {{{this.authorLink}}} <small>updated this record on {{this.date}}</small>
-                    </h4>
-                    <div class="btn-group">
-                        <button class="btn btn-default">Roll back</button>
-						<button type="button" class="btn btn-default" data-target="#linzModal" data-linz-control="versions-compare-latest" data-href="{{../adminPath}}/model/{{../modelName}}/{{../pageId}}/versions-compare/{{this._id}}/latest">Compare with latest</button>
-                        {{#if this.history.length}}
-    						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-    							<span class="caret"></span>
-    							<span class="sr-only">Toggle Dropdown</span>
-    						</button>
-    						<ul class="dropdown-menu" role="menu">
-    							{{#each this.history}}
-                                    <li><a href="{{../../../adminPath}}/model/{{../../../modelName}}/{{../../../pageId}}/versions-compare/{{this._id}}/{{../_id}}" data-linz-control="versions-compare">{{this.date}} ({{this.author}})</a></li>
-                                {{/each}}
-    						</ul>
-                        {{/if}}
-                    </div>
-                </li>
+                    {{! Skip first record as it is the latest version}}
+                    {{#ifCond @index '!==' 0}}
+                        <li class="list-group-item">
+                            <h4>
+                                {{{this.authorLink}}} <small>updated this record on {{this.date}}</small>
+                            </h4>
+                            <div class="btn-group">
+                                <button class="btn btn-default">Roll back</button>
+        						<button type="button" class="btn btn-default" data-target="#linzModal" data-linz-control="versions-compare-latest" data-href="{{../../adminPath}}/model/{{../../modelName}}/{{../../pageId}}/versions-compare/{{this._id}}/{{../../versions.0._id}}">Compare with latest</button>
+                                {{#if this.history.length}}
+            						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            							<span class="caret"></span>
+            							<span class="sr-only">Toggle Dropdown</span>
+            						</button>
+            						<ul class="dropdown-menu" role="menu">
+            							{{#each this.history}}
+                                            <li><a href="{{../../../adminPath}}/model/{{../../../modelName}}/{{../../../pageId}}/versions-compare/{{this._id}}/{{../_id}}" data-linz-control="versions-compare">{{this.date}} ({{this.author}})</a></li>
+                                        {{/each}}
+            						</ul>
+                                {{/if}}
+                            </div>
+                        </li>
+                    {{/ifCond}}
                 {{/each}}
             </ul>
         {{/if}}

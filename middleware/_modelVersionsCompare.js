@@ -6,7 +6,8 @@ module.exports = function (req, res, next) {
             '__v': 0,
             'refId': 0,
             'refVersion': 0
-        };
+        },
+        fieldInclusions = { dateModified: 1, modifiedBy: 1};
 
     // add compare exclusion fields from model configs
     if (Model.versions.compare && Model.versions.compare.exclusions) {
@@ -53,48 +54,38 @@ module.exports = function (req, res, next) {
 
     }
 
+    var getVersionById = function (id, exclusions, cb) {
+
+        Model.VersionedModel.findById(id, exclusions, { lean: 1 }, function (err, record) {
+
+            if (err) {
+                return cb(err);
+            }
+
+            if (!record) {
+                return cb (new Error('Error: Record not found.'));
+            }
+
+            return cb(null, record);
+
+        });
+
+    }
+
     return {
 
         getLastest: function (cb) {
 
-            var query;
-
-            if (req.params.revisionBId === 'latest') {
-                query = Model.find({_id: req.params.id }, fieldExclusions, { lean: 1 });
-            } else {
-                query = Model.VersionedModel.find({ refId: req.params.id, _id: req.params.revisionBId }, fieldExclusions, { lean: 1 });
-            }
-
-            query.exec(function (err, records) {
-
-                if (err) {
-                    return cb(err);
-                }
-
-                if (!records.length) {
-                    return cb (new Error('Error: Record not found.'));
-                }
-
-                return cb(null, records[0]);
-
+            getVersionById(req.params.revisionBId, fieldExclusions, function (err, record) {
+                return cb(err, record);
             });
 
         },
 
         getPrevious: function (cb) {
 
-            Model.VersionedModel.find({ refId: req.params.id, _id: req.params.revisionAId }, fieldExclusions, { lean: 1 }, function (err, records) {
-
-                if (err) {
-                    return cb(err);
-                }
-
-                if (!records.length) {
-                    return cb (new Error('Error: Record not found.'));
-                }
-
-                return cb(null, records[0]);
-
+            getVersionById(req.params.revisionAId, fieldExclusions, function (err, record) {
+                return cb(err, record);
             });
 
         },
@@ -105,26 +96,8 @@ module.exports = function (req, res, next) {
 
                 function (getValueDone) {
 
-                    var query;
-
-                    if (req.params.revisionBId === 'latest') {
-                        query = Model.find({_id: req.params.id }, { dateModified: 1, modifiedBy: 1}, { lean: 1 });
-                    } else {
-                        query = Model.VersionedModel.find({ refId: req.params.id, _id: req.params.revisionBId }, { dateModified: 1, modifiedBy: 1}, { lean: 1 });
-                    }
-
-                    query.exec(function (err, records) {
-
-                        if (err) {
-                            return getValueDone(err);
-                        }
-
-                        if (!records.length) {
-                            return getValueDone (new Error('Error: Record not found.'));
-                        }
-
-                        return getValueDone(null, records[0]);
-
+                    getVersionById(req.params.revisionBId, fieldInclusions, function (err, record) {
+                        return getValueDone(err, record);
                     });
 
                 },
@@ -145,18 +118,8 @@ module.exports = function (req, res, next) {
 
                 function (getValueDone) {
 
-                    Model.VersionedModel.find({ refId: req.params.id, _id: req.params.revisionAId }, { dateModified: 1, modifiedBy: 1}, { lean: 1 }, function (err, records) {
-
-                        if (err) {
-                            return getValueDone(err);
-                        }
-
-                        if (!records.length) {
-                            return getValueDone (new Error('Error: Record not found.'));
-                        }
-
-                        return getValueDone(null, records[0]);
-
+                    getVersionById(req.params.revisionAId, fieldInclusions, function (err, record) {
+                        return getValueDone(err, record);
                     });
 
                 },
