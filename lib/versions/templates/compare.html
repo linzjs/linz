@@ -1,10 +1,18 @@
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
+
+        {{#if rollback}}
+        <form method="post" action="{{url}}">
+        {{/if}}
+
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">Compare versions</h4>
+            <h4 class="modal-title" id="myModalLabel">{{label}}</h4>
         </div>
         <div class="modal-body">
+            {{#ifCond rollback '&&' diffs}}
+            <p>You have requested to rollback to version <strong>{{previous.date}} ({{previous.author}})</strong>. Please review the changes below before confirming the rollback operation.</p>
+            {{/ifCond}}
             <div class="form-group">
             {{#if diffs}}
                 <table class="table compare-versions">
@@ -21,7 +29,17 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" data-dismiss="modal">Close</button>
+            {{#if rollback}}
+                <button type="submit" class="btn btn-primary" data-linz-control="group-action-save">Rollback</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            {{else}}
+                <button type="submit" class="btn btn-primary" data-dismiss="modal">Close</button>
+            {{/if}}
         </div>
+
+        {{#if rollback}}
+        </form>
+        {{/if}}
+
     </div>
 </div>
