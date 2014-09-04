@@ -66,9 +66,46 @@ module.exports = function (req, res, next) {
                 return cb (new Error('Error: Record not found.'));
             }
 
-            return cb(null, record);
+            getReferenceNames(record, function (err, record) {
+                var recordWithLabel = getFieldNames(record);
+                return cb(null, recordWithLabel);
+            });
 
         });
+
+    }
+
+    var getReferenceNames = function (record, cb) {
+
+        async.each(Object.keys(record), function (fieldName, getReferenceDone) {
+
+            linz.versions.renderers.cellRenderers.default(record[fieldName], record, fieldName, Model, function (err, str) {
+                if (err) {
+                    return getReferenceDone(err);
+                }
+                record[fieldName] = str;
+                return getReferenceDone(null);
+            });
+
+        }, function (err) {
+            return cb(err, record);
+        });
+
+    }
+
+    var getFieldNames = function (record) {
+
+        var recordWithFieldNames = {},
+            form = Model.formtools.form;
+
+        Object.keys(record).forEach(function (fieldName) {
+            if (!form[fieldName]) {
+                return;
+            }
+            recordWithFieldNames[form[fieldName].label] = record[fieldName];
+        });
+
+        return recordWithFieldNames;
 
     }
 
