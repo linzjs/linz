@@ -33,4 +33,57 @@
 
     });
 
+    // disable submit button by default
+    $('button[type="submit"]').attr('disabled','disabled');
+
+    // set value of form field to data-form-value for checking if there are any changes
+    $(':input').each(function () {
+        $(this).attr('data-form-value', $(this).val());
+    });
+
+    // watch for form field changes to enable/disabled the save button
+    $(':input').on("change keyup", function () {
+
+        if (formHasChanged()) {
+            return $('button[type="submit"]').removeAttr('disabled');
+        }
+
+        return $('button[type="submit"]').attr('disabled','disabled');
+
+    });
+
+    function formHasChanged () {
+
+        var bHasChange = false;
+
+        $(':input').each(function () {
+
+            // return for those input fields that are added after by other libraries
+            if ($(this).val() === undefined || $(this).data('form-value') === undefined) {
+                return true;
+            }
+
+            var val = $(this).val().toString();
+            var oldVal = $(this).data('form-value').toString();
+
+            // return if value is array and data field is empty string
+            if (val === '[]' && oldVal.length === 0) {
+                return true;
+            }
+
+            if (val !== oldVal) {
+
+                bHasChange = true;
+
+                return false; // this will break the loop is condition is met
+
+            }
+
+            return true;
+
+        });
+
+        return bHasChange;
+    }
+
 })();
