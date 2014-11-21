@@ -144,6 +144,9 @@ $(document).ready(function () {
         // now grab the array if there already is one and turn it into a JavaScript object
         $('input[type="hidden"][name="' + editingFor + '"]').val(JSON.stringify(editingArray));
 
+        //trigger field change event
+        $('input[type="hidden"][name="' + editingFor + '"]').trigger('change');
+
         // now update the view
         drawDocuments(editingFor, editingArray);
 
@@ -159,6 +162,9 @@ $(document).ready(function () {
 
         // now grab the array if there already is one and turn it into a JavaScript object
         $('input[type="hidden"][name="' + editingFor + '"]').val(JSON.stringify(editingArray));
+
+        //trigger field change event
+        $('input[type="hidden"][name="' + editingFor + '"]').trigger('change');
 
         // now update the view
         drawDocuments(editingFor, editingArray);
