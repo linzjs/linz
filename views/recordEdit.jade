@@ -15,6 +15,7 @@ block content
 			.body
 				div
 					form.form-horizontal.model(role='form', action='#{actionUrl}', method='post', data-linz-validation='true')
+						input(type="hidden", name="versionNo", value=record.__v)
 						!= form
 						.form-group.control-bar
 							.col-sm-offset-2.col-sm-10
