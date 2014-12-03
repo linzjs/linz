@@ -48,7 +48,7 @@ describe('formtools', function () {
 
 		it('it adds the title virtual', function () {
 
-			PostSchema.plugin(formtools.plugin);
+			PostSchema.plugin(formtools.plugins.document);
 
 			PostSchema.virtuals.should.have.property('title');
 			PostSchema.paths.should.have.property('label');
@@ -61,7 +61,7 @@ describe('formtools', function () {
 			var TestSchema = new mongoose.Schema({ title: String, label: String, name: String });
 
 			// add the plugin
-			TestSchema.plugin(formtools.plugin);
+			TestSchema.plugin(formtools.plugins.document);
 
 			// create the model and a new instance of the model
 			var Test = mongoose.model('TestSchema', TestSchema),
@@ -82,7 +82,7 @@ describe('formtools', function () {
 			var LabelTestSchema = new mongoose.Schema({ label: String, name: String });
 
 			// add the plugin
-			LabelTestSchema.plugin(formtools.plugin);
+			LabelTestSchema.plugin(formtools.plugins.document);
 
 			// create the model and a new instance of the model
 			var LabelTest = mongoose.model('LabelTest', LabelTestSchema),
@@ -103,7 +103,7 @@ describe('formtools', function () {
 			var NameTestSchema = new mongoose.Schema({ label: String, name: String });
 
 			// add the plugin
-			NameTestSchema.plugin(formtools.plugin);
+			NameTestSchema.plugin(formtools.plugins.document);
 
 			// create the model and a new instance of the model
 			var NameTest = mongoose.model('NameTest', NameTestSchema),
@@ -133,7 +133,7 @@ describe('formtools', function () {
         before(function (done) {
 
             PostSchema = new mongoose.Schema({ label: String });
-            PostSchema.plugin(formtools.plugin);
+            PostSchema.plugin(formtools.plugins.document);
 
             postModel = mongoose.model('postModel', PostSchema);
 
@@ -142,7 +142,7 @@ describe('formtools', function () {
             });
 
             CommentSchema = new mongoose.Schema({ label: String });
-            CommentSchema.plugin(formtools.plugin, {
+            CommentSchema.plugin(formtools.plugins.document, {
                 model: {
                     hide: true,
                     label: 'Comment',
@@ -159,7 +159,7 @@ describe('formtools', function () {
             });
 
             LocationSchema = new mongoose.Schema({ label: String });
-            LocationSchema.plugin(formtools.plugin, {
+            LocationSchema.plugin(formtools.plugins.document, {
                 model: {
                     hide: true,
                     label: 'Location'
@@ -278,7 +278,7 @@ describe('formtools', function () {
                 alias: String
             });
 
-            CategoriesSchema.plugin(formtools.plugin, {});
+            CategoriesSchema.plugin(formtools.plugins.document, {});
 
             CategoriesModel = mongoose.model('CategoriesModel', CategoriesSchema);
 
@@ -311,7 +311,7 @@ describe('formtools', function () {
                 comments: [CommentsSchema]
 			});
 
-			PostSchema.plugin(formtools.plugin, {
+			PostSchema.plugin(formtools.plugins.document, {
 				form: {
 					firstName: {
 						label: 'First Name',
@@ -391,7 +391,7 @@ describe('formtools', function () {
                 code: Number
             });
 
-            OverridesPostSchema.plugin(formtools.plugin, {
+            OverridesPostSchema.plugin(formtools.plugins.document, {
                 grid: {
                     columns: {
                         title: 'Label',
@@ -1063,7 +1063,7 @@ describe('formtools', function () {
 
                     try {
 
-                        ErrorVirtualColumnsSchema.plugin(formtools.plugin, {
+                        ErrorVirtualColumnsSchema.plugin(formtools.plugins.document, {
                             grid: {
                                 columns: {
                                     title: 'Label',
@@ -2343,7 +2343,7 @@ describe('formtools', function () {
                     it('should overrides summary renderer', function (done) {
 
                         OverridesOverviewSummarySchema = new mongoose.Schema({ label: String });
-                        OverridesOverviewSummarySchema.plugin(formtools.plugin, {
+                        OverridesOverviewSummarySchema.plugin(formtools.plugins.document, {
                             overview: {
                                 summary: {
                                     renderer: function customSummaryRenderer (model, record, callback) {
@@ -2380,7 +2380,7 @@ describe('formtools', function () {
                         OverridesOverviewSummarySchema1 = new mongoose.Schema({ label: String });
 
                         should(function () {
-                            OverridesOverviewSummarySchema1.plugin(formtools.plugin, {
+                            OverridesOverviewSummarySchema1.plugin(formtools.plugins.document, {
                               overview: {
                                   summary: {
                                       something: ''
