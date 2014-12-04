@@ -1,5 +1,5 @@
 var modelVersionsCompare = require('./modelVersionsCompare'),
-    async = require('async');
+async = require('async');
 
 module.exports = {
 
@@ -16,6 +16,13 @@ module.exports = {
             },
             previous: function (cb) {
                 var exclusions = { '_id': 0, '__v': 0, 'refId': 0, 'refVersion': 0, 'dateModified': 0, 'dateCreated': 0, 'createdBy': 0, 'modifiedBy': 0 };
+
+                if (Model.versions.ignorePaths && Model.versions.ignorePaths.length) {
+                    Model.versions.ignorePaths.forEach(function (fieldName) {
+                        exclusions[fieldName] = 0;
+                    });
+                }
+
                 Model.VersionedModel.findById(req.params.revisionAId, exclusions, { lean: 1 }, cb);
             }
 
