@@ -12,7 +12,7 @@ module.exports = {
         async.series({
 
             latest: function (cb) {
-                Model.findById(req.params.id, {_id: 1}, cb);
+                Model.findById(req.params.id, cb);
             },
             previous: function (cb) {
                 var exclusions = { '_id': 0, '__v': 0, 'refId': 0, 'refVersion': 0, 'dateModified': 0, 'dateCreated': 0, 'createdBy': 0, 'modifiedBy': 0 };
