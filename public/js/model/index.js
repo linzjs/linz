@@ -278,6 +278,16 @@
         // click the button
         $('.filters').find(':submit').click();
 
+        // add spinning icon to Filter dropdown to indicate page is loading
+        var icon = $('.addFilterBtn').find('.fa-filter');
+        icon.removeClass('fa-filter');
+        icon.addClass('fa-spinner fa-spin');
+
     }
+
+    // add spinning icon when submit button is click
+    $('.filters').find(':submit').click(function () {
+        $(this).append(' <i class="fa fa-spinner fa-spin"></i>');
+    });
 
 })();
