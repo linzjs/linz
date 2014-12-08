@@ -287,7 +287,10 @@
 
     // add spinning icon when submit button is click
     $('.filters').find(':submit').click(function () {
-        $(this).append(' <i class="fa fa-spinner fa-spin"></i>');
+        // check html5 form validation
+        if ($('.filters')[0].checkValidity()) {
+            $(this).append(' <i class="fa fa-spinner fa-spin"></i>');
+        }
     });
 
 })();
