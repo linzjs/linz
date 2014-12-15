@@ -52,10 +52,6 @@ module.exports = function  (req, res, next) {
 
                     async.each(Object.keys(req.linz.model.grid.filters), function (fieldName, filtersDone) {
 
-                        if (req.linz.model.grid.filters[fieldName].formControls) {
-                            return filtersDone(null);
-                        }
-
                         // call the filter renderer and update the content with the result
                         req.linz.model.grid.filters[fieldName].filter.renderer(fieldName, function (err, result) {
 
