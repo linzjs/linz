@@ -115,6 +115,10 @@ module.exports = function  (req, res, next) {
 
                     async.each(session.grid.formData.selectedFilters.split(','), function (fieldName, filtersDone) {
 
+                        if (!session.grid.formData[fieldName]) {
+                            return filtersDone(null);
+                        }
+
                         // call the filter renderer and update the content with the result
                         req.linz.model.grid.filters[fieldName].filter.filter(fieldName, session.grid.formData, function (err, result) {
 
