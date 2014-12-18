@@ -248,8 +248,10 @@ module.exports = {
                 }
 
 
-                var excludedFieldNames = grid.export.exclusions.split(',') + ',__v',
-                    fieldLabels = {};
+                var excludedFieldNames = grid.export.exclusions.split(','),
+                fieldLabels = {};
+
+                excludedFieldNames.push('__v');
 
                 // get a list of field names
                 req.linz.model.schema.eachPath(function (pathname, schemaType) {
