@@ -19,7 +19,7 @@ UserSchema.virtual('hasAdminAccess').get(function () {
     return true;
 });
 
-var User = linz.mongoose.model('User', UserSchema);
+var User = linz.mongoose.model('UserVersions', UserSchema);
 
 // setup easy references
 var mongoose = linz.mongoose,
@@ -80,7 +80,7 @@ describe('versions', function () {
             it('default cell renderers', function () {
                 versionsSetting.should.be.ok;
                 versionsSetting.cellRenderers.should.have.properties({
-                    date: linz.versions.renderers.cellRenderers.date,
+                    date: linz.versions.renderers.cellRenderers.timestamp,
                     reference: linz.versions.renderers.cellRenderers.reference,
                     referenceName:linz.versions.renderers.cellRenderers.referenceName
                 })

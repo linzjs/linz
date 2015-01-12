@@ -52,10 +52,6 @@ module.exports = function  (req, res, next) {
 
                     async.each(Object.keys(req.linz.model.grid.filters), function (fieldName, filtersDone) {
 
-                        if (req.linz.model.grid.filters[fieldName].formControls) {
-                            return filtersDone(null);
-                        }
-
                         // call the filter renderer and update the content with the result
                         req.linz.model.grid.filters[fieldName].filter.renderer(fieldName, function (err, result) {
 
@@ -118,6 +114,10 @@ module.exports = function  (req, res, next) {
                     }
 
                     async.each(session.grid.formData.selectedFilters.split(','), function (fieldName, filtersDone) {
+
+                        if (!session.grid.formData[fieldName]) {
+                            return filtersDone(null);
+                        }
 
                         // call the filter renderer and update the content with the result
                         req.linz.model.grid.filters[fieldName].filter.filter(fieldName, session.grid.formData, function (err, result) {
