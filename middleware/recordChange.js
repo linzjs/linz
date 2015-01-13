@@ -26,6 +26,8 @@ module.exports = function (req, res, next) {
 		}
 	});
 
+	//TODO: need to change this to it's own configuration field
+
 	// exclude fields defined by versions compare
 	if ((Model.versions.compare && Model.versions.compare.exclusions)) {
 		Object.keys(Model.versions.compare.exclusions).forEach(function (fieldName) {
@@ -66,67 +68,69 @@ module.exports = function (req, res, next) {
 	], function (err, result) {
 
 		var revisionA = result;
-		// convert complex object to string to easy diff
-		Object.keys(revisionA).forEach(function (fieldName) {
 
-			// convert objectid to string
-			if (revisionA[fieldName] instanceof linz.mongoose.connection.db.bsonLib.ObjectID) {
-				revisionA[fieldName] = revisionA[fieldName].toString();
+			if (parseInt(formData.versionNo) === parseInt(revisionA.__v) || (req.params.versionNo && parseInt(req.params.versionNo) === parseInt(revisionA.__v))) {
+				return res.status(200).json(resData);
 			}
 
-			// convert date to short format
-			if (revisionA[fieldName] instanceof Date) {
-				revisionA[fieldName] = revisionA[fieldName].getFullYear().toString() + '-' + (revisionA[fieldName].getMonth()+1).toString() + '-' + revisionA[fieldName].getDate().toString();
+			// convert complex object to string to easy diff
+			Object.keys(revisionA).forEach(function (fieldName) {
+
+				// convert objectid to string
+				if (revisionA[fieldName] instanceof linz.mongoose.connection.db.bsonLib.ObjectID) {
+					revisionA[fieldName] = revisionA[fieldName].toString();
+				}
+
+				// convert date to short format
+				if (revisionA[fieldName] instanceof Date) {
+					revisionA[fieldName] = revisionA[fieldName].getFullYear().toString() + '-' + (revisionA[fieldName].getMonth()+1).toString() + '-' + revisionA[fieldName].getDate().toString();
+				}
+			});
+
+			var revisionB = {};
+
+			// first let's clean up formData and remove any fields that are not relevant to this record
+			Object.keys(revisionA).forEach(function (fieldName) {
+				if (formData[fieldName] === 'true') {
+					formData[fieldName] = true;
+				}
+				if (formData[fieldName] === 'false') {
+					formData[fieldName] = false;
+				}
+
+				revisionB[fieldName] = formData[fieldName];
+			});
+
+			// let's do a diff for the fields changed
+			var diff = deep.diff(revisionA, revisionB, function (path, key) {
+
+				if (!revisionA[key] || revisionA[key] === null || !revisionA[key].length && revisionB[key]) {
+					return true;
+				}
+				if (key === '__v') {
+					return true;
+				}
+				if (revisionA[key] === null && revisionB[key] === '' || revisionA[key] === '' && revisionB[key] === null) {
+					return true;
+				}
+				if (Array.isArray(revisionA[key]) && revisionA[key].length === 0 && (revisionB[key] === '[]' || revisionB[key] === undefined) ) {
+					return true;
+				}
+
+			});
+
+			if (!diff) {
+				return res.status(200).json(resData);
 			}
-		});
 
-		// TODO: re-instate this
-		// check if this record has been changed while user is editing this record
-		// if (parseInt(formData.versionNo) === parseInt(revisionA.__v)) {
-		// 	return res.status(200).json(resData);
-		// }
+			resData.hasChanged = true;
+			resData.revisionA = revisionA;
+			resData.revisionB = revisionB;
+			resData.diff = diff;
 
-		var revisionB = {};
-
-		// first let's clean up formData and remove any fields that are not relevant to this record
-		Object.keys(revisionA).forEach(function (fieldName) {
-			if (formData[fieldName] === 'true') {
-				formData[fieldName] = true;
-			}
-			if (formData[fieldName] === 'false') {
-				formData[fieldName] = false;
-			}
-
-			revisionB[fieldName] = formData[fieldName];
-		});
-
-		// TODO: remove this!
-		revisionB.businessName = 'yo stinkyQ';
-
-		// let's do a diff for the fields changed
-		var diff = deep.diff(revisionA, revisionB, function (path, key) {
-			if (key === '__v') {
-				return true;
-			}
-			if (revisionA[key] === null && revisionB[key] === '' || revisionA[key] === '' && revisionB[key] === null) {
-				return true;
-			}
-			if (Array.isArray(revisionA[key]) && revisionA[key].length === 0 && (revisionB[key] === '[]' || revisionB[key] === undefined) ) {
-				return true;
-			}
-		});
-
-		if (!diff) {
 			return res.status(200).json(resData);
-		}
 
-		resData.hasChanged = true;
-		resData.revisionA = revisionA;
-		resData.revisionB = revisionB;
-		resData.diff = diff;
+		});
 
-		return res.status(200).json(resData);
-
-	});
-
-}
+	}
+	
