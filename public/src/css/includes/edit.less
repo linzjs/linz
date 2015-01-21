@@ -20,7 +20,10 @@
 			.form-group.control-bar {
 				padding-top: 15px;
 			}
-
+			.form-group.control-bar-top {
+				margin-bottom: 0;
+				padding-left: 10px;
+			}
 			& > fieldset > legend {
 
 				background: @grey;
@@ -40,35 +43,6 @@
 
 }
 
-@media (min-width: @screen-sm-min) {
-
-	.linz-container.edit.record .pane, .linz-container.edit.config .pane, .linz-container.create.model .pane {
-
-		& > .body {
-
-			form {
-
-				fieldset {
-
-					margin-bottom: 10px;
-
-					legend {
-						margin-bottom: 30px;
-					}
-
-				}
-
-				.form-group {
-					padding: 0 25px 0 25px;
-				}
-
-			}
-
-		}
-
-	}
-
-}
 
 /* data conflicts styles */
 
@@ -164,4 +138,34 @@
 			color: #179d82;
 		}
 	}
+}
+
+@media (min-width: @screen-sm-min) {
+
+	.linz-container.edit.record .pane, .linz-container.edit.config .pane, .linz-container.create.model .pane {
+
+		& > .body {
+
+			form {
+
+				fieldset {
+
+					margin-bottom: 10px;
+
+					legend {
+						margin-bottom: 30px;
+					}
+
+				}
+
+				.form-group {
+					padding: 0 25px 0 25px;
+				}
+
+			}
+
+		}
+
+	}
+
 }

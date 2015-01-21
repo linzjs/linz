@@ -7,14 +7,13 @@ block header
 block content
 	.container.linz-container.edit.config
 			.pane
-				.container
-					.row
-						.control-bar.control-bar-top
-							button.btn.btn-primary(type='submit') Save
-							a.btn.btn-link(href='#{cancelUrl}') or cancel
 				.body
 					div
-						form.form-horizontal.model(role='form',action='#{actionUrl}',method='post')
+						form.form-horizontal.model(role='form',action='#{actionUrl}',method='post', data-linz-validation='true')
+							.form-group.control-bar.control-bar-top
+								.col-sm-12
+									button.btn.btn-primary(type='submit') Save
+									a.btn.btn-link(href='#{cancelUrl}') or cancel
 							!= form
 							.form-group.control-bar
 								.col-sm-offset-2.col-sm-10

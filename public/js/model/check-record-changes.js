@@ -2,11 +2,12 @@
 
     var resolvedVersionNo;
 
-    // $('form').bootstrapValidator({}).on('success.form.bv', function(e) {
-    //     // Prevent form submission
-    //     console.log('prevent default');
-    //     e.preventDefault();
-    // });
+    $('form').bootstrapValidator({}).on('success.form.bv', function(e) {
+
+        // Prevent form submission
+        e.preventDefault();
+
+    });
 
     $('form').submit(function () {
 
