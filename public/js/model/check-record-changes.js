@@ -34,8 +34,6 @@
 
             if (!data.hasChanged) {
 
-                //TODO: fix double form submission issue
-
                 // since there are no change submit the form, proceed with normal save operation
                 return form.submit();
 
@@ -83,7 +81,6 @@
                         }
                         break;
                     case 'textarea':
-                        //TODO: textarea conflict renderer
                         renderTextareaFieldConflict(fieldName, formField, data, form, formValidator);
 
                         break;
@@ -108,11 +105,15 @@
             theirChangeLabel = data.theirChange[fieldName];
 
         // check if values for comparison are of date format
-        if (moment(yourChangeLabel).isValid()) {
-            yourChangeLabel = moment(yourChangeLabel).format('DD/MM/YYYY');
-        }
-        if (moment(theirChangeLabel).isValid()) {
-            theirChangeLabel = moment(theirChangeLabel).format('DD/MM/YYYY');
+        try {
+            var yourDate = new Date(yourChangeLabel).toISOString(),
+                theirDate = new Date(theirChangeLabel).toISOString();
+
+            yourChangeLabel = moment(yourDate).format('DD/MM/YYYY');
+            theirChangeLabel = moment(theirDate).format('DD/MM/YYYY');
+
+        } catch (e) {
+            // one of the value is not a date type, do nothing
         }
 
         if (!formField.parent().hasClass('has-conflict')) {

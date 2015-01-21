@@ -20,9 +20,6 @@ module.exports = function (req, res, next) {
 			'createdBy': 0	 // TODO: this field might need to be dynamic as it's included as part of Linz model
 		};
 
-	//TODO: services field is not flagged as changes sometime
-	//TODO: change date format to dd-mm-yyyy
-
 	// exclude fields that are not editable
 	Object.keys(Model.form).forEach(function (fieldName) {
 		if (Model.form[fieldName].edit && Model.form[fieldName].edit.disabled) {
