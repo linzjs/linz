@@ -1,19 +1,22 @@
+!function($) {
 
-$(document).ready(function () {
+    function DocumentArray() {
 
-    var editingArray,
-        editingObject,
-        editingIndex,
-        formHtml = {},
-        editingFor,
-        listTemplate,
-        mode;
+        this.editingArray = undefined;
+        this.editingObject = undefined,
+        this.editingIndex = undefined,
+        this.formHtml = {},
+        this.editingFor = undefined,
+        this.listTemplate = undefined,
+        this.mode = undefined;
 
-    var setLabel = function (document) {
+    }
+
+    DocumentArray.prototype.setLabel = function (document) {
 
         if (!document.label) {
 
-             if (document.title) {
+            if (document.title) {
                 document.label = document.title
             }
 
@@ -37,62 +40,70 @@ $(document).ready(function () {
 
     };
 
-    var drawDocuments = function (documentArrayInstance, documents) {
+    DocumentArray.prototype.drawDocuments = function (documentArrayInstance, documents) {
+
+        var da = this;
 
         // loop through each document and ensure there is a label
         for (var i = 0; i < documents.length; i++) {
-            documents[i] = setLabel(documents[i]);
+            documents[i] = this.setLabel(documents[i]);
         }
 
         documents = { documents: documents };
 
-        $('[data-document-field-for="' + documentArrayInstance + '"] .documents').html(listTemplate(documents));
+        $('[data-document-field-for="' + documentArrayInstance + '"] .documents').html(this.listTemplate(documents));
 
         // now bind the documents, handle the edit button
         $('[data-document-field-for="' + documentArrayInstance + '"]').find('a[data-document-action="edit"]').click(function () {
 
-            mode = 'editing';
+            da.mode = 'editing';
 
-            editingFor = documentArrayInstance;
+            da.editingFor = documentArrayInstance;
 
-            editingIndex = $(this).parent().attr('data-document-index');
+            da.editingIndex = $(this).parent().attr('data-document-index');
 
             // now grab the array if there already is one and turn it into a JavaScript object
-            editingArray = JSON.parse($('[data-document-field-for="' + documentArrayInstance + '"]').find('input[type="hidden"][name="' + documentArrayInstance + '"]').val());
+            da.editingArray = JSON.parse($('[data-document-field-for="' + documentArrayInstance + '"]').find('input[type="hidden"][name="' + documentArrayInstance + '"]').val());
 
-            editingObject = editingArray[editingIndex];
+            da.editingObject = da.editingArray[da.editingIndex];
 
-            editDocument(documentArrayInstance);
+            da.editDocument(documentArrayInstance);
 
         });
 
         // now bind the documents, handle the delete button
         $('[data-document-field-for="' + documentArrayInstance + '"]').find('a[data-document-action="remove"]').click(function () {
 
-            mode = 'removing';
+            da.mode = 'removing';
 
-            editingFor = documentArrayInstance;
+            da.editingFor = documentArrayInstance;
 
-            editingIndex = $(this).parent().attr('data-document-index');
+            da.editingIndex = $(this).parent().attr('data-document-index');
 
             // now grab the array if there already is one and turn it into a JavaScript object
-            editingArray = JSON.parse($('[data-document-field-for="' + documentArrayInstance + '"]').find('input[type="hidden"][name="' + documentArrayInstance + '"]').val());
+            da.editingArray = JSON.parse($('[data-document-field-for="' + documentArrayInstance + '"]').find('input[type="hidden"][name="' + documentArrayInstance + '"]').val());
 
-            editingObject = setLabel(editingArray[editingIndex]);
+            da.editingObject = da.setLabel(da.editingArray[da.editingIndex]);
 
-            removeDocument(documentArrayInstance);
+            da.removeDocument(documentArrayInstance);
 
         });
 
     };
 
-    var editDocument = function (editingFor) {
+    DocumentArray.prototype.redrawDocuments = function (editingFor) {
+
+        this.drawDocuments(editingFor, JSON.parse($('input[type="hidden"][name="' + editingFor + '"]').val()));
+
+    };
+
+    DocumentArray.prototype.editDocument = function (editingFor) {
 
         // apply the form to the modal
-        $('#documentsModal .modal-body form').html(retrieveForm(editingFor)).binddata(editingObject);
+        $('#documentsModal .modal-body form').html(this.retrieveForm(editingFor)).binddata(this.editingObject);
 
         // apply the label to the modal
-        $('#documentsModal .modal-title').html(retrieveLabel(editingFor));
+        $('#documentsModal .modal-title').html(this.retrieveLabel(editingFor));
 
         // update the form buttons to SAVE/CANCEL
         $('#documentsModal .modal-footer .btn-save').html('Save');
@@ -106,19 +117,19 @@ $(document).ready(function () {
         // add an edit class to the model
         $('#documentsModal .modal-dialog').addClass('edit');
 
-        toggleModal();
+        this.toggleModal();
 
         // prevent the button from submitting the form
         return false;
 
     };
 
-    var removeDocument = function (editingFor) {
+    DocumentArray.prototype.removeDocument = function (editingFor) {
 
-        $('#documentsModal .modal-body form').html(Handlebars.compile('Are you sure you would like to delete \'{{label}}\'?')(editingObject));
+        $('#documentsModal .modal-body form').html(Handlebars.compile('Are you sure you would like to delete \'{{label}}\'?')(this.editingObject));
 
         // apply the label to the modal
-        $('#documentsModal .modal-title').html(retrieveLabel(editingFor));
+        $('#documentsModal .modal-title').html(this.retrieveLabel(editingFor));
 
         // update the form buttons to YES/NO
         $('#documentsModal .modal-footer .btn-save').html('Yes');
@@ -126,149 +137,176 @@ $(document).ready(function () {
 
         $('#documentsModal .modal-dialog').removeClass('edit');
 
-        toggleModal();
+        this.toggleModal();
 
         // prevent the button from submitting the form
         return false;
 
     };
 
-    var saveDocument = function () {
+    DocumentArray.prototype.saveDocument = function () {
 
-        if (editingIndex === undefined) {
-            editingArray.push(editingObject);
+        if (this.editingIndex === undefined) {
+            this.editingArray.push(this.editingObject);
         } else {
-            editingArray[editingIndex] = editingObject;
+            this.editingArray[this.editingIndex] = this.editingObject;
         }
 
         // now grab the array if there already is one and turn it into a JavaScript object
-        $('input[type="hidden"][name="' + editingFor + '"]').val(JSON.stringify(editingArray));
+        $('input[type="hidden"][name="' + this.editingFor + '"]').val(JSON.stringify(this.editingArray));
 
         // now update the view
-        drawDocuments(editingFor, editingArray);
+        this.drawDocuments(this.editingFor, this.editingArray);
 
-        reset();
+        this.reset();
 
-        toggleModal();
+        this.toggleModal();
 
     };
 
-    var deleteDocument = function () {
+    DocumentArray.prototype.deleteDocument = function () {
 
-        editingArray.splice(editingIndex, 1);
+        this.editingArray.splice(this.editingIndex, 1);
 
         // now grab the array if there already is one and turn it into a JavaScript object
-        $('input[type="hidden"][name="' + editingFor + '"]').val(JSON.stringify(editingArray));
+        $('input[type="hidden"][name="' + this.editingFor + '"]').val(JSON.stringify(this.editingArray));
 
         // now update the view
-        drawDocuments(editingFor, editingArray);
+        this.drawDocuments(this.editingFor, this.editingArray);
 
-        reset();
+        this.reset();
 
-        toggleModal();
+        this.toggleModal();
 
     };
 
-    var saveAction = function () {
+    DocumentArray.prototype.saveAction = function () {
 
-        if (mode === 'editing') {
-            saveDocument();
+        if (this.mode === 'editing') {
+            this.saveDocument();
         } else {
-            deleteDocument();
+            this.deleteDocument();
         }
 
     };
 
-    var closeAction = function () {
+    DocumentArray.prototype.closeAction = function () {
 
-        reset();
+        this.reset();
 
-        toggleModal();
-
-    };
-
-    var reset = function () {
-
-        editingFor = undefined;
-        editingIndex = undefined;
-        editingArray = undefined;
-        editingObject = undefined;
-        mode = undefined;
+        this.toggleModal();
 
     };
 
-    var toggleModal = function () {
+    DocumentArray.prototype.reset = function () {
+
+        this.editingFor = undefined;
+        this.editingIndex = undefined;
+        this.editingArray = undefined;
+        this.editingObject = undefined;
+        this.mode = undefined;
+
+    };
+
+    DocumentArray.prototype.toggleModal = function () {
 
         // popup the modal
         $('#documentsModal').modal('toggle');
 
     };
 
-    var retrieveForm = function (editingFor) {
+    DocumentArray.prototype.retrieveForm = function (editingFor) {
 
-        if (!formHtml[editingFor]) {
+        if (!this.formHtml[editingFor]) {
 
             // now grab the form HTML
-            formHtml[editingFor] = window.linz.templates['document-' + editingFor].clone().html();
+            this.formHtml[editingFor] = window.linz.templates['document-' + editingFor].clone().html();
 
         }
 
-        return formHtml[editingFor];
+        return this.formHtml[editingFor];
 
     };
 
-    var retrieveLabel = function (editingFor) {
+    DocumentArray.prototype.retrieveLabel = function (editingFor) {
 
         return $('[data-document-field-for="' + editingFor + '"]').attr('data-document-field-label');
 
     }
 
-    // do we have any documentarrays to take care of?
-    var daInstances = $('[data-document-field-for]');
 
-    // if we have a document array, wire-up the close and save buttons
-    if (daInstances) {
+    $.fn.documentarray = function(option, parameter, extraOptions) {
 
-        $('#documentsModal .btn-save').click(saveAction);
-        $('#documentsModal .btn-cancel').click(closeAction);
-        $('#documentsModal button.close').click(closeAction);
-        $('#documentsModal').on('shown.bs.modal', function (e) {
-            $('#documentsModal').animate({ scrollTop: 0 }, 'fast');
+        var isModalWired = false;
+
+        return this.each(function(index, el) {
+
+            var data = $(this).data('documentarray');
+
+            // initialize the documentarray.
+            if (!data) {
+                data = new DocumentArray();
+                $(this).data('documentarray', data);
+            }
+
+            if (!isModalWired) {
+
+                $('#documentsModal .btn-save').click(function () { data.saveAction(); });
+                $('#documentsModal .btn-cancel').click(function () { data.closeAction(); });
+                $('#documentsModal button.close').click(function () { data.closeAction(); });
+                $('#documentsModal').on('shown.bs.modal', function (e) {
+                    $('#documentsModal').animate({ scrollTop: 0 }, 'fast');
+                });
+
+                data.listTemplate = Handlebars.compile($('template.document-array-list').clone().html());
+
+                // activate switch to make sure the above if statement is executed just once!
+                isModalWired = true;
+
+            }
+
+            var documentArrayInstance = $(el).attr('data-document-field-for');
+
+            // handle the create button
+            $('[data-document-field-for="' + documentArrayInstance + '"] [data-document-action="create"]').click(function (event) {
+
+                var parentElem = $(event.target).closest('.documents-container');
+
+                // clear out persitence fields
+                data.editingObject = {};
+                data.editingInstance = undefined;
+                data.mode = 'editing';
+
+                // which field are we editing for?
+                data.editingFor = $(parentElem).attr('data-document-field-for');
+
+                // now grab the array if there already is one and turn it into a JavaScript object
+                data.editingArray = JSON.parse($(parentElem).children('input[type="hidden"][name="' + data.editingFor + '"]').val());
+
+                // now pop the form
+                data.editDocument(data.editingFor);
+
+            });
+
+            data.retrieveForm(documentArrayInstance);
+
+            data.drawDocuments(documentArrayInstance, JSON.parse($(el).children('input[type="hidden"][name="' + documentArrayInstance + '"]').val()));
+
+            // Call sandyle method.
+            if (typeof option === 'string') {
+                data[option](parameter, extraOptions);
+            }
+
         });
 
-        listTemplate = Handlebars.compile($('template.document-array-list').clone().html());
+    };
 
-    }
+    $.fn.documentarray.Constructor = DocumentArray;
 
-    daInstances.each(function (index, el) {
+    $(function() {
 
-        var documentArrayInstance = $(el).attr('data-document-field-for');
-
-        // handle the create button
-        $('[data-document-field-for="' + documentArrayInstance + '"] [data-document-action="create"]').click(function (event) {
-
-            var parentElem = $(event.target).closest('.documents-container');
-
-            // clear out persitence fields
-            editingObject = {};
-            editingInstance = undefined;
-            mode = 'editing';
-
-            // which field are we editing for?
-            editingFor = $(parentElem).attr('data-document-field-for');
-
-            // now grab the array if there already is one and turn it into a JavaScript object
-            editingArray = JSON.parse($(parentElem).children('input[type="hidden"][name="' + editingFor + '"]').val());
-
-            // now pop the form
-            editDocument(editingFor);
-
-        });
-
-        retrieveForm(documentArrayInstance);
-
-        drawDocuments(documentArrayInstance, JSON.parse($(el).children('input[type="hidden"][name="' + documentArrayInstance + '"]').val()));
+        $('[data-document-field-for]').documentarray();
 
     });
 
-});
+}(window.jQuery);
