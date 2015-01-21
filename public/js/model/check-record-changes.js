@@ -7,6 +7,9 @@
         // Prevent form submission
         e.preventDefault();
 
+        // disable submit button
+        $(e.target).find('[type="submit"]').attr('disabled','disabled');
+
     });
 
     $('form').submit(function () {
@@ -101,6 +104,17 @@
 
     function renderTextInputConflict(fieldName, formField, data, form, formValidator) {
 
+        var yourChangeLabel = data.yourChange[fieldName],
+            theirChangeLabel = data.theirChange[fieldName];
+
+        // check if values for comparison are of date format
+        if (moment(yourChangeLabel).isValid()) {
+            yourChangeLabel = moment(yourChangeLabel).format('DD/MM/YYYY');
+        }
+        if (moment(theirChangeLabel).isValid()) {
+            theirChangeLabel = moment(theirChangeLabel).format('DD/MM/YYYY');
+        }
+
         if (!formField.parent().hasClass('has-conflict')) {
 
             formField.wrap('<div class="input-group has-conflict"></div>');
@@ -109,9 +123,9 @@
                 + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-exclamation-sign"></span></button>'
                 + '<ul class="dropdown-menu dropdown-menu-right" role="menu">'
                 + '<li role="presentation" class="dropdown-header">Your change</li>'
-                + '<li class="your-change"><a href="#" class="conflict-selection">' + data.yourChange[fieldName] + '</a></li>'
+                + '<li class="your-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.yourChange[fieldName] + '">' + yourChangeLabel + '</a></li>'
                 + '<li role="presentation" class="dropdown-header their-change-author">' + data.theirChange['modifiedBy'] + "'s change" + '</li>'
-                + '<li class="their-change"><a href="#" class="conflict-selection">' + data.theirChange[fieldName] + '</a></li></ul>'
+                + '<li class="their-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.theirChange[fieldName] + '">' + theirChangeLabel + '</a></li></ul>'
                 + '</div>'
             );
 
@@ -122,7 +136,7 @@
                 resolvedVersionNo = data.theirChange.__v;
 
                 formField.parent().removeClass('has-conflict');
-                formField.val($(this).html());
+                formField.val($(this).attr('data-conflict-value'));
 
                 enableSubmitBtn(form, formValidator);
 
@@ -131,9 +145,9 @@
         } else {
 
             // since the conflict box is already displayed, simply update the values
-            formField.next('.input-group-btn').find('.their-change a').html(data.theirChange[fieldName]);
-            formField.next('.input-group-btn').find('.their-change-author').html(data.theirChange['modifiedBy'] + "'s change");
-            formField.next('.input-group-btn').find('.your-change a').html(data.yourChange[fieldName]);
+            formField.next('.input-group-btn').find('.their-change a').attr('data-conflict-value',data.theirChange[fieldName]).html(theirChangeLabel);
+            formField.next('.input-group-btn').find('.your-change a').attr('data-conflict-value',data.yourChange[fieldName]).html(yourChangeLabel);
+            formField.next('.input-group-btn').find('.their-change-author').html(data.theirChange['modifiedBy'] + '\'s change');
 
         }
 
@@ -463,11 +477,8 @@
         yourChange = JSON.parse(yourChange);
 
         var diffResults = DeepDiff.diff(yourChange, theirChange), // get changes in theirChange
-            results = { theirChange: [], yourChange: []};
-
-        //TODO: test in combination of additional properties, new member, edit member and delete member
-
-        var prevPos = undefined;
+            results = { theirChange: [], yourChange: [] },
+            prevPos;
 
         // process the changes in the array of records
         diffResults.forEach(function (diff) {

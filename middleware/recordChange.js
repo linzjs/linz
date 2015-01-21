@@ -20,8 +20,6 @@ module.exports = function (req, res, next) {
 			'createdBy': 0	 // TODO: this field might need to be dynamic as it's included as part of Linz model
 		};
 
-	//TODO: Investigate the issue where Model.form is underfined!
-
 	//TODO: services field is not flagged as changes sometime
 	//TODO: change date format to dd-mm-yyyy
 
