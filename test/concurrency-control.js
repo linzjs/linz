@@ -35,6 +35,7 @@ describe('concurrency control', function () {
     describe('extends the schema', function () {
 
         var TestSchema = new mongoose.Schema({ label: String });
+        var TestSchema1 = new mongoose.Schema({ modifiedBy: String });
 
         it('should throw error if options is not provided', function () {
             should(function () {
@@ -64,6 +65,18 @@ describe('concurrency control', function () {
                     modifiedByCellRenderer: modifiedByCellRenderer
                 });
             }).throw('settings.modifiedByProperty "' + modifiedByProperty + '" has been provided, but it is not defined in your schema.');
+        });
+
+        it('should throw error if options.modifiedByProperty is included in the exclusions settings', function () {
+            should(function () {
+                TestSchema1.plugin(concurrencyControl.plugin, {
+                    modifiedByProperty: modifiedByProperty,
+                    modifiedByCellRenderer: modifiedByCellRenderer,
+                    settings: {
+                        exclusions: [modifiedByProperty]
+                    }
+                });
+            }).throw('settings.modifiedByProperty "' + modifiedByProperty + '" is required and cannot be excluded.');
         });
 
     })

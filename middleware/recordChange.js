@@ -5,20 +5,17 @@ var linz = require('../'),
 
 module.exports = function (req, res, next) {
 
-	var Model = linz.get('models')[req.params.model];
-
-	var formData = req.body,
+	var Model = linz.get('models')[req.params.model],
+		ccSettings = Model.concurrencyControl,
+		formData = req.body,
 		resData = {
 			hasChanged: false
 		},
-		exclusionFields = {
-			'_id': 0,
-	        'refId': 0,
-	        'refVersion': 0,
-			'dateModified': 0,
-	        'dateCreated': 0,
-			'createdBy': 0	 // TODO: this field might need to be dynamic as it's included as part of Linz model
-		};
+		exclusionFields = {};
+
+	ccSettings.settings.exclusions.forEach(function (fieldName) {
+		exclusionFields[fieldName] = 0;
+	});
 
 	// exclude fields that are not editable
 	Object.keys(Model.form).forEach(function (fieldName) {
@@ -27,17 +24,8 @@ module.exports = function (req, res, next) {
 		}
 	});
 
-	//TODO: need to change this to it's own configuration field
-
-	// exclude fields defined by versions compare
-	if ((Model.versions.compare && Model.versions.compare.exclusions)) {
-		Object.keys(Model.versions.compare.exclusions).forEach(function (fieldName) {
-            exclusionFields[fieldName] = 0;
-        });
-	}
-
-	// remove modifiedBy field from exclusion fields
-	delete exclusionFields['modifiedBy'];
+	// remove modifiedByProperty field if it exists in exclusion fields
+	delete exclusionFields[ccSettings.modifiedByProperty];
 
 	async.waterfall([
 
@@ -60,12 +48,12 @@ module.exports = function (req, res, next) {
 				return cb(null);
 			}
 
-			Model.versions.cellRenderers.referenceName(doc.modifiedBy, doc, 'modifiedBy', Model, function (err, result) {
+			ccSettings.modifiedByCellRenderer(doc[ccSettings.modifiedByProperty], doc, ccSettings.modifiedByProperty, Model, function (err, result) {
 				if (err) {
 					return cb(err);
 				}
 
-				doc.modifiedBy = result;
+				doc[ccSettings.modifiedByProperty] = result;
 
 				return cb(null, doc);
 			});
