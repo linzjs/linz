@@ -13,6 +13,130 @@ module.exports = function (req, res, next) {
 		},
 		exclusionFields = {};
 
+	var sanitiseData = function (model, exclusions, yourChange, theirChange) {
+
+		var data = {
+				yourChange: {},
+				theirChange: {}
+			},
+			form = model.form;
+
+		model.schema.eachPath(function (fieldName, schemaType) {
+
+			if (exclusions.hasOwnProperty(fieldName)) {
+				return;
+			}
+
+			if (fieldName === '__v') {
+
+				data.yourChange['versionNo'] = yourChange['versionNo'];
+				data.theirChange['versionNo'] = theirChange['__v'];
+
+				return;
+			}
+
+			switch (form[fieldName].type) {
+
+				//TODO: check number field when clearing use mechanic field as an example
+
+				case 'number':
+
+					data.yourChange[fieldName] = parseFloat(yourChange[fieldName]);
+
+					if (data.yourChange[fieldName] === NaN) {
+						data.yourChange[fieldName] = '';
+					}
+
+					data.theirChange[fieldName] = parseFloat(theirChange[fieldName]);
+
+					if (data.theirChange[fieldName] === NaN) {
+						data.theirChange[fieldName] = '';
+					}
+
+					break;
+
+				// handle multi-criteria case
+				case 'boolean':
+				case 'objectid':
+
+					if (hasValue(yourChange[fieldName])) {
+						data.yourChange[fieldName] = yourChange[fieldName].toString();
+					} else {
+						data.yourChange[fieldName] = '';
+					}
+
+					if (hasValue(theirChange[fieldName])) {
+						data.theirChange[fieldName] = theirChange[fieldName].toString();
+					} else {
+						data.theirChange[fieldName] = '';
+					}
+
+					break;
+
+				case 'date':
+				case 'datetime':
+
+					if (hasValue(yourChange[fieldName])) {
+						data.yourChange[fieldName] = moment(new Date(yourChange[fieldName])).format('YYYY-MM-DD');
+					} else {
+						data.yourChange[fieldName] = '';
+					}
+
+					if (hasValue(theirChange[fieldName])) {
+						data.theirChange[fieldName] = moment(new Date(theirChange[fieldName])).format('YYYY-MM-DD');
+					} else {
+						data.theirChange[fieldName] = '';
+					}
+
+					break;
+
+				case 'documentarray':
+
+					data.yourChange[fieldName] = yourChange[fieldName];
+					data.theirChange[fieldName] = JSON.stringify(theirChange[fieldName]);
+					break;
+
+				case 'array':
+
+					if (hasValue(yourChange[fieldName])) {
+
+						// handle when array field contains onlu one value which is not of type array
+						data.yourChange[fieldName] = yourChange[fieldName];
+
+						if (!Array.isArray(data.yourChange[fieldName])) {
+							data.yourChange[fieldName] = data.yourChange[fieldName].split();
+						}
+
+					} else {
+						data.yourChange[fieldName] = '';
+					}
+
+					if (hasValue(theirChange[fieldName])) {
+						data.theirChange[fieldName] = theirChange[fieldName];
+					} else {
+						data.theirChange[fieldName] = '';
+					}
+
+					break;
+
+				default:
+					data.yourChange[fieldName] = yourChange[fieldName];
+					data.theirChange[fieldName] = theirChange[fieldName];
+
+			}
+		});
+
+		return data;
+
+	};
+
+	var hasValue = function (val) {
+		if (val === undefined || val === '' || val === null || val === '[]') {
+			return false;
+		}
+		return true;
+	}
+
 	ccSettings.settings.exclusions.forEach(function (fieldName) {
 		exclusionFields[fieldName] = 0;
 	});
@@ -66,73 +190,47 @@ module.exports = function (req, res, next) {
 			return res.status(200).json(resData);
 		}
 
-		var theirChange = result;
+		var cleanData = sanitiseData(Model, exclusionFields, formData, result),
+			yourChange = cleanData.yourChange,
+			theirChange = cleanData.theirChange;
 
 		// check if version no for yourChange and theirChange, if it is the same, no changes occurred, exit!
 		// also if version no from form request is the same as yourChange, this means the conflict has been resolved, exit!
-		if (parseInt(formData.versionNo) === parseInt(theirChange.__v) || (req.params.versionNo && parseInt(req.params.versionNo) === parseInt(theirChange.__v))) {
+		if (parseInt(yourChange.versionNo) === parseInt(theirChange.versionNo) || (req.params.versionNo && parseInt(req.params.versionNo) === parseInt(theirChange.versionNo))) {
+
 			return res.status(200).json(resData);
 		}
-
-		// convert complex object to string to easy diff
-		Object.keys(theirChange).forEach(function (fieldName) {
-
-			// convert boolean and objectid to string
-			if (typeof theirChange[fieldName] === 'boolean' || theirChange[fieldName] instanceof linz.mongoose.connection.db.bsonLib.ObjectID) {
-				theirChange[fieldName] = theirChange[fieldName].toString();
-			}
-
-			// convert date to string in the format of 'YYYY-MM-DD'
-			if (theirChange[fieldName] instanceof Date) {
-				theirChange[fieldName] = moment(theirChange[fieldName]).format('YYYY-MM-DD');
-			}
-
-			// check if field is a document array
-			if (Array.isArray(Model.schema.tree[fieldName])) {
-				// convert object to JSON to simplify comparison
-				theirChange[fieldName] = JSON.stringify(theirChange[fieldName]);
-			}
-
-		});
-
-		var yourChange = {};
-
-		// first let's clean up formData and remove any fields that are not relevant to this record
-		Object.keys(theirChange).forEach(function (fieldName) {
-
-			yourChange[fieldName] = formData[fieldName];
-
-		});
 
 		// let's do a diff for the fields changed
-		var diff = deep.diff(theirChange, yourChange, function (path, key) {
+		var diffResult = deep.diff(theirChange, yourChange, function (path, key) {
 
-			if (!theirChange[key] || theirChange[key] === null || !theirChange[key].length && yourChange[key]) {
+			if (key === 'versionNo') {
 				return true;
 			}
-			if (key === '__v') {
-				return true;
-			}
-			if (theirChange[key] === null && yourChange[key] === '' || theirChange[key] === '' && yourChange[key] === null) {
-				return true;
-			}
-			if (Array.isArray(theirChange[key]) && theirChange[key].length === 0 && (yourChange[key] === '[]' || yourChange[key] === undefined) ) {
-				return true;
-			}
-			// ignore if theirChange = ['test'] and yourChange = 'test'
-			if (Array.isArray(theirChange[key]) && theirChange[key].length === 1 && theirChange[key][0] === yourChange[key] ){
-				return true;
-			}
+
 		});
 
-		if (!diff) {
+		if (!diffResult) {
 			return res.status(200).json(resData);
 		}
+
+		var diffKeys = {};
+
+		// get a list of unique field names and it's type
+		diffResult.forEach(function (diff) {
+
+			var fieldName = diff.path[0];
+
+			if (!diffKeys[fieldName]) {
+				diffKeys[fieldName] = Model.form[fieldName].type;
+			}
+
+		});
 
 		resData.hasChanged = true;
 		resData.theirChange = theirChange;
 		resData.yourChange = yourChange;
-		resData.diff = diff;
+		resData.diff = diffKeys;
 
 		return res.status(200).json(resData);
 

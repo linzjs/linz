@@ -1,5 +1,7 @@
 (function () {
 
+    //TODO: refactor custom widget for google map
+
     var resolvedVersionNo;
 
     $('form').bootstrapValidator({}).on('success.form.bv', function(e) {
@@ -34,19 +36,25 @@
 
             if (!data.hasChanged) {
 
-                // since there are no change submit the form, proceed with normal save operation
-                return form.submit();
+                if (formValidator.isValid()) {
+
+                    // since there are no change, submit the form, proceed with normal save operation
+                    return form.submit();
+
+                } else {
+
+                    return formValidator.validate();
+
+                }
 
             }
 
-            // TODO: need to open the modal to flag that there is a data conflict with instruction on how to resolve them
             // since there is a change, lets load a modal to highlight the changes and provide user with options for the next step
-            // $('#linzModal').modal().load('', formData, function () {});
+            $('#linzModal').modal().load('/admin/merge-data-conflict-guide', function () {});
 
-            data.diff.forEach(function (diff) {
+            Object.keys(data.diff).forEach(function (fieldName) {
 
-                var fieldName = diff.path[0],
-                    formField = $(form).find(':input[name="' + fieldName + '"]');
+                var formField = $(form).find(':input[name="' + fieldName + '"]');
 
                 if (!formField.length) {
                     // exit if field is not found!
@@ -56,7 +64,7 @@
                 if (formField.length > 1) {
 
                     // this form field must be a group of radio or checkboxes
-                    renderRadioCheckboxInputsConflict(fieldName, formField, data, form, formValidator);
+                    renderRadioCheckboxInputsConflict(fieldName, data.diff[fieldName], formField, data, form, formValidator);
                     return;
 
                 }
@@ -64,24 +72,24 @@
                 if ($(form).find('[data-document-field-for="' + fieldName + '"]').length > 0) {
 
                     // this field contains a document array
-                    renderDocumentArrayConflicts(fieldName, formField, data, form, formValidator);
+                    renderDocumentArrayConflicts(fieldName, data.diff[fieldName], formField, data, form, formValidator);
                     return;
 
                 }
 
                 switch (formField[0].nodeName.toLowerCase()) {
                     case 'input':
-                        renderTextInputConflict(fieldName, formField, data, form, formValidator);
+                        renderTextInputConflict(fieldName, data.diff[fieldName], formField, data, form, formValidator);
                         break;
                     case 'select':
                         if (formField.hasClass('multiselect')) {
-                            renderMultiSelectFieldConflict(fieldName, formField, data, form, formValidator);
+                            renderMultiSelectFieldConflict(fieldName, data.diff[fieldName], formField, data, form, formValidator);
                         } else {
-                            renderSelectFieldConflict(fieldName, formField, data, form, formValidator);
+                            renderSelectFieldConflict(fieldName, data.diff[fieldName], formField, data, form, formValidator);
                         }
                         break;
                     case 'textarea':
-                        renderTextareaFieldConflict(fieldName, formField, data, form, formValidator);
+                        renderTextareaFieldConflict(fieldName, data.diff[fieldName], formField, data, form, formValidator);
 
                         break;
                     default:
@@ -92,29 +100,38 @@
 
         })
         .fail(function(jqXHR, textStatus, errorThrown ) {
+
             alert('An error has occured while attempting to check if this record has been editted by other user.');
             return false;
+            
         });
 
         return false;
     });
 
-    function renderTextInputConflict(fieldName, formField, data, form, formValidator) {
+    function renderTextInputConflict(fieldName, fieldType, formField, data, form, formValidator) {
 
         var yourChangeLabel = data.yourChange[fieldName],
             theirChangeLabel = data.theirChange[fieldName];
 
-        // check if values for comparison are of date format
-        try {
-            var yourDate = new Date(yourChangeLabel).toISOString(),
-                theirDate = new Date(theirChangeLabel).toISOString();
+        if (fieldType === 'date' || fieldType === 'datetime') {
 
-            yourChangeLabel = moment(yourDate).format('DD/MM/YYYY');
-            theirChangeLabel = moment(theirDate).format('DD/MM/YYYY');
+            if (yourChangeLabel !== '') {
+                try {
+                    yourChangeLabel = moment(new Date(yourChangeLabel).toISOString()).format('DD/MM/YYYY');
+                } catch (e) {}
+            }
 
-        } catch (e) {
-            // one of the value is not a date type, do nothing
+            if (theirChangeLabel !== '') {
+                try {
+                    theirChangeLabel = moment(new Date(theirChangeLabel).toISOString()).format('DD/MM/YYYY');
+                } catch (e) {}
+            }
+
         }
+
+        yourChangeLabel = formatTextFieldLabel(yourChangeLabel);
+        theirChangeLabel = formatTextFieldLabel(theirChangeLabel);
 
         if (!formField.parent().hasClass('has-conflict')) {
 
@@ -134,7 +151,7 @@
 
                 e.preventDefault();
 
-                resolvedVersionNo = data.theirChange.__v;
+                resolvedVersionNo = data.theirChange.versionNo;
 
                 formField.parent().removeClass('has-conflict');
                 formField.val($(this).attr('data-conflict-value'));
@@ -154,24 +171,34 @@
 
     }
 
-    function renderSelectFieldConflict(fieldName, formField, data, form, formValidator) {
+    function renderSelectFieldConflict(fieldName, fieldType, formField, data, form, formValidator) {
 
-        var theirChangeLabel = data.theirChange[fieldName],
-            yourChangeLabel = data.yourChange[fieldName];
+        var theirChangeLabel = '(none selected)',
+            yourChangeLabel = '(none selected)';
 
-        // get label for select values
-        formField.find('option').each(function () {
+        if (data.yourChange[fieldName] !== '') {
 
-            if (this.value === data.theirChange[fieldName]) {
-                theirChangeLabel = this.text;
-            }
+            formField.find('option').each(function () {
 
-            if (this.value === data.yourChange[fieldName]) {
-                yourChangeLabel = this.text;
+                if (this.value === data.yourChange[fieldName]) {
+                    yourChangeLabel = this.text;
+                    //exit the loop
+                    return false;
+                }
+            });
+        }
 
-            }
+        if (data.theirChange[fieldName] !== '') {
 
-        });
+            formField.find('option').each(function () {
+
+                if (this.value === data.theirChange[fieldName]) {
+                    theirChangeLabel = this.text;
+                    //exit the loop
+                    return false;
+                }
+            });
+        }
 
         if (!formField.parent().hasClass('has-conflict')) {
 
@@ -191,7 +218,7 @@
 
                 e.preventDefault();
 
-                resolvedVersionNo = data.theirChange.__v;
+                resolvedVersionNo = data.theirChange.versionNo;
 
                 formField.parent().removeClass('has-conflict');
                 formField.val($(this).attr('data-conflict-value'));
@@ -212,7 +239,7 @@
     }
 
 
-    function renderMultiSelectFieldConflict(fieldName, formField, data, form, formValidator) {
+    function renderMultiSelectFieldConflict(fieldName, fieldType, formField, data, form, formValidator) {
 
         var theirChangeLabel = data.theirChange[fieldName],
         yourChangeLabel = data.yourChange[fieldName];
@@ -230,6 +257,9 @@
             }
 
         });
+
+        yourChangeLabel = formatNonTextFieldLabel(yourChangeLabel);
+        theirChangeLabel = formatNonTextFieldLabel(theirChangeLabel);
 
         if (!formField.parent().hasClass('has-conflict')) {
 
@@ -249,7 +279,7 @@
 
                 e.preventDefault();
 
-                resolvedVersionNo = data.theirChange.__v;
+                resolvedVersionNo = data.theirChange.versionNo;
 
                 formField.parent().removeClass('has-conflict');
 
@@ -270,12 +300,12 @@
 
     }
 
-    function renderRadioCheckboxInputsConflict(fieldName, formField, data, form, formValidator) {
+    function renderRadioCheckboxInputsConflict(fieldName, fieldType, formField, data, form, formValidator) {
 
         var theirChangeLabel = [],
             yourChangeLabel = [],
-            theirChangeValue = data.theirChange[fieldName].toString().split(','),
-            yourChangeValue = data.yourChange[fieldName].toString().split(',');
+            theirChangeValue = data.theirChange[fieldName],
+            yourChangeValue = data.yourChange[fieldName];
 
         // get label for select values
         formField.each(function () {
@@ -286,6 +316,10 @@
                 yourChangeLabel.push($(this).parent().text());
             }
         });
+
+        // TODO: reformat the for for (empty) value and the code is a bit messy
+        yourChangeLabel = formatNonTextFieldLabel(yourChangeLabel);
+        theirChangeLabel = formatNonTextFieldLabel(theirChangeLabel);
 
         if (!formField.first().parents().hasClass('has-conflict')) {
 
@@ -305,7 +339,7 @@
 
                 e.preventDefault();
 
-                resolvedVersionNo = data.theirChange.__v;
+                resolvedVersionNo = data.theirChange.versionNo;
 
                 formField.first().parents('.col-sm-10').find('.input-group').removeClass('has-conflict');
 
@@ -326,7 +360,7 @@
 
     }
 
-    function renderDocumentArrayConflicts(fieldName, formField, data, form, formValidator) {
+    function renderDocumentArrayConflicts(fieldName, fieldType, formField, data, form, formValidator) {
 
         var diffResults = renderDocumentArrayDiff(fieldName, data.theirChange[fieldName], data.yourChange[fieldName]);
 
@@ -364,7 +398,7 @@
 
                 e.preventDefault();
 
-                resolvedVersionNo = data.theirChange.__v;
+                resolvedVersionNo = data.theirChange.versionNo;
 
                 formField.parents('.col-sm-10').find('.input-group').removeClass('has-conflict');
 
@@ -401,7 +435,10 @@
 
     }
 
-    function renderTextareaFieldConflict(fieldName, formField, data, form, formValidator) {
+    function renderTextareaFieldConflict(fieldName, fieldType, formField, data, form, formValidator) {
+
+        var yourChangeLabel = formatTextFieldLabel(data.yourChange[fieldName]),
+            theirChangeLabel = formatTextFieldLabel(data.theirChange[fieldName]);
 
         if (!formField.parents().hasClass('has-conflict')) {
 
@@ -411,9 +448,9 @@
                 + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-exclamation-sign"></span></button>'
                 + '<ul class="dropdown-menu dropdown-menu-right" role="menu">'
                 + '<li role="presentation" class="dropdown-header">Your change</li>'
-                + '<li class="your-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.yourChange[fieldName] + '">' + data.yourChange[fieldName] + '</a></li>'
+                + '<li class="your-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.yourChange[fieldName] + '">' + yourChangeLabel + '</a></li>'
                 + '<li role="presentation" class="dropdown-header their-change-author">' + data.theirChange['modifiedBy'] + "'s change" + '</li>'
-                + '<li class="their-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.theirChange[fieldName] + '">' + data.theirChange[fieldName] + '</a></li></ul>'
+                + '<li class="their-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.theirChange[fieldName] + '">' + theirChangeLabel + '</a></li></ul>'
                 + '</div>'
             );
 
@@ -421,7 +458,7 @@
 
                 e.preventDefault();
 
-                resolvedVersionNo = data.theirChange.__v;
+                resolvedVersionNo = data.theirChange.versionNo;
 
                 formField.parents('.col-sm-10').find('.input-group').removeClass('has-conflict');
 
@@ -434,8 +471,8 @@
         } else {
 
             // since the conflict box is already displayed, simply update the values
-            formField.next('.input-group-btn').find('.their-change a').attr('data-conflict-value',data.theirChange[fieldName]).html(data.theirChange[fieldName]);
-            formField.next('.input-group-btn').find('.your-change a').attr('data-conflict-value',data.yourChange[fieldName]).html(data.yourChange[fieldName]);
+            formField.next('.input-group-btn').find('.their-change a').attr('data-conflict-value',data.theirChange[fieldName]).html(theirChangeLabel);
+            formField.next('.input-group-btn').find('.your-change a').attr('data-conflict-value',data.yourChange[fieldName]).html(yourChangeLabel);
             formField.next('.input-group-btn').find('.their-change-author').html(data.theirChange['modifiedBy'] + "'s change");
 
         }
@@ -619,6 +656,7 @@
     }
 
     function enableSubmitBtn (form, formValidator) {
+
         if ($('.has-conflict').length === 0 && formValidator.isValid()) {
 
             // since all conflicts has been resolved and form is validated, let's activate the submit button
@@ -627,5 +665,12 @@
         }
     }
 
+    function formatTextFieldLabel (label, formFieldType) {
+        return label === '' ? '(empty)' : label;
+    }
+
+    function formatNonTextFieldLabel (label, formFieldType) {
+        return label === '' ? '(none selected)' : label;
+    }
 
 })();
