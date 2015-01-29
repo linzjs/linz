@@ -37,8 +37,6 @@ module.exports = function (req, res, next) {
 
 			switch (form[fieldName].type) {
 
-				//TODO: check number field when clearing use mechanic field as an example
-
 				case 'number':
 
 					data.yourChange[fieldName] = parseFloat(yourChange[fieldName]);

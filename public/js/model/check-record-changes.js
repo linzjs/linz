@@ -317,7 +317,6 @@
             }
         });
 
-        // TODO: reformat the for for (empty) value and the code is a bit messy
         yourChangeLabel = formatNonTextFieldLabel(yourChangeLabel);
         theirChangeLabel = formatNonTextFieldLabel(theirChangeLabel);
 
