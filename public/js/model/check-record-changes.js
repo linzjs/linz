@@ -61,40 +61,7 @@
                     return;
                 }
 
-                if (formField.length > 1) {
-
-                    // this form field must be a group of radio or checkboxes
-                    renderRadioCheckboxInputsConflict(fieldName, data.diff[fieldName], formField, data, form, formValidator);
-                    return;
-
-                }
-
-                if ($(form).find('[data-document-field-for="' + fieldName + '"]').length > 0) {
-
-                    // this field contains a document array
-                    renderDocumentArrayConflicts(fieldName, data.diff[fieldName], formField, data, form, formValidator);
-                    return;
-
-                }
-
-                switch (formField[0].nodeName.toLowerCase()) {
-                    case 'input':
-                        renderTextInputConflict(fieldName, data.diff[fieldName], formField, data, form, formValidator);
-                        break;
-                    case 'select':
-                        if (formField.hasClass('multiselect')) {
-                            renderMultiSelectFieldConflict(fieldName, data.diff[fieldName], formField, data, form, formValidator);
-                        } else {
-                            renderSelectFieldConflict(fieldName, data.diff[fieldName], formField, data, form, formValidator);
-                        }
-                        break;
-                    case 'textarea':
-                        renderTextareaFieldConflict(fieldName, data.diff[fieldName], formField, data, form, formValidator);
-
-                        break;
-                    default:
-                        // default code here
-                }
+                linz[formField.attr('data-linz-conflict-handler')](fieldName, data.diff[fieldName], formField, data, form, formValidator);
 
             });
 
@@ -103,13 +70,13 @@
 
             alert('An error has occured while attempting to check if this record has been editted by other user.');
             return false;
-            
+
         });
 
         return false;
     });
 
-    function renderTextInputConflict(fieldName, fieldType, formField, data, form, formValidator) {
+    function standardInputFieldConflictHandler(fieldName, fieldType, formField, data, form, formValidator) {
 
         var yourChangeLabel = data.yourChange[fieldName],
             theirChangeLabel = data.theirChange[fieldName];
@@ -171,7 +138,7 @@
 
     }
 
-    function renderSelectFieldConflict(fieldName, fieldType, formField, data, form, formValidator) {
+    function selectConflictHandler(fieldName, fieldType, formField, data, form, formValidator) {
 
         var theirChangeLabel = '(none selected)',
             yourChangeLabel = '(none selected)';
@@ -238,8 +205,7 @@
 
     }
 
-
-    function renderMultiSelectFieldConflict(fieldName, fieldType, formField, data, form, formValidator) {
+    function multiSelectConflictHandler(fieldName, fieldType, formField, data, form, formValidator) {
 
         var theirChangeLabel = data.theirChange[fieldName],
         yourChangeLabel = data.yourChange[fieldName];
@@ -300,7 +266,7 @@
 
     }
 
-    function renderRadioCheckboxInputsConflict(fieldName, fieldType, formField, data, form, formValidator) {
+    function radiosCheckboxesConflictHandler(fieldName, fieldType, formField, data, form, formValidator) {
 
         var theirChangeLabel = [],
             yourChangeLabel = [],
@@ -317,8 +283,8 @@
             }
         });
 
-        yourChangeLabel = formatNonTextFieldLabel(yourChangeLabel);
-        theirChangeLabel = formatNonTextFieldLabel(theirChangeLabel);
+        yourChangeLabel = formatNonTextFieldLabel(yourChangeLabel.toString());
+        theirChangeLabel = formatNonTextFieldLabel(theirChangeLabel.toString());
 
         if (!formField.first().parents().hasClass('has-conflict')) {
 
@@ -359,7 +325,100 @@
 
     }
 
-    function renderDocumentArrayConflicts(fieldName, fieldType, formField, data, form, formValidator) {
+    function checkboxesWithAdditionConflictHandler(fieldName, fieldType, formField, data, form, formValidator) {
+
+        var yourChangeLabel = formatNonTextFieldLabel(data.yourChange[fieldName].toString()),
+            theirChangeLabel = formatNonTextFieldLabel(data.theirChange[fieldName].toString());
+
+        if (!formField.first().parents().hasClass('has-conflict')) {
+
+            formField.first().parents('.col-sm-10').wrapInner('<div class="input-group has-conflict"></div>');
+            formField.first().parents('.col-sm-10').find('.input-group').first().append(
+                '<div class="input-group-btn conflict-btn">'
+                + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-exclamation-sign"></span></button>'
+                + '<ul class="dropdown-menu dropdown-menu-right" role="menu">'
+                + '<li role="presentation" class="dropdown-header">Your change</li>'
+                + '<li class="your-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.yourChange[fieldName] + '">' + yourChangeLabel + '</a></li>'
+                + '<li role="presentation" class="dropdown-header their-change-author">' + data.theirChange['modifiedBy'] + "'s change" + '</li>'
+                + '<li class="their-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.theirChange[fieldName] + '">' + theirChangeLabel + '</a></li></ul>'
+                + '</div>'
+            );
+
+            formField.first().parents('.col-sm-10').find('.conflict-btn').find('a').click(function (e) {
+
+                e.preventDefault();
+
+                resolvedVersionNo = data.theirChange.versionNo;
+
+                formField.first().parents('.col-sm-10').find('.input-group').removeClass('has-conflict');
+
+                var selectedValues = $(this).attr('data-conflict-value').split(',');
+
+                // update values for the list of checkboxes
+                selectedValues.forEach(function (val, index) {
+
+                    var field = $('input:checkbox[name="' + fieldName + '"][value="' + val +'"]');
+
+                    if (field.length) {
+
+                        if (field.val === val) {
+                            return;
+                        }
+
+                        field.val(val);
+                        field.siblings('span').html(val);
+
+                    } else {
+
+                        var checkbox = formField.first().parents('.checkbox').clone();
+
+                        checkbox.find('input').val(val);
+                        checkbox.find('span').html(val);
+
+                        // field doesn't exist, let's add one
+                        $('input:checkbox[name="' + fieldName + '"]').last().parents('.checkbox').after(checkbox);
+
+                    }
+
+                });
+
+                // remove extra fields
+                $('input:checkbox[name="' + fieldName + '"]').each(function (index, element){
+
+                    var bRemove = true;
+
+                    for (var i=0; i<selectedValues.length; i++){
+
+                        if (element.value === selectedValues[i]) {
+                            bRemove = false;
+                            break;
+                        }
+                    }
+
+                    if (bRemove) {
+                        $(element).parents('.checkbox').remove();
+                    }
+
+                });
+
+                checkSelectedInputs($('input:checkbox[name="' + fieldName + '"]'), $(this).attr('data-conflict-value').split(','));
+
+                enableSubmitBtn(form, formValidator);
+
+            });
+
+        } else {
+
+            // since the conflict box is already displayed, simply update the values
+            formField.next('.input-group-btn').find('.their-change a').attr('data-conflict-value',data.theirChange[fieldName]).html(theirChangeLabel);
+            formField.next('.input-group-btn').find('.your-change a').attr('data-conflict-value',data.yourChange[fieldName]).html(yourChangeLabel);
+            formField.next('.input-group-btn').find('.their-change-author').html(data.theirChange['modifiedBy'] + "'s change");
+
+        }
+
+    }
+
+    function documentArrayConflictHandler(fieldName, fieldType, formField, data, form, formValidator) {
 
         var diffResults = renderDocumentArrayDiff(fieldName, data.theirChange[fieldName], data.yourChange[fieldName]);
 
@@ -434,7 +493,7 @@
 
     }
 
-    function renderTextareaFieldConflict(fieldName, fieldType, formField, data, form, formValidator) {
+    function textareaConflictHandler(fieldName, fieldType, formField, data, form, formValidator) {
 
         var yourChangeLabel = formatTextFieldLabel(data.yourChange[fieldName]),
             theirChangeLabel = formatTextFieldLabel(data.theirChange[fieldName]);
@@ -671,5 +730,16 @@
     function formatNonTextFieldLabel (label, formFieldType) {
         return label === '' ? '(none selected)' : label;
     }
+
+    linz.textConflictHandler = standardInputFieldConflictHandler;
+    linz.dateConflictHandler = standardInputFieldConflictHandler;
+    linz.numericConflictHandler = standardInputFieldConflictHandler;
+    linz.selectConflictHandler = selectConflictHandler;
+    linz.multiSelectConflictHandler = multiSelectConflictHandler;
+    linz.radiosConflictHandler = radiosCheckboxesConflictHandler;
+    linz.checkboxesConflictHandler = radiosCheckboxesConflictHandler;
+    linz.checkboxesWithAdditionConflictHandler = checkboxesWithAdditionConflictHandler;
+    linz.documentArrayConflictHandler = documentArrayConflictHandler;
+    linz.textareaConflictHandler = textareaConflictHandler;
 
 })();

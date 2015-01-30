@@ -41,13 +41,13 @@ module.exports = function (req, res, next) {
 
 					data.yourChange[fieldName] = parseFloat(yourChange[fieldName]);
 
-					if (data.yourChange[fieldName] === NaN) {
+					if (isNaN(data.yourChange[fieldName])) {
 						data.yourChange[fieldName] = '';
 					}
 
 					data.theirChange[fieldName] = parseFloat(theirChange[fieldName]);
 
-					if (data.theirChange[fieldName] === NaN) {
+					if (isNaN(data.theirChange[fieldName])) {
 						data.theirChange[fieldName] = '';
 					}
 
@@ -129,7 +129,7 @@ module.exports = function (req, res, next) {
 	};
 
 	var hasValue = function (val) {
-		if (val === undefined || val === '' || val === null || val === '[]') {
+		if (val === undefined || val === '' || val === null || val === '[]' || Array.isArray(val) && val.length === 0) {
 			return false;
 		}
 		return true;
