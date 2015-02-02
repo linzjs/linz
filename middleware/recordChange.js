@@ -192,8 +192,8 @@ module.exports = function (req, res, next) {
 			yourChange = cleanData.yourChange,
 			theirChange = cleanData.theirChange;
 
-		// check if version no for yourChange and theirChange, if it is the same, no changes occurred, exit!
-		// also if version no from form request is the same as yourChange, this means the conflict has been resolved, exit!
+		// check if version number for yourChange and theirChange, if it is the same, no changes occurred, exit!
+		// also check if version number from form request is the same as yourChange, this means the conflict has been resolved, exit!
 		if (parseInt(yourChange.versionNo) === parseInt(theirChange.versionNo) || (req.params.versionNo && parseInt(req.params.versionNo) === parseInt(theirChange.versionNo))) {
 
 			return res.status(200).json(resData);

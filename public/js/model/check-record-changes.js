@@ -4,8 +4,6 @@ if (!linz) {
 
 (function () {
 
-    //TODO: refactor custom widget for google map
-
     var resolvedVersionNo;
 
     $('form').bootstrapValidator({}).on('success.form.bv', function(e) {
