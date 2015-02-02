@@ -1,3 +1,7 @@
+if (!linz) {
+    var linz = {};
+}
+
 (function () {
 
     //TODO: refactor custom widget for google map
@@ -100,9 +104,9 @@
         yourChangeLabel = formatTextFieldLabel(yourChangeLabel);
         theirChangeLabel = formatTextFieldLabel(theirChangeLabel);
 
-        if (!formField.parent().hasClass('has-conflict')) {
+        if (!formField.parent().hasClass('has-change')) {
 
-            formField.wrap('<div class="input-group has-conflict"></div>');
+            formField.wrap('<div class="input-group has-conflict has-change"></div>');
             formField.after(
                 '<div class="input-group-btn conflict-btn">'
                 + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-exclamation-sign"></span></button>'
@@ -114,20 +118,10 @@
                 + '</div>'
             );
 
-            formField.next('.conflict-btn').find('a').click(function (e) {
-
-                e.preventDefault();
-
-                resolvedVersionNo = data.theirChange.versionNo;
-
-                formField.parent().removeClass('has-conflict');
-                formField.val($(this).attr('data-conflict-value'));
-
-                enableSubmitBtn(form, formValidator);
-
-            });
-
         } else {
+
+            // highlight conflict
+            formField.parent().addClass('has-conflict');
 
             // since the conflict box is already displayed, simply update the values
             formField.next('.input-group-btn').find('.their-change a').attr('data-conflict-value',data.theirChange[fieldName]).html(theirChangeLabel);
@@ -135,6 +129,23 @@
             formField.next('.input-group-btn').find('.their-change-author').html(data.theirChange['modifiedBy'] + '\'s change');
 
         }
+
+        // remove click binding if button has previously been added
+        formField.next('.conflict-btn').find('a').off('click');
+
+        // bind click event
+        formField.next('.conflict-btn').find('a').on('click',function (e) {
+
+            e.preventDefault();
+
+            resolvedVersionNo = data.theirChange.versionNo;
+
+            formField.parent().removeClass('has-conflict');
+            formField.val($(this).attr('data-conflict-value'));
+
+            enableSubmitBtn(form, formValidator);
+
+        });
 
     }
 
@@ -167,9 +178,9 @@
             });
         }
 
-        if (!formField.parent().hasClass('has-conflict')) {
+        if (!formField.parent().hasClass('has-change')) {
 
-            formField.wrap('<div class="input-group has-conflict"></div>');
+            formField.wrap('<div class="input-group has-conflict has-change"></div>');
             formField.after(
                 '<div class="input-group-btn conflict-btn">'
                 + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-exclamation-sign"></span></button>'
@@ -181,20 +192,10 @@
                 + '</div>'
             );
 
-            formField.next('.conflict-btn').find('a').click(function (e) {
-
-                e.preventDefault();
-
-                resolvedVersionNo = data.theirChange.versionNo;
-
-                formField.parent().removeClass('has-conflict');
-                formField.val($(this).attr('data-conflict-value'));
-
-                enableSubmitBtn(form, formValidator);
-
-            });
-
         } else {
+
+            // highlight conflict
+            formField.parent().addClass('has-conflict');
 
             // since the conflict box is already displayed, simply update the values
             formField.next('.input-group-btn').find('.their-change a').attr('data-conflict-value',data.theirChange[fieldName]).html(theirChangeLabel);
@@ -203,33 +204,45 @@
 
         }
 
+        // remove click binding if button has previously been added
+        formField.next('.conflict-btn').find('a').off('click');
+
+        // bind click event
+        formField.next('.conflict-btn').find('a').on('click',function (e) {
+
+            e.preventDefault();
+
+            resolvedVersionNo = data.theirChange.versionNo;
+
+            formField.parent().removeClass('has-conflict');
+            formField.val($(this).attr('data-conflict-value'));
+
+            enableSubmitBtn(form, formValidator);
+
+        });
+
     }
 
     function multiSelectConflictHandler(fieldName, fieldType, formField, data, form, formValidator) {
 
-        var theirChangeLabel = data.theirChange[fieldName],
-        yourChangeLabel = data.yourChange[fieldName];
+        var theirChangeLabel = [],
+            yourChangeLabel = [];
 
-        // get label for select values
         formField.find('option').each(function () {
-
-            if (this.value === data.theirChange[fieldName]) {
-                theirChangeLabel = this.text;
+            if (data.theirChange[fieldName].indexOf(this.value) > -1) {
+                theirChangeLabel.push($(this).text());
             }
-
-            if (this.value === data.yourChange[fieldName]) {
-                yourChangeLabel = this.text;
-
+            if (data.yourChange[fieldName].indexOf(this.value) > -1) {
+                yourChangeLabel.push($(this).text());
             }
-
         });
 
-        yourChangeLabel = formatNonTextFieldLabel(yourChangeLabel);
-        theirChangeLabel = formatNonTextFieldLabel(theirChangeLabel);
+        yourChangeLabel = formatNonTextFieldLabel(yourChangeLabel.join(', '));
+        theirChangeLabel = formatNonTextFieldLabel(theirChangeLabel.join(', '));
 
-        if (!formField.parent().hasClass('has-conflict')) {
+        if (!formField.parent().hasClass('has-change')) {
 
-            formField.parent().wrapInner('<div class="input-group has-conflict"></div>');
+            formField.parent().wrapInner('<div class="input-group has-conflict has-change"></div>');
             formField.next('.btn-group-multiselect').after(
                 '<div class="input-group-btn conflict-btn">'
                 + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-exclamation-sign"></span></button>'
@@ -241,54 +254,59 @@
                 + '</div>'
             );
 
-            formField.parent().find('.conflict-btn').find('a').click(function (e) {
-
-                e.preventDefault();
-
-                resolvedVersionNo = data.theirChange.versionNo;
-
-                formField.parent().removeClass('has-conflict');
-
-                updateMultiSelectOptions(formField,$(this).attr('data-conflict-value').split(','));
-
-                enableSubmitBtn(form, formValidator);
-
-            });
-
         } else {
 
+            // highlight conflict
+            formField.parent().addClass('has-conflict');
+
             // since the conflict box is already displayed, simply update the values
-            formField.next('.input-group-btn').find('.their-change a').attr('data-conflict-value',data.theirChange[fieldName]).html(theirChangeLabel);
-            formField.next('.input-group-btn').find('.your-change a').attr('data-conflict-value',data.yourChange[fieldName]).html(yourChangeLabel);
-            formField.next('.input-group-btn').find('.their-change-author').html(data.theirChange['modifiedBy'] + "'s change");
+            formField.parent().find('.their-change a').attr('data-conflict-value',data.theirChange[fieldName]).html(theirChangeLabel);
+            formField.parent().find('.your-change a').attr('data-conflict-value',data.yourChange[fieldName]).html(yourChangeLabel);
+            formField.parent().find('.their-change-author').html(data.theirChange['modifiedBy'] + "'s change");
 
         }
+
+        // remove click binding if button has previously been added
+        formField.parent().find('.conflict-btn').find('a').off('click');
+
+        // bind click event
+        formField.parent().find('.conflict-btn').find('a').on('click', function (e) {
+
+            e.preventDefault();
+
+            resolvedVersionNo = data.theirChange.versionNo;
+
+            formField.parent().removeClass('has-conflict');
+
+            updateMultiSelectOptions(formField,$(this).attr('data-conflict-value').split(','));
+
+            enableSubmitBtn(form, formValidator);
+
+        });
 
     }
 
     function radiosCheckboxesConflictHandler(fieldName, fieldType, formField, data, form, formValidator) {
 
         var theirChangeLabel = [],
-            yourChangeLabel = [],
-            theirChangeValue = data.theirChange[fieldName],
-            yourChangeValue = data.yourChange[fieldName];
+            yourChangeLabel = [];
 
-        // get label for select values
+        // get label for selected values
         formField.each(function () {
-            if (theirChangeValue.indexOf(this.value) > -1) {
+            if (data.theirChange[fieldName].indexOf(this.value) > -1) {
                 theirChangeLabel.push($(this).parent().text());
             }
-            if (yourChangeValue.indexOf(this.value) > -1) {
+            if (data.yourChange[fieldName].indexOf(this.value) > -1) {
                 yourChangeLabel.push($(this).parent().text());
             }
         });
 
-        yourChangeLabel = formatNonTextFieldLabel(yourChangeLabel.toString());
-        theirChangeLabel = formatNonTextFieldLabel(theirChangeLabel.toString());
+        yourChangeLabel = formatNonTextFieldLabel(yourChangeLabel.join(', '));
+        theirChangeLabel = formatNonTextFieldLabel(theirChangeLabel.join(', '));
 
-        if (!formField.first().parents().hasClass('has-conflict')) {
+        if (!formField.first().parents().hasClass('has-change')) {
 
-            formField.first().parents('.col-sm-10').wrapInner('<div class="input-group has-conflict"></div>');
+            formField.first().parents('.col-sm-10').wrapInner('<div class="input-group has-conflict has-change"></div>');
             formField.first().parents('.col-sm-10').find('.input-group').append(
                 '<div class="input-group-btn conflict-btn">'
                 + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-exclamation-sign"></span></button>'
@@ -300,39 +318,47 @@
                 + '</div>'
             );
 
-            formField.first().parents('.col-sm-10').find('.conflict-btn').find('a').click(function (e) {
-
-                e.preventDefault();
-
-                resolvedVersionNo = data.theirChange.versionNo;
-
-                formField.first().parents('.col-sm-10').find('.input-group').removeClass('has-conflict');
-
-                checkSelectedInputs(formField, $(this).attr('data-conflict-value').split(','));
-
-                enableSubmitBtn(form, formValidator);
-
-            });
-
         } else {
 
+            // highlight conflict
+            formField.first().parents('.col-sm-10').find('.input-group').addClass('has-conflict');
+
             // since the conflict box is already displayed, simply update the values
-            formField.next('.input-group-btn').find('.their-change a').attr('data-conflict-value',data.theirChange[fieldName]).html(theirChangeLabel);
-            formField.next('.input-group-btn').find('.your-change a').attr('data-conflict-value',data.yourChange[fieldName]).html(yourChangeLabel);
-            formField.next('.input-group-btn').find('.their-change-author').html(data.theirChange['modifiedBy'] + "'s change");
+            formField.first().parents('.col-sm-10').find('.their-change a').attr('data-conflict-value',data.theirChange[fieldName]).html(theirChangeLabel);
+            formField.first().parents('.col-sm-10').find('.your-change a').attr('data-conflict-value',data.yourChange[fieldName]).html(yourChangeLabel);
+            formField.first().parents('.col-sm-10').find('.their-change-author').html(data.theirChange['modifiedBy'] + "'s change");
 
         }
+
+        // remove click binding if button has previously been added
+        formField.first().parents('.col-sm-10').find('.conflict-btn a').off('click');
+
+        // bind click event
+        formField.first().parents('.col-sm-10').find('.conflict-btn a').on('click', function (e) {
+
+            e.preventDefault();
+
+            resolvedVersionNo = data.theirChange.versionNo;
+
+            formField.first().parents('.col-sm-10').find('.input-group').removeClass('has-conflict');
+
+            checkSelectedInputs(formField, $(this).attr('data-conflict-value').split(','));
+
+            enableSubmitBtn(form, formValidator);
+
+        });
+
 
     }
 
     function checkboxesWithAdditionConflictHandler(fieldName, fieldType, formField, data, form, formValidator) {
 
-        var yourChangeLabel = formatNonTextFieldLabel(data.yourChange[fieldName].toString()),
-            theirChangeLabel = formatNonTextFieldLabel(data.theirChange[fieldName].toString());
+        var yourChangeLabel = formatNonTextFieldLabel(data.yourChange[fieldName].join(', ')),
+            theirChangeLabel = formatNonTextFieldLabel(data.theirChange[fieldName].join(', '));
 
-        if (!formField.first().parents().hasClass('has-conflict')) {
+        if (!formField.first().parents().hasClass('has-change')) {
 
-            formField.first().parents('.col-sm-10').wrapInner('<div class="input-group has-conflict"></div>');
+            formField.first().parents('.col-sm-10').wrapInner('<div class="input-group has-conflict has-change"></div>');
             formField.first().parents('.col-sm-10').find('.input-group').first().append(
                 '<div class="input-group-btn conflict-btn">'
                 + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-exclamation-sign"></span></button>'
@@ -344,77 +370,84 @@
                 + '</div>'
             );
 
-            formField.first().parents('.col-sm-10').find('.conflict-btn').find('a').click(function (e) {
+        } else {
 
-                e.preventDefault();
+            // highlight conflict
+            formField.first().parents('.col-sm-10').find('.input-group').addClass('has-conflict');
 
-                resolvedVersionNo = data.theirChange.versionNo;
+            // since the conflict box is already displayed, simply update the values
+            formField.first().parents('.col-sm-10').find('.their-change a').attr('data-conflict-value',data.theirChange[fieldName]).html(theirChangeLabel);
+            formField.first().parents('.col-sm-10').find('.your-change a').attr('data-conflict-value',data.yourChange[fieldName]).html(yourChangeLabel);
+            formField.first().parents('.col-sm-10').find('.their-change-author').html(data.theirChange['modifiedBy'] + "'s change");
 
-                formField.first().parents('.col-sm-10').find('.input-group').removeClass('has-conflict');
+        }
 
-                var selectedValues = $(this).attr('data-conflict-value').split(',');
+        // remove click binding if button has previously been added
+        formField.first().parents('.col-sm-10').find('.conflict-btn a').off('click');
 
-                // update values for the list of checkboxes
-                selectedValues.forEach(function (val, index) {
+        // bind click event
+        formField.first().parents('.col-sm-10').find('.conflict-btn a').click(function (e) {
 
-                    var field = $('input:checkbox[name="' + fieldName + '"][value="' + val +'"]');
+            e.preventDefault();
 
-                    if (field.length) {
+            resolvedVersionNo = data.theirChange.versionNo;
 
-                        if (field.val === val) {
-                            return;
-                        }
+            formField.first().parents('.col-sm-10').find('.input-group').removeClass('has-conflict');
 
-                        field.val(val);
-                        field.siblings('span').html(val);
+            var selectedValues = $(this).attr('data-conflict-value').split(',');
 
-                    } else {
+            // update values for the list of checkboxes
+            selectedValues.forEach(function (val, index) {
 
-                        var checkbox = formField.first().parents('.checkbox').clone();
+                var field = $('input:checkbox[name="' + fieldName + '"][value="' + val +'"]');
 
-                        checkbox.find('input').val(val);
-                        checkbox.find('span').html(val);
+                if (field.length) {
 
-                        // field doesn't exist, let's add one
-                        $('input:checkbox[name="' + fieldName + '"]').last().parents('.checkbox').after(checkbox);
-
+                    if (field.val === val) {
+                        return;
                     }
 
-                });
+                    field.val(val);
+                    field.siblings('span').html(val);
 
-                // remove extra fields
-                $('input:checkbox[name="' + fieldName + '"]').each(function (index, element){
+                } else {
 
-                    var bRemove = true;
+                    var checkbox = formField.first().parents('.checkbox').clone();
 
-                    for (var i=0; i<selectedValues.length; i++){
+                    checkbox.find('input').val(val);
+                    checkbox.find('span').html(val);
 
-                        if (element.value === selectedValues[i]) {
-                            bRemove = false;
-                            break;
-                        }
-                    }
+                    // field doesn't exist, let's add one
+                    $('input:checkbox[name="' + fieldName + '"]').last().parents('.checkbox').after(checkbox);
 
-                    if (bRemove) {
-                        $(element).parents('.checkbox').remove();
-                    }
-
-                });
-
-                checkSelectedInputs($('input:checkbox[name="' + fieldName + '"]'), $(this).attr('data-conflict-value').split(','));
-
-                enableSubmitBtn(form, formValidator);
+                }
 
             });
 
-        } else {
+            // remove extra fields
+            $('input:checkbox[name="' + fieldName + '"]').each(function (index, element){
 
-            // since the conflict box is already displayed, simply update the values
-            formField.next('.input-group-btn').find('.their-change a').attr('data-conflict-value',data.theirChange[fieldName]).html(theirChangeLabel);
-            formField.next('.input-group-btn').find('.your-change a').attr('data-conflict-value',data.yourChange[fieldName]).html(yourChangeLabel);
-            formField.next('.input-group-btn').find('.their-change-author').html(data.theirChange['modifiedBy'] + "'s change");
+                var bRemove = true;
 
-        }
+                for (var i=0; i<selectedValues.length; i++){
+
+                    if (element.value === selectedValues[i]) {
+                        bRemove = false;
+                        break;
+                    }
+                }
+
+                if (bRemove) {
+                    $(element).parents('.checkbox').remove();
+                }
+
+            });
+
+            checkSelectedInputs($('input:checkbox[name="' + fieldName + '"]'), $(this).attr('data-conflict-value').split(','));
+
+            enableSubmitBtn(form, formValidator);
+
+        });
 
     }
 
@@ -422,9 +455,9 @@
 
         var diffResults = renderDocumentArrayDiff(fieldName, data.theirChange[fieldName], data.yourChange[fieldName]);
 
-        if (!formField.parents().hasClass('has-conflict')) {
+        if (!formField.parents().hasClass('has-change')) {
 
-            formField.parents('.col-sm-10').wrapInner('<div class="input-group has-conflict"></div>');
+            formField.parents('.col-sm-10').wrapInner('<div class="input-group has-conflict has-change"></div>');
 
             var html = '<div class="input-group-btn conflict-btn">'
                         + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-exclamation-sign"></span></button>'
@@ -434,9 +467,9 @@
                                 + '<p>Below highlights <span class="conflict-author">' + data.theirChange['modifiedBy'] + '</span>\'s changes in comparison to yours:</p>'
                                 + '<table class="table-conflict">'
                                     + '<tr>'
-                                        + '<td><h5>Your change<a title="Select this" class="btn btn-default btn-xs btn-conflict-selection" data-conflict-value=\'' + data.yourChange[fieldName] + '\'><i class="fa fa-check"></i></a></h5></td>'
+                                        + '<td class="your-change"><h5>Your change<a title="Select this" class="btn btn-default btn-xs btn-conflict-selection" data-conflict-value=\'' + data.yourChange[fieldName] + '\'><i class="fa fa-check"></i></a></h5></td>'
                                         + '<td class="v-divider">&nbsp;</td>'
-                                        + '<td><h5><span class="conflict-author">' + data.theirChange['modifiedBy'] + '</span>\'s change<a title="Select this" class="btn btn-default btn-xs btn-conflict-selection" data-conflict-value=\'' + data.theirChange[fieldName] + '\'><i class="fa fa-check"></i></a></h5></td>'
+                                        + '<td class="their-change"><h5><span class="conflict-author">' + data.theirChange['modifiedBy'] + '</span>\'s change<a title="Select this" class="btn btn-default btn-xs btn-conflict-selection" data-conflict-value=\'' + data.theirChange[fieldName] + '\'><i class="fa fa-check"></i></a></h5></td>'
                                     + '</tr>';
 
             diffResults.theirChange.forEach(function (result, index) {
@@ -452,27 +485,13 @@
 
             formField.parents('.col-sm-10').find('.input-group').append(html);
 
-            formField.parents('.col-sm-10').find('.btn-conflict-selection').click(function (e) {
-
-                e.preventDefault();
-
-                resolvedVersionNo = data.theirChange.versionNo;
-
-                formField.parents('.col-sm-10').find('.input-group').removeClass('has-conflict');
-
-                formField.val($(this).attr('data-conflict-value'));
-
-                // redraw document
-                formField.parents('.col-sm-10').find('[data-document-field-for="' + fieldName + '"]').data('documentarray').redrawDocuments(fieldName);
-
-                enableSubmitBtn(form, formValidator);
-
-            });
-
         } else {
 
+            // highlight conflict
+            formField.parents('.col-sm-10').find('.input-group').addClass('has-conflict');
+
             // since the conflict box is already displayed, simply update the values
-            formField.next('.input-group-btn').find('.table-conflict .conflict-content').remove();
+            formField.parents('.col-sm-10').find('.table-conflict .conflict-content').remove();
 
             var html = '';
 
@@ -485,11 +504,35 @@
 
             });
 
-            formField.next('.input-group-btn').find('.table-conflict').append(html);
+            formField.parents('.col-sm-10').find('.table-conflict').append(html);
 
-            formField.next('.input-group-btn').find('.conflict-author').html(data.theirChange['modifiedBy']);
+            // update conflict values
+            formField.parents('.col-sm-10').find('.their-change a').attr('data-conflict-value',data.theirChange[fieldName]);
+            formField.parents('.col-sm-10').find('.your-change a').attr('data-conflict-value',data.yourChange[fieldName]);
+            formField.parents('.col-sm-10').find('.conflict-author').html(data.theirChange['modifiedBy']);
 
         }
+
+        // remove click binding if button has previously been added
+        formField.parents('.col-sm-10').find('.btn-conflict-selection').off('click');
+
+        // bind click event
+        formField.parents('.col-sm-10').find('.btn-conflict-selection').on('click', function (e) {
+
+            e.preventDefault();
+
+            resolvedVersionNo = data.theirChange.versionNo;
+
+            formField.parents('.col-sm-10').find('.input-group').removeClass('has-conflict');
+
+            formField.val($(this).attr('data-conflict-value'));
+
+            // redraw document
+            formField.parents('.col-sm-10').find('[data-document-field-for="' + fieldName + '"]').data('documentarray').redrawDocuments(fieldName);
+
+            enableSubmitBtn(form, formValidator);
+
+        });
 
     }
 
@@ -498,13 +541,13 @@
         var yourChangeLabel = formatTextFieldLabel(data.yourChange[fieldName]),
             theirChangeLabel = formatTextFieldLabel(data.theirChange[fieldName]);
 
-        if (!formField.parents().hasClass('has-conflict')) {
+        if (!formField.parents().hasClass('has-change')) {
 
-            formField.parents('.col-sm-10').wrapInner('<div class="input-group has-conflict"></div>');
+            formField.parents('.col-sm-10').wrapInner('<div class="input-group has-conflict has-change"></div>');
             formField.parents('.col-sm-10').find('.input-group').append(
                 '<div class="input-group-btn conflict-btn">'
                 + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-exclamation-sign"></span></button>'
-                + '<ul class="dropdown-menu dropdown-menu-right" role="menu">'
+                + '<ul class="dropdown-menu dropdown-menu-right dropdown-conflict" role="menu">'
                 + '<li role="presentation" class="dropdown-header">Your change</li>'
                 + '<li class="your-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.yourChange[fieldName] + '">' + yourChangeLabel + '</a></li>'
                 + '<li role="presentation" class="dropdown-header their-change-author">' + data.theirChange['modifiedBy'] + "'s change" + '</li>'
@@ -512,28 +555,35 @@
                 + '</div>'
             );
 
-            formField.parents('.col-sm-10').find('.conflict-btn').find('a').click(function (e) {
-
-                e.preventDefault();
-
-                resolvedVersionNo = data.theirChange.versionNo;
-
-                formField.parents('.col-sm-10').find('.input-group').removeClass('has-conflict');
-
-                formField.val($(this).attr('data-conflict-value'));
-
-                enableSubmitBtn(form, formValidator);
-
-            });
-
         } else {
 
+            // highlight conflict
+            formField.parents('.col-sm-10').find('.input-group').addClass('has-conflict');
+
             // since the conflict box is already displayed, simply update the values
-            formField.next('.input-group-btn').find('.their-change a').attr('data-conflict-value',data.theirChange[fieldName]).html(theirChangeLabel);
-            formField.next('.input-group-btn').find('.your-change a').attr('data-conflict-value',data.yourChange[fieldName]).html(yourChangeLabel);
-            formField.next('.input-group-btn').find('.their-change-author').html(data.theirChange['modifiedBy'] + "'s change");
+            formField.parents('.col-sm-10').find('.their-change a').attr('data-conflict-value',data.theirChange[fieldName]).html(theirChangeLabel);
+            formField.parents('.col-sm-10').find('.your-change a').attr('data-conflict-value',data.yourChange[fieldName]).html(yourChangeLabel);
+            formField.parents('.col-sm-10').find('.their-change-author').html(data.theirChange['modifiedBy'] + "'s change");
 
         }
+
+        // remove click binding if button has previously been added
+        formField.parents('.col-sm-10').find('.conflict-btn a').off('click');
+
+        // bind click event
+        formField.parents('.col-sm-10').find('.conflict-btn a').on('click', function (e) {
+
+            e.preventDefault();
+
+            resolvedVersionNo = data.theirChange.versionNo;
+
+            formField.parents('.col-sm-10').find('.input-group').removeClass('has-conflict');
+
+            formField.val($(this).attr('data-conflict-value'));
+
+            enableSubmitBtn(form, formValidator);
+
+        });
 
     }
 
@@ -731,6 +781,11 @@
         return label === '' ? '(none selected)' : label;
     }
 
+    function setConflictVersionNo (val) {
+        resolvedVersionNo = val;
+    }
+
+    // define global functions
     linz.textConflictHandler = standardInputFieldConflictHandler;
     linz.dateConflictHandler = standardInputFieldConflictHandler;
     linz.numericConflictHandler = standardInputFieldConflictHandler;
@@ -741,5 +796,7 @@
     linz.checkboxesWithAdditionConflictHandler = checkboxesWithAdditionConflictHandler;
     linz.documentArrayConflictHandler = documentArrayConflictHandler;
     linz.textareaConflictHandler = textareaConflictHandler;
+    linz.enableSubmitBtn = enableSubmitBtn;
+    linz.setConflictVersionNo = setConflictVersionNo;
 
 })();

@@ -98,7 +98,7 @@ module.exports = function (req, res, next) {
 
 					if (hasValue(yourChange[fieldName])) {
 
-						// handle when array field contains onlu one value which is not of type array
+						// handle when array field contains only one value which is not of type array
 						data.yourChange[fieldName] = yourChange[fieldName];
 
 						if (!Array.isArray(data.yourChange[fieldName])) {
@@ -106,13 +106,13 @@ module.exports = function (req, res, next) {
 						}
 
 					} else {
-						data.yourChange[fieldName] = '';
+						data.yourChange[fieldName] = [];
 					}
 
 					if (hasValue(theirChange[fieldName])) {
 						data.theirChange[fieldName] = theirChange[fieldName];
 					} else {
-						data.theirChange[fieldName] = '';
+						data.theirChange[fieldName] = [];
 					}
 
 					break;
@@ -129,7 +129,7 @@ module.exports = function (req, res, next) {
 	};
 
 	var hasValue = function (val) {
-		if (val === undefined || val === '' || val === null || val === '[]' || Array.isArray(val) && val.length === 0) {
+		if (val === undefined || val === '' || val === null || val === '[]' || Array.isArray(val) && val.length === 0 || Array.isArray(val) && val.length === 1 && val[0] === '') {
 			return false;
 		}
 		return true;
@@ -218,6 +218,11 @@ module.exports = function (req, res, next) {
 		diffResult.forEach(function (diff) {
 
 			var fieldName = diff.path[0];
+
+			// change fieldname to the related field defined in the relationship
+			if (Model.form[fieldName].relationship) {
+				fieldName = Model.form[fieldName].relationship;
+			}
 
 			if (!diffKeys[fieldName]) {
 				diffKeys[fieldName] = Model.form[fieldName].type;
