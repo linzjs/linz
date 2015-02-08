@@ -180,7 +180,7 @@
         $(_this).find('[data-group-action="ids"]').val(selectedIDs);
 
         // add form validation
-        $(_this).find('form').bootstrapValidator({});
+        $(_this).find('form[data-linz-validation="true"]').bootstrapValidator({});
 
     });
 
