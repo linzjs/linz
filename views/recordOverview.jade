@@ -5,6 +5,19 @@ block header
 		h1= record.title
 	.model-actions
 
+		if (model.overview.canEdit || model.overview.canDelete || model.overview.viewAll)
+			.actions
+				if model.overview.canEdit
+					span.edit
+						a.btn.btn-primary(href='' + linz.api.getAdminLink(model, 'edit', record._id), data-linz-control="edit", data-linz-disabled=((record.edit && record.edit.disabled) ? 'true' : false), data-linz-disabled-message=((record.edit && record.edit.disabled) ? record.edit.message : false))
+							i.fa.fa-edit
+							| Edit
+				if model.overview.canDelete
+					span.delete
+						a.btn.btn-default(href='' + linz.api.getAdminLink(model, 'delete', record._id), data-linz-control="delete", data-linz-disabled=((record.delete && record.delete.disabled) ? 'true' : false), data-linz-disabled-message=((record.delete && record.delete.disabled) ? record.delete.message : false))
+							i.fa.fa-trash-o
+							| Delete
+
 		if model.overview.actions && model.overview.actions.length
 			.custom-actions
 				if model.overview.actions.length === 1
@@ -28,18 +41,8 @@ block header
 										else
 											a(role='menuitem', tabindex='-1', href='' + linz.api.getAdminLink(model, action.action, record._id))= action.label
 
-		if (model.overview.canEdit || model.overview.canDelete || model.overview.viewAll)
+		if (model.overview.viewAll)
 			.actions
-				if model.overview.canEdit
-					span.edit
-						a.btn.btn-primary(href='' + linz.api.getAdminLink(model, 'edit', record._id), data-linz-control="edit", data-linz-disabled=((record.edit && record.edit.disabled) ? 'true' : false), data-linz-disabled-message=((record.edit && record.edit.disabled) ? record.edit.message : false))
-							i.fa.fa-edit
-							| Edit
-				if model.overview.canDelete
-					span.delete
-						a.btn.btn-default(href='' + linz.api.getAdminLink(model, 'delete', record._id), data-linz-control="delete", data-linz-disabled=((record.delete && record.delete.disabled) ? 'true' : false), data-linz-disabled-message=((record.delete && record.delete.disabled) ? record.delete.message : false))
-							i.fa.fa-trash-o
-							| Delete
 				if model.overview.viewAll
 					span.back
 						a.btn.btn-default(href='' + linz.api.getAdminLink(model))
