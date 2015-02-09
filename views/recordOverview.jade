@@ -4,10 +4,7 @@ block header
 	.model-title
 		h1= record.title
 	.model-actions
-		if model.overview.actions.length
-			.custom-actions
-				for action in model.overview.actions
-						a.btn.btn-default(href='' + linz.api.getAdminLink(model, action.action, record._id))= action.label
+
 		if (model.overview.canEdit || model.overview.canDelete || model.overview.viewAll)
 			.actions
 				if model.overview.canEdit
@@ -20,6 +17,32 @@ block header
 						a.btn.btn-default(href='' + linz.api.getAdminLink(model, 'delete', record._id), data-linz-control="delete", data-linz-disabled=((record.delete && record.delete.disabled) ? 'true' : false), data-linz-disabled-message=((record.delete && record.delete.disabled) ? record.delete.message : false))
 							i.fa.fa-trash-o
 							| Delete
+
+		if model.overview.actions && model.overview.actions.length
+			.custom-actions
+				if model.overview.actions.length === 1
+					for action in model.overview.actions
+						a.btn.btn-default(href='' + linz.api.getAdminLink(model, action.action, record._id))= action.label
+				else
+					.dropdown
+						button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+							| Actions&nbsp;
+							span.caret
+						ul.dropdown-menu(role='menu')
+							for action in model.overview.actions
+								if action.type === 'header'
+									li(role='presentation', class='dropdown-header')= action.label
+								else if action.type === 'divider'
+									li(role='presentation', class='divider')
+								else
+									li(role='presentation')
+										if action.isDisabled && action.isDisabled === true
+											a(role='menuitem', tabindex='-1', href='', data-linz-disabled='true', data-linz-disabled-message=action.disabledMessage)= action.label
+										else
+											a(role='menuitem', tabindex='-1', href='' + linz.api.getAdminLink(model, action.action, record._id))= action.label
+
+		if (model.overview.viewAll)
+			.actions
 				if model.overview.viewAll
 					span.back
 						a.btn.btn-default(href='' + linz.api.getAdminLink(model))
@@ -38,4 +61,3 @@ block content
 				if overviewVersions
 					.overview-versions
 						div!= overviewVersions
-

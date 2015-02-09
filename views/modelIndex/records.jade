@@ -44,11 +44,16 @@ if records.length > 0
 													span.caret
 												ul.dropdown-menu(role="menu")
 													for action in model.grid.recordActions
-														li
-															if (record.recordActions && record.recordActions[action.label] && record.recordActions[action.label].disabled)
-																a(href='', data-linz-disabled='true', data-linz-disabled-message=record.recordActions[action.label].message)= action.label
+														li(role='presentation')
+															if action.type === 'header'
+																li(role='presentation', class='dropdown-header')= action.label
+															else if action.type === 'divider'
+																li(role='presentation', class='divider')
 															else
-																a(href=linz.api.getAdminLink(model, action.action, record._id))= action.label
+																if (record.recordActions && record.recordActions[action.label] && record.recordActions[action.label].disabled)
+																	a(href='', data-linz-disabled='true', data-linz-disabled-message=record.recordActions[action.label].message)= action.label
+																else
+																	a(href=linz.api.getAdminLink(model, action.action, record._id))= action.label
 
 							each val in Object.keys(model.grid.columns)
 								td!= record[val]

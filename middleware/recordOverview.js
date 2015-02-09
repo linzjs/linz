@@ -57,6 +57,43 @@ module.exports = function () {
 
                 });
 
+            },
+
+            // check if we need to process custom actions
+            function (cb) {
+
+                if (!req.linz.model.overview.actions.length) {
+                    return cb(null);
+                }
+
+                async.each(req.linz.model.overview.actions, function (action, actionDone) {
+
+                    if (!action.disabled) {
+                        return actionDone(null);
+                    }
+
+                    if (typeof action.disabled !== 'function') {
+                        throw new Error('Invalid type for overview.action.disabled. It must be a function.');
+                    }
+
+                    action.disabled(req.linz.record, function (err, isDisabled, message) {
+
+                        action.isDisabled = isDisabled;
+
+                        if (isDisabled === true) {
+                            action.disabledMessage = message;
+                        }
+
+                        return actionDone(err);
+
+                    });
+
+                }, function (err) {
+
+                    return cb(err);
+
+                });
+
             }
 
         ], function (err, results) {
