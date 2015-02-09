@@ -4,10 +4,30 @@ block header
 	.model-title
 		h1= record.title
 	.model-actions
-		if model.overview.actions.length
+
+		if model.overview.actions && model.overview.actions.length
 			.custom-actions
-				for action in model.overview.actions
+				if model.overview.actions.length === 1
+					for action in model.overview.actions
 						a.btn.btn-default(href='' + linz.api.getAdminLink(model, action.action, record._id))= action.label
+				else
+					.dropdown
+						button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+							| Actions&nbsp;
+							span.caret
+						ul.dropdown-menu(role='menu')
+							for action in model.overview.actions
+								if action.type === 'header'
+									li(role='presentation', class='dropdown-header')= action.label
+								else if action.type === 'divider'
+									li(role='presentation', class='divider')
+								else
+									li(role='presentation')
+										if action.isDisabled && action.isDisabled === true
+											a(role='menuitem', tabindex='-1', href='', data-linz-disabled='true', data-linz-disabled-message=action.disabledMessage)= action.label
+										else
+											a(role='menuitem', tabindex='-1', href='' + linz.api.getAdminLink(model, action.action, record._id))= action.label
+
 		if (model.overview.canEdit || model.overview.canDelete || model.overview.viewAll)
 			.actions
 				if model.overview.canEdit
@@ -38,4 +58,3 @@ block content
 				if overviewVersions
 					.overview-versions
 						div!= overviewVersions
-
