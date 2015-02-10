@@ -465,9 +465,9 @@ if (!linz) {
                                 + '<p>Below highlights <span class="conflict-author">' + data.theirChange['modifiedBy'] + '</span>\'s changes in comparison to yours:</p>'
                                 + '<table class="table-conflict">'
                                     + '<tr>'
-                                        + '<td class="your-change"><h5>Your change<a title="Select this" class="btn btn-default btn-xs btn-conflict-selection" data-conflict-value=\'' + data.yourChange[fieldName] + '\'><i class="fa fa-check"></i></a></h5></td>'
+                                        + '<td class="your-change"><h5><a class="btn btn-primary btn-conflict-selection" data-conflict-value=\'' + data.yourChange[fieldName] + '\'>Keep your change</a></h5></td>'
                                         + '<td class="v-divider">&nbsp;</td>'
-                                        + '<td class="their-change"><h5><span class="conflict-author">' + data.theirChange['modifiedBy'] + '</span>\'s change<a title="Select this" class="btn btn-default btn-xs btn-conflict-selection" data-conflict-value=\'' + data.theirChange[fieldName] + '\'><i class="fa fa-check"></i></a></h5></td>'
+                                        + '<td class="their-change"><h5><a class="btn btn-primary btn-conflict-selection" data-conflict-value=\'' + data.theirChange[fieldName] + '\'>Keep ' + data.theirChange['modifiedBy'] + '\'s change</a></h5></td>'
                                     + '</tr>';
 
             diffResults.theirChange.forEach(function (result, index) {
@@ -507,7 +507,7 @@ if (!linz) {
             // update conflict values
             formField.parents('.col-sm-10').find('.their-change a').attr('data-conflict-value',data.theirChange[fieldName]);
             formField.parents('.col-sm-10').find('.your-change a').attr('data-conflict-value',data.yourChange[fieldName]);
-            formField.parents('.col-sm-10').find('.conflict-author').html(data.theirChange['modifiedBy']);
+            formField.parents('.col-sm-10').find('.their-change a').html(data.theirChange['modifiedBy']);
 
         }
 

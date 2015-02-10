@@ -75,6 +75,11 @@
 	td {
 		vertical-align: top;
 	}
+
+	h5{
+		min-width: 270px;
+	}
+
 }
 
 .conflict-legend {
@@ -101,6 +106,9 @@
 
 .has-conflict, .example-has-conflict {
 	border: 1px solid orange;
+	.dropdown-toggle{
+		border-radius: 0px;
+	}
 }
 
 .input-group {
@@ -108,6 +116,10 @@
 		vertical-align: top;
 		.dropdown-menu {
 			top: 34px;
+		}
+		.dropdown-toggle{
+			background: orange;
+			border-color: orange;
 		}
 		p {
 			padding: 10px 20px 0;
@@ -130,12 +142,6 @@
 			line-height: 1;
 			-webkit-font-smoothing: antialiased;
 			-moz-osx-font-smoothing: grayscale;
-		}
-	}
-	.btn-conflict-selection{
-		margin-left: 5px;
-		&:hover {
-			color: #179d82;
 		}
 	}
 }
