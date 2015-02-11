@@ -279,6 +279,9 @@ module.exports = function  (req, res, next) {
                     // loop through each record
                     async.each(Object.keys(records), function (index, recordDone) {
 
+                        // store the rendered content into a separate property
+                        records[index]['rendered'] = {};
+
                         // loop through each column
                         async.each(Object.keys(req.linz.model.grid.columns), function (column, columnDone) {
 
@@ -289,13 +292,13 @@ module.exports = function  (req, res, next) {
                                 args.push(records[index][column]);
                             }
 
-                            args.push(records[index]);
+                            args.push(mongooseRecords[index]);
                             args.push(column);
                             args.push(req.linz.model);
                             args.push(function (err, value) {
 
                                 if (!err) {
-                                    records[index][column] = value;
+                                    records[index]['rendered'][column] = value;
                                 }
 
                                 return columnDone(err);
@@ -337,13 +340,13 @@ module.exports = function  (req, res, next) {
                             throw new Error('Invalid type for record.action.disabled. It must be a function');
                         }
 
-                        async.each(records, function (record, recordDone) {
+                        async.each(Object.keys(records), function (index, recordDone) {
 
-                            action.disabled(record, function (err, isDisabled, message) {
+                            action.disabled(mongooseRecords[index], function (err, isDisabled, message) {
 
-                                record.recordActions = record.recordActions || {};
+                                records[index].recordActions = records[index].recordActions || {};
 
-                                record.recordActions[action.label] = {
+                                records[index].recordActions[action.label] = {
                                     disabled: isDisabled,
                                     message: message
                                 };

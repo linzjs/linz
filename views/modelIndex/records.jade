@@ -56,4 +56,4 @@ if records.length > 0
 																	a(href=linz.api.getAdminLink(model, action.action, record._id))= action.label
 
 							each val in Object.keys(model.grid.columns)
-								td!= record[val]
+								td!= record['rendered'][val]
