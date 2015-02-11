@@ -2,9 +2,13 @@ var linz = require('../'),
     inflection = require('inflection');
 
 /* GET /admin/model/:model/create */
-var route = function (req, res) {
+var route = function (req, res, next) {
 
-	linz.formtools.form.generateFormFromModel(req.linz.model.schema, req.linz.model.form, {}, 'create', function (editForm) {
+	linz.formtools.form.generateFormFromModel(req.linz.model.schema, req.linz.model.form, {}, 'create', function (err, editForm) {
+
+        if (err) {
+            return next(err);
+        }
 
 		res.render(req.linz.views + '/modelCreate.jade', {
 			model: req.linz.model,
