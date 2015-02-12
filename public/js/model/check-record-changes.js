@@ -104,17 +104,22 @@ if (!linz) {
 
         if (!formField.parent().hasClass('has-change')) {
 
+            var dropdownHTML = $("#conflict-dropdown-template").html();
+            var template = Handlebars.compile(dropdownHTML);
+            var context = {
+                yourChange: {
+                    label: yourChangeLabel,
+                    value: data.yourChange[fieldName]
+                },
+                theirChange: {
+                    label: theirChangeLabel,
+                    value: data.theirChange[fieldName],
+                    author: data.theirChange['modifiedBy']
+                }
+            };
+
             formField.wrap('<div class="input-group has-conflict has-change"></div>');
-            formField.after(
-                '<div class="input-group-btn conflict-btn">'
-                + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-exclamation-sign"></span></button>'
-                + '<ul class="dropdown-menu dropdown-menu-right" role="menu">'
-                + '<li role="presentation" class="dropdown-header">Your change</li>'
-                + '<li class="your-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.yourChange[fieldName] + '">' + yourChangeLabel + '</a></li>'
-                + '<li role="presentation" class="dropdown-header their-change-author">' + data.theirChange['modifiedBy'] + "'s change" + '</li>'
-                + '<li class="their-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.theirChange[fieldName] + '">' + theirChangeLabel + '</a></li></ul>'
-                + '</div>'
-            );
+            formField.after(template(context));
 
         } else {
 
@@ -178,17 +183,23 @@ if (!linz) {
 
         if (!formField.parent().hasClass('has-change')) {
 
+            var dropdownHTML = $("#conflict-dropdown-template").html();
+            var template = Handlebars.compile(dropdownHTML);
+            var context = {
+                yourChange: {
+                    label: yourChangeLabel,
+                    value: data.yourChange[fieldName]
+                },
+                theirChange: {
+                    label: theirChangeLabel,
+                    value: data.theirChange[fieldName],
+                    author: data.theirChange['modifiedBy']
+                }
+            };
+
             formField.wrap('<div class="input-group has-conflict has-change"></div>');
-            formField.after(
-                '<div class="input-group-btn conflict-btn">'
-                + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-exclamation-sign"></span></button>'
-                + '<ul class="dropdown-menu dropdown-menu-right" role="menu">'
-                + '<li role="presentation" class="dropdown-header">Your change</li>'
-                + '<li class="your-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.yourChange[fieldName] + '">' + yourChangeLabel + '</a></li>'
-                + '<li role="presentation" class="dropdown-header their-change-author">' + data.theirChange['modifiedBy'] + "'s change" + '</li>'
-                + '<li class="their-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.theirChange[fieldName] + '">' + theirChangeLabel + '</a></li></ul>'
-                + '</div>'
-            );
+            formField.after(template(context));
+
 
         } else {
 
@@ -240,17 +251,22 @@ if (!linz) {
 
         if (!formField.parent().hasClass('has-change')) {
 
+            var dropdownHTML = $("#conflict-dropdown-template").html();
+            var template = Handlebars.compile(dropdownHTML);
+            var context = {
+                yourChange: {
+                    label: yourChangeLabel,
+                    value: data.yourChange[fieldName]
+                },
+                theirChange: {
+                    label: theirChangeLabel,
+                    value: data.theirChange[fieldName],
+                    author: data.theirChange['modifiedBy']
+                }
+            };
+
             formField.parent().wrapInner('<div class="input-group has-conflict has-change"></div>');
-            formField.next('.btn-group-multiselect').after(
-                '<div class="input-group-btn conflict-btn">'
-                + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-exclamation-sign"></span></button>'
-                + '<ul class="dropdown-menu dropdown-menu-right" role="menu">'
-                + '<li role="presentation" class="dropdown-header">Your change</li>'
-                + '<li class="your-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.yourChange[fieldName] + '">' + yourChangeLabel + '</a></li>'
-                + '<li role="presentation" class="dropdown-header their-change-author">' + data.theirChange['modifiedBy'] + "'s change" + '</li>'
-                + '<li class="their-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.theirChange[fieldName] + '">' + theirChangeLabel + '</a></li></ul>'
-                + '</div>'
-            );
+            formField.next('.btn-group-multiselect').after(template(context));
 
         } else {
 
@@ -304,17 +320,22 @@ if (!linz) {
 
         if (!formField.first().parents().hasClass('has-change')) {
 
-            formField.first().parents('.col-sm-10').wrapInner('<div class="input-group has-conflict has-change"></div>');
-            formField.first().parents('.col-sm-10').find('.input-group').append(
-                '<div class="input-group-btn conflict-btn">'
-                + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-exclamation-sign"></span></button>'
-                + '<ul class="dropdown-menu dropdown-menu-right" role="menu">'
-                + '<li role="presentation" class="dropdown-header">Your change</li>'
-                + '<li class="your-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.yourChange[fieldName] + '">' + yourChangeLabel + '</a></li>'
-                + '<li role="presentation" class="dropdown-header their-change-author">' + data.theirChange['modifiedBy'] + "'s change" + '</li>'
-                + '<li class="their-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.theirChange[fieldName] + '">' + theirChangeLabel + '</a></li></ul>'
-                + '</div>'
-            );
+            var dropdownHTML = $("#conflict-dropdown-template").html();
+            var template = Handlebars.compile(dropdownHTML);
+            var context = {
+                yourChange: {
+                    label: yourChangeLabel,
+                    value: data.yourChange[fieldName]
+                },
+                theirChange: {
+                    label: theirChangeLabel,
+                    value: data.theirChange[fieldName],
+                    author: data.theirChange['modifiedBy']
+                }
+            };
+
+            formField.first().parents('.col-sm-10').wrapInner('<div class="input-group has-conflict has-change conflict-none-text-field"></div>');
+            formField.first().parents('.col-sm-10').find('.input-group').append(template(context));
 
         } else {
 
@@ -356,17 +377,22 @@ if (!linz) {
 
         if (!formField.first().parents().hasClass('has-change')) {
 
-            formField.first().parents('.col-sm-10').wrapInner('<div class="input-group has-conflict has-change"></div>');
-            formField.first().parents('.col-sm-10').find('.input-group').first().append(
-                '<div class="input-group-btn conflict-btn">'
-                + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-exclamation-sign"></span></button>'
-                + '<ul class="dropdown-menu dropdown-menu-right" role="menu">'
-                + '<li role="presentation" class="dropdown-header">Your change</li>'
-                + '<li class="your-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.yourChange[fieldName] + '">' + yourChangeLabel + '</a></li>'
-                + '<li role="presentation" class="dropdown-header their-change-author">' + data.theirChange['modifiedBy'] + "'s change" + '</li>'
-                + '<li class="their-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.theirChange[fieldName] + '">' + theirChangeLabel + '</a></li></ul>'
-                + '</div>'
-            );
+            var dropdownHTML = $("#conflict-dropdown-template").html();
+            var template = Handlebars.compile(dropdownHTML);
+            var context = {
+                yourChange: {
+                    label: yourChangeLabel,
+                    value: data.yourChange[fieldName]
+                },
+                theirChange: {
+                    label: theirChangeLabel,
+                    value: data.theirChange[fieldName],
+                    author: data.theirChange['modifiedBy']
+                }
+            };
+
+            formField.first().parents('.col-sm-10').wrapInner('<div class="input-group has-conflict has-change conflict-none-text-field"></div>');
+            formField.first().parents('.col-sm-10').find('.input-group').first().append(template(context));
 
         } else {
 
@@ -455,33 +481,22 @@ if (!linz) {
 
         if (!formField.parents().hasClass('has-change')) {
 
-            formField.parents('.col-sm-10').wrapInner('<div class="input-group has-conflict has-change"></div>');
+            var dropdownHTML = $("#conflict-document-array-dropdown-template").html();
+            var template = Handlebars.compile(dropdownHTML);
+            var context = {
+                yourChange: {
+                    value: data.yourChange[fieldName],
+                    diffs: diffResults.yourChange
+                },
+                theirChange: {
+                    value: data.theirChange[fieldName],
+                    author: data.theirChange['modifiedBy'],
+                    diffs: diffResults.theirChange
+                }
+            };
 
-            var html = '<div class="input-group-btn conflict-btn">'
-                        + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-exclamation-sign"></span></button>'
-                        + '<ul class="dropdown-menu dropdown-menu-right" role="menu">'
-                            + '<li class="conflict-legend"><span class="new"><i class="fa fa-square"></i>New</span><span class="removed"><i class="fa fa-square"></i>Deleted</span><span class="edited"><i class="fa fa-square"></i>Updated</span></li>'
-                            + '<li class="table-responsive">'
-                                + '<p>Below highlights <span class="conflict-author">' + data.theirChange['modifiedBy'] + '</span>\'s changes in comparison to yours:</p>'
-                                + '<table class="table-conflict">'
-                                    + '<tr>'
-                                        + '<td class="your-change"><h5><a class="btn btn-primary btn-conflict-selection" data-conflict-value=\'' + data.yourChange[fieldName] + '\'>Keep your change</a></h5></td>'
-                                        + '<td class="v-divider">&nbsp;</td>'
-                                        + '<td class="their-change"><h5><a class="btn btn-primary btn-conflict-selection" data-conflict-value=\'' + data.theirChange[fieldName] + '\'>Keep ' + data.theirChange['modifiedBy'] + '\'s change</a></h5></td>'
-                                    + '</tr>';
-
-            diffResults.theirChange.forEach(function (result, index) {
-                html += '<tr class="conflict-content">'
-                            + '<td>' + diffResults.yourChange[index] + '</td>'
-                            + '<td class="v-divider">&nbsp;</td>'
-                            + '<td>' + result + '</td>'
-                    + '</tr>';
-
-            });
-
-            html += '</table></li></div>';
-
-            formField.parents('.col-sm-10').find('.input-group').append(html);
+            formField.parents('.col-sm-10').wrapInner('<div class="input-group has-conflict has-change conflict-none-text-field"></div>');
+            formField.parents('.col-sm-10').find('.input-group').append(template(context));
 
         } else {
 
@@ -541,17 +556,23 @@ if (!linz) {
 
         if (!formField.parents().hasClass('has-change')) {
 
-            formField.parents('.col-sm-10').wrapInner('<div class="input-group has-conflict has-change"></div>');
-            formField.parents('.col-sm-10').find('.input-group').append(
-                '<div class="input-group-btn conflict-btn">'
-                + '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="glyphicon glyphicon-exclamation-sign"></span></button>'
-                + '<ul class="dropdown-menu dropdown-menu-right dropdown-conflict" role="menu">'
-                + '<li role="presentation" class="dropdown-header">Your change</li>'
-                + '<li class="your-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.yourChange[fieldName] + '">' + yourChangeLabel + '</a></li>'
-                + '<li role="presentation" class="dropdown-header their-change-author">' + data.theirChange['modifiedBy'] + "'s change" + '</li>'
-                + '<li class="their-change"><a href="#" class="conflict-selection" data-conflict-value="' + data.theirChange[fieldName] + '">' + theirChangeLabel + '</a></li></ul>'
-                + '</div>'
-            );
+            var dropdownHTML = $("#conflict-dropdown-template").html();
+            var template = Handlebars.compile(dropdownHTML);
+            var context = {
+                yourChange: {
+                    label: yourChangeLabel,
+                    value: data.yourChange[fieldName]
+                },
+                theirChange: {
+                    label: theirChangeLabel,
+                    value: data.theirChange[fieldName],
+                    author: data.theirChange['modifiedBy']
+                }
+            };
+
+            formField.parents('.col-sm-10').wrapInner('<div class="input-group has-conflict has-change conflict-long-text"></div>');
+            formField.parents('.col-sm-10').find('.input-group').append(template(context));
+
 
         } else {
 

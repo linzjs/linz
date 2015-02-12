@@ -1,4 +1,8 @@
 include mixins/documentarray
+include mixins/conflictDropdown
+include mixins/conflictDocumentArrayDropdown
+
+
 extends layout
 
 block header
@@ -32,3 +36,6 @@ block script
 	script(src='' + linz.get('admin path') + '/public/js/json2.js')
 	script(src='' + linz.get('admin path') + '/public/js/model/edit.js')
 	script(src='' + linz.get('admin path') + '/public/js/model/check-record-changes.js')
+	mixin conflictDropdown()
+	mixin conflictDocumentArrayDropdown()
+	
