@@ -4,7 +4,7 @@
 
     /* FILTERS */
 
-    if ($('.selectedFilters').val().length > 0) {
+    if ($('.selectedFilters').length && $('.selectedFilters').val().length > 0) {
         toggleFilterBox('show');
     }
 
@@ -299,13 +299,24 @@
     // trigger a click of the 'filter' button
     function triggerSubmit () {
 
-        // click the button
-        $('.filters').find(':submit').click();
+        // is there a filter submit button?
+        // model indexes without filters don't have them
+        if ($('.filters').find(':submit').length) {
 
-        // add spinning icon to Filter dropdown to indicate page is loading
-        var icon = $('.addFilterBtn').find('.fa-filter');
-        icon.removeClass('fa-filter');
-        icon.addClass('fa-spinner fa-spin');
+            // click the button
+            $('.filters').find(':submit').click();
+
+            // add spinning icon to Filter dropdown to indicate page is loading
+            var icon = $('.addFilterBtn').find('.fa-filter');
+            icon.removeClass('fa-filter');
+            icon.addClass('fa-spinner fa-spin');
+
+            return;
+
+        }
+
+        // click the button
+        $('.filters').submit();
 
     }
 
