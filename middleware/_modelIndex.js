@@ -46,6 +46,36 @@ module.exports = function  (req, res, next) {
                     });
 
                 },
+                // check if there are toolbar items required
+                function (cb) {
+
+                    if (!req.linz.model.grid.toolbarItems.length) {
+                        return cb(null);
+                    }
+
+                    async.each(req.linz.model.grid.toolbarItems, function (item, itemDone) {
+
+                        if (!item.renderer) {
+                            return itemDone(null);
+                        }
+
+                        // this is a custom action, let's execute the function to get the HTML markup
+                        item.renderer(function (err, html) {
+
+                            if (err) {
+                                return itemDone(err);
+                            }
+
+                            item.html = html;
+
+                            return itemDone(null);
+                        });
+
+                    }, function (err) {
+                        return cb(err);
+                    });
+
+                },
 
                 // render the filters
                 function (cb) {

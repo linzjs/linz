@@ -20,8 +20,13 @@
 						span.caret
 					ul.dropdown-menu(role='menu')
 						for action in model.grid.actions
-							li(role='presentation')
-								a(role='menuitem', tabindex='-1', href='' + linz.api.getAdminLink(model, action.action))= action.label
+							if action.type === 'header'
+								li(role='presentation', class='dropdown-header')= action.label
+							else if action.type === 'divider'
+								li(role='presentation', class='divider')
+							else			
+								li(role='presentation')
+									a(role='menuitem', tabindex='-1', href='' + linz.api.getAdminLink(model, action.action))= action.label
 
 	if model.grid.groupActions && model.grid.groupActions.length
 		.group-actions.hidden
@@ -41,6 +46,12 @@
 									- groupAction.attributes['data-target'] = '#groupActionModal'
 								a(role='menuitem' tabindex='-1' href=linz.api.getAdminLink(model, groupAction.action))&attributes(groupAction.attributes)= groupAction.label
 
+	if model.grid.toolbarItems && model.grid.toolbarItems.length
+		.toolbar
+			for item in model.grid.toolbarItems
+				.toolbarItem
+					!= item.html
+	
 	if model.grid.export && model.grid.export.enable
 		.export
 			a.btn.btn-default(href='' + linz.api.getAdminLink(model, model.grid.export.action) data-linz-control="export" data-target="#exportModal")= model.grid.export.label
