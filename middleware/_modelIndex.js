@@ -1,4 +1,5 @@
-var async = require('async');
+var async = require('async'),
+    formtoolsAPI = require('../lib/api/formtools');
 
 module.exports = function  (req, res, next) {
 
@@ -29,11 +30,13 @@ module.exports = function  (req, res, next) {
                 // grab the grid object and append it to the model, i.e. req.linz.model.grid.columns
                 function (cb) {
 
-                    req.linz.model.getGrid(function (err, grid) {
+                    formtoolsAPI.grid.getSettings(req.params.model, function (err, settings) {
 
-                        if (!err) {
-                            req.linz.model.grid = grid;
+                        if (err) {
+                            return cb(err);
                         }
+
+                        req.linz.model.grid = settings;
 
                         // reset the pageSize value
                         pageSize = session.grid.formData.pageSize || req.linz.model.grid.paging.size;
@@ -41,7 +44,7 @@ module.exports = function  (req, res, next) {
                         // holder for the sortingBy value
                         req.linz.model.grid.sortingBy = {};
 
-                        cb(err);
+                        return cb(err);
 
                     });
 
@@ -49,30 +52,16 @@ module.exports = function  (req, res, next) {
                 // check if there are toolbar items required
                 function (cb) {
 
-                    if (!req.linz.model.grid.toolbarItems.length) {
-                        return cb(null);
-                    }
+                    formtoolsAPI.grid.getToolbarItems(req.params.model, function (err, result) {
 
-                    async.each(req.linz.model.grid.toolbarItems, function (item, itemDone) {
-
-                        if (!item.renderer) {
-                            return itemDone(null);
+                        if (err) {
+                            return cb(err);
                         }
 
-                        // this is a custom action, let's execute the function to get the HTML markup
-                        item.renderer(function (err, html) {
+                        req.linz.model.grid.toolbarItems = result;
 
-                            if (err) {
-                                return itemDone(err);
-                            }
+                        return cb(null);
 
-                            item.html = html;
-
-                            return itemDone(null);
-                        });
-
-                    }, function (err) {
-                        return cb(err);
                     });
 
                 },
@@ -80,23 +69,15 @@ module.exports = function  (req, res, next) {
                 // render the filters
                 function (cb) {
 
-                    async.each(Object.keys(req.linz.model.grid.filters), function (fieldName, filtersDone) {
+                    formtoolsAPI.grid.getFilters(req.params.model, function (err, result) {
 
-                        // call the filter renderer and update the content with the result
-                        req.linz.model.grid.filters[fieldName].filter.renderer(fieldName, function (err, result) {
+                        if (err) {
+                            return cb(err);
+                        }
 
-                            if (!err) {
-                                req.linz.model.grid.filters[fieldName].formControls = result;
-                            }
+                        req.linz.model.grid.filters = result;
 
-                            return filtersDone(err);
-
-                        });
-
-                    }, function (err) {
-
-                        return cb(err);
-
+                        return cb(null);
                     });
 
                 },
@@ -111,26 +92,15 @@ module.exports = function  (req, res, next) {
                         return cb(null);
                     }
 
-                    async.each(session.grid.formData.selectedFilters.split(','), function (fieldName, filtersDone) {
+                    formtoolsAPI.grid.getActiveFilters(session.grid.formData.selectedFilters.split(','), session.grid.formData, req.params.model, function (err, result) {
 
-                        // call the filter binder to render active filter form controls with form value added
-                        req.linz.model.grid.filters[fieldName].filter.bind(fieldName, session.grid.formData, function (err, result) {
+                        if (err) {
+                            return cb(err);
+                        }
 
-                            if (!err) {
-                                req.linz.model.grid.activeFilters[fieldName] = {
-                                    label: req.linz.model.grid.filters[fieldName].label,
-                                    controls: result
-                                }
-                            }
+                        req.linz.model.grid.activeFilters = result;
 
-                            return filtersDone(err);
-
-                        });
-
-                    }, function (err) {
-
-                        return cb(err);
-
+                        return cb(null);
                     });
 
                 },
@@ -143,28 +113,15 @@ module.exports = function  (req, res, next) {
                         return cb(null);
                     }
 
-                    async.each(session.grid.formData.selectedFilters.split(','), function (fieldName, filtersDone) {
+                    formtoolsAPI.grid.getSearchFilter(session.grid.formData.selectedFilters.split(','), session.grid.formData, req.params.model, function (err, result) {
 
-                        if (!session.grid.formData[fieldName]) {
-                            return filtersDone(null);
+                        if (err) {
+                            return cb(err);
                         }
 
-                        // call the filter renderer and update the content with the result
-                        req.linz.model.grid.filters[fieldName].filter.filter(fieldName, session.grid.formData, function (err, result) {
+                        filters = result;
 
-                            if (!err) {
-
-                                filters = req.linz.model.addSearchFilter(filters, result);
-
-                            }
-
-                            return filtersDone(err);
-
-                        });
-
-                    }, function (err) {
-
-                        return cb(err);
+                        return cb(null);
 
                     });
 
@@ -173,9 +130,8 @@ module.exports = function  (req, res, next) {
                 // count the docs
                 function (cb) {
 
-                    // consolidate filters into query
-                    if (Object.keys(filters).length) {
-                        filters = req.linz.model.setFiltersAsQuery(filters);
+                    if (!Object.keys(filters).length) {
+                        return cb(null);
                     }
 
                     req.linz.model.count(filters, function (err, docs) {
