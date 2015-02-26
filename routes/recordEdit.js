@@ -14,8 +14,8 @@ var route = function (req, res, next) {
 			model: req.linz.model,
 			record: req.linz.record,
 			form: editForm.render(),
-            actionUrl: linz.api.getAdminLink(req.linz.model, 'save', req.linz.record._id),
-			cancelUrl: linz.api.getAdminLink(req.linz.model)
+            actionUrl: linz.api.admin.getAdminLink(req.linz.model, 'save', req.linz.record._id),
+			cancelUrl: linz.api.admin.getAdminLink(req.linz.model)
 		});
 
 	});

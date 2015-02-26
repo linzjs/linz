@@ -18,6 +18,6 @@ module.exports = {
     },
 
     post : function (req, res) {
-        return res.redirect(linz.api.getAdminLink(req.linz.model, 'overview', req.params.id) + '#history');
+        return res.redirect(linz.api.admin.getAdminLink(req.linz.model, 'overview', req.params.id) + '#history');
     }
 }
