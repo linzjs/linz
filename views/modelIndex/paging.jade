@@ -1,5 +1,5 @@
-if pagination
-	.model-paging
+.model-paging
+	if pagination
 		.records
 			span Showing
 			select.pagination.form-control
@@ -9,11 +9,11 @@ if pagination
 					else
 						option(value=i+1)= i+1
 			span of #{pages} pages
-		.page-size
-			select.pagination-size.form-control
-				- for ps in pageSizes
-					if pageSize === ps
-						option(value=ps, selected)= ps
-					else
-						option(value=ps)= ps
-			span records per page
+	.page-size
+		select.pagination-size.form-control
+			- for ps in pageSizes
+				if pageSize === ps
+					option(value=ps, selected)= ps
+				else
+					option(value=ps)= ps
+		span records per page

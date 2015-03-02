@@ -7,12 +7,19 @@ module.exports = function  (req, res, next) {
         getModelIndex: function getModelIndex () {
 
             // set up session control
-            var session = req.session[req.params.model] = req.session[req.params.model] || {};
+            var session = req.session[req.params.model] = req.session[req.params.model] || {},
+                previousFormData = null;
+
             session.grid = session.grid || {};
             session.grid.formData = session.grid.formData || {};
 
             if (Object.keys(req.body).length) {
                 session.grid.formData = req.body;
+            }
+
+            // if the pageSize has been changed, reset the page index
+            if (previousFormData !== null && previousFormData.pageSize !== undefined && session.grid.formData.pageSize !== undefined && previousFormData.pageSize !== session.grid.formData.pageSize) {
+                session.grid.formData.page = 1;
             }
 
             var records = [],
