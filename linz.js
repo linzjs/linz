@@ -247,10 +247,8 @@ Linz.prototype.loadModels = function (cb) {
 	// set the default models path
 	this.set('models path', path.resolve(this.get('cwd'), 'models'), false);
 
-	var modelsPath = this.get('models path');
-
     // load in the models (non-standard callback as loadModels handles all errors)
-    helpersModels.loadModels(modelsPath, function (models) {
+    helpersModels.loadModels(this.get('models path'), function (models) {
 
         _this.set('models', models || []);
 
@@ -413,7 +411,7 @@ Linz.prototype.defaultConfiguration = function (cb) {
 	if (this.get('request logging') === true) routesManager.setupLoggingRoutes();
 
 	// store the cwd
-	this.set('cwd', process.cwd());
+	this.set('cwd', process.cwd(), false);
 
 	// place holder for the models, which get loaded in next
 	this.set('models', []);
