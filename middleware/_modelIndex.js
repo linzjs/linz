@@ -52,7 +52,7 @@ module.exports = function  (req, res, next) {
                 // check if there are toolbar items required
                 function (cb) {
 
-                    formtoolsAPI.grid.getToolbarItems(req.params.model, function (err, result) {
+                    formtoolsAPI.grid.getToolbarItems(req, res, req.params.model, function (err, result) {
 
                         if (err) {
                             return cb(err);
@@ -113,7 +113,7 @@ module.exports = function  (req, res, next) {
                         return cb(null);
                     }
 
-                    formtoolsAPI.grid.getSearchFilter(session.grid.formData.selectedFilters.split(','), session.grid.formData, req.params.model, function (err, result) {
+                    formtoolsAPI.grid.getSearchFilters(session.grid.formData.selectedFilters.split(','), session.grid.formData, req.params.model, function (err, result) {
 
                         if (err) {
                             return cb(err);
