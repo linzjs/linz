@@ -258,8 +258,11 @@ module.exports = {
                         return;
                     }
 
+                    // if the pathname doesn't exist in form, default the label to the pathname itself
+                    var ind = (form[pathname] === undefined) ? pathname : form[pathname].label;
+
                     // get a list of fields by the label ready for sorting
-                    fieldLabels[form[pathname].label] = pathname;
+                    fieldLabels[ind] = pathname;
 
                 });
 
