@@ -185,7 +185,7 @@
     });
 
     // bind export button
-    $('[data-linz-control="export"]').click(function () {
+    $('[data-linz-control="export"][data-target="#exportModal"]').click(function () {
 
         var queryObj = $(this),
             url = queryObj.attr('href');

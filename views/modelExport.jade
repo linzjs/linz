@@ -1,10 +1,10 @@
 extends modal
 
 block content
-	form.exportForm(role='form', action=linz.api.getAdminLink(model, model.grid.export.action), method='post', target='_blank')
+	form.exportForm(role='form', action=linz.api.getAdminLink(model, modelExport.action), method='post', target='_blank')
 		div.modal-header
 			button.close(type='button', data-dismiss='modal' aria-hidden='true') &times;
-			h4#myModalLabel.modal-title!= model.grid.export.label
+			h4#myModalLabel.modal-title!= modelExport.label
 		div.modal-body
 			div.modal-footer.actions
 				button.btn.btn-default(type='button', class='pull-left', data-linz-control="checked-all") Select <b>all</b>
@@ -30,7 +30,7 @@ block content
 
 		(function () {
 
-			var fields = !{JSON.stringify(model.grid.export.fields)},
+			var fields = !{JSON.stringify(modelExport.fields)},
 				exportCookieName = !{JSON.stringify(model.modelName)} + '_' + 'selectedExportFields',
 				savedFields = mergeFields(getCookie(exportCookieName), fields),
 				bSelectAll = true;
