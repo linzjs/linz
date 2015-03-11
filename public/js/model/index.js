@@ -185,12 +185,55 @@
     });
 
     // bind export button
-    $('[data-linz-control="export"]').click(function () {
+    $('[data-linz-control="export"]').click(function (event) {
+
+        // stop the href navigation
+        event.preventDefault();
 
         var queryObj = $(this),
-            url = queryObj.attr('href');
+            url = queryObj.attr('href'),
+            useModal = (queryObj.attr('data-target') === "#exportModal");
 
-        $('#exportModal').modal().find('.modal-dialog').load(url, function () {});
+        if (useModal) {
+            $('#exportModal').modal().find('.modal-dialog').load(url, function () {});
+            return false;
+        }
+
+        // retrieve the ids
+        var selectedIds = $('input[data-linz-control="checked-record"]:checked').map(function () {
+            return $(this).val();
+        }).get();
+
+        // construct the form
+        var form = document.createElement('form');
+        form.method = 'post';
+        form.action = url;
+
+        var inputFilters = document.createElement('input');
+        inputFilters.type = 'hidden';
+        inputFilters.name = 'filters';
+        inputFilters.value = $('#modelQuery').html();
+
+        var inputSelectedIds = document.createElement('input')
+        inputSelectedIds.type = 'hidden';
+        inputSelectedIds.name = 'selectedIds';
+        inputSelectedIds.value = selectedIds.join(',');
+
+        var inputModelName = document.createElement('input');
+        inputModelName.type = 'hidden';
+        inputModelName.name = 'modelName';
+        inputModelName.value = $('[data-linz-model]').attr('data-linz-model');
+
+        // append to the form
+        form.appendChild(inputFilters);
+        form.appendChild(inputSelectedIds);
+        form.appendChild(inputModelName);
+
+        // append form to body
+        document.body.appendChild(form);
+
+        // submit the form
+        form.submit();
 
         return false;
 
@@ -207,10 +250,13 @@
         });
 
         // add selected IDs to hidden field
-        $(_this).find('[data-export="ids"]').val(selectedIDs);
+        $(_this).find('[data-linz-export="ids"]').val(selectedIDs);
 
         // add model form post data for filtering purposes
-        $(_this).find('[data-export="modelQuery"]').val($('#modelQuery').html());
+        $(_this).find('[data-linz-export="filters"]').val($('#modelQuery').html());
+
+        // add the model name
+        $(_this).find('[data-linz-export="model"]').val($('[data-linz-model]').attr('data-linz-model'));
 
     });
 
