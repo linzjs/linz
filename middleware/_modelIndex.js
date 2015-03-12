@@ -130,10 +130,6 @@ module.exports = function  (req, res, next) {
                 // count the docs
                 function (cb) {
 
-                    if (!Object.keys(filters).length) {
-                        return cb(null);
-                    }
-
                     req.linz.model.count(filters, function (err, docs) {
 
                         if (!err) {
