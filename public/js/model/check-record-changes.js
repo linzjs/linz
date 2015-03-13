@@ -146,7 +146,7 @@ if (!linz) {
             formField.parent().removeClass('has-conflict');
             formField.val($(this).attr('data-conflict-value'));
 
-            enableSubmitBtn(form, formValidator);
+            enableSubmitBtn(form, formField, formValidator);
 
         });
 
@@ -226,7 +226,7 @@ if (!linz) {
             formField.parent().removeClass('has-conflict');
             formField.val($(this).attr('data-conflict-value'));
 
-            enableSubmitBtn(form, formValidator);
+            enableSubmitBtn(form, formField, formValidator);
 
         });
 
@@ -294,7 +294,7 @@ if (!linz) {
 
             updateMultiSelectOptions(formField,$(this).attr('data-conflict-value').split(','));
 
-            enableSubmitBtn(form, formValidator);
+            enableSubmitBtn(form, formField, formValidator);
 
         });
 
@@ -363,7 +363,7 @@ if (!linz) {
 
             checkSelectedInputs(formField, $(this).attr('data-conflict-value').split(','));
 
-            enableSubmitBtn(form, formValidator);
+            enableSubmitBtn(form, formField, formValidator);
 
         });
 
@@ -469,7 +469,7 @@ if (!linz) {
 
             checkSelectedInputs($('input:checkbox[name="' + fieldName + '"]'), $(this).attr('data-conflict-value').split(','));
 
-            enableSubmitBtn(form, formValidator);
+            enableSubmitBtn(form, formField, formValidator);
 
         });
 
@@ -543,7 +543,7 @@ if (!linz) {
             // redraw document
             formField.parents('.col-sm-10').find('[data-document-field-for="' + fieldName + '"]').data('documentarray').redrawDocuments(fieldName);
 
-            enableSubmitBtn(form, formValidator);
+            enableSubmitBtn(form, formField, formValidator);
 
         });
 
@@ -600,7 +600,7 @@ if (!linz) {
 
             formField.val($(this).attr('data-conflict-value'));
 
-            enableSubmitBtn(form, formValidator);
+            enableSubmitBtn(form, formField, formValidator);
 
         });
 
@@ -782,7 +782,10 @@ if (!linz) {
         return html;
     }
 
-    function enableSubmitBtn (form, formValidator) {
+    function enableSubmitBtn (form, formField, formValidator) {
+
+        // revalidate the field to remove any error message display prior to the data conflict
+        formValidator.updateStatus(formField, 'NOT_VALIDATED').validateField(formField);
 
         if ($('.has-conflict').length === 0 && formValidator.isValid()) {
 
