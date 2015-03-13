@@ -46,7 +46,10 @@
 			if model.grid.export.length === 1
 				for exp in model.grid.export
 					if exp.enabled
-						a.btn.btn-default(href='' + linz.api.getAdminLink(model, exp.action) data-linz-control="export" data-target="#exportModal")= exp.label
+						- attributes = {}
+						if exp.action === 'export'
+							- attributes['data-target'] = '#exportModal'
+						a.btn.btn-default(href='' + linz.api.getAdminLink(model, exp.action) data-linz-control="export")&attributes(attributes)= exp.label
 			else
 				.dropdown
 					button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
