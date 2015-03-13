@@ -313,11 +313,6 @@ module.exports = {
 
         var Model = linz.get('models')[req.body.modelName];
 
-        // check if there is custom export function for model
-        if (Model.export) {
-            return Model.export(req, res, next);
-        }
-
         // since a custom export function is not defined for model, use local export function
         var asyncFn = [],
             helpers = modelExportHelpers(req, res),
