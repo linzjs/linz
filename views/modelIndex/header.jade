@@ -41,6 +41,25 @@
 									- groupAction.attributes['data-target'] = '#groupActionModal'
 								a(role='menuitem' tabindex='-1' href=linz.api.getAdminLink(model, groupAction.action))&attributes(groupAction.attributes)= groupAction.label
 
-	if model.grid.export && model.grid.export.enable
+	if model.grid.export && model.grid.export.length
 		.export
-			a.btn.btn-default(href='' + linz.api.getAdminLink(model, model.grid.export.action) data-linz-control="export" data-target="#exportModal")= model.grid.export.label
+			if model.grid.export.length === 1
+				for exp in model.grid.export
+					if exp.enabled
+						- attributes = {}
+						if exp.action === 'export'
+							- attributes['data-target'] = '#exportModal'
+						a.btn.btn-default(href='' + linz.api.getAdminLink(model, exp.action) data-linz-control="export")&attributes(attributes)= exp.label
+			else
+				.dropdown
+					button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+						| Export&nbsp;
+						span.caret
+					ul.dropdown-menu(role='menu')
+						for exp in model.grid.export
+							if exp.enabled
+								- attributes = {}
+								if exp.action === 'export'
+									- attributes['data-target'] = '#exportModal'
+								li(role='presentation')
+									a(role='menuitem' tabindex='-1' href='' + linz.api.getAdminLink(model, exp.action) data-linz-control='export')&attributes(attributes)= exp.label

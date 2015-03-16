@@ -109,12 +109,12 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
         getFilters: function getFilters (cb) {
 
-            if (!req.body.modelQuery.length) {
+            if (!req.body.filters.length) {
                 return cb(null, {});
             }
 
             var Model = linz.get('models')[req.body.modelName],
-                form = JSON.parse(req.body.modelQuery);
+                form = JSON.parse(req.body.filters);
 
             // check if there are any filters in the form post
             if (!form.selectedFilters) {
@@ -225,6 +225,31 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
 }
 
+// this will retrieve the export object, using Linz's default export handler amongst custom export handlers
+// this is based on the knowledge that only Linz's default export handler can have an `action` of `export`
+// `exports` should be model.grid.export
+var getExport = function (exports) {
+
+    var exp = undefined;
+
+    // retrieve the export object
+    exports.forEach(function (_export) {
+
+        // Linz's default export function is called export
+        if (_export.action && _export.action === 'export') {
+            exp = _export;
+        }
+
+    });
+
+    // if the export object could not be found, throw an error
+    if (!exp) {
+        throw new Error('The export was using Linz default export method, yet the model\'s grid.export object could not be found.');
+    }
+
+    return exp;
+
+}
 
 module.exports = {
 
@@ -238,17 +263,22 @@ module.exports = {
                 return next(err);
             }
 
+            // attach our grid object to the model
             req.linz.model.grid = grid;
-            req.linz.model.grid.export.fields = {};
 
+            // retrieve the export object
+            req.linz.export = getExport(grid.export);
+            req.linz.export.fields = {};
+
+            // retrieve the form to provide a list of fields to choose from
             req.linz.model.getForm( function (formErr, form){
 
                 if (formErr) {
                     return next(formErr);
                 }
 
-                var excludedFieldNames = grid.export.exclusions.concat(',__v').split(','),
-                fieldLabels = {};
+                var excludedFieldNames = req.linz.export.exclusions.concat(',__v').split(','),
+                    fieldLabels = {};
 
                 // get a list of field names
                 req.linz.model.schema.eachPath(function (pathname, schemaType) {
@@ -268,7 +298,7 @@ module.exports = {
 
                 // iterate through sorted label and re-constructs in the order of labels
                 sortedFieldsByLabel.forEach(function (label) {
-                    req.linz.model.grid.export.fields[fieldLabels[label]] = label;
+                    req.linz.export.fields[fieldLabels[label]] = label;
                 });
 
                 return next(null);
@@ -283,11 +313,6 @@ module.exports = {
 
         var Model = linz.get('models')[req.body.modelName];
 
-        // check if there is custom export function for model
-        if (Model.export) {
-            return Model.export(req, res, next);
-        }
-
         // since a custom export function is not defined for model, use local export function
         var asyncFn = [],
             helpers = modelExportHelpers(req, res),
@@ -298,7 +323,18 @@ module.exports = {
         asyncFn.push(helpers.getForm);
         asyncFn.push(helpers.getGrid);
 
-        async.waterfall(asyncFn, function (err, filters, form, grid) {
+        // get the actual export object
+        asyncFn.push(function (filters, form, grid, callback) {
+
+            // retrieve the export
+            var _export = getExport(grid.export);
+            _export.fields = {};
+
+            return callback(null, filters, form, grid, _export);
+
+        });
+
+        async.waterfall(asyncFn, function (err, filters, form, grid, exportObj) {
 
             if (err) {
                 return next(err);
@@ -325,7 +361,7 @@ module.exports = {
             });
 
             // check if _id is excluded
-            if (grid.export.exclusions.indexOf('_id') >= 0) {
+            if (exportObj.exclusions.indexOf('_id') >= 0) {
                 filterFieldNames.push('-_id');
             }
 

@@ -1,7 +1,10 @@
 include mixins/navigation
 
 doctype html
-html(lang="en")
+- attributes = []
+if model && model.modelName
+	- attributes['data-linz-model'] = model.modelName
+html(lang="en")&attributes(attributes)
 	head
 		title= pageTitle
 		meta(name='viewport', content='width=device-width, initial-scale=1.0')

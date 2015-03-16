@@ -1,10 +1,10 @@
 extends modal
 
 block content
-	form.exportForm(role='form', action=linz.api.getAdminLink(model, model.grid.export.action), method='post', target='_blank')
+	form.exportForm(role='form', action=linz.api.getAdminLink(model, modelExport.action), method='post', target='_blank')
 		div.modal-header
 			button.close(type='button', data-dismiss='modal' aria-hidden='true') &times;
-			h4#myModalLabel.modal-title!= model.grid.export.label
+			h4#myModalLabel.modal-title!= modelExport.label
 		div.modal-body
 			div.modal-footer.actions
 				button.btn.btn-default(type='button', class='pull-left', data-linz-control="checked-all") Select <b>all</b>
@@ -12,10 +12,10 @@ block content
 				button.btn.btn-primary(type='submit', data-linz-control='export-save') Export
 				button.btn.btn-default(type='button', data-dismiss='modal') Cancel
 
-			input(type='hidden', name='modelName', value=model.modelName)
-			input(type='hidden', name='selectedIds', data-export='ids')
-			input(type='hidden', name='selectedFields', data-export='fields')
-			input(type='hidden', name='modelQuery', data-export='modelQuery')
+			input(type='hidden', name='modelName', data-linz-export='model')
+			input(type='hidden', name='selectedIds', data-linz-export='ids')
+			input(type='hidden', name='selectedFields', data-linz-export='fields')
+			input(type='hidden', name='filters', data-linz-export='filters')
 
 			p Drag and drop to re-order the fields.
 
@@ -30,7 +30,7 @@ block content
 
 		(function () {
 
-			var fields = !{JSON.stringify(model.grid.export.fields)},
+			var fields = !{JSON.stringify(modelExport.fields)},
 				exportCookieName = !{JSON.stringify(model.modelName)} + '_' + 'selectedExportFields',
 				savedFields = mergeFields(getCookie(exportCookieName), fields),
 				bSelectAll = true;
@@ -81,7 +81,7 @@ block content
 
 			$('.exportForm').submit(function (event){
 
-				$('[data-export="fields"]').val(getSelectedExportFields().join());
+				$('[data-linz-export="fields"]').val(getSelectedExportFields().join());
 
 			});
 
