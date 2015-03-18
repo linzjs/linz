@@ -6,4 +6,6 @@ test-versions:
 	@./node_modules/.bin/mocha test/versions.js
 test-api:
 	@./node_modules/.bin/mocha test/api.js
+test-concurrency-control:
+	./node_modules/.bin/mocha test/concurrency-control.js
 .PHONY: test

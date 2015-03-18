@@ -1560,7 +1560,7 @@ describe('formtools', function () {
                         it('should render text input field', function (done) {
                             var fieldName = 'code';
                             linz.formtools.filters.number.renderer(fieldName,function (err, result) {
-                                result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" required>');
+                                result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" required pattern="[0-9]*" placeholder="Only digits are allowed.">');
                                 done();
                             });
 

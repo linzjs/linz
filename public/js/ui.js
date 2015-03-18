@@ -60,7 +60,6 @@ if (!linz) {
             {
                 test: Modernizr.inputtypes.date,
                 nope: [
-                    path + '/public/js/moment.min.js',
                     path + '/public/js/bootstrap-datetimepicker.min.js',
                     path + '/public/css/bootstrap-datetimepicker.min.css'
                 ],

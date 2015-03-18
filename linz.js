@@ -38,6 +38,7 @@ var linz = module.exports = exports = new Linz;
 linz.hbs = require('./lib/hbs-helpers');
 linz.formtools = require('./lib/formtools');
 linz.versions = require('./lib/versions'),
+linz.concurrencyControl = require('./lib/concurrency-control'),
 linz.middleware = require('./middleware-public');
 linz.api = require('./lib/api');
 linz.utils = require('./lib/utils');
