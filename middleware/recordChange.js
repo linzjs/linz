@@ -208,7 +208,8 @@ module.exports = function (req, res, next) {
 
 		});
 
-		if (!diffResult) {
+		if (!diffResult || (diffResult.length === 1 && diffResult[0].path && diffResult[0].path[0] === 'modifiedBy')) {
+			// exit if there is not diff result or if diff result only contains the modifiedBy field
 			return res.status(200).json(resData);
 		}
 

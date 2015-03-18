@@ -790,8 +790,14 @@ if (!linz) {
         });
 
         if (bHasValidator) {
+
             // revalidate the field to remove any error message displayed prior to the data conflict
             formValidator.updateStatus(formField, 'NOT_VALIDATED').validateField(formField);
+
+            // check if the submit button is enable by the validation above, if yes disable it first, so that it can be enabled after merging conflicts are completed
+            if ($(form).find('button[type="submit"]:disabled').length === 0) {
+                $(form).find('button[type="submit"]').attr('disabled','disabled');
+            }
         }
 
         if ($('.has-conflict').length === 0 && formValidator.isValid()) {
