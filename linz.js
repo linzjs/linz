@@ -625,7 +625,7 @@ Linz.prototype.buildNavigation = function (cb) {
                     }
 
                     models.children.push({
-                        name: linzModels[model].formtools.model.plural,
+                        name: linzModels[model].linz.formtools.model.plural,
                         href: _this.get('admin path') + '/model/' + model + '/list'
                     });
 

@@ -96,7 +96,7 @@ module.exports = function (req, res, next) {
     var getFieldNames = function (record) {
 
         var recordWithFieldNames = {},
-            form = Model.formtools.form;
+            form = Model.linz.formtools.form;
 
         Object.keys(record).forEach(function (fieldName) {
             if (!form[fieldName]) {

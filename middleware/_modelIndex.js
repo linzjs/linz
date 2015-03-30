@@ -1,5 +1,6 @@
 var async = require('async'),
-    formtoolsAPI = require('../lib/api/formtools');
+    formtoolsAPI = require('../lib/api/formtools'),
+    clone = require('clone');
 
 module.exports = function  (req, res, next) {
 
@@ -23,36 +24,23 @@ module.exports = function  (req, res, next) {
                 pageIndex = session.grid.formData.page || 1;
 
             // set the model on linz
-            req.linz.model = req.linz.get('models')[req.params.model];
+            req.linz.model = linz.api.model.get(req.params.model);
+
+            // cloned a copy of grid settings and append it to the request model
+            req.linz.model.grid = clone(req.linz.model.linz.formtools.grid);
+
+            // reset the pageSize value
+            pageSize = session.grid.formData.pageSize || req.linz.model.grid.paging.size;
+
+            // holder for the sortingBy value
+            req.linz.model.grid.sortingBy = {};
 
             async.series([
 
-                // grab the grid object and append it to the model, i.e. req.linz.model.grid.columns
-                function (cb) {
-
-                    formtoolsAPI.grid.getSettings(req.params.model, function (err, settings) {
-
-                        if (err) {
-                            return cb(err);
-                        }
-
-                        req.linz.model.grid = settings;
-
-                        // reset the pageSize value
-                        pageSize = session.grid.formData.pageSize || req.linz.model.grid.paging.size;
-
-                        // holder for the sortingBy value
-                        req.linz.model.grid.sortingBy = {};
-
-                        return cb(err);
-
-                    });
-
-                },
                 // check if there are toolbar items required
                 function (cb) {
 
-                    formtoolsAPI.grid.getToolbarItems(req, res, req.params.model, function (err, result) {
+                    formtoolsAPI.grid.renderToolbarItems(req, res, req.params.model, function (err, result) {
 
                         if (err) {
                             return cb(err);
@@ -69,7 +57,7 @@ module.exports = function  (req, res, next) {
                 // render the filters
                 function (cb) {
 
-                    formtoolsAPI.grid.getFilters(req.params.model, function (err, result) {
+                    formtoolsAPI.grid.renderFilters(req.params.model, function (err, result) {
 
                         if (err) {
                             return cb(err);
@@ -113,7 +101,7 @@ module.exports = function  (req, res, next) {
                         return cb(null);
                     }
 
-                    formtoolsAPI.grid.getSearchFilters(session.grid.formData.selectedFilters.split(','), session.grid.formData, req.params.model, function (err, result) {
+                    formtoolsAPI.grid.renderSearchFilters(session.grid.formData.selectedFilters.split(','), session.grid.formData, req.params.model, function (err, result) {
 
                         if (err) {
                             return cb(err);

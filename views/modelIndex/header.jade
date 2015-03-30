@@ -1,6 +1,6 @@
 .model-title
 	h1
-		a(href='' + linz.api.admin.getAdminLink(model))= model.formtools.model.plural
+		a(href='' + linz.api.admin.getAdminLink(model))= model.linz.formtools.model.plural
 .model-actions
 	if model.grid.canCreate
 		.actions
