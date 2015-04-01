@@ -19,7 +19,7 @@ module.exports = function (req, res, next) {
 				yourChange: {},
 				theirChange: {}
 			},
-			form = model.form;
+			form = model.formtools.form;
 
 		model.schema.eachPath(function (fieldName, schemaType) {
 
