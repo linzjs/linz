@@ -21,42 +21,42 @@ describe('Linz has an api', function () {
 	describe('has a getAdminLink method', function () {
 
         it('it should default to the admin path', function () {
-            expect(linz.api.admin.getAdminLink()).to.equal('/admin');
+            expect(linz.api.url.getAdminLink()).to.equal('/admin');
         });
 
         describe("on models", function () {
 
             it('it should allow a list action', function () {
-                expect(linz.api.admin.getAdminLink(mongoose.model('user'))).to.equal('/admin/model/user/list');
-                expect(linz.api.admin.getAdminLink(mongoose.model('user'), 'list')).to.equal('/admin/model/user/list');
+                expect(linz.api.url.getAdminLink(mongoose.model('user'))).to.equal('/admin/model/user/list');
+                expect(linz.api.url.getAdminLink(mongoose.model('user'), 'list')).to.equal('/admin/model/user/list');
             });
 
             it('it should allow a create action', function () {
-                expect(linz.api.admin.getAdminLink(mongoose.model('user'), 'create')).to.equal('/admin/model/user/create');
+                expect(linz.api.url.getAdminLink(mongoose.model('user'), 'create')).to.equal('/admin/model/user/create');
             });
 
             it('it should return the model listing url', function () {
-                expect(linz.api.admin.getAdminLink(undefined, 'list')).to.equal('/admin/models/list');
+                expect(linz.api.url.getAdminLink(undefined, 'list')).to.equal('/admin/models/list');
             });
         });
 
         describe("on records", function () {
 
             it('it should allow an overview action', function () {
-                expect(linz.api.admin.getAdminLink(mongoose.model('user'), undefined, 'id')).to.equal('/admin/model/user/id/overview');
-                expect(linz.api.admin.getAdminLink(mongoose.model('user'), 'overview', 'id')).to.equal('/admin/model/user/id/overview');
+                expect(linz.api.url.getAdminLink(mongoose.model('user'), undefined, 'id')).to.equal('/admin/model/user/id/overview');
+                expect(linz.api.url.getAdminLink(mongoose.model('user'), 'overview', 'id')).to.equal('/admin/model/user/id/overview');
             });
 
             it('it should allow an edit action', function () {
-                expect(linz.api.admin.getAdminLink(mongoose.model('user'), 'edit', 'id')).to.equal('/admin/model/user/id/edit');
+                expect(linz.api.url.getAdminLink(mongoose.model('user'), 'edit', 'id')).to.equal('/admin/model/user/id/edit');
             });
 
             it('it should allow a save action', function () {
-                expect(linz.api.admin.getAdminLink(mongoose.model('user'), 'save', 'id')).to.equal('/admin/model/user/id/save');
+                expect(linz.api.url.getAdminLink(mongoose.model('user'), 'save', 'id')).to.equal('/admin/model/user/id/save');
             });
 
             it('it should allow a delete action', function () {
-                expect(linz.api.admin.getAdminLink(mongoose.model('user'), 'delete', 'id')).to.equal('/admin/model/user/id/delete');
+                expect(linz.api.url.getAdminLink(mongoose.model('user'), 'delete', 'id')).to.equal('/admin/model/user/id/delete');
             });
 
         });
@@ -70,24 +70,24 @@ describe('Linz has an api', function () {
             };
 
             it('it should allow an overview action', function () {
-                expect(linz.api.admin.getAdminLink(config, undefined, 'id')).to.equal('/admin/config/id/overview');
-                expect(linz.api.admin.getAdminLink(config, 'overview', 'id')).to.equal('/admin/config/id/overview');
+                expect(linz.api.url.getAdminLink(config, undefined, 'id')).to.equal('/admin/config/id/overview');
+                expect(linz.api.url.getAdminLink(config, 'overview', 'id')).to.equal('/admin/config/id/overview');
             });
 
             it('it should allow an edit action', function () {
-                expect(linz.api.admin.getAdminLink(config, 'edit', 'id')).to.equal('/admin/config/id/edit');
+                expect(linz.api.url.getAdminLink(config, 'edit', 'id')).to.equal('/admin/config/id/edit');
             });
 
             it('it should allow a save action', function () {
-                expect(linz.api.admin.getAdminLink(config, 'save', 'id')).to.equal('/admin/config/id/save');
+                expect(linz.api.url.getAdminLink(config, 'save', 'id')).to.equal('/admin/config/id/save');
             });
 
             it('it should allow a delete action', function () {
-                expect(linz.api.admin.getAdminLink(config, 'delete', 'id')).to.equal('/admin/config/id/delete');
+                expect(linz.api.url.getAdminLink(config, 'delete', 'id')).to.equal('/admin/config/id/delete');
             });
 
             it('it should return the config listing url', function () {
-                expect(linz.api.admin.getAdminLink(config, 'list')).to.equal('/admin/configs/list');
+                expect(linz.api.url.getAdminLink(config, 'list')).to.equal('/admin/configs/list');
             });
 
         });
@@ -98,15 +98,15 @@ describe('Linz has an api', function () {
     describe('has a getLink method', function () {
 
         it('it should default to the admin path', function () {
-            expect(linz.api.admin.getLink()).to.equal('/admin');
+            expect(linz.api.url.getLink()).to.equal('/admin');
         });
 
         it('it should generate url with one query parameter', function () {
-            expect(linz.api.admin.getLink(['one'])).to.equal('/admin/one');
+            expect(linz.api.url.getLink(['one'])).to.equal('/admin/one');
         });
 
         it('it should generate url with multiple query parameters', function () {
-            expect(linz.api.admin.getLink(['one','two','three'])).to.equal('/admin/one/two/three');
+            expect(linz.api.url.getLink(['one','two','three'])).to.equal('/admin/one/two/three');
         });
 
     });

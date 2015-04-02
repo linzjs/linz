@@ -74,7 +74,7 @@ var route = function (req, res, next) {
                 return next(err);
             }
 
-            return res.redirect(linz.api.admin.getAdminLink(req.linz.model, 'overview', doc._id));
+            return res.redirect(linz.api.url.getAdminLink(req.linz.model, 'overview', doc._id));
 
         });
 
