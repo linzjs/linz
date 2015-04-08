@@ -112,7 +112,7 @@ var route = function (req, res, next) {
             return next(err);
         }
 
-        return res.redirect(linz.api.getAdminLink(req.linz.config, 'overview', req.params.config));
+        return res.redirect(linz.api.url.getAdminLink(req.linz.config, 'overview', req.params.config));
 
     });
 

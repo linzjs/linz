@@ -368,7 +368,7 @@ module.exports = {
             filterFieldNames = filterFieldNames.concat(fields);
 
             // serve .csv file
-            res.setHeader('Content-disposition', 'attachment; filename=' + Model.formtools.model.plural + '-' + moment(Date.now()).format('l').replace(/\//g, '.', 'g') + '.csv');
+            res.setHeader('Content-disposition', 'attachment; filename=' + Model.linz.formtools.model.plural + '-' + moment(Date.now()).format('l').replace(/\//g, '.', 'g') + '.csv');
             res.writeHead(200, { 'Content-Type': 'text/csv' });
 
             // pipe data to response stream

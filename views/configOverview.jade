@@ -8,19 +8,19 @@ block header
 			.actions
 				if config.overview.canEdit
 					span.edit
-						a.btn.btn-primary(href='' + linz.api.getAdminLink(config, 'edit', record._id))
+						a.btn.btn-primary(href='' + linz.api.url.getAdminLink(config, 'edit', record._id))
 							i.fa.fa-edit
 							| Edit
 				if config.overview.viewAll
 					span.back
-						a.btn.btn-default(href='' + linz.api.getAdminLink(config, 'list'))
+						a.btn.btn-default(href='' + linz.api.url.getAdminLink(config, 'list'))
 							i.fa.fa-chevron-left
 							| View all Configs
 		if config.overview.actions.length
 			.custom-actions
 				if config.overview.actions.length === 1
 					for action in config.overview.actions
-						a.btn.btn-default(href='' + linz.api.getAdminLink(config, action.action, record._id))= action.label
+						a.btn.btn-default(href='' + linz.api.url.getAdminLink(config, action.action, record._id))= action.label
 				else
 					.dropdown
 						button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
@@ -29,7 +29,7 @@ block header
 						ul.dropdown-menu(role='menu')
 							for action in config.overview.actions
 								li(role='presentation')
-									a(role='menuitem', tabindex='-1', href='' + linz.api.getAdminLink(config, action.action))= action.label
+									a(role='menuitem', tabindex='-1', href='' + linz.api.url.getAdminLink(config, action.action))= action.label
 
 block content
 	.container.linz-container.overview.config
@@ -42,4 +42,3 @@ block content
 						div!= overviewBody
 
 block script
-	script(src='' + linz.get('admin path') + '/public/js/model/overview.js')

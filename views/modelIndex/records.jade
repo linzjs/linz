@@ -26,7 +26,7 @@ if records.length > 0
 												a.btn.btn-default(href='', data-linz-control="edit", data-linz-disabled='true', data-linz-disabled-message=record.edit.message)
 													span(class="glyphicon glyphicon-pencil")
 											else
-												a.btn.btn-default(href=linz.api.getAdminLink(model, 'edit', record._id), data-linz-control="edit")
+												a.btn.btn-default(href=linz.api.url.getAdminLink(model, 'edit', record._id), data-linz-control="edit")
 													span(class="glyphicon glyphicon-pencil")
 
 										if model.grid.canDelete
@@ -35,7 +35,7 @@ if records.length > 0
 												a.btn.btn-default(href='', data-linz-control="delete", data-linz-disabled='true', data-linz-disabled-message=record.delete.message)
 													span(class="glyphicon glyphicon-trash")
 											else
-												a.btn.btn-default(href=linz.api.getAdminLink(model, 'delete', record._id), data-linz-control="delete")
+												a.btn.btn-default(href=linz.api.url.getAdminLink(model, 'delete', record._id), data-linz-control="delete")
 													span(class="glyphicon glyphicon-trash")
 
 										if model.grid.recordActions.length
@@ -53,7 +53,7 @@ if records.length > 0
 																if (record.recordActions && record.recordActions[action.label] && record.recordActions[action.label].disabled)
 																	a(href='', data-linz-disabled='true', data-linz-disabled-message=record.recordActions[action.label].message)= action.label
 																else
-																	a(href=linz.api.getAdminLink(model, action.action, record._id))= action.label
+																	a(href=linz.api.url.getAdminLink(model, action.action, record._id))= action.label
 
 							each val in Object.keys(model.grid.columns)
 								td!= record['rendered'][val]

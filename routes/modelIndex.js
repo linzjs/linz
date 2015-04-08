@@ -39,8 +39,8 @@ var route = function (req, res) {
         sort: req.linz.model.grid.sortingBy,
         sortDirection: sortDirection,
         label: {
-            singular: inflection.humanize(req.linz.model.formtools.model.label, true),
-            plural: req.linz.model.formtools.model.plural
+            singular: inflection.humanize(req.linz.model.linz.formtools.model.label, true),
+            plural: req.linz.model.linz.formtools.model.plural
         },
         modelQuery: JSON.stringify(req.linz.model.formData)
 	});

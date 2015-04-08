@@ -13,11 +13,11 @@ var route = function (req, res, next) {
 		res.render(req.linz.views + '/modelCreate.jade', {
 			model: req.linz.model,
 			form: editForm.render(),
-            actionUrl: linz.api.getAdminLink(req.linz.model, 'create'),
-            cancelUrl: linz.api.getAdminLink(req.linz.model),
+            actionUrl: linz.api.url.getAdminLink(req.linz.model, 'create'),
+            cancelUrl: linz.api.url.getAdminLink(req.linz.model),
             label: {
-                singular: inflection.humanize(req.linz.model.formtools.model.label, true),
-                plural: req.linz.model.formtools.model.plural
+                singular: inflection.humanize(req.linz.model.linz.formtools.model.label, true),
+                plural: req.linz.model.linz.formtools.model.plural
             }
 		});
 

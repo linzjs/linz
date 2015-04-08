@@ -10,7 +10,7 @@ var route = function (req, res, next) {
         }
 
         if (!doc) {
-		  return res.redirect(linz.api.getAdminLink(req.linz.model));
+		  return res.redirect(linz.api.url.getAdminLink(req.linz.model));
         }
 
         doc.remove(function (removeErr) {
@@ -19,7 +19,7 @@ var route = function (req, res, next) {
                 return next(removeErr);
             }
 
-            return res.redirect(linz.api.getAdminLink(req.linz.model));
+            return res.redirect(linz.api.url.getAdminLink(req.linz.model));
 
         });
 

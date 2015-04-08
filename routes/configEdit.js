@@ -12,8 +12,8 @@ var route = function (req, res, next) {
 		res.render(linz.views + '/configEdit.jade', {
 			record: req.linz.record,
 			form: editForm.render(),
-            actionUrl: linz.api.getAdminLink(req.linz.config, 'save', req.linz.record._id),
-			cancelUrl: linz.api.getAdminLink(req.linz.config, 'list')
+            actionUrl: linz.api.url.getAdminLink(req.linz.config, 'save', req.linz.record._id),
+			cancelUrl: linz.api.url.getAdminLink(req.linz.config, 'list')
 		});
 
 	});

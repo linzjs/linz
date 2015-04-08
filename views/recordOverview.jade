@@ -9,12 +9,12 @@ block header
 			.actions
 				if model.overview.canEdit
 					span.edit
-						a.btn.btn-primary(href='' + linz.api.getAdminLink(model, 'edit', record._id), data-linz-control="edit", data-linz-disabled=((record.edit && record.edit.disabled) ? 'true' : false), data-linz-disabled-message=((record.edit && record.edit.disabled) ? record.edit.message : false))
+						a.btn.btn-primary(href='' + linz.api.url.getAdminLink(model, 'edit', record._id), data-linz-control="edit", data-linz-disabled=((record.edit && record.edit.disabled) ? 'true' : false), data-linz-disabled-message=((record.edit && record.edit.disabled) ? record.edit.message : false))
 							i.fa.fa-edit
 							| Edit
 				if model.overview.canDelete
 					span.delete
-						a.btn.btn-default(href='' + linz.api.getAdminLink(model, 'delete', record._id), data-linz-control="delete", data-linz-disabled=((record.delete && record.delete.disabled) ? 'true' : false), data-linz-disabled-message=((record.delete && record.delete.disabled) ? record.delete.message : false))
+						a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, 'delete', record._id), data-linz-control="delete", data-linz-disabled=((record.delete && record.delete.disabled) ? 'true' : false), data-linz-disabled-message=((record.delete && record.delete.disabled) ? record.delete.message : false))
 							i.fa.fa-trash-o
 							| Delete
 
@@ -22,7 +22,7 @@ block header
 			.custom-actions
 				if model.overview.actions.length === 1
 					for action in model.overview.actions
-						a.btn.btn-default(href='' + linz.api.getAdminLink(model, action.action, record._id))= action.label
+						a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, action.action, record._id))= action.label
 				else
 					.dropdown
 						button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
@@ -39,15 +39,15 @@ block header
 										if action.isDisabled && action.isDisabled === true
 											a(role='menuitem', tabindex='-1', href='', data-linz-disabled='true', data-linz-disabled-message=action.disabledMessage)= action.label
 										else
-											a(role='menuitem', tabindex='-1', href='' + linz.api.getAdminLink(model, action.action, record._id))= action.label
+											a(role='menuitem', tabindex='-1', href='' + linz.api.url.getAdminLink(model, action.action, record._id))= action.label
 
 		if (model.overview.viewAll)
 			.actions
 				if model.overview.viewAll
 					span.back
-						a.btn.btn-default(href='' + linz.api.getAdminLink(model))
+						a.btn.btn-default(href='' + linz.api.url.getAdminLink(model))
 							i.fa.fa-chevron-left
-							| View all #{model.formtools.model.plural}
+							| View all #{model.linz.formtools.model.plural}
 
 block content
 	.container.linz-container.overview.config
