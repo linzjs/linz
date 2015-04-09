@@ -15,7 +15,7 @@ module.exports = {
 
         }, function (err, result) {
 
-            req.linz.model = req.linz.get('models')[req.params.model];
+            req.linz.model = req.linz.api.model.get(req.params.model);
             req.linz.diffs = deep.diff(result.previous, result.latest);
             req.linz.history = {
                 previous: result.previous,

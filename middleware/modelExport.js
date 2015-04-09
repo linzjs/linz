@@ -27,7 +27,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
             return val;
         }
 
-        var Model = linz.get('models')[req.body.modelName];
+        var Model = linz.api.model.get(req.body.modelName);
 
         if (Model.schema.tree[fieldName].ref) {
             return val.title;
@@ -113,7 +113,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
                 return cb(null, {});
             }
 
-            var Model = linz.get('models')[req.body.modelName],
+            var Model = linz.api.model.get(req.body.modelName),
                 form = JSON.parse(req.body.filters);
 
             // check if there are any filters in the form post
@@ -204,7 +204,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
         getForm: function getForm(filters, cb) {
 
-            var Model = linz.get('models')[req.body.modelName];
+            var Model = linz.api.model.get(req.body.modelName);
 
             Model.getForm(function (err, form) {
                 return cb(err, filters, form)
@@ -214,7 +214,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
         getGrid: function getGrid (filters, form, cb) {
 
-            var Model = linz.get('models')[req.body.modelName];
+            var Model = linz.api.model.get(req.body.modelName);
             Model.getGrid( function (err, grid) {
                 return cb(err, filters, form, grid);
             });
@@ -255,7 +255,7 @@ module.exports = {
 
     get: function (req, res, next) {
 
-        req.linz.model = linz.get('models')[req.params.model];
+        req.linz.model = linz.api.model.get(req.params.model);
 
         req.linz.model.getGrid(function (err, grid) {
 
@@ -311,7 +311,7 @@ module.exports = {
 
     post: function (req, res, next) {
 
-        var Model = linz.get('models')[req.body.modelName];
+        var Model = linz.api.model.get(req.body.modelName);
 
         // since a custom export function is not defined for model, use local export function
         var asyncFn = [],

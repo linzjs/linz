@@ -10,7 +10,7 @@ module.exports = {
             return next(new Error('User id is required.'));
         }
 
-        var User = linz.get('models')[linz.get('user model')];
+        var User = linz.api.model.get(linz.get('user model'));
 
         User.findById(req.params.id, function (err, doc) {
 
@@ -52,7 +52,7 @@ module.exports = {
             return next(new Error('Unable to reset password. Password and confirm password must be the same.'));
         }
 
-        var User = linz.get('models')[linz.get('user model')];
+        var User = linz.api.model.get(linz.get('user model'));
 
         if (!User.updatePassword) {
             throw new Error('updatePassword() is not defined for user model.');

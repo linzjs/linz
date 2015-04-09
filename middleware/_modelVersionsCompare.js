@@ -1,6 +1,6 @@
 module.exports = function (req, res, next) {
 
-    var Model = req.linz.get('models')[req.params.model],
+    var Model = req.linz.api.model.get(req.params.model),
         fieldExclusions = {
             '_id': 0,
             '__v': 0,

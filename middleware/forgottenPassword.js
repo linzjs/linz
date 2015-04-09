@@ -8,7 +8,7 @@ module.exports = {
             return next(new Error('An email address is required in order to reset your password.'));
         }
 
-        var User = linz.get('models')[linz.get('user model')];
+        var User = linz.api.model.get(linz.get('user model'));
 
         if (!User.sendPasswordResetEmail) {
             throw new Error('sendPasswordResetEmail() is not defined for user model.');

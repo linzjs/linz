@@ -5,7 +5,7 @@ module.exports = function () {
 
 	return function (req, res, next) {
 
-		req.linz.model = req.linz.get('models')[req.params.model];
+		req.linz.model = req.linz.api.model.get(req.params.model);
 
         async.series([
 

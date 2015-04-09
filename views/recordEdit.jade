@@ -35,7 +35,8 @@ block script
 	script(src='' + linz.get('admin path') + '/public/js/deep-diff-0.2.0.min.js')
 	script(src='' + linz.get('admin path') + '/public/js/json2.js')
 	script(src='' + linz.get('admin path') + '/public/js/model/edit.js')
-	script(src='' + linz.get('admin path') + '/public/js/model/check-record-changes.js')
+	if model.concurrencyControl
+		script(src='' + linz.get('admin path') + '/public/js/model/check-record-changes.js')
 	mixin conflictDropdown()
 	mixin conflictDocumentArrayDropdown()
 	

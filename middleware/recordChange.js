@@ -5,7 +5,7 @@ var linz = require('../'),
 
 module.exports = function (req, res, next) {
 
-	var Model = linz.get('models')[req.params.model],
+	var Model = linz.api.model.get(req.params.model),
 		ccSettings = Model.concurrencyControl,
 		formData = req.body,
 		resData = {
@@ -19,7 +19,7 @@ module.exports = function (req, res, next) {
 				yourChange: {},
 				theirChange: {}
 			},
-			form = model.formtools.form;
+			form = model.linz.formtools.form;
 
 		model.schema.eachPath(function (fieldName, schemaType) {
 
