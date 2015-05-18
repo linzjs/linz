@@ -37,8 +37,8 @@ var linz = module.exports = exports = new Linz;
  */
 linz.hbs = require('./lib/hbs-helpers');
 linz.formtools = require('./lib/formtools');
-linz.versions = require('./lib/versions'),
-linz.concurrencyControl = require('./lib/concurrency-control'),
+linz.versions = require('./lib/versions');
+linz.concurrencyControl = require('./lib/concurrency-control');
 linz.middleware = require('./middleware-public');
 linz.api = require('./lib/api');
 linz.utils = require('./lib/utils');
@@ -454,13 +454,19 @@ Linz.prototype.bootstrapExpress = function (cb) {
 
 	// setup body-parser, and cookie-parser
 	this.app.use(bodyParser());
-	this.app.use(cookieParser());
+
+	// need to hook in custom cookie parser if provided
+	if (typeof this.get('cookie parser') === 'function') {
+		this.app.use(this.get('cookie parser'));
+	} else {
+		this.app.use(cookieParser((this.get('cookie secret'))));
+	}
 
 	// need to hook session in here as it must be before passport.initialize
 	if (typeof this.get('session middleware') === 'function') {
 		this.app.use(this.get('session middleware'));
 	} else {
-		this.app.use(expressSession({ secret: 'linzcookiesecret' }));
+		this.app.use(expressSession({ secret: this.get('cookie secret') }));
 	}
 
 	// initialize passport
