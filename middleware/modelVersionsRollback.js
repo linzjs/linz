@@ -1,5 +1,6 @@
-var modelVersionsCompare = require('./modelVersionsCompare'),
-async = require('async');
+var linz = require('../'),
+    modelVersionsCompare = require('./modelVersionsCompare'),
+    async = require('async');
 
 module.exports = {
 

@@ -1,12 +1,15 @@
-linz = require('../');
-
 module.exports = function (err, req, res, next) {
 
-    console.error(err.stack);
+    // requires linz helpers to set req.linz.views
+    require('../lib/helpers').linz()(req, res, function () {
 
-    res.render(linz.views + '/error.jade', {
-        error: err,
-        returnUrl: req.headers.referer
+        console.error(err.stack);
+
+        res.render(req.linz.views + '/error.jade', {
+            error: err,
+            returnUrl: req.headers.referer
+        });
+
     });
 
 }

@@ -1,4 +1,5 @@
-var async = require('async'),
+var linz = require('../'),
+    async = require('async'),
     formtoolsAPI = require('../lib/api/formtools'),
     clone = require('clone');
 
