@@ -1,3 +1,5 @@
+var linz = require('../');
+
 module.exports = function (req, res, next) {
 
     var Model = req.linz.api.model.get(req.params.model),
