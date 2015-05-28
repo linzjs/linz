@@ -76,6 +76,9 @@ html(lang="en")&attributes(attributes)
 		script(src='' + linz.get('admin path') + '/public/js/ui.js')
 		script(src='' + linz.get('admin path') + '/public/js/template.js')
 		script(src='' + linz.get('admin path') + '/public/js/moment.min.js')
+		script(src='' + linz.get('admin path') + '/public/ckeditor/ckeditor.js')
+		script.
+			CKEDITOR.replaceClass = null; // Disable replacing by class
 		
 		if adminJSFile !== undefined
 			script(src='' + adminJSFile)
