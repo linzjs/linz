@@ -4,6 +4,10 @@ module.exports = function ensureAuthenticated () {
 
 	return function (req, res, next) {
 
+		if (!linz.get('requires login')) {
+			return next();
+		}
+
 		if (req.originalUrl === linz.get('admin path') + '/login' || req.isAuthenticated() && req.user.hasAdminAccess) {
 			return next();
 		}
