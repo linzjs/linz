@@ -51,6 +51,41 @@ if (!linz) {
             buttonContainer: '<div class="btn-group btn-group-multiselect" />'
         });
 
+        // assign wysiwyg editor
+        $('.ckeditor').each(function () {
+
+            var editorConfig = {
+                customConfig: $(this).attr('data-linz-wysiwyg-config') || '/admin/public/js/ckeditor-config-linz-default.js',
+                contentsCss: $(this).attr('data-linz-wysiwyg-css') ? $(this).attr('data-linz-wysiwyg-config').split(',') : '/admin/public/css/ckeditor-linz-default.css'
+            };
+
+            // check if there are any widgets to include
+            var widgets = $(this).attr('data-linz-wysiwyg-widget') ? $(this).attr('data-linz-wysiwyg-widget').split(',') : [];
+
+            if (widgets.length !== 0) {
+
+                var plugins = [];
+
+                widgets.forEach(function (widget) {
+
+                    // widget is provided in the format {name}:{path}
+                    var widgetProperties = widget.split(':');
+
+                    // loads external plugins
+                    CKEDITOR.plugins.addExternal(widgetProperties[0], widgetProperties[1], '');
+
+                    plugins.push(widgetProperties[0]);
+
+                });
+
+                editorConfig.extraPlugins = plugins.join(',');
+
+            }
+
+			CKEDITOR.replace( this, editorConfig);
+
+        });
+
     });
 
     function loadLibraries(path) {
