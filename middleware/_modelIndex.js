@@ -58,6 +58,11 @@ module.exports = function  (req, res, next) {
                 // render the filters
                 function (cb) {
 
+                    // check if we need to render the filters
+                    if (!Object.keys(req.linz.model.grid.filters).length) {
+                        return cb(null);
+                    }
+
                     formtoolsAPI.grid.renderFilters(req.params.model, function (err, result) {
 
                         if (err) {
