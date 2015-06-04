@@ -11,7 +11,6 @@ var	express = require('express'),
 	moment = require('moment'),
 	events = require('events'),
 	passport = require('passport'),
-	LocalStrategy = require('passport-local').Strategy,
 	bunyan = require('bunyan'),
     async = require('async'),
     lessMiddleware = require('less-middleware');
@@ -47,9 +46,9 @@ linz.utils = require('./lib/utils');
  * Define local variables used by the Linz class
  */
 var routesManager = require('./lib/router'),
-    passportHelpers = require('./lib/helpers-passport'),
     helpersModels = require('./lib/helpers-models'),
     helpersConfigs = require('./lib/helpers-configs'),
+	libPassport = require('./lib/passport'),
     debugModels = require('debug')('linz:models'),
     debugConfigs = require('debug')('linz:configs'),
     debugGeneral = require('debug')('linz:general'),
@@ -486,11 +485,12 @@ Linz.prototype.bootstrapExpress = function (cb) {
 	// setup admin static routes
 	this.app.use(this.get('admin path') + '/public/', express.static(path.resolve(__dirname, 'public')));
 
-	// setup passport for authentication
-	passport.use('linz-local', passportHelpers.login);
-
-	// add serialize and deserialize functionality
-	passportHelpers.setupPassport(passport);
+	// setup passport to provide authentication for Linz
+	if (typeof this.get('passport configuration') === 'function') {
+		this.get('passport configuration').call(this, passport);
+	} else {
+		libPassport(passport);
+	}
 
     return cb(null);
 
