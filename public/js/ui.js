@@ -58,7 +58,7 @@ if (!linz) {
                 customConfig: $(this).attr('data-linz-ckeditor-config') || '/admin/public/js/ckeditor-config-linz-default.js',
                 contentsCss: $(this).attr('data-linz-ckeditor-style') ? $(this).attr('data-linz-ckeditor-style').split(',') : '/admin/public/css/ckeditor-linz-default.css'
             };
-console.log(editorConfig);
+
             // check if there are any widgets to include
             var widgets = $(this).attr('data-linz-ckeditor-widget') ? $(this).attr('data-linz-ckeditor-widget').split(',') : [];
 

@@ -1,18 +1,18 @@
-var util = require('util'),
+var linz = require('../'),
     async = require('async');
 
 module.exports = function () {
 
 	return function (req, res, next) {
 
-		req.linz.model = req.linz.api.model.get(req.params.model);
+		req.linz.model = linz.api.model.get(req.params.model);
 
         async.series([
 
             function (cb) {
 
                 // get doc
-                req.linz.model.findById(req.params.id, function (err, doc) {
+                linz.api.model.getData(req.params.model, req.params.id, function (err, doc) {
 
                     if (err) {
                         cb(err);
@@ -23,7 +23,6 @@ module.exports = function () {
                     return cb(null);
 
                 });
-
 
             },
 

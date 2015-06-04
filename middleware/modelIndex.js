@@ -1,7 +1,5 @@
-var util = require('util'),
-	async = require('async'),
-    linz = require('../');
-
+var linz = require('../'),
+	async = require('async');
 
 module.exports = {
 
