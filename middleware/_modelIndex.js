@@ -11,8 +11,8 @@ module.exports = function  (req, res, next) {
 
             // set up session control
             var session = req.session[req.params.model] = req.session[req.params.model] || {};
-            session.grid = session.grid || {};
-            session.grid.formData = session.grid.formData || {};
+                session.grid = session.grid || {};
+                session.grid.formData = session.grid.formData || {};
 
             if (Object.keys(req.body).length) {
                 session.grid.formData = req.body;
@@ -22,7 +22,8 @@ module.exports = function  (req, res, next) {
                 filters = {},
                 totalRecords = 0,
                 pageSize = linz.get('page size'),
-                pageIndex = session.grid.formData.page || 1;
+                pageIndex = session.grid.formData.page || 1,
+                query;
 
             // set the model on linz
             req.linz.model = linz.api.model.get(req.params.model);
@@ -136,10 +137,18 @@ module.exports = function  (req, res, next) {
 
                 },
 
-                // find the docs
+                // create the query
                 function (cb) {
 
-                    var query = req.linz.model.find(filters);
+                    req.linz.model.getQuery(filters, function (err, result) {
+                        query = result;
+                        return cb(null);
+                    });
+
+                },
+
+                // find the docs
+                function (cb) {
 
                     if (!session.grid.formData.sort && req.linz.model.grid.sortBy.length) {
 

@@ -12,7 +12,7 @@ module.exports = function () {
             function (cb) {
 
                 // get doc
-                linz.api.model.getData(req.params.model, req.params.id, function (err, doc) {
+                req.linz.model.getObject(req.params.id, function (err, doc) {
 
                     if (err) {
                         cb(err);
