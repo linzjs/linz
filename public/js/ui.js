@@ -51,6 +51,75 @@ if (!linz) {
             buttonContainer: '<div class="btn-group btn-group-multiselect" />'
         });
 
+        // assign ckeditor editor (classic view using iframe)
+        $('.ckeditor').each(function () {
+
+            var editorConfig = {
+                customConfig: $(this).attr('data-linz-ckeditor-config') || '/admin/public/js/ckeditor-config-linz-default.js',
+                contentsCss: $(this).attr('data-linz-ckeditor-style') ? $(this).attr('data-linz-ckeditor-style').split(',') : '/admin/public/css/ckeditor-linz-default.css'
+            };
+
+            // check if there are any widgets to include
+            var widgets = $(this).attr('data-linz-ckeditor-widget') ? $(this).attr('data-linz-ckeditor-widget').split(',') : [];
+
+            if (widgets.length !== 0) {
+
+                var plugins = [];
+
+                widgets.forEach(function (widget) {
+
+                    // widget is provided in the format {name}:{path}
+                    var widgetProperties = widget.split(':');
+
+                    // loads external plugins
+                    CKEDITOR.plugins.addExternal(widgetProperties[0], widgetProperties[1], '');
+
+                    plugins.push(widgetProperties[0]);
+
+                });
+
+                editorConfig.extraPlugins = plugins.join(',');
+
+            }
+
+			CKEDITOR.replace( this, editorConfig);
+
+        });
+
+        // assign ckeditor inline editor
+        $('.ckeditor-inline').each(function () {
+
+            var editorConfig = {
+                customConfig: $(this).attr('data-linz-ckeditor-config') || '/admin/public/js/ckeditor-config-linz-default.js'
+            };
+
+            // check if there are any widgets to include
+            var widgets = $(this).attr('data-linz-ckeditor-widget') ? $(this).attr('data-linz-ckeditor-widget').split(',') : [];
+
+            if (widgets.length !== 0) {
+
+                var plugins = [];
+
+                widgets.forEach(function (widget) {
+
+                    // widget is provided in the format {name}:{path}
+                    var widgetProperties = widget.split(':');
+
+                    // loads external plugins
+                    CKEDITOR.plugins.addExternal(widgetProperties[0], widgetProperties[1], '');
+
+                    plugins.push(widgetProperties[0]);
+
+                });
+
+                editorConfig.extraPlugins = plugins.join(',');
+
+            }
+
+			CKEDITOR.inline( this, editorConfig);
+
+        });
+
     });
 
     function loadLibraries(path) {
