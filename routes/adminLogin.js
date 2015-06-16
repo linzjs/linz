@@ -18,7 +18,7 @@ var route = {
             function (done) {
 
                 // render either a custom form, or the default Linz form
-                (typeof linz.get('admin login view') === 'function') ? linz.get('admin login view').call(null, locals, done) : (function () {
+                (typeof linz.get('admin login view') === 'function') ? linz.get('admin login view').call(null, req, locals, done) : (function () {
 
                     linz.app.render(path.resolve(req.linz.views, 'login', 'form.jade'), locals, done);
 
