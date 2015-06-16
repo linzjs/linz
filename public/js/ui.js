@@ -120,6 +120,30 @@ if (!linz) {
 
         });
 
+        // add ability to open URL in a modal
+        $('[data-linz-modal]').click(function () {
+
+            if ($(this).attr('data-linz-disabled') === 'true') {
+                return;
+            }
+
+            var queryObj = $(this),
+                url = queryObj[0].nodeName === 'BUTTON' ? queryObj.attr('data-href') : queryObj.attr('href');
+
+            $('#linzModal').modal().load(url, function () {});
+
+           return false;
+
+        });
+
+        // bind model save button and update the selected ids to modal form
+        $('#linzModal').on('shown.bs.modal', function (e) {
+
+            // add form validation
+            $(this).find('form[data-linz-validation="true"]').bootstrapValidator({});
+
+        });
+
     });
 
     function loadLibraries(path) {
