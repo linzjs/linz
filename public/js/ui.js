@@ -121,26 +121,36 @@ if (!linz) {
         });
 
         // add ability to open URL in a modal
-        $('[data-linz-modal]').click(function () {
+        $('[data-linz-modal]').click(function (event) {
 
-            if ($(this).attr('data-linz-disabled') === 'true') {
+            event.preventDefault();
+
+            var button = $(this);
+
+            if (button.attr('data-linz-disabled') === 'true') {
                 return;
             }
 
-            var queryObj = $(this),
-                url = queryObj[0].nodeName === 'BUTTON' ? queryObj.attr('data-href') : queryObj.attr('href');
+            var url = button[0].nodeName === 'BUTTON' ? button.attr('data-href') : button.attr('href');
 
-            $('#linzModal').modal().load(url, function () {});
+            // open modal and load URL
+            $('#linzModal').modal().load(url);
 
-           return false;
+            // remove modal shown event
+            $('#linzModal').off('shown.bs.modal');
 
-        });
+            // re-bind the shown event
+            $('#linzModal').on('shown.bs.modal', function (e) {
 
-        // bind model save button and update the selected ids to modal form
-        $('#linzModal').on('shown.bs.modal', function (e) {
+                // add form validation
+                $(this).find('form[data-linz-validation="true"]').bootstrapValidator({});
 
-            // add form validation
-            $(this).find('form[data-linz-validation="true"]').bootstrapValidator({});
+                if (button.attr('data-linz-modal-callback')) {
+                    // run custom function if provided after modal is shown
+                    window[button.attr('data-linz-modal-callback')]();
+                }
+
+            });
 
         });
 
