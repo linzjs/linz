@@ -53,7 +53,7 @@ if records.length > 0
 																if (record.recordActions && record.recordActions[action.label] && record.recordActions[action.label].disabled)
 																	a(href='', data-linz-disabled='true', data-linz-disabled-message=record.recordActions[action.label].message)= action.label
 																else
-																	a(href=linz.api.url.getAdminLink(model, action.action, record._id) target=action.target)= action.label
+																	a(href=linz.api.url.getAdminLink(model, action.action, record._id) target=action.target, data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback)= action.label
 
 							each val in Object.keys(model.grid.columns)
 								td!= record['rendered'][val]
