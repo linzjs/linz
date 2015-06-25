@@ -154,6 +154,16 @@ if (!linz) {
 
         });
 
+        // convert UTC to local datetime
+        $('[data-linz-localise-date]').each(function () {
+
+            var dateFormat = $(this).attr('data-linz-date-format') || 'ddd DD/MM/YYYY';
+            var localDateTime = moment(new Date($(this).html())).format(dateFormat);
+
+            $(this).html(localDateTime);
+
+        });
+
     });
 
     function loadLibraries(path) {
