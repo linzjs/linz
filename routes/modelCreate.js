@@ -10,7 +10,7 @@ var route = function (req, res, next) {
             return next(err);
         }
 
-		res.render(req.linz.views + '/modelCreate.jade', {
+		res.render(linz.api.views.viewPath('modelCreate.jade'), {
 			model: req.linz.model,
 			form: editForm.render(),
             actionUrl: linz.api.url.getAdminLink(req.linz.model, 'create'),

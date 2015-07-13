@@ -1,10 +1,8 @@
-var util = require('util');
+var linz = require('linz');
 
 module.exports = function () {
 
 	return function (req, res, next) {
-
-		req.linz.model = req.linz.api.model.get(req.params.model);
 
         req.linz.model.getForm(function(err,form){
 

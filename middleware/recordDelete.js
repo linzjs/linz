@@ -1,10 +1,8 @@
-var util = require('util');
+var linz = require('linz');
 
 module.exports = function () {
 
 	return function (req, res, next) {
-
-		req.linz.model = req.linz.api.model.get(req.params.model);
 
 		// simply return all docs
 		req.linz.model.findById(req.params.id, function (err, doc) {

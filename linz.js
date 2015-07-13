@@ -488,9 +488,6 @@ Linz.prototype.bootstrapExpressLocals = function (cb) {
 	// expose our settings to the rendering engine
 	this.app.locals['linz'] = this;
 
-	// expose the linz admin navigation
-	this.app.locals['linzNavigation'] = this.get('navigation');
-
 	this.app.locals['adminPath'] = this.get('admin path');
 
 	this.app.locals['adminTitle'] = this.get('admin title');

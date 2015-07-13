@@ -24,9 +24,6 @@ module.exports = function  (req, res, next) {
                 pageSize = linz.get('page size'),
                 pageIndex = session.grid.formData.page || 1;
 
-            // set the model on linz
-            req.linz.model = linz.api.model.get(req.params.model);
-
             // cloned a copy of grid settings and append it to the request model
             req.linz.model.grid = clone(req.linz.model.linz.formtools.grid);
 

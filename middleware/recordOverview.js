@@ -1,11 +1,9 @@
-var util = require('util'),
+var linz = require('linz'),
     async = require('async');
 
 module.exports = function () {
 
 	return function (req, res, next) {
-
-		req.linz.model = req.linz.api.model.get(req.params.model);
 
         async.series([
 

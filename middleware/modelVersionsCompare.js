@@ -1,4 +1,5 @@
-var async = require('async'),
+var linz = require('linz'),
+    async = require('async'),
     deep = require('deep-diff'),
     textDiffUtils = require('diff');
 
@@ -15,7 +16,6 @@ module.exports = {
 
         }, function (err, result) {
 
-            req.linz.model = req.linz.api.model.get(req.params.model);
             req.linz.diffs = deep.diff(result.previous, result.latest);
             req.linz.history = {
                 previous: result.previous,

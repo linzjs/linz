@@ -1,5 +1,6 @@
 
-var async = require('async');
+var linz = require('linz'),
+	async = require('async');
 
 /* GET /admin/:model/:id/overview */
 var route = function (req, res) {
@@ -127,7 +128,7 @@ var route = function (req, res) {
 
 	], function (err, results) {
 
-		res.render(req.linz.views + '/recordOverview.jade', locals);
+		res.render(linz.api.views.viewPath('recordOverview.jade'), locals);
 
 	});
 

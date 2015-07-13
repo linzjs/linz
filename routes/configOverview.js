@@ -52,7 +52,7 @@ var route = function (req, res) {
 
 	], function (err, results) {
 
-		res.render(linz.views + '/configOverview.jade', locals);
+		res.render(linz.api.views.viewPath('configOverview.jade'), locals);
 
 	});
 

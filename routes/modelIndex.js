@@ -2,7 +2,7 @@ var linz = require('../'),
     inflection = require('inflection');
 
 /* GET /admin/model/:model/list */
-var route = function (req, res) {
+var route = function (req, res, next) {
 
     var total = Number(req.linz.records.total),
         pageSize = Number(req.linz.records.pageSize),
@@ -24,7 +24,7 @@ var route = function (req, res) {
         sortDirection = ((req.linz.model.formData.sort.charAt(0) === '-') ? 'desc' : 'asc')
     }
 
-	res.render(linz.views + '/modelIndex.jade', {
+	res.render(linz.api.views.viewPath('modelIndex.jade'), {
 		model: req.linz.model,
         form: req.linz.model.formData || {},
 		records: req.linz.records.records,

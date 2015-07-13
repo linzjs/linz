@@ -19,7 +19,7 @@ var route = function (req, res) {
 
     }, function (err) {
 
-        res.render(req.linz.views + '/modelList.jade', { models: modelsToShow });
+        res.render(linz.api.views.viewPath('modelList.jade'), { models: modelsToShow });
 
     });
 

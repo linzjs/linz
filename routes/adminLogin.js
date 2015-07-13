@@ -1,5 +1,4 @@
-var linz = require('../'),
-    path = require('path');
+var linz = require('../');
 
 /* GET /admin/login */
 var route = {
@@ -9,12 +8,12 @@ var route = {
         // check if resetPassword() is defined for user model
         var hasResetPassword = linz.api.model.get(linz.get('user model')).sendPasswordResetEmail;
 
-		res.render(req.linz.views + '/adminLogin.jade', { hasResetPassword: hasResetPassword });
+		res.render(linz.api.views.viewPath('adminLogin.jade'), { hasResetPassword: hasResetPassword });
 
 	},
 
 	post: function (req, res) {
-		res.redirect((req.linz.get('admin path') === '' ? '/': req.linz.get('admin path')));
+		res.redirect((linz.get('admin path') === '' ? '/': linz.get('admin path')));
 	}
 
 };
