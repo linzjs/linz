@@ -155,10 +155,10 @@ if (!linz) {
         });
 
         // convert UTC to local datetime
-        $('[data-linz-localise-date]').each(function () {
+        $('[data-linz-local-date]').each(function () {
 
             var dateFormat = $(this).attr('data-linz-date-format') || 'ddd DD/MM/YYYY';
-            var localDateTime = moment(new Date($(this).html())).format(dateFormat);
+            var localDateTime = moment(new Date($(this).attr('data-linz-utc-date'))).format(dateFormat);
 
             $(this).html(localDateTime);
 
