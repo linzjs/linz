@@ -60,6 +60,36 @@ module.exports = function () {
 
 			},
 
+            // loop through and determine which configs the user has access too
+            (function () {
+
+                // skip this extra processing if the permissions function is the default
+                if (linz.get('permissions').name === 'defaultPermissions') {
+
+                    return function (records, cb) {
+                        return cb(null, records);
+                    }
+
+                }
+
+                return function (records, cb) {
+
+                    return async.filter(records, function (record, callback) {
+
+                        linz.get('permissions')(req.user, 'list', {
+                            type: 'navigation',
+                            placement: 'config-index',
+                            data: linz.api.configs.get(record._id)
+                        }, callback);
+
+                    }, function (results) {
+                        return cb(null, results);
+                    });
+
+                }
+
+            })(),
+
             // apply renderer to values of each configs
             function (records, cb) {
 

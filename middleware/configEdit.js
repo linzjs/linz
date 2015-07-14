@@ -6,8 +6,6 @@ module.exports = function () {
 
 	return function (req, res, next) {
 
-		req.linz.config = linz.get('configs')[req.params.config];
-
 		async.series([
 
 			function (cb) {
