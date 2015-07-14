@@ -30,6 +30,7 @@ function navigation (req, res, next) {
 
                     linz.get('permissions')(req.user, 'list', {
                         type: 'navigation',
+                        placement: 'navigation',
                         data: navigationItem
                     }, cb);
 
