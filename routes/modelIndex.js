@@ -24,10 +24,10 @@ var route = function (req, res, next) {
         sortDirection = ((req.linz.model.formData.sort.charAt(0) === '-') ? 'desc' : 'asc')
     }
 
-	res.render(linz.api.views.viewPath('modelIndex.jade'), {
-		model: req.linz.model,
+    res.render(linz.api.views.viewPath('modelIndex.jade'), {
+        model: req.linz.model,
         form: req.linz.model.formData || {},
-		records: req.linz.records.records,
+        records: req.linz.records.records,
         page: page,
         total: total,
         pages: pages,
@@ -43,7 +43,7 @@ var route = function (req, res, next) {
             plural: req.linz.model.linz.formtools.model.plural
         },
         modelQuery: JSON.stringify(req.linz.model.formData)
-	});
+    });
 
 };
 
