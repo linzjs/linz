@@ -85,7 +85,7 @@ Linz.prototype.init = function () {
 		} else if (arg.constructor.name === 'Authenticator') {
 			debugGeneral('Using passed in passport object');
 			_passport = arg;
-		} else if (arg.constructor.name === 'Function' && typeof arg === 'function') {
+		} else if ((arg.constructor.name === 'EventEmitter' || arg.constructor.name === 'Function') && typeof arg === 'function') {
             debugGeneral('Using passed in express app');
 			_app = arg;
 		} else  if (arg.constructor.name === 'Object' && typeof arg === 'object') {
