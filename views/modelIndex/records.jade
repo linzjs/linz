@@ -6,7 +6,7 @@ if records.length > 0
 						th #
 						th
 							input(type="checkbox", data-linz-control="checked-all")
-						if model.grid.canDelete || model.grid.canEdit || model.grid.recordActions.length
+						if model.grid.canDelete || model.grid.canEdit || (model.grid.recordActions.length && permissions.recordActions)
 							th.actions Actions
 						for column in model.grid.columns
 							th= column.label
@@ -16,7 +16,7 @@ if records.length > 0
 							td= from + index + 1
 							td
 								input(type="checkbox", name="ids[]", value="#{record._id}", data-linz-control="checked-record")
-							if model.grid.canDelete || model.grid.canEdit || model.grid.recordActions.length
+							if model.grid.canDelete || model.grid.canEdit || (model.grid.recordActions.length && permissions.recordActions)
 								td
 									div.btn-group
 
@@ -38,7 +38,7 @@ if records.length > 0
 												a.btn.btn-default(href=linz.api.url.getAdminLink(model, 'delete', record._id), data-linz-control="delete")
 													span(class="glyphicon glyphicon-trash")
 
-										if model.grid.recordActions.length
+										if model.grid.recordActions.length && permissions.recordActions
 											div.btn-group
 												button.btn.btn-default.dropdown-toggle(type="button", data-toggle="dropdown")
 													span.caret

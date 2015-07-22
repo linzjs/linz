@@ -5,24 +5,25 @@ block header
 		h1= record.title
 	.model-actions
 
-		if (model.overview.canEdit || model.overview.canDelete || model.overview.viewAll)
+		if (model.overview.canEdit && permissions.edit) || (model.overview.canDelete && permissions.delete)
 			.actions
 				if model.overview.canEdit && permissions.edit
 					span.edit
 						a.btn.btn-primary(href='' + linz.api.url.getAdminLink(model, 'edit', record._id), data-linz-control="edit", data-linz-disabled=((record.edit && record.edit.disabled) ? 'true' : false), data-linz-disabled-message=((record.edit && record.edit.disabled) ? record.edit.message : false))
 							i.fa.fa-edit
 							| Edit
-				if model.overview.canDelete
+				if model.overview.canDelete && permissions.delete
 					span.delete
 						a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, 'delete', record._id), data-linz-control="delete", data-linz-disabled=((record.delete && record.delete.disabled) ? 'true' : false), data-linz-disabled-message=((record.delete && record.delete.disabled) ? record.delete.message : false))
 							i.fa.fa-trash-o
 							| Delete
 
-		if model.overview.actions && model.overview.actions.length
+		if model.overview.actions && model.overview.actions.length && permissions.overviewActions
 			.custom-actions
 				if model.overview.actions.length === 1
 					for action in model.overview.actions
-						a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, action.action, record._id))= action.label
+						if action.permission && permissions[action.permission] || !action.permission
+							a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, action.action, record._id))= action.label
 				else
 					.dropdown
 						button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
@@ -30,24 +31,24 @@ block header
 							span.caret
 						ul.dropdown-menu(role='menu')
 							for action in model.overview.actions
-								if action.type === 'header'
-									li(role='presentation', class='dropdown-header')= action.label
-								else if action.type === 'divider'
-									li(role='presentation', class='divider')
-								else
-									li(role='presentation')
-										if action.isDisabled && action.isDisabled === true
-											a(role='menuitem', tabindex='-1', href='', data-linz-disabled='true', data-linz-disabled-message=action.disabledMessage)= action.label
-										else
-											a(role='menuitem', tabindex='-1', href='' + linz.api.url.getAdminLink(model, action.action, record._id))= action.label
+								if action.permission && permissions[action.permission] || !action.permission
+									if action.type === 'header'
+										li(role='presentation', class='dropdown-header')= action.label
+									else if action.type === 'divider'
+										li(role='presentation', class='divider')
+									else
+										li(role='presentation')
+											if action.isDisabled
+												a(role='menuitem', tabindex='-1', href='', data-linz-disabled='true', data-linz-disabled-message=action.disabledMessage)= action.label
+											else
+												a(role='menuitem', tabindex='-1', href='' + linz.api.url.getAdminLink(model, action.action, record._id))= action.label
 
-		if (model.overview.viewAll)
+		if model.overview.viewAll && permissions.index
 			.actions
-				if model.overview.viewAll && permissions.index
-					span.back
-						a.btn.btn-default(href='' + linz.api.url.getAdminLink(model))
-							i.fa.fa-chevron-left
-							| View all #{model.linz.formtools.model.plural}
+				span.back
+					a.btn.btn-default(href='' + linz.api.url.getAdminLink(model))
+						i.fa.fa-chevron-left
+						| View all #{model.linz.formtools.model.plural}
 
 block content
 	.container.linz-container.overview.config

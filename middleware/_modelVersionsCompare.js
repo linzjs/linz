@@ -1,4 +1,5 @@
-var linz = require('../');
+var linz = require('../'),
+    async = require('async');
 
 module.exports = function (req, res, next) {
 
