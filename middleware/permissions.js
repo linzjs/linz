@@ -15,13 +15,19 @@ function permissions (action, type) {
 
     return function (req, res, next) {
 
-        linz.get('permissions')(req.user, action, getContextObj(type, req), function (allow) {
+        linz.api.model.getPermissions(req, req.params.model, function (err, permissions) {
 
-            if (allow) {
-                return next();
+            if (err) {
+                return next(err);
             }
 
-            return res.status(403).render(linz.api.views.viewPath('forbidden.jade'));
+            if (!permissions[action]) {
+                return res.status(403).render(linz.api.views.viewPath('forbidden.jade'));
+            }
+
+            res.locals['permissions'] = permissions;
+
+            return next(null);
 
         });
 
