@@ -15,7 +15,9 @@ function permissions (action, type) {
 
     return function (req, res, next) {
 
-        linz.api.model.getPermissions(req, req.params.model, function (err, permissions) {
+        var dataType = type === 'model' ? req.params.model : req.params.config;
+
+        linz.api[type].getPermissions(req, dataType, function (err, permissions) {
 
             if (err) {
                 return next(err);
