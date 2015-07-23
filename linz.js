@@ -10,10 +10,10 @@ var	express = require('express'),
 	path = require('path'),
 	moment = require('moment'),
 	events = require('events'),
-	passport = require('passport'),
 	bunyan = require('bunyan'),
     async = require('async'),
-    lessMiddleware = require('less-middleware');
+    lessMiddleware = require('less-middleware'),
+	flash = require('connect-flash');
 
 /**
  * Linz constructor
@@ -71,6 +71,7 @@ Linz.prototype.init = function () {
 
 	var _app,
 		_mongoose,
+		_passport,
 		_options;
 
 	// loop through the arguments, and determine what is what
@@ -81,7 +82,10 @@ Linz.prototype.init = function () {
 		if (arg.constructor.name === 'Mongoose') {
             debugGeneral('Using passed in mongoose object');
 			_mongoose = arg;
-		} else if (arg.constructor.name === 'Function' && typeof arg === 'function') {
+		} else if (arg.constructor.name === 'Authenticator') {
+			debugGeneral('Using passed in passport object');
+			_passport = arg;
+		} else if ((arg.constructor.name === 'EventEmitter' || arg.constructor.name === 'Function') && typeof arg === 'function') {
             debugGeneral('Using passed in express app');
 			_app = arg;
 		} else  if (arg.constructor.name === 'Object' && typeof arg === 'object') {
@@ -94,11 +98,13 @@ Linz.prototype.init = function () {
 	// use anything that is passed in
 	_app = _app || express();
 	_mongoose = _mongoose || require('mongoose');
+	_passport = _passport || require('passport');
 	_options = _options || {};
 
 	// reference required properties
 	this.app = _app;
 	this.mongoose = _mongoose;
+	this.passport = _passport;
 
 	// apply default linz options
 	this.options(require('./lib/defaults'));
@@ -468,9 +474,15 @@ Linz.prototype.bootstrapExpress = function (cb) {
 		this.app.use(expressSession({ secret: this.get('cookie secret') }));
 	}
 
-	// initialize passport
-	this.app.use(this.get('admin path'), passport.initialize());
-	this.app.use(this.get('admin path'), passport.session());
+	// setup connect-flash
+	this.app.use(flash());
+
+	// configure passport
+	libPassport(this.passport);
+
+	// initialize passport (on all routes)
+	this.app.use(this.passport.initialize());
+	this.app.use(this.passport.session());
 
     if ((process.env.NODE_ENV || 'development') === 'development') {
         this.app.use(this.get('admin path') + '/public', lessMiddleware(__dirname + '/public', {
@@ -484,13 +496,6 @@ Linz.prototype.bootstrapExpress = function (cb) {
 
 	// setup admin static routes
 	this.app.use(this.get('admin path') + '/public/', express.static(path.resolve(__dirname, 'public')));
-
-	// setup passport to provide authentication for Linz
-	if (typeof this.get('passport configuration') === 'function') {
-		this.get('passport configuration').call(this, passport);
-	} else {
-		libPassport(passport);
-	}
 
     return cb(null);
 
