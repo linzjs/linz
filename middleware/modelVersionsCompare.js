@@ -1,4 +1,4 @@
-var linz = require('linz'),
+var linz = require('../'),
     async = require('async'),
     deep = require('deep-diff'),
     textDiffUtils = require('diff');

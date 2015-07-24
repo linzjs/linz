@@ -1,4 +1,4 @@
-var linz = require('linz'),
+var linz = require('../'),
     async = require('async');
 
 module.exports = function () {
@@ -10,7 +10,7 @@ module.exports = function () {
             function (cb) {
 
                 // get doc
-                req.linz.model.findById(req.params.id, function (err, doc) {
+                req.linz.model.getObject(req.params.id, function (err, doc) {
 
                     if (err) {
                         cb(err);
@@ -21,7 +21,6 @@ module.exports = function () {
                     return cb(null);
 
                 });
-
 
             },
 

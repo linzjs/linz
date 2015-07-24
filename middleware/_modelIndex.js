@@ -11,8 +11,8 @@ module.exports = function  (req, res, next) {
 
             // set up session control
             var session = req.session[req.params.model] = req.session[req.params.model] || {};
-            session.grid = session.grid || {};
-            session.grid.formData = session.grid.formData || {};
+                session.grid = session.grid || {};
+                session.grid.formData = session.grid.formData || {};
 
             if (Object.keys(req.body).length) {
                 session.grid.formData = req.body;
@@ -22,7 +22,8 @@ module.exports = function  (req, res, next) {
                 filters = {},
                 totalRecords = 0,
                 pageSize = linz.get('page size'),
-                pageIndex = session.grid.formData.page || 1;
+                pageIndex = session.grid.formData.page || 1,
+                query;
 
             // cloned a copy of grid settings and append it to the request model
             req.linz.model.grid = clone(req.linz.model.linz.formtools.grid);
@@ -54,6 +55,11 @@ module.exports = function  (req, res, next) {
 
                 // render the filters
                 function (cb) {
+
+                    // check if we need to render the filters
+                    if (!Object.keys(req.linz.model.grid.filters).length) {
+                        return cb(null);
+                    }
 
                     formtoolsAPI.grid.renderFilters(req.params.model, function (err, result) {
 
@@ -128,10 +134,18 @@ module.exports = function  (req, res, next) {
 
                 },
 
-                // find the docs
+                // create the query
                 function (cb) {
 
-                    var query = req.linz.model.find(filters);
+                    req.linz.model.getQuery(filters, function (err, result) {
+                        query = result;
+                        return cb(null);
+                    });
+
+                },
+
+                // find the docs
+                function (cb) {
 
                     if (!session.grid.formData.sort && req.linz.model.grid.sortBy.length) {
 

@@ -1,11 +1,10 @@
-var linz = require('linz');
+var linz = require('../');
 
 module.exports = function () {
 
 	return function (req, res, next) {
 
-		// simply return all docs
-		req.linz.model.findById(req.params.id, function (err, doc) {
+		req.linz.model.getObject(req.params.id, function (err, doc) {
 
 			if (!err) {
 				req.linz.record = doc;
