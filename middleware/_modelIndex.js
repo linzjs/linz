@@ -119,27 +119,19 @@ module.exports = function  (req, res, next) {
 
                 },
 
-                // count the docs
-                function (cb) {
-
-                    req.linz.model.count(filters, function (err, docs) {
-
-                        if (!err) {
-                            totalRecords = docs;
-                        }
-
-                        return cb(null);
-
-                    });
-
-                },
-
                 // create the query
                 function (cb) {
 
-                    req.linz.model.getQuery(filters, function (err, result) {
+                    req.linz.model.getQuery(req, filters, function (err, result) {
+
+                        if (err) {
+                            return cb(err);
+                        }
+
                         query = result;
+
                         return cb(null);
+
                     });
 
                 },
@@ -180,6 +172,8 @@ module.exports = function  (req, res, next) {
                         }
 
                         if (!err) {
+
+                            totalRecords = docs.length;
 
                             mongooseRecords = docs;
                             // convert mongoose documents to plain javascript objects
