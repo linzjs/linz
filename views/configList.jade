@@ -13,19 +13,23 @@ block content
 							thead
 								tr
 									th #
-									th Actions
+									if permissions.edit || permissions.reset
+										th Actions
 									for column in grid.columns
 										th= column.label
 							tbody
 								for record, index in records
 									tr
 										td= index+1
-										td
-											div.btn-group
-												a.btn.btn-default.control-edit(href='' + linz.api.url.getAdminLink(configs[Object.keys(configs)[0]], 'edit', record._id))
-													span(class="glyphicon glyphicon-pencil")
-												a.btn.btn-default(href='' + linz.api.url.getAdminLink(configs[Object.keys(configs)[0]], 'default', record._id), data-linz-control="config-default")
-													span(class="glyphicon glyphicon-refresh")
+										if permissions.edit || permissions.reset	
+											td
+												div.btn-group
+													if permissions.edit
+														a.btn.btn-default.control-edit(href='' + linz.api.url.getAdminLink(configs[Object.keys(configs)[0]], 'edit', record._id))
+															span(class="glyphicon glyphicon-pencil")
+													if permissions.reset
+														a.btn.btn-default(href='' + linz.api.url.getAdminLink(configs[Object.keys(configs)[0]], 'default', record._id), data-linz-control="config-default")
+															span(class="glyphicon glyphicon-refresh")
 										each val in Object.keys(grid.columns)
 											td!= record[val]
 
