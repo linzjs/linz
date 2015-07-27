@@ -9,12 +9,25 @@ var route = function (req, res, next) {
 
     async.seq(
 
-        // don't show those that have been marked to hide
         function (_models, callback) {
 
+            // filter by hidden models
+            _models = _models.filter(function (model) {
+                return !models[model].linz.formtools.model.hide;
+            });
+
+            // filter by permissions
             async.filter(_models, function (model, cb) {
 
-                return cb(!models[model].linz.formtools.model.hide);
+                linz.api.model.getPermissions(req, model, function (err, permissions) {
+
+                    if (err) {
+                        return cb(err);
+                    }
+
+                    return cb(permissions.index);
+
+                });
 
             }, function (results) {
 
@@ -23,34 +36,6 @@ var route = function (req, res, next) {
             });
 
         },
-
-        // optionally, run these through the permissions function
-        (function () {
-
-            // skip this step if we're using the default permissions function
-            if (linz.get('permissions').name === 'defaultPermissions') {
-                return function (_models, callback) {
-                    return callback(null, _models);
-                }
-            }
-
-            return function (_models, callback) {
-
-                async.filter(_models, function (model, cb) {
-
-                    linz.get('permissions')(req.user, 'list', {
-                        type: 'navigation',
-                        placement: 'model-index',
-                        data: models[model]
-                    }, cb);
-
-                }, function (results) {
-                    return callback(null, results);
-                });
-
-            }
-
-        })(),
 
         // return an array of actual models
         function (_models, callback) {
