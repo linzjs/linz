@@ -12,7 +12,7 @@
 		.custom-actions
 			if model.grid.actions.length === 1
 				for action in model.grid.actions
-					a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, action.action))= action.label
+					a.btn.btn-default(href=linz.api.url.getAdminLink(model, action.action) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback)= action.label				
 			else
 				.dropdown
 					button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
@@ -26,8 +26,8 @@
 								li(role='presentation', class='divider')
 							else			
 								li(role='presentation')
-									a(role='menuitem', tabindex='-1', href='' + linz.api.url.getAdminLink(model, action.action))= action.label
-
+									a(role='menuitem', tabindex='-1', href=linz.api.url.getAdminLink(model, action.action) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback)= action.label
+									
 	if model.grid.groupActions && model.grid.groupActions.length
 		.group-actions.hidden
 			if model.grid.groupActions.length === 1

@@ -22,7 +22,7 @@ block header
 			.custom-actions
 				if model.overview.actions.length === 1
 					for action in model.overview.actions
-						a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, action.action, record._id))= action.label
+						a.btn.btn-default(href=linz.api.url.getAdminLink(model, action.action) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback)= action.label				
 				else
 					.dropdown
 						button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
@@ -39,8 +39,7 @@ block header
 										if action.isDisabled && action.isDisabled === true
 											a(role='menuitem', tabindex='-1', href='', data-linz-disabled='true', data-linz-disabled-message=action.disabledMessage)= action.label
 										else
-											a(role='menuitem', tabindex='-1', href='' + linz.api.url.getAdminLink(model, action.action, record._id))= action.label
-
+											a(role='menuitem', tabindex='-1', href=linz.api.url.getAdminLink(model, action.action) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback)= action.label
 		if (model.overview.viewAll)
 			.actions
 				if model.overview.viewAll

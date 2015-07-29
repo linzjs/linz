@@ -127,6 +127,22 @@ var route = function (req, res) {
 
 	], function (err, results) {
 
+	    // define default overview action modal settings in a format that jade can access easily
+	    req.linz.model.overview.actions.forEach(function (action) {
+
+	        var modal = { active: false };
+
+	        if (typeof action.modal === 'object') {
+	            modal = action.modal;
+	            modal.active = true;
+	        } else if (typeof action.modal === 'boolean') {
+	            modal.active = action.modal;
+	        }
+
+	        action.modal = modal;
+
+	    });
+
 		res.render(req.linz.views + '/recordOverview.jade', locals);
 
 	});
