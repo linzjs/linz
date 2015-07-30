@@ -94,7 +94,6 @@
         toggleFilterBox('show');
 
         assignRemoveButton();
-        linz.loadDatepicker();
 
         return false;
 

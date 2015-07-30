@@ -173,29 +173,12 @@ if (!linz) {
             {
                 test: Modernizr.inputtypes.date,
                 nope: [
-                    path + '/public/js/bootstrap-datetimepicker.min.js',
-                    path + '/public/css/bootstrap-datetimepicker.min.css'
+                    path + '/public/js/bootstrap-datepicker.min.js',
+                    path + '/public/css/bootstrap-datepicker.min.css'
                 ],
-                complete : function () {
-                    loadDatepicker();
-                }
+                complete : function () {}
             }
         ]);
-
-    }
-
-    function loadDatepicker() {
-
-        if (!Modernizr.inputtypes.date) {
-
-            // remove all event listener
-            $('[data-ui-datepicker]').parent().unbind();
-            $('[data-ui-datepicker]').parent().datetimepicker({
-                pickTime: false,
-                format: 'YYYY-MM-DD'
-            });
-
-        }
 
     }
 
@@ -248,7 +231,6 @@ if (!linz) {
     }
 
     linz.loadLibraries = loadLibraries;
-    linz.loadDatepicker = loadDatepicker;
     linz.isTemplateSupported = isTemplateSupported;
     linz.addDeleteConfirmation = addDeleteConfirmation;
     linz.addDisabledBtnAlert = addDisabledBtnAlert;
