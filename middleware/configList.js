@@ -7,6 +7,7 @@ module.exports = function () {
 
         // set the config on linz
 		req.linz.configs = linz.get('configs');
+        req.linz.configsPerm = {};
 
         // construct the grid object
         req.linz.configGrid = {
@@ -41,7 +42,7 @@ module.exports = function () {
 
                 db.collection(linz.get('configs collection name'), function (err, collection) {
 
-                    // find documents matching each of the availabel config schema name
+                    // find documents matching each of the available config schema name
                     collection.find(filter).toArray(function(err, items) {
 
                         if (err) {
@@ -61,34 +62,30 @@ module.exports = function () {
 			},
 
             // loop through and determine which configs the user has access too
-            (function () {
+            function (records, cb) {
 
-                // skip this extra processing if the permissions function is the default
-                if (linz.get('permissions').name === 'defaultPermissions') {
+                // filter by permissions
+                async.filter(records, function (config, callback) {
 
-                    return function (records, cb) {
-                        return cb(null, records);
-                    }
+                    linz.api.configs.getPermissions(req, config._id, function (err, permissions) {
 
-                }
+                        if (err) {
+                            return callback(err);
+                        }
 
-                return function (records, cb) {
+                        req.linz.configsPerm[config._id] = permissions;
 
-                    return async.filter(records, function (record, callback) {
+                        return callback(permissions.index);
 
-                        linz.get('permissions')(req.user, 'list', {
-                            type: 'navigation',
-                            placement: 'config-index',
-                            data: linz.api.configs.get(record._id)
-                        }, callback);
-
-                    }, function (results) {
-                        return cb(null, results);
                     });
 
-                }
+                }, function (results) {
 
-            })(),
+                    return cb(null, results);
+
+                });
+
+            },
 
             // apply renderer to values of each configs
             function (records, cb) {

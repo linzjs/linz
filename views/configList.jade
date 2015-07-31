@@ -13,7 +13,7 @@ block content
 							thead
 								tr
 									th #
-									if permissions.edit || permissions.reset
+									if canEdit || canReset
 										th Actions
 									for column in grid.columns
 										th= column.label
@@ -21,13 +21,13 @@ block content
 								for record, index in records
 									tr
 										td= index+1
-										if permissions.edit || permissions.reset	
+										if canEdit || canReset
 											td
 												div.btn-group
-													if permissions.edit
+													if permissions[record._id].edit
 														a.btn.btn-default.control-edit(href='' + linz.api.url.getAdminLink(configs[Object.keys(configs)[0]], 'edit', record._id))
 															span(class="glyphicon glyphicon-pencil")
-													if permissions.reset
+													if permissions[record._id].reset
 														a.btn.btn-default(href='' + linz.api.url.getAdminLink(configs[Object.keys(configs)[0]], 'default', record._id), data-linz-control="config-default")
 															span(class="glyphicon glyphicon-refresh")
 										each val in Object.keys(grid.columns)

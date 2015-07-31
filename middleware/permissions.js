@@ -4,20 +4,12 @@ var linz = require('../');
 // protect routes by requesting permissions for the action
 function permissions (action, type) {
 
-    // skip this extra processing if the permissions function is the default
-    if (linz.get('permissions').name === 'defaultPermissions') {
-
-        return function (req, res, next) {
-            return next();
-        }
-
-    }
-
     return function (req, res, next) {
 
-        var dataType = type === 'model' ? req.params.model : req.params.config;
+        var dataType = type === 'model' ? req.params.model : req.params.config,
+            apiType = type === 'config' ? 'configs' : type;
 
-        linz.api[type].getPermissions(req, dataType, function (err, permissions) {
+        linz.api[apiType].getPermissions(req, dataType, function (err, permissions) {
 
             if (err) {
                 return next(err);
