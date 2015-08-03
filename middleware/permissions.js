@@ -29,32 +29,4 @@ function permissions (action, type) {
 
 };
 
-/**
- * [getContextObj description]
- * @param  {String} type The type of object for which permission is being requested.
- * @param  {Object} req  The Express request object.
- * @return {Object}      An object to be passed to the permissions functionality
- */
-function getContextObj (type, req) {
-
-    var context = {
-        type: type
-    };
-
-    switch (type) {
-
-        case "model":
-            context['data'] = req.linz.model;
-            break;
-
-        case "config":
-            context['data'] = req.linz.config;
-            break;
-
-    }
-
-    return context;
-
-}
-
 module.exports = permissions;

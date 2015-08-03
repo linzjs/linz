@@ -3,7 +3,7 @@ var async = require('async');
 module.exports = function () {
 
     if (!arguments.length) {
-        throw new Error('Missing parameters! Please provide at least one middleware function.');
+        throw new Error('Exclusions middleware is missing parameters. Please provide at least one middleware function.');
     }
 
     var args = Array.prototype.slice.call(arguments),
