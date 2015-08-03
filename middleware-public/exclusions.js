@@ -1,4 +1,5 @@
-var async = require('async');
+var linz = require('../'),
+    async = require('async');
 
 module.exports = function () {
 
@@ -7,7 +8,7 @@ module.exports = function () {
     }
 
     var args = Array.prototype.slice.call(arguments),
-        exclusions = [/^\/admin\/(login|public)/],
+        exclusions = [new RegExp("^" + "/admin".replace(/\//g, '\/') + "\/(login|public)")], // TODO: change /admin to linz.get('admin path')
         middlewares = args;
 
     if (Array.isArray(args[0]) && args.length === 1) {
