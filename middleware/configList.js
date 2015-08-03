@@ -7,6 +7,7 @@ module.exports = function () {
 
         // set the config on linz
 		req.linz.configs = linz.get('configs');
+        req.linz.configsPerm = {};
 
         // construct the grid object
         req.linz.configGrid = {
@@ -41,7 +42,7 @@ module.exports = function () {
 
                 db.collection(linz.get('configs collection name'), function (err, collection) {
 
-                    // find documents matching each of the availabel config schema name
+                    // find documents matching each of the available config schema name
                     collection.find(filter).toArray(function(err, items) {
 
                         if (err) {
@@ -59,6 +60,32 @@ module.exports = function () {
                 });
 
 			},
+
+            // loop through and determine which configs the user has access too
+            function (records, cb) {
+
+                // filter by permissions
+                async.filter(records, function (config, callback) {
+
+                    linz.api.configs.getPermissions(req, config._id, function (err, permissions) {
+
+                        if (err) {
+                            return callback(err);
+                        }
+
+                        req.linz.configsPerm[config._id] = permissions;
+
+                        return callback(permissions.index);
+
+                    });
+
+                }, function (results) {
+
+                    return cb(null, results);
+
+                });
+
+            },
 
             // apply renderer to values of each configs
             function (records, cb) {

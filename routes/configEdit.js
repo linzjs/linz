@@ -9,7 +9,7 @@ var route = function (req, res, next) {
 			return next(err);
 		}
 
-		res.render(linz.views + '/configEdit.jade', {
+		res.render(linz.api.views.viewPath('configEdit.jade'), {
 			record: req.linz.record,
 			form: editForm.render(),
             actionUrl: linz.api.url.getAdminLink(req.linz.config, 'save', req.linz.record._id),

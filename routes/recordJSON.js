@@ -2,8 +2,6 @@
 /* GET /admin/:model/:id/json */
 var route = function (req, res, next) {
 
-    req.linz.model = req.linz.api.model.get(req.params.model);
-
     // get doc
     req.linz.model.findById(req.params.id, function (err, doc) {
 

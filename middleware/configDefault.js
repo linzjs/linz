@@ -5,9 +5,6 @@ module.exports = function () {
 
     return function (req, res, next) {
 
-        // set the config on linz
-        req.linz.config = linz.get('configs')[req.params.config];
-
         async.waterfall([
 
             // find the configs

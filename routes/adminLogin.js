@@ -20,7 +20,7 @@ var route = {
                 // render either a custom form, or the default Linz form
                 (typeof linz.get('admin login view') === 'function') ? linz.get('admin login view').call(null, req, locals, done) : (function () {
 
-                    linz.app.render(path.resolve(req.linz.views, 'login', 'form.jade'), locals, done);
+                    linz.app.render(linz.api.views.viewPath('login/form.jade'), locals, done);
 
                 })();
 
@@ -34,7 +34,7 @@ var route = {
             }
 
             // now render the final template, within the layout
-            return res.render(req.linz.views + '/adminLogin.jade', {
+            return res.render(linz.api.views.viewPath('adminLogin.jade'), {
                 html: html
             });
 
@@ -43,7 +43,7 @@ var route = {
 	},
 
 	post: function (req, res) {
-		res.redirect((req.linz.get('admin path') === '' ? '/': req.linz.get('admin path')));
+		res.redirect((linz.get('admin path') === '' ? '/': linz.get('admin path')));
 	}
 
 };

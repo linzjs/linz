@@ -1,8 +1,9 @@
-var linz = require('../');
+var linz = require('../'),
+    async = require('async');
 
 module.exports = function (req, res, next) {
 
-    var Model = req.linz.api.model.get(req.params.model),
+    var Model = linz.api.model.get(req.params.model),
         fieldExclusions = {
             '_id': 0,
             '__v': 0,

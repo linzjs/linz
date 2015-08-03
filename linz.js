@@ -112,25 +112,7 @@ Linz.prototype.init = function () {
 	// overlay runtime options, these will override linz defaults
 	this.options(_options);
 
-	this.on('admin path', function () {
-
-		this.app.locals['linzNavigation'] = [
-			{
-				name: 'Models',
-				href: this.get('admin path') + '/models/list'
-			},
-			{
-				name: 'Logs',
-				href: this.get('admin path') + '/logs/request/list'
-			},
-			{
-				name: 'Logout',
-				href: this.get('admin path') + '/logout'
-			}
-		];
-
-	});
-
+	// configure everything
 	this.configure();
 
 	return this;
@@ -511,9 +493,6 @@ Linz.prototype.bootstrapExpressLocals = function (cb) {
 	// expose our settings to the rendering engine
 	this.app.locals['linz'] = this;
 
-	// expose the linz admin navigation
-	this.app.locals['linzNavigation'] = this.get('navigation');
-
 	this.app.locals['adminPath'] = this.get('admin path');
 
 	this.app.locals['adminTitle'] = this.get('admin title');
@@ -668,18 +647,35 @@ Linz.prototype.buildNavigation = function (cb) {
 
         },
 
-        function (done) {
+		// this function will run and return either a no-op function,
+		// or a function that will execute the 'navigation configuration' function and override
+		// nav with the customisation as returned to the callback
+		(function () {
 
-            // add a reference for the logs
-            var logs = {
-                name: 'Logs',
-                href: _this.get('admin path') + '/logs/request/list'
-            };
-            nav.push(logs);
+			// if we don't have a function, return a no-op that will simply execute the callback with null
+			if (typeof _this.get('navigation configuration') !== 'function') {
+				return linz.utils.noOp();
+			}
 
-            return done(null);
+			return function (done) {
 
-        }
+				return _this.get('navigation configuration')(nav, function (err, _nav) {
+
+					if (err) {
+						errors.log('The navigation configuration function errored.');
+						return done(null);
+					}
+
+					// override with the newly updated navigation
+					nav = _nav;
+
+					return done(null);
+
+				});
+
+			}
+
+		})()
 
     ], function () {
 

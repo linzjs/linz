@@ -2,7 +2,7 @@ var linz = require('../'),
     inflection = require('inflection');
 
 /* GET /admin/model/:model/list */
-var route = function (req, res) {
+var route = function (req, res, next) {
 
     var total = Number(req.linz.records.total),
         pageSize = Number(req.linz.records.pageSize),
@@ -40,10 +40,10 @@ var route = function (req, res) {
 
     });
 
-	res.render(linz.views + '/modelIndex.jade', {
-		model: req.linz.model,
+    res.render(linz.api.views.viewPath('modelIndex.jade'), {
+        model: req.linz.model,
         form: req.linz.model.formData || {},
-		records: req.linz.records.records,
+        records: req.linz.records.records,
         page: page,
         total: total,
         pages: pages,
@@ -59,7 +59,7 @@ var route = function (req, res) {
             plural: req.linz.model.linz.formtools.model.plural
         },
         modelQuery: JSON.stringify(req.linz.model.formData)
-	});
+    });
 
 };
 

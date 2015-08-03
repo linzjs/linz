@@ -3,23 +3,60 @@ var path = require('path'),
     linz = require('../');
 
 /* GET /admin/models/list */
-var route = function (req, res) {
+var route = function (req, res, next) {
 
-	var models = linz.get('models'),
-        modelsToShow = {};
+    var models = linz.get('models');
 
-    // loop through each model, and determine if it should be displayed in list
-    async.each(Object.keys(models), function (model, done) {
+    async.seq(
 
-        if (!models[model].linz.formtools.model.hide) {
-            modelsToShow[model] = models[model];
+        function (_models, callback) {
+
+            // filter by hidden models
+            _models = _models.filter(function (model) {
+                return !models[model].linz.formtools.model.hide;
+            });
+
+            // filter by permissions
+            async.filter(_models, function (model, cb) {
+
+                linz.api.model.getPermissions(req, model, function (err, permissions) {
+
+                    if (err) {
+                        return cb(err);
+                    }
+
+                    return cb(permissions.index);
+
+                });
+
+            }, function (results) {
+
+                return callback(null, results);
+
+            });
+
+        },
+
+        // return an array of actual models
+        function (_models, callback) {
+
+            async.map(_models, function (model, cb) {
+
+                return cb(null, models[model]);
+
+            }, callback);
+
         }
 
-        return done(null);
+    )(Object.keys(models), function (err, modelsList) {
 
-    }, function (err) {
+        if (err) {
+            return next(err);
+        }
 
-        res.render(req.linz.views + '/modelList.jade', { models: modelsToShow });
+        res.render(linz.api.views.viewPath('modelList.jade'), {
+            models: modelsList
+        });
 
     });
 

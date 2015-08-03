@@ -1,9 +1,9 @@
-var path = require('path');
+var linz = require('linz');
 
 /* GET /admin */
 var route = function (req, res) {
 
-	res.redirect(307, req.linz.get('admin path') + '/models/list');
+	res.redirect(307, linz.get('admin path') + '/models/list');
 
 };
 

@@ -2,17 +2,18 @@
 	h1
 		a(href='' + linz.api.url.getAdminLink(model))= model.linz.formtools.model.plural
 .model-actions
-	if model.grid.canCreate
+	if model.grid.canCreate && permissions.create
 		.actions
 			span.create
 				a.btn.btn-primary(href='' + linz.api.url.getAdminLink(model, 'new'))
 					i.fa.fa-plus
 					| Create a new #{label.singular}
-	if model.grid.actions && model.grid.actions.length
+	if model.grid.actions && model.grid.actions.length && permissions.gridActions
 		.custom-actions
 			if model.grid.actions.length === 1
 				for action in model.grid.actions
-					a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, action.action))= action.label
+					if action.permission && permissions[action.permission] || !action.permission
+						a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, action.action))= action.label
 			else
 				.dropdown
 					button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
@@ -20,18 +21,21 @@
 						span.caret
 					ul.dropdown-menu(role='menu')
 						for action in model.grid.actions
-							if action.type === 'header'
-								li(role='presentation', class='dropdown-header')= action.label
-							else if action.type === 'divider'
-								li(role='presentation', class='divider')
-							else			
-								li(role='presentation')
-									a(role='menuitem', tabindex='-1', href='' + linz.api.url.getAdminLink(model, action.action))= action.label
+							if action.permission && permissions[action.permission] || !action.permission
+								if action.type === 'header'
+									li(role='presentation', class='dropdown-header')= action.label
+								else if action.type === 'divider'
+									li(role='presentation', class='divider')
+								else			
+									li(role='presentation')
+										a(role='menuitem', tabindex='-1', href='' + linz.api.url.getAdminLink(model, action.action))= action.label
 
-	if model.grid.groupActions && model.grid.groupActions.length
+	if model.grid.groupActions && model.grid.groupActions.length && permissions.groupActions
 		.group-actions.hidden
 			if model.grid.groupActions.length === 1
-				a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, groupAction.action) data-linz-control=((groupAction.useModal) ? 'group-action' : false) data-target=((groupAction.useModal) ? '#groupActionModal' : false) )= groupAction.label
+				for groupAction in model.grid.groupActions
+					if groupAction.permission && permissions[groupAction.permission] || !groupAction.permission
+						a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, groupAction.action) data-linz-control=((groupAction.useModal) ? 'group-action' : false) data-target=((groupAction.useModal) ? '#groupActionModal' : false) )= groupAction.label
 			else
 				.dropdown
 					button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
@@ -39,12 +43,13 @@
 						span.caret
 					ul.dropdown-menu(role='menu')
 						for groupAction in model.grid.groupActions
-							li(role='presentation')
-								- groupAction.attributes = groupAction.attributes || {}
-								if groupAction.useModal
-									- groupAction.attributes['data-linz-control'] = 'group-action'
-									- groupAction.attributes['data-target'] = '#groupActionModal'
-								a(role='menuitem' tabindex='-1' href=linz.api.url.getAdminLink(model, groupAction.action))&attributes(groupAction.attributes)= groupAction.label
+							if groupAction.permission && permissions[groupAction.permission] || !groupAction.permission
+								li(role='presentation')
+									- groupAction.attributes = groupAction.attributes || {}
+									if groupAction.useModal
+										- groupAction.attributes['data-linz-control'] = 'group-action'
+										- groupAction.attributes['data-target'] = '#groupActionModal'
+									a(role='menuitem' tabindex='-1' href=linz.api.url.getAdminLink(model, groupAction.action))&attributes(groupAction.attributes)= groupAction.label
 
 	if model.grid.toolbarItems && model.grid.toolbarItems.length
 		.toolbar
@@ -52,11 +57,11 @@
 				.toolbarItem
 					!= item.html
 	
-	if model.grid.export && model.grid.export.length
+	if model.grid.export && model.grid.export.length && permissions.canExport
 		.export
 			if model.grid.export.length === 1
 				for exp in model.grid.export
-					if exp.enabled
+					if exp.enabled && (exp.permission && permissions[exp.permission] || !exp.permission)
 						- attributes = {}
 						if exp.action === 'export'
 							- attributes['data-target'] = '#exportModal'
@@ -68,7 +73,7 @@
 						span.caret
 					ul.dropdown-menu(role='menu')
 						for exp in model.grid.export
-							if exp.enabled
+							if exp.enabled && (exp.permission && permissions[exp.permission] || !exp.permission)
 								- attributes = {}
 								if exp.action === 'export'
 									- attributes['data-target'] = '#exportModal'

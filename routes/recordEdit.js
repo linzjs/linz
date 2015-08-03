@@ -44,7 +44,7 @@ var route = function (req, res, next) {
 		// wrap code in self-executable function
 		conflictHandlersJS = '\n\t(function () {\n\t' + conflictHandlersJS + '\n\t})();'
 
-		res.render(req.linz.views + '/recordEdit.jade', {
+		res.render(linz.api.views.viewPath('recordEdit.jade'), {
 			model: req.linz.model,
 			record: req.linz.record,
 			form: editForm.render(),
