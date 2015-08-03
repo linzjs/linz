@@ -8,7 +8,7 @@ module.exports = function () {
     }
 
     var args = Array.prototype.slice.call(arguments),
-        exclusions = [new RegExp("^" + "/admin".replace(/\//g, '\/') + "\/(login|public)")], // TODO: change /admin to linz.get('admin path')
+        exclusions = [new RegExp("^" + "/admin".replace(/\//g, '\/') + "\/(login|logout|public)")], // TODO: change /admin to linz.get('admin path')
         middlewares = args;
 
     if (Array.isArray(args[0]) && args.length === 1) {
