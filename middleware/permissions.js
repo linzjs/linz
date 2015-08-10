@@ -15,6 +15,8 @@ function permissions (action, type) {
                 return next(err);
             }
 
+            console.log(req.originalURL);
+
             if (!permissions[action]) {
                 return res.status(403).render(linz.api.views.viewPath('forbidden.jade'));
             }

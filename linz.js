@@ -8,7 +8,6 @@ var	express = require('express'),
 	cookieParser = require('cookie-parser'),
 	expressSession = require('express-session'),
 	path = require('path'),
-	moment = require('moment'),
 	events = require('events'),
 	bunyan = require('bunyan'),
     async = require('async'),
@@ -387,6 +386,9 @@ Linz.prototype.defaultConfiguration = function (cb) {
 
     // assign the middleware
     this.app.use(require('./middleware/request')());
+
+	// assign the route params
+	routesManager.setupParams();
 
 	// assign the admin routes
 	routesManager.setupAdminRoutes();

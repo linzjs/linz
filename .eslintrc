@@ -1,0 +1,1 @@
+{    "root": true,    "env": {        "node": true    },    "rules": {        "quotes": [1, "single"],        "strict": 0,        "no-use-before-define": 1,        "no-underscore-dangle": 0,        "dot-notation": 1,        "comma-spacing": 1,        "no-mixed-requires": 0,        "new-cap": 1,        "camelcase": 1    }}
