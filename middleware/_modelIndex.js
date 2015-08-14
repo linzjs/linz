@@ -136,6 +136,26 @@ module.exports = function  (req, res, next) {
 
                 },
 
+                // get page total
+                function (cb) {
+
+                    query.exec(function (err, docs) {
+
+                        if (!err && docs.length === 0) {
+                            return cb(new Error('No records found'));
+                        }
+
+                        if (!err) {
+
+                            totalRecords = docs.length;
+                        }
+
+                        return cb(err);
+
+                    });
+
+                },
+
                 // find the docs
                 function (cb) {
 
@@ -172,8 +192,6 @@ module.exports = function  (req, res, next) {
                         }
 
                         if (!err) {
-
-                            totalRecords = docs.length;
 
                             mongooseRecords = docs;
                             // convert mongoose documents to plain javascript objects
