@@ -3,7 +3,7 @@ var linz = require('linz'),
 	async = require('async');
 
 /* GET /admin/:model/:id/overview */
-var route = function (req, res) {
+var route = function (req, res, next) {
 
 	var locals = {
 		model: req.linz.model,
@@ -127,6 +127,10 @@ var route = function (req, res) {
         }
 
 	], function (err, results) {
+
+		if (err) {
+			return next(err);
+		}
 
 	    // define default overview action modal settings in a format that jade can access easily
 
