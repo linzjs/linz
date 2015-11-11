@@ -1,4 +1,4 @@
-if Object.keys(model.grid.filters).length
+if model.grid.filters && Object.keys(model.grid.filters).length
 	.model-filters
 		.dropdown.addFilterBtn
 			a(data-toggle='dropdown', role='button', class="btn btn-default")
