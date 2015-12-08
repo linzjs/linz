@@ -16,8 +16,22 @@ var route = function (req, res, next) {
                 return !models[model].linz.formtools.model.hide;
             });
 
-            // TODO: reimplement filtering based on permissions
             return callback(null, _models);
+
+        },
+
+        function (_models, callback) {
+
+            // based on permissions, filter out some models
+            async.filter(_models, function (model, cb) {
+
+                linz.api.model.permission(req.user, model, 'canList', cb);
+
+            }, function (results) {
+
+                return callback(null, results);
+
+            });
 
         },
 

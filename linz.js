@@ -605,7 +605,10 @@ Linz.prototype.buildNavigation = function (cb) {
             var models = {
                 name: 'Models',
                 href: _this.get('admin path') + '/models/list',
-                children: []
+                children: [],
+				permission: function (user, callback) {
+					return linz.get('permissions')(user, 'models', 'canList', callback);
+				}
             };
 
             async.each(Object.keys(linzModels), function (model, callback) {
@@ -619,7 +622,10 @@ Linz.prototype.buildNavigation = function (cb) {
 
                     models.children.push({
                         name: linzModels[model].linz.formtools.model.plural,
-                        href: _this.get('admin path') + '/model/' + model + '/list'
+                        href: _this.get('admin path') + '/model/' + model + '/list',
+						permission: function (user, callback) {
+							return linz.api.model.permission(user, model, 'canList', callback);
+						}
                     });
 
                     return callback(null);
@@ -641,7 +647,10 @@ Linz.prototype.buildNavigation = function (cb) {
             // add a reference for configs
             var configs = {
                 name: 'Configs',
-                href: _this.get('admin path') + '/configs/list'
+                href: _this.get('admin path') + '/configs/list',
+				permission: function (user, callback) {
+					return linz.get('permissions')(user, 'configs', 'canList', callback);
+				}
             };
             nav.push(configs);
 
