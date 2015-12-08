@@ -58,6 +58,7 @@ var route = function (req, res, next) {
 
     res.render(linz.api.views.viewPath('modelIndex.jade'), {
         model: req.linz.model,
+        permissions: req.linz.model.linz.formtools.permissions,
         form: req.linz.model.formData || {},
         records: req.linz.records.records,
         page: page,

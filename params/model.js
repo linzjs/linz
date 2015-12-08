@@ -10,7 +10,7 @@ module.exports = function (router) {
 		// grab the model
 		req.linz.model = linz.api.model.get(modelName);
 
-		// setup the grid for this particular request
+		// setup the formtools data for this particular request
 		async.parallel([
 
 			function (cb) {
@@ -23,16 +23,29 @@ module.exports = function (router) {
 
 					req.linz.model.linz.formtools.grid = grid;
 
-					cb(null);
+					return cb(null);
+
+				});
+
+			},
+
+			function (cb) {
+
+				req.linz.model.getPermissions(req.user, function (err, permissions) {
+
+					if (err) {
+						return cb(err);
+					}
+
+					req.linz.model.linz.formtools.permissions = permissions;
+
+					return cb(null);
 
 				});
 
 			}
 
 		], function (err) {
-
-			console.log('------------------');
-			console.log(req.linz.model.linz.formtools.grid);
 
 			return next(err);
 
