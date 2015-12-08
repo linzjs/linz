@@ -7,7 +7,8 @@ var route = function (req, res, next) {
 
 	var locals = {
 		model: req.linz.model,
-		record: req.linz.record
+		record: req.linz.record,
+		permissions: req.linz.model.linz.formtools.permissions
 	};
 
 	async.series([
