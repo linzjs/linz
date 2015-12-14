@@ -125,7 +125,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
                 function (callback) {
 
-                    Model.getGrid(function (err, grid) {
+                    Model.getGrid(req.user, function (err, grid) {
 
                         if (err) {
                             return cb(err);
@@ -215,7 +215,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
         getGrid: function getGrid (filters, form, cb) {
 
             var Model = linz.api.model.get(req.body.modelName);
-            Model.getGrid( function (err, grid) {
+            Model.getGrid(req.user, function (err, grid) {
                 return cb(err, filters, form, grid);
             });
 
@@ -255,7 +255,7 @@ module.exports = {
 
     get: function (req, res, next) {
 
-        req.linz.model.getGrid(function (err, grid) {
+        req.linz.model.getGrid(req.user, function (err, grid) {
 
             if (err) {
                 return next(err);
