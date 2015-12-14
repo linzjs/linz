@@ -6,7 +6,7 @@ if records.length > 0
 						th #
 						th
 							input(type="checkbox", data-linz-control="checked-all")
-						if permissions.canDelete || permissions.canEdit || model.grid.recordActions.length
+						if permissions.canDelete !== false || permissions.canEdit !== false || model.grid.recordActions.length
 							th.actions Actions
 						for column in model.grid.columns
 							th= column.label
@@ -16,11 +16,11 @@ if records.length > 0
 							td= from + index + 1
 							td
 								input(type="checkbox", name="ids[]", value="#{record._id}", data-linz-control="checked-record")
-							if permissions.canDelete || permissions.canEdit || model.grid.recordActions.length
+							if permissions.canDelete !== false || permissions.canEdit !== false || model.grid.recordActions.length
 								td
 									div.btn-group
 
-										if permissions.canEdit
+										if permissions.canEdit !== false
 											if record.edit && record.edit.disabled
 												a.btn.btn-default(href='', data-linz-control="edit", data-linz-disabled='true', data-linz-disabled-message=record.edit.message)
 													span(class="glyphicon glyphicon-pencil")
@@ -28,7 +28,7 @@ if records.length > 0
 												a.btn.btn-default(href=linz.api.url.getAdminLink(model, 'edit', record._id), data-linz-control="edit")
 													span(class="glyphicon glyphicon-pencil")
 
-										if permissions.canDelete
+										if permissions.canDelete !== false
 											if record.delete && record.delete.disabled
 												a.btn.btn-default(href='', data-linz-control="delete", data-linz-disabled='true', data-linz-disabled-message=record.delete.message)
 													span(class="glyphicon glyphicon-trash")
