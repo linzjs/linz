@@ -15,6 +15,11 @@ function permissions (permission, context) {
                 model: req.linz.model.modelName,
                 type: 'model'
             };
+        } else if (context === 'config') {
+            context = {
+                config: req.linz.config.config._id,
+                type: 'config'
+            }
         }
 
         // if we're working with a custom action, let's tweak the permission value

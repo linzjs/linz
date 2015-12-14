@@ -1,23 +1,28 @@
-var linz = require('../');
+var linz = require('../'),
+	async = require('async');
 
 /* GET /admin/configs/list */
 var route = function (req, res) {
 
-	var canEdit = Object.keys(req.linz.configsPerm).some(function (configName) {
-		return req.linz.configsPerm[configName].edit;
-	});
+	// determine if we need to render the actions column
+	async.some(req.linz.records, function (record, cb) {
 
-	var canReset = Object.keys(req.linz.configsPerm).some(function (configName) {
-		return req.linz.configsPerm[configName].reset;
-	});
+		// if any of these records can edit or reset, we should show the column
+		if (record.permissions.canEdit !== false || record.permissions.canReset !== false) {
+			return cb(true);
+		}
 
-	res.render(linz.api.views.viewPath('configList.jade'), {
-		grid: req.linz.configGrid,
-		configs: req.linz.configs,
-		records: req.linz.records,
-		permissions: req.linz.configsPerm,
-		canEdit: canEdit,
-		canReset: canReset
+		return cb(false);
+
+	}, function (renderActionsColumn) {
+
+		res.render(linz.api.views.viewPath('configList.jade'), {
+			grid: req.linz.configGrid,
+			configs: req.linz.configs,
+			records: req.linz.records,
+			renderActionsColumn: renderActionsColumn
+		});
+
 	});
 
 };

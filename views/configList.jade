@@ -13,25 +13,26 @@ block content
 							thead
 								tr
 									th #
-									if canEdit || canReset
+									if renderActionsColumn
 										th Actions
 									for column in grid.columns
 										th= column.label
 							tbody
 								for record, index in records
-									tr
-										td= index+1
-										if canEdit || canReset
-											td
-												div.btn-group
-													if permissions[record._id].edit
-														a.btn.btn-default.control-edit(href='' + linz.api.url.getAdminLink(configs[Object.keys(configs)[0]], 'edit', record._id))
-															span(class="glyphicon glyphicon-pencil")
-													if permissions[record._id].reset
-														a.btn.btn-default(href='' + linz.api.url.getAdminLink(configs[Object.keys(configs)[0]], 'default', record._id), data-linz-control="config-default")
-															span(class="glyphicon glyphicon-refresh")
-										each val in Object.keys(grid.columns)
-											td!= record[val]
+									if record.permissions.canList !== false
+										tr
+											td= index+1
+											if renderActionsColumn
+												td
+													div.btn-group
+														if record.permissions.canEdit !== false
+															a.btn.btn-default.control-edit(href='' + linz.api.url.getAdminLink(configs[Object.keys(configs)[0]], 'edit', record._id))
+																span(class="glyphicon glyphicon-pencil")
+														if record.permissions.canReset !== false
+															a.btn.btn-default(href='' + linz.api.url.getAdminLink(configs[Object.keys(configs)[0]], 'default', record._id), data-linz-control="config-default")
+																span(class="glyphicon glyphicon-refresh")
+											each val in Object.keys(grid.columns)
+												td!= record[val]
 
 block script
 	script(src='' + linz.get('admin path') + '/public/js/config/list.js')

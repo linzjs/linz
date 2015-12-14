@@ -57,6 +57,22 @@ module.exports = function () {
 
                 });
 
+            },
+
+            function (cb) {
+
+                req.linz.config.schema.statics.getPermissions(req.user, function (err, permissions) {
+
+                    if (err) {
+                        return cb(err);
+                    }
+
+                    req.linz.config.permissions = permissions;
+
+                    return cb(null);
+
+                });
+
             }
 
         ], function (err, results) {

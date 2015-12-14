@@ -61,27 +61,21 @@ module.exports = function () {
 
 			},
 
-            // loop through and determine which configs the user has access too
             function (records, cb) {
 
-                // filter by permissions
-                async.filter(records, function (config, callback) {
+                async.map(records, function (config, configDone) {
 
-                    linz.api.configs.getPermissions(req, config._id, function (err, permissions) {
+                    req.linz.configs[config._id].schema.statics.getPermissions(req.user, function (permsErr, perms) {
 
-                        if (err) {
-                            return callback(err);
-                        }
+                        config.permissions = perms;
 
-                        req.linz.configsPerm[config._id] = permissions;
-
-                        return callback(permissions.index);
+                        return configDone(permsErr, config);
 
                     });
 
-                }, function (results) {
+                }, function (err, results) {
 
-                    return cb(null, results);
+                    return cb(err, results);
 
                 });
 

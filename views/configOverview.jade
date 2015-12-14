@@ -4,14 +4,14 @@ block header
 	.model-title
 		h1= record.label
 	.model-actions
-		if (config.overview.canEdit || config.overview.viewAll)
+		if (config.permissions.canEdit || config.permissions.canList)
 			.actions
-				if config.overview.canEdit
+				if config.permissions.canEdit
 					span.edit
 						a.btn.btn-primary(href='' + linz.api.url.getAdminLink(config, 'edit', record._id))
 							i.fa.fa-edit
 							| Edit
-				if config.overview.viewAll
+				if config.permissions.canList
 					span.back
 						a.btn.btn-default(href='' + linz.api.url.getAdminLink(config, 'list'))
 							i.fa.fa-chevron-left
