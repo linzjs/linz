@@ -25,7 +25,7 @@ var route = function (req, res, next) {
             // based on permissions, filter out some models
             async.filter(_models, function (model, cb) {
 
-                linz.api.model.permission(req.user, model, 'canList', function (result) {
+                linz.api.model.hasPermission(req.user, model, 'canList', function (result) {
 
                     // explicitly, a permission must return false in order to be denied
                     // an undefined permission, or anything other than false will allow the permission

@@ -12,7 +12,7 @@ var route = function (req, res, next) {
 
         function (done) {
 
-            req.linz.model.getForm(function(err,form){
+            req.linz.model.getForm(req.user, function (err, form) {
 
                 // retrieve form information, for use in next function
                 req.linz.model.form = form;

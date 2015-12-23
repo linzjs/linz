@@ -43,6 +43,58 @@ module.exports = function (router) {
 
 				});
 
+			},
+
+			function (cb) {
+
+				req.linz.model.getForm(req.user, function (err, form) {
+
+					if (err) {
+						return cb(err);
+					}
+
+					req.linz.model.linz.formtools.form = form;
+
+					return cb(null);
+
+				});
+
+			},
+
+			function (cb) {
+
+				// loop through each of the keys to determine if we have an embedded document
+				// if we do, we need to call getForm with the user
+				var form = req.linz.model.linz.formtools.form;
+
+				async.forEachOf(form, function (field, key, callback) {
+
+					if (field.type !== 'documentarray') {
+						return callback();
+					}
+
+					field.schema.statics.getForm(req.user, function (err, embeddedForm) {
+
+						if (err) {
+							return callback(err);
+						}
+
+						field.linz = {
+							formtools: {
+								form: embeddedForm
+							}
+						};
+
+						return callback(null);
+
+					});
+
+				}, function (err) {
+
+					return cb(null);
+
+				});
+
 			}
 
 		], function (err) {
