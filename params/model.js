@@ -63,6 +63,22 @@ module.exports = function (router) {
 
 			function (cb) {
 
+				req.linz.model.getOverview(req.user, function (err, overview) {
+
+					if (err) {
+						return cb(err);
+					}
+
+					req.linz.model.linz.formtools.overview = overview;
+
+					return cb(null);
+
+				});
+
+			},
+
+			function (cb) {
+
 				// loop through each of the keys to determine if we have an embedded document
 				// if we do, we need to call getForm with the user
 				var form = req.linz.model.linz.formtools.form;

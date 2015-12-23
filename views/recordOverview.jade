@@ -18,10 +18,10 @@ block header
 							i.fa.fa-trash-o
 							| Delete
 
-		if model.overview.actions && model.overview.actions.length
+		if formtools.overview.actions && formtools.overview.actions.length
 			.custom-actions
-				if model.overview.actions.length === 1
-					for action in model.overview.actions
+				if formtools.overview.actions.length === 1
+					for action in formtools.overview.actions
 						a.btn.btn-default(href=linz.api.url.getAdminLink(model, action.action) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback)= action.label				
 				else
 					.dropdown
@@ -29,7 +29,7 @@ block header
 							| Actions&nbsp;
 							span.caret
 						ul.dropdown-menu(role='menu')
-							for action in model.overview.actions
+							for action in formtools.overview.actions
 								if action.type === 'header'
 									li(role='presentation', class='dropdown-header')= action.label
 								else if action.type === 'divider'
@@ -45,7 +45,7 @@ block header
 				span.back
 					a.btn.btn-default(href='' + linz.api.url.getAdminLink(model))
 						i.fa.fa-chevron-left
-						| View all #{model.linz.formtools.model.plural}
+						| View all #{formtools.model.plural}
 
 block content
 	.container.linz-container.overview.config

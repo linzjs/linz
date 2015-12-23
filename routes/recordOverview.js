@@ -8,14 +8,15 @@ var route = function (req, res, next) {
 	var locals = {
 		model: req.linz.model,
 		record: req.linz.record,
-		permissions: req.linz.model.linz.formtools.permissions
+		permissions: req.linz.model.linz.formtools.permissions,
+		formtools: req.linz.model.linz.formtools
 	};
 
 	async.series([
 
         function (cb) {
 
-            req.linz.model.overview.summary.renderer(req.linz.record, req.linz.model, function (err, content) {
+            req.linz.model.linz.formtools.overview.summary.renderer(req.linz.record, req.linz.model, function (err, content) {
 
                 if (err) {
                     return cb(err);
@@ -31,13 +32,13 @@ var route = function (req, res, next) {
 
 		function (cb) {
 
-			if (!req.linz.model.overview.body) {
+			if (!req.linz.model.linz.formtools.overview.body) {
 
 				return cb(null);
 
 			}
 
-			req.linz.model.overview.body(req, res, req.linz.record, req.linz.model, function (err, content) {
+			req.linz.model.linz.formtools.overview.body(req, res, req.linz.record, req.linz.model, function (err, content) {
 
                 if (err) {
                     return cb(err);
@@ -135,7 +136,7 @@ var route = function (req, res, next) {
 
 	    // define default overview action modal settings in a format that jade can access easily
 
-	    req.linz.model.overview.actions.forEach(function (action) {
+	    req.linz.model.linz.formtools.overview.actions.forEach(function (action) {
 
 	        var modal = { active: false };
 
