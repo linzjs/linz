@@ -2,7 +2,7 @@
 	h1
 		a(href='' + linz.api.url.getAdminLink(model))= label.plural
 .model-actions
-	if permissions.canCreate
+	if permissions.canCreate !== false
 		.actions
 			span.create
 				a.btn.btn-primary(href='' + linz.api.url.getAdminLink(model, 'new'))
@@ -52,11 +52,11 @@
 				.toolbarItem
 					!= item.html
 	
-	if model.grid.export && model.grid.export.length && permissions.canExport
+	if model.grid.export && model.grid.export.length && permissions.canExport !== false
 		.export
 			if model.grid.export.length === 1
 				for exp in model.grid.export
-					if exp.enabled && permissions.canExport
+					if exp.enabled && permissions.canExport !== false
 						- attributes = {}
 						if exp.action === 'export'
 							- attributes['data-target'] = '#exportModal'
@@ -68,7 +68,7 @@
 						span.caret
 					ul.dropdown-menu(role='menu')
 						for exp in model.grid.export
-							if exp.enabled && permissions.canExport
+							if exp.enabled && permissions.canExport !== false
 								- attributes = {}
 								if exp.action === 'export'
 									- attributes['data-target'] = '#exportModal'
