@@ -2,7 +2,9 @@
 
 	<template data-linz-template="document-{{name}}">{{{form}}}</template>
 
-	<a class="btn btn-default" data-toggle="modal" data-document-action="create">Create another</a>
+	{{#if create}}
+		<a class="btn btn-default" data-toggle="modal" data-document-action="create">Create another</a>
+	{{/if}}
 
 	<input type="hidden" name="{{name}}" value="{{json}}" data-linz-conflict-handler="documentArrayConflictHandler" />
 

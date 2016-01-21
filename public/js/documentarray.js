@@ -56,6 +56,14 @@
         // now bind the documents, handle the edit button
         $('[data-document-field-for="' + documentArrayInstance + '"]').find('a[data-document-action="edit"]').click(function () {
 
+            $('#documentsModal .btn-save').unbind('click');
+            $('#documentsModal .btn-cancel').unbind('click');
+            $('#documentsModal button.close').unbind('click');
+
+            $('#documentsModal .btn-save').click(function () {  da.saveAction(); });
+            $('#documentsModal .btn-cancel').click(function () { da.closeAction(); });
+            $('#documentsModal button.close').click(function () { da.closeAction(); });
+
             da.mode = 'editing';
 
             da.editingFor = documentArrayInstance;
@@ -73,6 +81,14 @@
 
         // now bind the documents, handle the delete button
         $('[data-document-field-for="' + documentArrayInstance + '"]').find('a[data-document-action="remove"]').click(function () {
+
+            $('#documentsModal .btn-save').unbind('click');
+            $('#documentsModal .btn-cancel').unbind('click');
+            $('#documentsModal button.close').unbind('click');
+
+            $('#documentsModal .btn-save').click(function () {  da.saveAction(); });
+            $('#documentsModal .btn-cancel').click(function () { da.closeAction(); });
+            $('#documentsModal button.close').click(function () { da.closeAction(); });
 
             da.mode = 'removing';
 
@@ -237,11 +253,12 @@
 
     $.fn.documentarray = function(option, parameter, extraOptions) {
 
-        var isModalWired = false;
+
 
         return this.each(function(index, el) {
 
-            var data = $(this).data('documentarray');
+            var data = $(this).data('documentarray'),
+                isModalWired = false;
 
             // initialize the documentarray.
             if (!data) {
@@ -251,9 +268,6 @@
 
             if (!isModalWired) {
 
-                $('#documentsModal .btn-save').click(function () { data.saveAction(); });
-                $('#documentsModal .btn-cancel').click(function () { data.closeAction(); });
-                $('#documentsModal button.close').click(function () { data.closeAction(); });
                 $('#documentsModal').on('shown.bs.modal', function (e) {
                     $('#documentsModal').animate({ scrollTop: 0 }, 'fast');
                 });
@@ -271,6 +285,15 @@
             $('[data-document-field-for="' + documentArrayInstance + '"] [data-document-action="create"]').click(function (event) {
 
                 var parentElem = $(event.target).closest('.documents-container');
+
+                // unbind click events before we can bind new ones
+                $('#documentsModal .btn-save').unbind('click');
+                $('#documentsModal .btn-cancel').unbind('click');
+                $('#documentsModal button.close').unbind('click');
+
+                $('#documentsModal .btn-save').click(function () {  data.saveAction(); });
+                $('#documentsModal .btn-cancel').click(function () { data.closeAction(); });
+                $('#documentsModal button.close').click(function () { data.closeAction(); });
 
                 // clear out persitence fields
                 data.editingObject = {};
