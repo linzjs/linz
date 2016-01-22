@@ -42,11 +42,17 @@
 
     DocumentArray.prototype.drawDocuments = function (documentArrayInstance, documents) {
 
-        var da = this;
+        var da = this,
+            setLabel = this.setLabel;
+
+        // check if there is a custom setLabel for this documentarray
+        if ($('[data-document-field-for="' + documentArrayInstance + '"]').attr('data-document-set-label') !== undefined) {
+            setLabel = linz.documents[documentArrayInstance + 'SetLabel'];
+        }
 
         // loop through each document and ensure there is a label
         for (var i = 0; i < documents.length; i++) {
-            documents[i] = this.setLabel(documents[i]);
+            documents[i] = setLabel(documents[i]);
         }
 
         documents = { documents: documents };
