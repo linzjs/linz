@@ -1,8 +1,8 @@
-<div class="documents-container" data-document-field-for="{{name}}" data-document-field-label="{{label}}">
+<div class="documents-container" data-document-field-for="{{name}}" data-document-field-label="{{label}}"{{#if canCreate}} data-document-can-create{{/if}}{{#if canEdit}} data-document-can-edit{{/if}}{{#if canDelete}} data-document-can-delete{{/if}}>
 
 	<template data-linz-template="document-{{name}}">{{{form}}}</template>
 
-	{{#if create}}
+	{{#if canCreate}}
 		<a class="btn btn-default" data-toggle="modal" data-document-action="create">Create another</a>
 	{{/if}}
 
