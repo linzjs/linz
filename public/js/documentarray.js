@@ -42,52 +42,82 @@
 
     DocumentArray.prototype.drawDocuments = function (documentArrayInstance, documents) {
 
-        var da = this;
+        var da = this,
+            setLabel = this.setLabel;
+
+        // check if there is a custom setLabel for this documentarray
+        if ($('[data-document-field-for="' + documentArrayInstance + '"]').attr('data-document-set-label') !== undefined) {
+            setLabel = linz.documents[documentArrayInstance + 'SetLabel'];
+        }
 
         // loop through each document and ensure there is a label
         for (var i = 0; i < documents.length; i++) {
-            documents[i] = this.setLabel(documents[i]);
+            documents[i] = setLabel(documents[i]);
         }
 
         documents = { documents: documents };
 
         $('[data-document-field-for="' + documentArrayInstance + '"] .documents').html(this.listTemplate(documents));
 
-        // now bind the documents, handle the edit button
-        $('[data-document-field-for="' + documentArrayInstance + '"]').find('a[data-document-action="edit"]').click(function () {
+        if (da.canEdit) {
 
-            da.mode = 'editing';
+            // now bind the documents, handle the edit button
+            $('[data-document-field-for="' + documentArrayInstance + '"]').find('a[data-document-action="edit"]').click(function () {
 
-            da.editingFor = documentArrayInstance;
+                $('#documentsModal .btn-save').unbind('click');
+                $('#documentsModal .btn-cancel').unbind('click');
+                $('#documentsModal button.close').unbind('click');
 
-            da.editingIndex = $(this).parent().attr('data-document-index');
+                $('#documentsModal .btn-save').click(function () {  da.saveAction(); });
+                $('#documentsModal .btn-cancel').click(function () { da.closeAction(); });
+                $('#documentsModal button.close').click(function () { da.closeAction(); });
 
-            // now grab the array if there already is one and turn it into a JavaScript object
-            da.editingArray = JSON.parse($('[data-document-field-for="' + documentArrayInstance + '"]').find('input[type="hidden"][name="' + documentArrayInstance + '"]').val());
+                da.mode = 'editing';
 
-            da.editingObject = da.editingArray[da.editingIndex];
+                da.editingFor = documentArrayInstance;
 
-            da.editDocument(documentArrayInstance);
+                da.editingIndex = $(this).parent().attr('data-document-index');
 
-        });
+                // now grab the array if there already is one and turn it into a JavaScript object
+                da.editingArray = JSON.parse($('[data-document-field-for="' + documentArrayInstance + '"]').find('input[type="hidden"][name="' + documentArrayInstance + '"]').val());
 
-        // now bind the documents, handle the delete button
-        $('[data-document-field-for="' + documentArrayInstance + '"]').find('a[data-document-action="remove"]').click(function () {
+                da.editingObject = da.editingArray[da.editingIndex];
 
-            da.mode = 'removing';
+                da.editDocument(documentArrayInstance);
 
-            da.editingFor = documentArrayInstance;
+            });
 
-            da.editingIndex = $(this).parent().attr('data-document-index');
+        }
 
-            // now grab the array if there already is one and turn it into a JavaScript object
-            da.editingArray = JSON.parse($('[data-document-field-for="' + documentArrayInstance + '"]').find('input[type="hidden"][name="' + documentArrayInstance + '"]').val());
+        if (da.canDelete) {
 
-            da.editingObject = da.setLabel(da.editingArray[da.editingIndex]);
+            // now bind the documents, handle the delete button
+            $('[data-document-field-for="' + documentArrayInstance + '"]').find('a[data-document-action="remove"]').click(function () {
 
-            da.removeDocument(documentArrayInstance);
+                $('#documentsModal .btn-save').unbind('click');
+                $('#documentsModal .btn-cancel').unbind('click');
+                $('#documentsModal button.close').unbind('click');
 
-        });
+                $('#documentsModal .btn-save').click(function () {  da.saveAction(); });
+                $('#documentsModal .btn-cancel').click(function () { da.closeAction(); });
+                $('#documentsModal button.close').click(function () { da.closeAction(); });
+
+                da.mode = 'removing';
+
+                da.editingFor = documentArrayInstance;
+
+                da.editingIndex = $(this).parent().attr('data-document-index');
+
+                // now grab the array if there already is one and turn it into a JavaScript object
+                da.editingArray = JSON.parse($('[data-document-field-for="' + documentArrayInstance + '"]').find('input[type="hidden"][name="' + documentArrayInstance + '"]').val());
+
+                da.editingObject = da.setLabel(da.editingArray[da.editingIndex]);
+
+                da.removeDocument(documentArrayInstance);
+
+            });
+
+        }
 
     };
 
@@ -237,11 +267,12 @@
 
     $.fn.documentarray = function(option, parameter, extraOptions) {
 
-        var isModalWired = false;
+
 
         return this.each(function(index, el) {
 
-            var data = $(this).data('documentarray');
+            var data = $(this).data('documentarray'),
+                isModalWired = false;
 
             // initialize the documentarray.
             if (!data) {
@@ -249,16 +280,30 @@
                 $(this).data('documentarray', data);
             }
 
+            // determine the actions for this documentarray
+            data.canCreate = $(el).attr('data-document-can-create') !== undefined ? true : false,
+            data.canEdit = $(el).attr('data-document-can-edit') !== undefined ? true : false,
+            data.canDelete = $(el).attr('data-document-can-delete') !== undefined ? true : false;
+
             if (!isModalWired) {
 
-                $('#documentsModal .btn-save').click(function () { data.saveAction(); });
-                $('#documentsModal .btn-cancel').click(function () { data.closeAction(); });
-                $('#documentsModal button.close').click(function () { data.closeAction(); });
                 $('#documentsModal').on('shown.bs.modal', function (e) {
                     $('#documentsModal').animate({ scrollTop: 0 }, 'fast');
                 });
 
-                data.listTemplate = Handlebars.compile($('template.document-array-list').clone().html());
+                var template = $('template.document-array-list').clone().html();
+
+                if (!data.canEdit) {
+                    // remove edit button from template
+                    template = $(template).find('[data-document-action="edit"]').remove().end()[0].outerHTML;
+                }
+
+                if (!data.canDelete) {
+                    // remove delete button from template
+                    template = $(template).find('[data-document-action="remove"]').remove().end()[0].outerHTML;
+                }
+
+                data.listTemplate = Handlebars.compile(template);
 
                 // activate switch to make sure the above if statement is executed just once!
                 isModalWired = true;
@@ -267,26 +312,39 @@
 
             var documentArrayInstance = $(el).attr('data-document-field-for');
 
-            // handle the create button
-            $('[data-document-field-for="' + documentArrayInstance + '"] [data-document-action="create"]').click(function (event) {
+            if (data.canCreate) {
 
-                var parentElem = $(event.target).closest('.documents-container');
+                // handle the create button
+                $('[data-document-field-for="' + documentArrayInstance + '"] [data-document-action="create"]').click(function (event) {
 
-                // clear out persitence fields
-                data.editingObject = {};
-                data.editingInstance = undefined;
-                data.mode = 'editing';
+                    var parentElem = $(event.target).closest('.documents-container');
 
-                // which field are we editing for?
-                data.editingFor = $(parentElem).attr('data-document-field-for');
+                    // unbind click events before we can bind new ones
+                    $('#documentsModal .btn-save').unbind('click');
+                    $('#documentsModal .btn-cancel').unbind('click');
+                    $('#documentsModal button.close').unbind('click');
 
-                // now grab the array if there already is one and turn it into a JavaScript object
-                data.editingArray = JSON.parse($(parentElem).children('input[type="hidden"][name="' + data.editingFor + '"]').val());
+                    $('#documentsModal .btn-save').click(function () {  data.saveAction(); });
+                    $('#documentsModal .btn-cancel').click(function () { data.closeAction(); });
+                    $('#documentsModal button.close').click(function () { data.closeAction(); });
 
-                // now pop the form
-                data.editDocument(data.editingFor);
+                    // clear out persitence fields
+                    data.editingObject = {};
+                    data.editingInstance = undefined;
+                    data.mode = 'editing';
 
-            });
+                    // which field are we editing for?
+                    data.editingFor = $(parentElem).attr('data-document-field-for');
+
+                    // now grab the array if there already is one and turn it into a JavaScript object
+                    data.editingArray = JSON.parse($(parentElem).children('input[type="hidden"][name="' + data.editingFor + '"]').val());
+
+                    // now pop the form
+                    data.editDocument(data.editingFor);
+
+                });
+
+            }
 
             data.retrieveForm(documentArrayInstance);
 
