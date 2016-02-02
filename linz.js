@@ -592,7 +592,8 @@ Linz.prototype.buildNavigation = function (cb) {
 
 	var nav = [],
 		_this = this,
-		linzModels = this.get('models');
+		linzModels = this.get('models'),
+		linzConfigs = this.get('configs');
 
     // models, configs and logs
     async.parallel([
@@ -636,12 +637,16 @@ Linz.prototype.buildNavigation = function (cb) {
 
         function (done) {
 
-            // add a reference for configs
-            var configs = {
-                name: 'Configs',
-                href: _this.get('admin path') + '/configs/list'
-            };
-            nav.push(configs);
+            // add a reference for configs, if we have some
+			if (linzConfigs.length) {
+
+				var configs = {
+	                name: 'Configs',
+	                href: _this.get('admin path') + '/configs/list'
+	            };
+	            nav.push(configs);
+				
+			}
 
             return done(null);
 
