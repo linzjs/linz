@@ -16,6 +16,14 @@ var	express = require('express'),
 	flash = require('connect-flash');
 
 /**
+ * Define error handling loggers
+ */
+var debugModels = require('debug')('linz:models'),
+	debugConfigs = require('debug')('linz:configs'),
+	debugGeneral = require('debug')('linz:general'),
+	debugSet = require('debug')('linz:set');
+
+/**
  * Linz constructor
  */
 function Linz () {
@@ -24,7 +32,99 @@ function Linz () {
 	this.settings = {};
 	this.loggers = {};
 
+	// apply default linz options
+	this.options(require('./lib/defaults'));
+
 }
+
+/**
+ * Linz inherits from EventEmitter for Linz.prototype.on('event') handling
+ *
+ */
+ Linz.prototype.__proto__ = events.EventEmitter.prototype;
+
+/**
+ * Internal method used to setup options
+ *
+ * @return Linz for chaining
+ */
+
+Linz.prototype.options = function (opts) {
+
+	var _this = this,
+		opts = opts || {};
+
+	for (var opt in opts) {
+		_this.set(opt, opts[opt]);
+	}
+
+	return this;
+
+};
+
+/**
+* Set a value or setting on Linz
+*
+* @return Linz for chaining
+*/
+
+Linz.prototype.set = function (setting, val, override) {
+
+	if (arguments.length === 1) {
+		return this.settings[setting];
+	}
+
+	// can only set the following values once
+	var onceOnly = ['models path'];
+
+	if (onceOnly.indexOf(setting) >= 0 && this.settings[setting] !== undefined) {
+		return debugSet('You can only set \'' + setting + '\' once. Ignoring set this time.');
+	}
+
+	// defaults to true
+	override = !(override === false);
+
+	// override unless previously set
+	if (override || override === false && this.settings[setting] === undefined) {
+		debugSet('Setting ' + setting + ' to ' + val);
+		this.settings[setting] = val;
+		this.emit(setting, val);
+	}
+
+	return this;
+
+};
+
+/**
+* Get a value or setting on Linz
+*
+* @return setting value
+*/
+
+Linz.prototype.get = function (setting) {
+	return this.settings[setting];
+};
+
+/*
+* Set a settings value to true
+* synonym for admin.set('setting', true);
+* @return Linz for chaining
+*/
+
+Linz.prototype.enable = function (setting) {
+	this.set(setting, true);
+	return this;
+};
+
+/*
+* Set a settings value to false
+* synonym for admin.set('setting', false);
+* @return Linz for chaining
+*/
+Linz.prototype.disable = function (setting) {
+	this.set(setting, false);
+	return this;
+};
 
 /**
  * Expose Linz
@@ -45,22 +145,12 @@ linz.utils = require('./lib/utils');
 /**
  * Define local variables used by the Linz class
  */
-var routesManager = require('./lib/router'),
+var middlewareManager = require('./lib/middleware'),
+    routesManager = require('./lib/router'),
     helpersModels = require('./lib/helpers-models'),
     helpersConfigs = require('./lib/helpers-configs'),
 	libPassport = require('./lib/passport'),
-    debugModels = require('debug')('linz:models'),
-    debugConfigs = require('debug')('linz:configs'),
-    debugGeneral = require('debug')('linz:general'),
-    debugSet = require('debug')('linz:set'),
     error = require('./lib/errors');
-
-
-/**
- * Linz inherits from EventEmitter for Linz.prototype.on('event') handling
- *
- */
- Linz.prototype.__proto__ = events.EventEmitter.prototype;
 
 /**
  * Initialize linz with the express app
@@ -105,9 +195,6 @@ Linz.prototype.init = function () {
 	this.app = _app;
 	this.mongoose = _mongoose;
 	this.passport = _passport;
-
-	// apply default linz options
-	this.options(require('./lib/defaults'));
 
 	// overlay runtime options, these will override linz defaults
 	this.options(_options);
@@ -214,7 +301,6 @@ Linz.prototype.setupORM = function (cb) {
     return cb(null);
 
 };
-
 
 /**
 * Search and look for the models folder, then go ahead and load them
@@ -385,8 +471,11 @@ Linz.prototype.defaultConfiguration = function (cb) {
 	// setup the router
 	this.router = routesManager.getRouter();
 
-    // assign the middleware
-    this.app.use(require('./middleware/request')());
+    // assign the default middleware (across all routes)
+    middlewareManager.mountDefaults(this.app);
+
+	// assign admin spefific middleware
+	middlewareManager.mountAdminMiddleware(this.router);
 
 	// assign the admin routes
 	routesManager.setupAdminRoutes();
@@ -507,81 +596,6 @@ Linz.prototype.bootstrapExpressLocals = function (cb) {
 
 };
 
-Linz.prototype.options = function (opts) {
-
-	var _this = this,
-		opts = opts || {};
-
-	for (var opt in opts) {
-		_this.set(opt, opts[opt]);
-	}
-
-};
-
-/**
-* Set a value or setting on Linz
-*
-* @return Linz for chaining
-*/
-
-Linz.prototype.set = function (setting, val, override) {
-
-	if (arguments.length === 1) {
-		return this.settings[setting];
-	}
-
-	// can only set the following values once
-	var onceOnly = ['models path'];
-
-	if (onceOnly.indexOf(setting) >= 0 && this.settings[setting] !== undefined) {
-		return debugSet('You can only set \'' + setting + '\' once. Ignoring set this time.');
-	}
-
-	// defaults to true
-	override = !(override === false);
-
-	// override unless previously set
-	if (override || override === false && this.settings[setting] === undefined) {
-		debugSet('Setting ' + setting + ' to ' + val);
-		this.settings[setting] = val;
-		this.emit(setting, val);
-	}
-
-	return this;
-
-};
-
-/**
-* Get a value or setting on Linz
-*
-* @return setting value
-*/
-
-Linz.prototype.get = function (setting) {
-	return this.settings[setting];
-};
-
-/*
-* Set a settings value to true
-* synonym for admin.set('setting', true);
-* @return Linz for chaining
-*/
-
-Linz.prototype.enable = function (setting) {
-	this.set(setting, true);
-	return this;
-};
-
-/*
-* Set a settings value to false
-* synonym for admin.set('setting', false);
-* @return Linz for chaining
-*/
-Linz.prototype.disable = function (setting) {
-	this.set(setting, false);
-	return this;
-};
-
 
 /*
 * Return the linz navigation structure
@@ -645,7 +659,7 @@ Linz.prototype.buildNavigation = function (cb) {
 	                href: _this.get('admin path') + '/configs/list'
 	            };
 	            nav.push(configs);
-				
+
 			}
 
             return done(null);

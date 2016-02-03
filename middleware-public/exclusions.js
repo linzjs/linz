@@ -8,7 +8,7 @@ module.exports = function () {
     }
 
     var args = Array.prototype.slice.call(arguments),
-        exclusions = [new RegExp("^" + "/admin".replace(/\//g, '\/') + "\/(login|logout|public)")], // TODO: change /admin to linz.get('admin path')
+        exclusions = [new RegExp("^" + linz.api.url.getLink().replace(/\//g, '\/') + "\/(login|logout|public)")],
         middlewares = args;
 
     if (Array.isArray(args[0]) && args.length === 1) {
@@ -16,7 +16,7 @@ module.exports = function () {
     }
 
     if (Array.isArray(args[0])) {
-        exclusions = args[0];
+        exclusions = exclusions.concat(args[0]);
         // remove the first arguments as this is an exclusion
         middlewares.splice(0,1);
     }
