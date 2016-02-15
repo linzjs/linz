@@ -40,10 +40,6 @@ var route = {
 
         });
 
-	},
-
-	post: function (req, res) {
-		res.redirect((linz.get('admin path') === '' ? '/': linz.get('admin path')));
 	}
 
 };
