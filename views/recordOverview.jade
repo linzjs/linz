@@ -4,15 +4,14 @@ block header
 	.model-title
 		h1= record.title
 	.model-actions
-
-		if permissions.canEdit || permissions.canDelete
+		if permissions.canEdit !== false || permissions.canDelete !== false
 			.actions
-				if permissions.canEdit
+				if permissions.canEdit !== false
 					span.edit
 						a.btn.btn-primary(href='' + linz.api.url.getAdminLink(model, 'edit', record._id), data-linz-control="edit", data-linz-disabled=((record.edit && record.edit.disabled) ? 'true' : false), data-linz-disabled-message=((record.edit && record.edit.disabled) ? record.edit.message : false))
 							i.fa.fa-edit
 							| Edit
-				if permissions.canDelete
+				if permissions.canDelete !== false
 					span.delete
 						a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, 'delete', record._id), data-linz-control="delete", data-linz-disabled=((record.delete && record.delete.disabled) ? 'true' : false), data-linz-disabled-message=((record.delete && record.delete.disabled) ? record.delete.message : false))
 							i.fa.fa-trash-o
@@ -22,7 +21,7 @@ block header
 			.custom-actions
 				if formtools.overview.actions.length === 1
 					for action in formtools.overview.actions
-						a.btn.btn-default(href=linz.api.url.getAdminLink(model, action.action) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback)= action.label				
+						a.btn.btn-default(href=linz.api.url.getAdminLink(model, action.action, record._id) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback)= action.label				
 				else
 					.dropdown
 						button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
@@ -39,8 +38,8 @@ block header
 										if action.isDisabled
 											a(role='menuitem', tabindex='-1', href='', data-linz-disabled='true', data-linz-disabled-message=action.disabledMessage)= action.label
 										else
-											a(role='menuitem', tabindex='-1', href=linz.api.url.getAdminLink(model, action.action) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback)= action.label
-		if permissions.canList
+											a(role='menuitem', tabindex='-1', href=linz.api.url.getAdminLink(model, action.action, record._id) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback)= action.label
+		if permissions.canList !== false
 			.actions
 				span.back
 					a.btn.btn-default(href='' + linz.api.url.getAdminLink(model))

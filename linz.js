@@ -622,7 +622,8 @@ Linz.prototype.disable = function (setting) {
 
 
 /*
-* Return the linz navigation structure
+* Return the linz navigation structure. This is the complete navigation structure.
+* It will be further manipulated by middleware (using the API) to customise per user.
 *
 * @api private
 */

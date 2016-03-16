@@ -15,7 +15,7 @@ module.exports = function (router) {
 
 			function (cb) {
 
-				req.linz.model.getGrid(req.user, function (err, grid) {
+				linz.api.model.grid(req.user, modelName, function (err, grid) {
 
 					if (err) {
 						return cb(err);
@@ -31,7 +31,7 @@ module.exports = function (router) {
 
 			function (cb) {
 
-				req.linz.model.getPermissions(req.user, function (err, permissions) {
+				linz.api.model.permissions(req.user, modelName, function (err, permissions) {
 
 					if (err) {
 						return cb(err);
@@ -47,7 +47,7 @@ module.exports = function (router) {
 
 			function (cb) {
 
-				req.linz.model.getForm(req.user, function (err, form) {
+				linz.api.model.form(req.user, modelName, function (err, form) {
 
 					if (err) {
 						return cb(err);
@@ -63,7 +63,7 @@ module.exports = function (router) {
 
 			function (cb) {
 
-				req.linz.model.getOverview(req.user, function (err, overview) {
+				linz.api.model.overview(req.user, modelName, function (err, overview) {
 
 					if (err) {
 						return cb(err);
