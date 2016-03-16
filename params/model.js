@@ -15,6 +15,14 @@ module.exports = function (router) {
 
 			function (cb) {
 
+				req.linz.model.linz.formtools.labels = linz.api.model.labels(modelName);
+
+				return cb();
+
+			},
+
+			function (cb) {
+
 				linz.api.model.grid(req.user, modelName, function (err, grid) {
 
 					if (err) {
@@ -89,19 +97,21 @@ module.exports = function (router) {
 						return callback();
 					}
 
+					// Setup the placeholder for the embedded document. Retrieve the labels.
+					field.linz = {
+						formtools: {
+							labels: field.schema.statics.getLabels()
+						}
+					};
+
+					// Retrieve the form.
 					field.schema.statics.getForm(req.user, function (err, embeddedForm) {
 
-						if (err) {
-							return callback(err);
+						if (embeddedForm) {
+							field.linz.formtools.form = embeddedForm;
 						}
 
-						field.linz = {
-							formtools: {
-								form: embeddedForm
-							}
-						};
-
-						return callback(null);
+						return callback(err);
 
 					});
 

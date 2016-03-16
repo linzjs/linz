@@ -18,7 +18,7 @@
     "bunyan": "0.22.x",
     "camelcase": "2.0.1",
     "chalk": "~0.4.0",
-    "clone": "0.1.15",
+    "clone": "1.0.2",
     "connect-flash": "^0.1.1",
     "cookie-parser": "1.0.x",
     "debug": "0.7.4",

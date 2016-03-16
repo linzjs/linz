@@ -10,22 +10,8 @@ var route = function (req, res, next) {
 
         function (cb) {
 
-            req.linz.config.schema.statics.getForm(function(err,form){
-
-                // retrieve form information, for use in next function
-                req.linz.config.form = form;
-
-                // we're done
-                return cb(null, form);
-
-            });
-
-        },
-
-        function (form, cb) {
-
-
-            var db  = linz.mongoose.connection.db;
+            var db  = linz.mongoose.connection.db,
+                form = req.linz.config.linz.formtools.form;
 
             db.collection(linz.get('configs collection name'), function (err, collection) {
 

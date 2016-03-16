@@ -7,16 +7,18 @@ function permissions (permission, context) {
 
     return function (req, res, next) {
 
-        var perm = permission;
+        var perm = permission,
+            _context = context;
 
-        // if the context is a model, let's get it
+        // If the context is a model, let's get it.
+        // `context` will either be `models`, `model`, `configs`, or `config`.
         if (context === 'model') {
-            context = {
+            _context = {
                 model: req.linz.model.modelName,
                 type: 'model'
             };
         } else if (context === 'config') {
-            context = {
+            _context = {
                 config: req.linz.config.config._id,
                 type: 'config'
             }
@@ -28,7 +30,7 @@ function permissions (permission, context) {
             perm = camelCase('can-' + req.params.action);
         }
 
-        linz.api.permissions.hasPermission(req.user, context, perm, function (hasPermission) {
+        linz.api.permissions.hasPermission(req.user, _context, perm, function (hasPermission) {
 
             // explicitly, a permission must return false in order to be denied
             // an undefined permission, or anything other than false will allow the permission

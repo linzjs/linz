@@ -4,7 +4,7 @@ var linz = require('../'),
 /* GET /admin/model/:model/create */
 var route = function (req, res, next) {
 
-	linz.formtools.form.generateFormFromModel(req.linz.model.schema, req.linz.model.form, {}, 'create', function (err, editForm) {
+	linz.formtools.form.generateFormFromModel(req.linz.model.schema, req.linz.model.linz.formtools.form, {}, 'create', function (err, editForm) {
 
         if (err) {
             return next(err);
