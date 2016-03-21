@@ -27,7 +27,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
             return val;
         }
 
-        var Model = linz.api.model.get(req.body.modelName);
+        var Model = req.linz.model;
 
         if (Model.schema.tree[fieldName].ref) {
             return val.title;
@@ -66,8 +66,8 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
         }
 
-        if (typeof val === 'boolean' || 'true,false,yes,no'.indexOf(val) >=0 ) {
-            return (linz.utils.asBoolean(val) ? 'Yes' : 'No')
+        if (typeof val === 'boolean' || 'true,false,yes,no'.indexOf(val) >= 0 ) {
+            return (linz.utils.asBoolean(val) ? 'Yes' : 'No');
         }
 
         return val;
@@ -83,8 +83,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
             return function (doc) {
 
                 var str = '',
-                    record = doc.toObject({virtuals: true }),
-                    columnNames = fields.join();
+                    record = doc.toObject({virtuals: true });
 
                 if (count !== 0) {
                     return getRecordData(fields, record);
@@ -103,7 +102,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
                 return str + getRecordData(fields, record);
 
-            }
+            };
 
         },
 
@@ -113,7 +112,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
                 return cb(null, {});
             }
 
-            var Model = linz.api.model.get(req.body.modelName),
+            var Model = req.linz.model,
                 form = JSON.parse(req.body.filters);
 
             // check if there are any filters in the form post
@@ -204,26 +203,23 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
         getForm: function getForm(filters, cb) {
 
-            var Model = linz.api.model.get(req.body.modelName);
-
-            Model.getForm(function (err, form) {
-                return cb(err, filters, form)
+            req.linz.model.getForm(req.user, function (err, form) {
+                return cb(err, filters, form);
             });
 
         },
 
         getGrid: function getGrid (filters, form, cb) {
 
-            var Model = linz.api.model.get(req.body.modelName);
-            Model.getGrid(req.user, function (err, grid) {
+            req.linz.model.getGrid(req.user, function (err, grid) {
                 return cb(err, filters, form, grid);
             });
 
         }
 
-    }
+    };
 
-}
+};
 
 // this will retrieve the export object, using Linz's default export handler amongst custom export handlers
 // this is based on the knowledge that only Linz's default export handler can have an `action` of `export`
@@ -269,7 +265,7 @@ module.exports = {
             req.linz.export.fields = {};
 
             // retrieve the form to provide a list of fields to choose from
-            req.linz.model.getForm( function (formErr, form){
+            req.linz.model.getForm(req.user, function (formErr, form){
 
                 if (formErr) {
                     return next(formErr);
@@ -309,12 +305,11 @@ module.exports = {
 
     post: function (req, res, next) {
 
-        var Model = linz.api.model.get(req.body.modelName);
+        var Model = req.linz.model;
 
         // since a custom export function is not defined for model, use local export function
         var asyncFn = [],
-            helpers = modelExportHelpers(req, res),
-            test = 'test';
+            helpers = modelExportHelpers(req, res);
 
         asyncFn.push(helpers.getFilters);
         asyncFn.push(helpers.addIdFilters);
@@ -375,4 +370,4 @@ module.exports = {
         });
 
     }
-}
+};
