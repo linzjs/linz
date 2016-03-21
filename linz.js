@@ -3,36 +3,36 @@
 /**
  * Load required modules
  */
-var	express = require('express'),
-	bodyParser = require('body-parser'),
-	cookieParser = require('cookie-parser'),
-	expressSession = require('express-session'),
-	path = require('path'),
-	events = require('events'),
-	bunyan = require('bunyan'),
+var express = require('express'),
+    bodyParser = require('body-parser'),
+    cookieParser = require('cookie-parser'),
+    expressSession = require('express-session'),
+    path = require('path'),
+    events = require('events'),
+    bunyan = require('bunyan'),
     async = require('async'),
     lessMiddleware = require('less-middleware'),
-	flash = require('connect-flash');
+    flash = require('connect-flash');
 
 /**
  * Define error handling loggers
  */
 var debugModels = require('debug')('linz:models'),
-	debugConfigs = require('debug')('linz:configs'),
-	debugGeneral = require('debug')('linz:general'),
-	debugSet = require('debug')('linz:set');
+    debugConfigs = require('debug')('linz:configs'),
+    debugGeneral = require('debug')('linz:general'),
+    debugSet = require('debug')('linz:set');
 
 /**
  * Linz constructor
  */
 function Linz () {
 
-	// internal properties
-	this.settings = {};
-	this.loggers = {};
+    // internal properties
+    this.settings = {};
+    this.loggers = {};
 
-	// apply default linz options
-	this.options(require('./lib/defaults'));
+    // apply default linz options
+    this.options(require('./lib/defaults'));
 
 }
 
@@ -50,14 +50,14 @@ function Linz () {
 
 Linz.prototype.options = function (opts) {
 
-	var _this = this,
-		opts = opts || {};
+    var _this = this,
+        opts = opts || {};
 
-	for (var opt in opts) {
-		_this.set(opt, opts[opt]);
-	}
+    for (var opt in opts) {
+        _this.set(opt, opts[opt]);
+    }
 
-	return this;
+    return this;
 
 };
 
@@ -69,28 +69,28 @@ Linz.prototype.options = function (opts) {
 
 Linz.prototype.set = function (setting, val, override) {
 
-	if (arguments.length === 1) {
-		return this.settings[setting];
-	}
+    if (arguments.length === 1) {
+        return this.settings[setting];
+    }
 
-	// can only set the following values once
-	var onceOnly = ['models path'];
+    // can only set the following values once
+    var onceOnly = ['models path'];
 
-	if (onceOnly.indexOf(setting) >= 0 && this.settings[setting] !== undefined) {
-		return debugSet('You can only set \'' + setting + '\' once. Ignoring set this time.');
-	}
+    if (onceOnly.indexOf(setting) >= 0 && this.settings[setting] !== undefined) {
+        return debugSet('You can only set \'' + setting + '\' once. Ignoring set this time.');
+    }
 
-	// defaults to true
-	override = !(override === false);
+    // defaults to true
+    override = !(override === false);
 
-	// override unless previously set
-	if (override || override === false && this.settings[setting] === undefined) {
-		debugSet('Setting ' + setting + ' to ' + val);
-		this.settings[setting] = val;
-		this.emit(setting, val);
-	}
+    // override unless previously set
+    if (override || override === false && this.settings[setting] === undefined) {
+        debugSet('Setting ' + setting + ' to ' + val);
+        this.settings[setting] = val;
+        this.emit(setting, val);
+    }
 
-	return this;
+    return this;
 
 };
 
@@ -101,7 +101,7 @@ Linz.prototype.set = function (setting, val, override) {
 */
 
 Linz.prototype.get = function (setting) {
-	return this.settings[setting];
+    return this.settings[setting];
 };
 
 /*
@@ -111,8 +111,8 @@ Linz.prototype.get = function (setting) {
 */
 
 Linz.prototype.enable = function (setting) {
-	this.set(setting, true);
-	return this;
+    this.set(setting, true);
+    return this;
 };
 
 /*
@@ -121,8 +121,8 @@ Linz.prototype.enable = function (setting) {
 * @return Linz for chaining
 */
 Linz.prototype.disable = function (setting) {
-	this.set(setting, false);
-	return this;
+    this.set(setting, false);
+    return this;
 };
 
 /**
@@ -148,7 +148,7 @@ var middlewareManager = require('./lib/middleware'),
     routesManager = require('./lib/router'),
     helpersModels = require('./lib/helpers-models'),
     helpersConfigs = require('./lib/helpers-configs'),
-	libPassport = require('./lib/passport'),
+    libPassport = require('./lib/passport'),
     error = require('./lib/errors');
 
 /**
@@ -158,50 +158,50 @@ var middlewareManager = require('./lib/middleware'),
  */
 Linz.prototype.init = function () {
 
-	var _app,
-		_mongoose,
-		_passport,
-		_options;
+    var _app,
+        _mongoose,
+        _passport,
+        _options;
 
-	// loop through the arguments, and determine what is what
-	for (var i = 0; i < arguments.length; i++) {
+    // loop through the arguments, and determine what is what
+    for (var i = 0; i < arguments.length; i++) {
 
-		var arg = arguments[i];
+        var arg = arguments[i];
 
-		if (arg.constructor.name === 'Mongoose') {
+        if (arg.constructor.name === 'Mongoose') {
             debugGeneral('Using passed in mongoose object');
-			_mongoose = arg;
-		} else if (arg.constructor.name === 'Authenticator') {
-			debugGeneral('Using passed in passport object');
-			_passport = arg;
-		} else if ((arg.constructor.name === 'EventEmitter' || arg.constructor.name === 'Function') && typeof arg === 'function') {
+            _mongoose = arg;
+        } else if (arg.constructor.name === 'Authenticator') {
+            debugGeneral('Using passed in passport object');
+            _passport = arg;
+        } else if ((arg.constructor.name === 'EventEmitter' || arg.constructor.name === 'Function') && typeof arg === 'function') {
             debugGeneral('Using passed in express app');
-			_app = arg;
-		} else  if (arg.constructor.name === 'Object' && typeof arg === 'object') {
+            _app = arg;
+        } else  if (arg.constructor.name === 'Object' && typeof arg === 'object') {
             debugGeneral('Found options configuration object');
-			_options = arg;
-		}
+            _options = arg;
+        }
 
-	}
+    }
 
-	// use anything that is passed in
-	_app = _app || express();
-	_mongoose = _mongoose || require('mongoose');
-	_passport = _passport || require('passport');
-	_options = _options || {};
+    // use anything that is passed in
+    _app = _app || express();
+    _mongoose = _mongoose || require('mongoose');
+    _passport = _passport || require('passport');
+    _options = _options || {};
 
-	// reference required properties
-	this.app = _app;
-	this.mongoose = _mongoose;
-	this.passport = _passport;
+    // reference required properties
+    this.app = _app;
+    this.mongoose = _mongoose;
+    this.passport = _passport;
 
-	// overlay runtime options, these will override linz defaults
-	this.options(_options);
+    // overlay runtime options, these will override linz defaults
+    this.options(_options);
 
-	// configure everything
-	this.configure();
+    // configure everything
+    this.configure();
 
-	return this;
+    return this;
 
 };
 
@@ -308,24 +308,24 @@ Linz.prototype.setupORM = function (cb) {
 */
 Linz.prototype.loadModels = function (cb) {
 
-	if (!this.get('load models')) {
+    if (!this.get('load models')) {
 
-		this.set('models', []);
+        this.set('models', {});
         return cb(null);
 
-	}
+    }
 
     var _this = this;
 
-	// set the default models path
-	this.set('models path', path.resolve(this.get('cwd'), 'models'), false);
+    // set the default models path
+    this.set('models path', path.resolve(this.get('cwd'), 'models'), false);
 
-	var modelsPath = this.get('models path');
+    var modelsPath = this.get('models path');
 
     // load in the models (non-standard callback as loadModels handles all errors)
     helpersModels.loadModels(modelsPath, function (models) {
 
-        _this.set('models', models || []);
+        _this.set('models', models || {});
 
         return cb(null);
 
@@ -342,7 +342,7 @@ Linz.prototype.loadConfigs = function (cb) {
 
     if (!this.get('load configs')) {
 
-        this.set('configs', []);
+        this.set('configs', {});
         return cb(null);
 
     }
@@ -463,39 +463,39 @@ Linz.prototype.initConfigs = function (cb) {
 */
 Linz.prototype.defaultConfiguration = function (cb) {
 
-	var _this = this;
+    var _this = this;
 
-	debugGeneral('Setting up the default configuration');
+    debugGeneral('Setting up the default configuration');
 
-	// setup the router
-	this.router = routesManager.getRouter();
+    // setup the router
+    this.router = routesManager.getRouter();
 
     // assign the default middleware (across all routes)
     middlewareManager.mountDefaults(this.app);
 
-	// assign admin specific middleware
-	middlewareManager.mountAdminMiddleware(this.router);
+    // assign admin specific middleware
+    middlewareManager.mountAdminMiddleware(this.router);
 
-	// assign the route params
-	routesManager.setupParams();
+    // assign the route params
+    routesManager.setupParams();
 
-	// assign the admin routes
-	routesManager.setupAdminRoutes();
+    // assign the admin routes
+    routesManager.setupAdminRoutes();
 
-	// assign the model CRUD routes
-	routesManager.setupModelRoutes();
+    // assign the model CRUD routes
+    routesManager.setupModelRoutes();
 
     // assign the config CRUD routes
     routesManager.setupConfigsRoutes();
 
-	// assign the logging routes
-	if (this.get('request logging') === true) routesManager.setupLoggingRoutes();
+    // assign the logging routes
+    if (this.get('request logging') === true) routesManager.setupLoggingRoutes();
 
-	// store the cwd
-	this.set('cwd', process.cwd());
+    // store the cwd
+    this.set('cwd', process.cwd());
 
-	// place holder for the models, which get loaded in next
-	this.set('models', []);
+    // place holder for the models, which get loaded in next
+    this.set('models', []);
 
     return cb(null);
 
@@ -503,8 +503,8 @@ Linz.prototype.defaultConfiguration = function (cb) {
 
 Linz.prototype.mountAdmin = function (cb) {
 
-	debugGeneral('Mounting Linz on ' + this.get('admin path'));
-	this.app.use(this.get('admin path'), this.router);
+    debugGeneral('Mounting Linz on ' + this.get('admin path'));
+    this.app.use(this.get('admin path'), this.router);
 
     return cb(null);
 };
@@ -516,46 +516,46 @@ Linz.prototype.mountAdmin = function (cb) {
 */
 Linz.prototype.bootstrapExpress = function (cb) {
 
-	// only run once
-	if (this.bBootstrapExpress) {
+    // only run once
+    if (this.bBootstrapExpress) {
         return cb(null);
     }
 
-	if (!this.bBootstrapExpress) {
+    if (!this.bBootstrapExpress) {
         this.bBootstrapExpress = true;
     }
 
-	debugGeneral('Bootstrapping express');
+    debugGeneral('Bootstrapping express');
 
-	this.app.engine('jade', require('jade').__express);
-	this.app.set('view engine', 'jade');
+    this.app.engine('jade', require('jade').__express);
+    this.app.set('view engine', 'jade');
 
-	// setup body-parser, and cookie-parser
-	this.app.use(bodyParser());
+    // setup body-parser, and cookie-parser
+    this.app.use(bodyParser());
 
-	// need to hook in custom cookie parser if provided
-	if (typeof this.get('cookie parser') === 'function') {
-		this.app.use(this.get('cookie parser'));
-	} else {
-		this.app.use(cookieParser((this.get('cookie secret'))));
-	}
+    // need to hook in custom cookie parser if provided
+    if (typeof this.get('cookie parser') === 'function') {
+        this.app.use(this.get('cookie parser'));
+    } else {
+        this.app.use(cookieParser((this.get('cookie secret'))));
+    }
 
-	// need to hook session in here as it must be before passport.initialize
-	if (typeof this.get('session middleware') === 'function') {
-		this.app.use(this.get('session middleware'));
-	} else {
-		this.app.use(expressSession({ secret: this.get('cookie secret') }));
-	}
+    // need to hook session in here as it must be before passport.initialize
+    if (typeof this.get('session middleware') === 'function') {
+        this.app.use(this.get('session middleware'));
+    } else {
+        this.app.use(expressSession({ secret: this.get('cookie secret') }));
+    }
 
-	// setup connect-flash
-	this.app.use(flash());
+    // setup connect-flash
+    this.app.use(flash());
 
-	// configure passport
-	libPassport(this.passport);
+    // configure passport
+    libPassport(this.passport);
 
-	// initialize passport (on all routes)
-	this.app.use(this.passport.initialize());
-	this.app.use(this.passport.session());
+    // initialize passport (on all routes)
+    this.app.use(this.passport.initialize());
+    this.app.use(this.passport.session());
 
     if ((process.env.NODE_ENV || 'development') === 'development') {
         this.app.use(this.get('admin path') + '/public', lessMiddleware(__dirname + '/public', {
@@ -567,8 +567,8 @@ Linz.prototype.bootstrapExpress = function (cb) {
         }));
     }
 
-	// setup admin static routes
-	this.app.use(this.get('admin path') + '/public/', express.static(path.resolve(__dirname, 'public')));
+    // setup admin static routes
+    this.app.use(this.get('admin path') + '/public/', express.static(path.resolve(__dirname, 'public')));
 
     return cb(null);
 
@@ -581,12 +581,12 @@ Linz.prototype.bootstrapExpress = function (cb) {
 */
 Linz.prototype.bootstrapExpressLocals = function (cb) {
 
-	// expose our settings to the rendering engine
-	this.app.locals['linz'] = this;
+    // expose our settings to the rendering engine
+    this.app.locals['linz'] = this;
 
-	this.app.locals['adminPath'] = this.get('admin path');
+    this.app.locals['adminPath'] = this.get('admin path');
 
-	this.app.locals['adminTitle'] = this.get('admin title');
+    this.app.locals['adminTitle'] = this.get('admin title');
 
     this.app.locals['env'] = process.env.NODE_ENV || 'development';
 
@@ -606,8 +606,8 @@ Linz.prototype.bootstrapExpressLocals = function (cb) {
 */
 
 Linz.prototype.enable = function (setting) {
-	this.set(setting, true);
-	return this;
+    this.set(setting, true);
+    return this;
 };
 
 /*
@@ -616,8 +616,8 @@ Linz.prototype.enable = function (setting) {
 * @return Linz for chaining
 */
 Linz.prototype.disable = function (setting) {
-	this.set(setting, false);
-	return this;
+    this.set(setting, false);
+    return this;
 };
 
 
@@ -629,10 +629,10 @@ Linz.prototype.disable = function (setting) {
 */
 Linz.prototype.buildNavigation = function (cb) {
 
-	var nav = [],
-		_this = this,
-		linzModels = this.get('models'),
-		linzConfigs = this.get('configs');
+    var nav = [],
+        _this = this,
+        linzModels = this.get('models'),
+        linzConfigs = this.get('configs');
 
     // models, configs and logs
     async.parallel([
@@ -644,15 +644,19 @@ Linz.prototype.buildNavigation = function (cb) {
                 name: 'Models',
                 href: _this.get('admin path') + '/models/list',
                 children: [],
-				permission: function (user, callback) {
-					return linz.api.permissions.hasPermission(user, 'models', 'canList', callback);
-				}
+                permission: function (user, callback) {
+                    return linz.api.permissions.hasPermission(user, 'models', 'canList', callback);
+                }
             };
 
             async.each(Object.keys(linzModels), function (model, callback) {
 
                 // get the model options
                 linzModels[model].getModelOptions(function (err, options) {
+
+                    if (err) {
+                        return callback(err);
+                    }
 
                     if (options.hide === true) {
                         return callback(null);
@@ -661,9 +665,9 @@ Linz.prototype.buildNavigation = function (cb) {
                     models.children.push({
                         name: linzModels[model].linz.formtools.model.plural,
                         href: _this.get('admin path') + '/model/' + model + '/list',
-						permission: function (user, callback) {
-							return linz.api.permissions.hasPermission(user, { type: 'model', model: model }, 'canList', callback);
-						}
+                        permission: function (user, permCallback) {
+                            return linz.api.permissions.hasPermission(user, { type: 'model', model: model }, 'canList', permCallback);
+                        }
                     });
 
                     return callback(null);
@@ -673,7 +677,12 @@ Linz.prototype.buildNavigation = function (cb) {
 
             }, function (err) {
 
+                if (err) {
+                    return done(err);
+                }
+
                 nav.push(models);
+
                 return done();
 
             });
@@ -683,52 +692,53 @@ Linz.prototype.buildNavigation = function (cb) {
         function (done) {
 
             // add a reference for configs, if we have some
-			if (linzConfigs.length) {
+            if (Object.keys(linzConfigs).length) {
 
-            var configs = {
-                name: 'Configs',
-                href: _this.get('admin path') + '/configs/list',
-				permission: function (user, callback) {
-					return linz.api.permissions.hasPermission(user, 'configs', 'canList', callback);
-				}
-            };
-	            nav.push(configs);
+                var configs = {
+                    name: 'Configs',
+                    href: _this.get('admin path') + '/configs/list',
+                    permission: function (user, callback) {
+                        return linz.api.permissions.hasPermission(user, 'configs', 'canList', callback);
+                    }
+                };
 
-			}
+                nav.push(configs);
+
+            }
 
             return done(null);
 
         },
 
-		// this function will run and return either a no-op function,
-		// or a function that will execute the 'navigation configuration' function and override
-		// nav with the customisation as returned to the callback
-		(function () {
+        // this function will run and return either a no-op function,
+        // or a function that will execute the 'navigation configuration' function and override
+        // nav with the customisation as returned to the callback
+        (function () {
 
-			// if we don't have a function, return a no-op that will simply execute the callback with null
-			if (typeof _this.get('navigation configuration') !== 'function') {
-				return linz.utils.noOp();
-			}
+            // if we don't have a function, return a no-op that will simply execute the callback with null
+            if (typeof _this.get('navigation configuration') !== 'function') {
+                return linz.utils.noOp();
+            }
 
-			return function (done) {
+            return function (done) {
 
-				return _this.get('navigation configuration')(nav, function (err, _nav) {
+                return _this.get('navigation configuration')(nav, function (err, _nav) {
 
-					if (err) {
-						errors.log('The navigation configuration function errored.');
-						return done(null);
-					}
+                    if (err) {
+                        errors.log('The navigation configuration function errored.');
+                        return done(null);
+                    }
 
-					// override with the newly updated navigation
-					nav = _nav;
+                    // override with the newly updated navigation
+                    nav = _nav;
 
-					return done(null);
+                    return done(null);
 
-				});
+                });
 
-			}
+            }
 
-		})()
+        })()
 
     ], function () {
 
@@ -748,9 +758,9 @@ Linz.prototype.buildNavigation = function (cb) {
  */
 Linz.prototype.checkSetup = function(cb) {
 
-	if (this.get('user model') === undefined) {
-		error.log('You must define a user model');
-	}
+    if (this.get('user model') === undefined) {
+        error.log('You must define a user model');
+    }
 
     return cb(null);
 
@@ -766,17 +776,17 @@ Linz.prototype.checkSetup = function(cb) {
 */
 Linz.prototype.logger = function (options) {
 
-	// user can pass either a String or an Object
-	if (typeof options === 'string') options = {name: options};
+    // user can pass either a String or an Object
+    if (typeof options === 'string') options = {name: options};
 
-	// The name parameter must exist
-	if (!options.name) throw new Error('You must pass the name parameter when creating a logger.');
+    // The name parameter must exist
+    if (!options.name) throw new Error('You must pass the name parameter when creating a logger.');
 
-	// If we haven't already created a logger, create one now, transparently passing the options
-	if (!this.loggers[options.name]) {
-		this.loggers[options.name] = bunyan.createLogger(options);
-	}
+    // If we haven't already created a logger, create one now, transparently passing the options
+    if (!this.loggers[options.name]) {
+        this.loggers[options.name] = bunyan.createLogger(options);
+    }
 
-	return this.loggers[options.name];
+    return this.loggers[options.name];
 
 };
