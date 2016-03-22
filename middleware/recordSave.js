@@ -6,11 +6,9 @@ module.exports = function () {
 
 		req.linz.model.getObject(req.params.id, function (err, doc) {
 
-			if (!err) {
-				req.linz.record = doc;
-			}
+			req.linz.record = doc;
 
-			next();
+			return next(err);
 
 		});
 

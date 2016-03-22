@@ -5,7 +5,7 @@ var formist = require('formist'),
 /* GET /admin/:model/:id/overview */
 var route = function (req, res, next) {
 
-	linz.formtools.form.generateFormFromModel(req.linz.model.schema, req.linz.model.form, req.linz.record, 'edit', function (err, editForm) {
+	linz.formtools.form.generateFormFromModel(req.linz.model.schema, req.linz.model.linz.formtools.form, req.linz.record, 'edit', function (err, editForm) {
 
 		if (err) {
 			return next(err);
@@ -42,7 +42,7 @@ var route = function (req, res, next) {
 		});
 
 		// wrap code in self-executable function
-		conflictHandlersJS = '\n\t(function () {\n\t' + conflictHandlersJS + '\n\t})();'
+		conflictHandlersJS = '\n\t(function () {\n\t' + conflictHandlersJS + '\n\t})();';
 
 		res.render(linz.api.views.viewPath('recordEdit.jade'), {
 			model: req.linz.model,

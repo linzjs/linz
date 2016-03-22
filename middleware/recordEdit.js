@@ -1,40 +1,14 @@
-var linz = require('../'),
-	async = require('async');
+var linz = require('../');
 
 module.exports = function () {
 
 	return function (req, res, next) {
 
-		async.series([
+		req.linz.model.getObject(req.params.id, function (err, doc) {
 
-			function (cb) {
+			req.linz.record = doc;
 
-                req.linz.model.getForm(function(err,form){
-
-                    req.linz.model.form = form;
-                    cb(null);
-
-                });
-
-			},
-
-			function (cb) {
-
-				req.linz.model.getObject(req.params.id, function (err, doc) {
-
-					if (!err) {
-						req.linz.record = doc;
-						cb(null);
-					}
-
-				});
-
-			},
-
-		], function () {
-
-			// call the next middleware
-			next();
+			return next(err);
 
 		});
 

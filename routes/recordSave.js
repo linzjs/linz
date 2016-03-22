@@ -12,20 +12,6 @@ var route = function (req, res, next) {
 
         function (done) {
 
-            req.linz.model.getForm(function(err,form){
-
-                // retrieve form information, for use in next function
-                req.linz.model.form = form;
-
-                // we're done
-                return done(null, form);
-
-            });
-
-        },
-
-        function (form, done) {
-
             req.linz.model.findById(req.params.id).exec(function (err, record) {
 
                 if (err) {
@@ -42,7 +28,7 @@ var route = function (req, res, next) {
                     if (field !== '_id' && req.body[field] !== undefined) {
 
                         // merge edit object back into form object (overrides)
-                        utils.merge(form[field], form[field]['edit'] || {});
+                        utils.merge(req.linz.model.linz.formtools.form[field], req.linz.model.linz.formtools.form[field]['edit'] || {});
 
                         if (formUtils.schemaType(req.linz.model.schema.paths[field]) === 'documentarray') {
 
@@ -52,7 +38,7 @@ var route = function (req, res, next) {
                         }
 
                         // go through the transform function if one exists
-                        record[field] = (form[field].transform) ? form[field].transform(req.body[field], 'beforeSave') : req.body[field];
+                        record[field] = (req.linz.model.linz.formtools.form[field].transform) ? req.linz.model.linz.formtools.form[field].transform(req.body[field], 'beforeSave') : req.body[field];
 
                     }
 

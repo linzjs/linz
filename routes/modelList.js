@@ -16,16 +16,21 @@ var route = function (req, res, next) {
                 return !models[model].linz.formtools.model.hide;
             });
 
-            // filter by permissions
+            return callback(null, _models);
+
+        },
+
+        function (_models, callback) {
+
+            // based on permissions, filter out some models
             async.filter(_models, function (model, cb) {
 
-                linz.api.model.getPermissions(req, model, function (err, permissions) {
+                linz.api.model.hasPermission(req.user, model, 'canList', function (result) {
 
-                    if (err) {
-                        return cb(err);
-                    }
-
-                    return cb(permissions.index);
+                    // explicitly, a permission must return false in order to be denied
+                    // an undefined permission, or anything other than false will allow the permission
+                    // falsy does not apply in this scenario
+                    return cb(result !== false);
 
                 });
 

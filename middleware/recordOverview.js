@@ -24,46 +24,14 @@ module.exports = function () {
 
             },
 
-            function (cb) {
-
-                req.linz.model.getForm(function(err,form){
-
-                    if (err) {
-                        cb(err);
-                    }
-
-                    req.linz.model.form = form;
-
-                    return cb(null);
-
-                });
-
-            },
-
-            function (cb) {
-
-                req.linz.model.getOverview(function(err,overview){
-
-                    if (err) {
-                        cb(err);
-                    }
-
-                    req.linz.model.overview = overview;
-
-                    return cb(null);
-
-                });
-
-            },
-
             // check if we need to process custom actions
             function (cb) {
 
-                if (!req.linz.model.overview.actions.length) {
+                if (!req.linz.model.linz.formtools.overview.actions.length) {
                     return cb(null);
                 }
 
-                async.each(req.linz.model.overview.actions, function (action, actionDone) {
+                async.each(req.linz.model.linz.formtools.overview.actions, function (action, actionDone) {
 
                     if (!action.disabled) {
                         return actionDone(null);

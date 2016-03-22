@@ -7,14 +7,16 @@ var route = function (req, res) {
 
 	var locals = {
 		config: req.linz.config,
-		record: req.linz.record
+		record: req.linz.record,
+		permissions: req.linz.config.linz.formtools.permissions,
+		formtools: req.linz.config.linz.formtools
 	};
 
 	async.series([
 
         function (cb) {
 
-            req.linz.config.overview.summary.renderer(req.linz.record, req.linz.config, function (err, content) {
+            req.linz.config.linz.formtools.overview.summary.renderer(req.linz.record, req.linz.config, function (err, content) {
 
                 if (err) {
                     return cb(err);
@@ -30,13 +32,13 @@ var route = function (req, res) {
 
 		function (cb) {
 
-			if (!req.linz.config.overview.body) {
+			if (!req.linz.config.linz.formtools.overview.body) {
 
 				return cb(null);
 
 			}
 
-			req.linz.config.overview.body(req.linz.record, req.linz.config, function (err, content) {
+			req.linz.config.linz.formtools.overview.body(req.linz.record, req.linz.config, function (err, content) {
 
                 if (err) {
                     return cb(err);
