@@ -25,4 +25,12 @@
         return false;
     });
 
+    linz.addLoadEvent(function () {
+
+        var validator = $('form[data-linz-validation="true"]').bootstrapValidator({});
+
+        linz.executeContext('recordEdit', validator);
+
+    });
+
 })();

@@ -4,6 +4,103 @@ if (!linz) {
 
 (function  () {
 
+    function setFormDependencies(form, dependeeArr, dependantsObj){
+
+        $(form).find('[data-linz-dependencies]').each( function() {
+
+            var dependencies = $(this).data('linz-dependencies');
+            var dependantField = $(this).attr('name');
+            var dependeeName;
+            var depnedeeIdentifyer;
+
+            if (typeof dependencies === 'object' && !Array.isArray(dependencies)) {
+
+                if (dependencies.field.length) {
+
+                    dependeeName = dependencies.field;
+                    depnedeeIdentifyer = '[name="' + dependeeName + '"]';
+
+                    //Add dependee field name selector syntax to dependeeArr only if it does not exist
+                    if (dependeeArr.indexOf(depnedeeIdentifyer) === -1) {
+                        dependeeArr.push(depnedeeIdentifyer);
+
+                        //Add the dependee filed name key to dependantsObj and assign an empty array to it
+                        //will add names of filed which depends on dependee filed in to this empty array
+                        dependantsObj[dependeeName] = [];
+                    }
+
+                    //Add name of dependant field into array of dependee key of dependantsObj only if it does not exist
+                    if (dependantsObj[dependeeName].indexOf(dependantField) === -1) {
+                        dependantsObj[dependeeName].push(dependantField);
+                    }
+
+                }
+
+            } else if (typeof dependencies === 'object' && Array.isArray(dependencies)) {
+
+                var strDependency = '';
+
+                for (var i = 0; i < dependencies.length; i++) {
+
+                    var v = dependencies[i];
+
+                    if (v instanceof Array) {
+
+                        for (var j = 0; j < v.length; j++) {
+
+                            if (v[j].field.length) {
+
+                                dependeeName = v[j].field;
+                                depnedeeIdentifyer = '[name="' + dependeeName.field + '"]';
+
+                                //Add dependee field name selector syntax to dependeeArr only if it does not exist
+                                if (dependeeArr.indexOf(depnedeeIdentifyer) === -1) {
+                                    dependeeArr.push(depnedeeIdentifyer);
+
+                                    //Add the dependee filed name key to dependantsObj and assign an empty array to it
+                                    //will add names of filed which depends on dependee filed in to this empty array
+                                    dependantsObj[dependeeName] = [];
+                                }
+
+                                //Add name of dependant field into array of dependee key of dependantsObj only if it does not exist
+                                if (dependantsObj[dependeeName].indexOf(dependantField) === -1) {
+                                    dependantsObj[dependeeName].push(dependantField);
+                                }
+
+                            }
+
+                        }
+
+                    } else {
+
+                        if (v.field.length) {
+
+                            dependeeName = v.field;
+                            depnedeeIdentifyer = '[name="' + dependeeName + '"]';
+
+                            //Add dependee field name selector syntax to dependeeArr only if it does not exist
+                            if (dependeeArr.indexOf(depnedeeIdentifyer) === -1) {
+                                dependeeArr.push(depnedeeIdentifyer);
+
+                                //Add the dependee filed name key to dependantsObj and assign an empty array to it
+                                //will add names of filed which depends on dependee filed in to this empty array
+                                dependantsObj[dependeeName] = [];
+                            }
+
+                            //Add name of dependant field into array of dependee key of dependantsObj only if it does not exist
+                            if (dependantsObj[dependeeName].indexOf(dependantField) === -1) {
+                                dependantsObj[dependeeName].push(dependantField);
+                            }
+
+                        }
+
+                    }
+                }
+            }
+
+        });
+    }
+
     $(document).ready(function () {
 
         // javascript events for the navigation
@@ -17,8 +114,43 @@ if (!linz) {
 
         });
 
-        // add form validation
-        $('form[data-linz-validation="true"]').bootstrapValidator({});
+
+
+        // $('form[data-linz-validation="true"]'). bootstrapValidator({});
+
+        $('form[data-linz-validation="true"]').each( function() {
+
+            var dependeeArr = [];
+            var dependantsObj = {};
+            var thisFrom = $(this);
+
+            // workout which fields require linz-dependency validation
+            setFormDependencies($(this), dependeeArr, dependantsObj);
+
+            // add form validation
+            $(this).bootstrapValidator({})
+            //bind keyup event on dependee fileds
+            .on('keyup', dependeeArr.join(), dependantsObj, function (e) {
+
+                var eventElm = $(this).attr('name');
+                var data = e.data;
+
+                //on fire of keyup event on dependee filed, call revalidateField for fields that depends on the depndee fied
+                if (data.hasOwnProperty(eventElm)) {
+
+                    for (var i = 0; i < data[eventElm].length; i++) {
+
+                        if (data[eventElm][i].length) {
+
+                            $(thisFrom).bootstrapValidator('revalidateField', data[eventElm][i]);
+                        }
+                    }
+                }
+
+            });
+
+        });
+
 
         // add delete prompt
         $('[data-linz-control="delete"]').click(function () {
@@ -82,7 +214,7 @@ if (!linz) {
 
             }
 
-			CKEDITOR.replace( this, editorConfig);
+            CKEDITOR.replace( this, editorConfig);
 
         });
 
@@ -116,7 +248,7 @@ if (!linz) {
 
             }
 
-			CKEDITOR.inline( this, editorConfig);
+            CKEDITOR.inline( this, editorConfig);
 
         });
 
@@ -247,11 +379,35 @@ if (!linz) {
         });
     }
 
+    function formDependencyValidation (value, validator, $field) {
+        console.log('== form linz-dependency validator');
+        // console.log(arguments);
+        console.log();
+
+        var dependencies = $field.data('linz-dependencies');
+
+        // check if contains anything
+
+        console.log(validator.$form);
+
+console.log($field.data('linz-dependencies'));
+
+
+        // what to do if's an Object
+        // what to do if's an Array
+            // what to do if's an Object
+            // what to do if's an Array
+
+        return ($('[name="lastName"]').val() === 'Patel') ? true : (value !== '');
+    }
+
+
     linz.loadLibraries = loadLibraries;
     linz.loadDatepicker = loadDatepicker;
     linz.isTemplateSupported = isTemplateSupported;
     linz.addDeleteConfirmation = addDeleteConfirmation;
     linz.addDisabledBtnAlert = addDisabledBtnAlert;
     linz.addConfigDefaultConfirmation = addConfigDefaultConfirmation;
+    linz.formDependencyValidation = formDependencyValidation;
 
 })();

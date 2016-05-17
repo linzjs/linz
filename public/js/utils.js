@@ -39,7 +39,18 @@ if (!linz) {
         }
     }
 
+    function executeContext (context) {
+
+        var args = Array.call();
+
+        if (typeof linz[context] === 'function') {
+            linz[context].call(undefined, args);
+        }
+
+    }
+
     linz.loadScript = loadScript;
     linz.addLoadEvent = addLoadEvent;
+    linz.executeContext = executeContext;
 
 })();
