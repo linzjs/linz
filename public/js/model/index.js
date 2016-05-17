@@ -239,27 +239,6 @@
 
     });
 
-    // bind model save button and update the selected ids to modal form
-    $('#exportModal').on('shown.bs.modal', function (e) {
-
-        var selectedIDs = [],
-            _this = this;
-
-        $('input[data-linz-control="checked-record"]:checked').each(function () {
-            selectedIDs.push($(this).val());
-        });
-
-        // add selected IDs to hidden field
-        $(_this).find('[data-linz-export="ids"]').val(selectedIDs);
-
-        // add model form post data for filtering purposes
-        $(_this).find('[data-linz-export="filters"]').val($('#modelQuery').html());
-
-        // add the model name
-        $(_this).find('[data-linz-export="model"]').val($('[data-linz-model]').attr('data-linz-model'));
-
-    });
-
 
     function removeFomList (list, value, separator) {
         separator = separator || ",";

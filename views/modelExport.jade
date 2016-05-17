@@ -1,184 +1,196 @@
 extends modal
 
 block content
-	form.exportForm(role='form', action=linz.api.url.getAdminLink(model, modelExport.action), method='post', target='_blank')
-		div.modal-header
-			button.close(type='button', data-dismiss='modal' aria-hidden='true') &times;
-			h4#myModalLabel.modal-title!= modelExport.label
-		div.modal-body
-			div.modal-footer.actions
-				button.btn.btn-default(type='button', class='pull-left', data-linz-control="checked-all") Select <b>all</b>
-				button.btn.btn-default(type='button', class='pull-left', data-linz-control="reset-export") Reset
-				button.btn.btn-primary(type='submit', data-linz-control='export-save') Export
-				button.btn.btn-default(type='button', data-dismiss='modal') Cancel
+    form.exportForm(role='form', action=linz.api.url.getAdminLink(model, modelExport.action), method='post', target='_blank')
+        div.modal-header
+            button.close(type='button', data-dismiss='modal' aria-hidden='true') &times;
+            h4#myModalLabel.modal-title!= modelExport.label
+        div.modal-body
+            div.modal-footer.actions
+                button.btn.btn-default(type='button', class='pull-left', data-linz-control="checked-all") Select <b>all</b>
+                button.btn.btn-default(type='button', class='pull-left', data-linz-control="reset-export") Reset
+                button.btn.btn-primary(type='submit', data-linz-control='export-save') Export
+                button.btn.btn-default(type='button', data-dismiss='modal') Cancel
 
-			input(type='hidden', name='modelName', data-linz-export='model')
-			input(type='hidden', name='selectedIds', data-linz-export='ids')
-			input(type='hidden', name='selectedFields', data-linz-export='fields')
-			input(type='hidden', name='filters', data-linz-export='filters')
+            input(type='hidden', name='selectedIds', data-linz-export='ids')
+            input(type='hidden', name='selectedFields', data-linz-export='fields')
+            input(type='hidden', name='filters', data-linz-export='filters')
 
-			p Drag and drop to re-order the fields.
+            p Drag and drop to re-order the fields.
 
-			ul.exportFields.list-group.clearfix
+            ul.exportFields.list-group.clearfix
 
-		div.modal-footer
-			button.btn.btn-primary(type='submit', data-linz-control='export-save') Export
-			button.btn.btn-default(type='button', data-dismiss='modal') Cancel
+        div.modal-footer
+            button.btn.btn-primary(type='submit', data-linz-control='export-save') Export
+            button.btn.btn-default(type='button', data-dismiss='modal') Cancel
 
-	script(src='' + linz.get('admin path') + '/public/js/jquery-ui.min.js')
-	script.
+    script(src='' + linz.get('admin path') + '/public/js/jquery-ui.min.js')
+    script.
 
-		(function () {
+        (function () {
 
-			var fields = !{JSON.stringify(modelExport.fields)},
-				exportCookieName = !{JSON.stringify(model.modelName)} + '_' + 'selectedExportFields',
-				savedFields = mergeFields(getCookie(exportCookieName), fields),
-				bSelectAll = true;
+            var fields = !{JSON.stringify(modelExport.fields)},
+                exportCookieName = !{JSON.stringify(model.modelName)} + '_' + 'selectedExportFields',
+                savedFields = mergeFields(getCookie(exportCookieName), fields),
+                bSelectAll = true;
 
-			drawExportList(savedFields);
+            drawExportList(savedFields);
+            
+            var selectedIDs = [];
+            
+            $('input[data-linz-control="checked-record"]:checked').each(function () {
+                selectedIDs.push($(this).val());
+            });
+            
+            // add selected IDs to hidden field
+            $('[data-linz-export="ids"]', 'form.exportForm').val(selectedIDs);
 
-			$('[data-linz-control="checked-all"]', $('.exportForm')).click(function () {
+            // add model form post data for filtering purposes
+            $('[data-linz-export="filters"]', 'form.exportForm').val($('#modelQuery').html());
 
-				$('input[data-linz-control="export-field"]', $('.exportForm')).prop('checked',bSelectAll);
 
-				bSelectAll = !bSelectAll;
+            $('[data-linz-control="checked-all"]', $('.exportForm')).click(function () {
 
-				if (bSelectAll) {
-					$(this).find('b').html('all');
-				} else {
-					$(this).find('b').html('none');
-				}
+                $('input[data-linz-control="export-field"]', $('.exportForm')).prop('checked',bSelectAll);
 
-			});
+                bSelectAll = !bSelectAll;
 
-			$('[data-linz-control="reset-export"]', $('.exportForm')).click(function () {
+                if (bSelectAll) {
+                    $(this).find('b').html('all');
+                } else {
+                    $(this).find('b').html('none');
+                }
 
-				var defaultFields = mergeFields('', fields);
-				drawExportList(defaultFields);
-				addExportFieldsToCookies();
+            });
 
-			});
+            $('[data-linz-control="reset-export"]', $('.exportForm')).click(function () {
 
-			$('[data-linz-control="export-save"]', $('.exportForm')).click(function () {
+                var defaultFields = mergeFields('', fields);
+                drawExportList(defaultFields);
+                addExportFieldsToCookies();
 
-				if (!$('input[data-linz-control="export-field"]:checked', $('.exportForm')).length) {
-					alert('Please select one or more fields from below to export.');
-					return false;
-				}
+            });
 
-				// close modal
-				$('#exportModal').modal('hide');
+            $('[data-linz-control="export-save"]', $('.exportForm')).click(function () {
 
-				return true;
+                if (!$('input[data-linz-control="export-field"]:checked', $('.exportForm')).length) {
+                    alert('Please select one or more fields from below to export.');
+                    return false;
+                }
 
-			});
+                // close modal
+                $('#exportModal').modal('hide');
 
-			$('.exportFields').sortable({
-				update: function( event, ui ) {
-					addExportFieldsToCookies();
-				}
-			});
+                return true;
 
-			$('.exportForm').submit(function (event){
+            });
 
-				$('[data-linz-export="fields"]').val(getSelectedExportFields().join());
+            $('.exportFields').sortable({
+                update: function( event, ui ) {
+                    addExportFieldsToCookies();
+                }
+            });
 
-			});
+            $('.exportForm').submit(function (event){
 
-			function drawExportList (list) {
+                $('[data-linz-export="fields"]').val(getSelectedExportFields().join());
 
-				var html = '';
+            });
 
-				list.forEach( function (field) {
+            function drawExportList (list) {
 
-					html += '<li class="list-group-item">'
-								+ '<div class="checkbox">'
-									+ '<label>'
-										+ '<input type="checkbox" value="' + field.value + '" data-linz-control="export-field"' + (field.selected ? ' checked' : '') + '> ' + field.label;
+                var html = '';
 
-				});
+                list.forEach( function (field) {
 
-				$('.exportFields').html(html);
+                    html += '<li class="list-group-item">'
+                                + '<div class="checkbox">'
+                                    + '<label>'
+                                        + '<input type="checkbox" value="' + field.value + '" data-linz-control="export-field"' + (field.selected ? ' checked' : '') + '> ' + field.label;
 
-				$('input[data-linz-control="export-field"]', $('.exportForm')).click(function () {
+                });
 
-					addExportFieldsToCookies();
+                $('.exportFields').html(html);
 
-					var selectedFields = mergeFields(getCookie(exportCookieName), fields);
-					drawExportList(selectedFields);
+                $('input[data-linz-control="export-field"]', $('.exportForm')).click(function () {
 
-				});
+                    addExportFieldsToCookies();
 
-			}
+                    var selectedFields = mergeFields(getCookie(exportCookieName), fields);
+                    drawExportList(selectedFields);
 
-			function getSelectedExportFields () {
+                });
 
-				var selectedFields = [];
+            }
 
-				$('input[data-linz-control="export-field"]:checked', $('.exportForm')).each(function () {
-					selectedFields.push($(this).val());
-				});
+            function getSelectedExportFields () {
 
-				return selectedFields;
-			}
+                var selectedFields = [];
 
-			function addExportFieldsToCookies () {
+                $('input[data-linz-control="export-field"]:checked', $('.exportForm')).each(function () {
+                    selectedFields.push($(this).val());
+                });
 
-				setCookie(exportCookieName, getSelectedExportFields(), 30);
-			}
+                return selectedFields;
+            }
 
-			function mergeFields (selections, master) {
+            function addExportFieldsToCookies () {
 
-				var mergedFields = [];
+                setCookie(exportCookieName, getSelectedExportFields(), 30);
+            }
 
-				if (selections.length) {
+            function mergeFields (selections, master) {
 
-					selections = selections.split(',');
+                var mergedFields = [];
 
-					selections.forEach(function (fieldName) {
-						mergedFields.push({
-							label: master[fieldName] || fieldName,
-							value: fieldName,
-							selected: true
-						});
-					});
+                if (selections.length) {
 
-				}
+                    selections = selections.split(',');
 
-				Object.keys(master).forEach(function (fieldName) {
+                    selections.forEach(function (fieldName) {
+                        mergedFields.push({
+                            label: master[fieldName] || fieldName,
+                            value: fieldName,
+                            selected: true
+                        });
+                    });
 
-					if (selections.indexOf(fieldName) >= 0) {
-						// field exists, exit!
-						return;
-					}
+                }
 
-					mergedFields.push({
-						label: master[fieldName] || fieldName,
-						value: fieldName,
-						selected: false
-					});
-				});
+                Object.keys(master).forEach(function (fieldName) {
 
-				return mergedFields;
+                    if (selections.indexOf(fieldName) >= 0) {
+                        // field exists, exit!
+                        return;
+                    }
 
-			}
+                    mergedFields.push({
+                        label: master[fieldName] || fieldName,
+                        value: fieldName,
+                        selected: false
+                    });
+                });
 
-			function setCookie(cname, cvalue, exdays) {
-				var d = new Date();
-				d.setTime(d.getTime() + (exdays*24*60*60*1000));
-				var expires = "expires="+d.toGMTString();
-				document.cookie = cname + "=" + cvalue + "; " + expires;
-			}
+                return mergedFields;
 
-			function getCookie(cname) {
-				var name = cname + "=";
-				var ca = document.cookie.split(';');
-				for(var i=0; i<ca.length; i++) {
-					var c = ca[i];
-					while (c.charAt(0)==' ') c = c.substring(1);
-					if (c.indexOf(name) != -1) return c.substring(name.length,c.length);
-				}
-				return "";
-			}
+            }
 
-		})();
+            function setCookie(cname, cvalue, exdays) {
+                var d = new Date();
+                d.setTime(d.getTime() + (exdays*24*60*60*1000));
+                var expires = "expires="+d.toGMTString();
+                document.cookie = cname + "=" + cvalue + "; " + expires;
+            }
+
+            function getCookie(cname) {
+                var name = cname + "=";
+                var ca = document.cookie.split(';');
+                for(var i=0; i<ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0)==' ') c = c.substring(1);
+                    if (c.indexOf(name) != -1) return c.substring(name.length,c.length);
+                }
+                return "";
+            }
+
+        })();
