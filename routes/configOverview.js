@@ -30,6 +30,28 @@ var route = function (req, res) {
 
         },
 
+        function (cb) {
+
+            if (!req.linz.config.linz.formtools.overview.details) {
+
+				return cb(null);
+
+			}
+
+			req.linz.config.linz.formtools.overview.details(req.linz.record, req.linz.config, function (err, content) {
+
+                if (err) {
+                    return cb(err);
+                }
+
+				locals.overviewDetail = content;
+
+				return cb(null);
+
+			});
+
+        },
+
 		function (cb) {
 
 			if (!req.linz.config.linz.formtools.overview.body) {

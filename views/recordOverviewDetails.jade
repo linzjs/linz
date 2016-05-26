@@ -1,0 +1,23 @@
+
+block content
+
+    if form
+        div.form-horizontal.model
+            != form
+            
+    if (tabs && tabs.length)
+        ul.nav.nav-tabs.nav-tabs-overview
+            each tab in tabs
+                li
+                    a(href='#' + tab.label, role='tab' data-toggle='tab')
+                         span=tab.label
+
+    if (tabs && tabs.length)
+        div.tab-content
+            each tab, index in tabs
+                if (tab.form)
+                    div(id=tab.label, class="#{index === 0 ? 'form-horizontal model tab-pane active' : 'form-horizontal model tab-pane'}")
+                        != tab.form
+                else
+                    div(id=tab.label, class="#{index === 0 ? 'tab-pane active' : 'tab-pane'}")
+                        != tab.body

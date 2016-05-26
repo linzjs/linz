@@ -10,7 +10,8 @@ var route = function (req, res, next) {
         model: req.linz.model,
         record: clone(req.linz.record.toObject({ virtuals: true})),
         permissions: req.linz.model.linz.formtools.permissions,
-        formtools: req.linz.model.linz.formtools
+        formtools: req.linz.model.linz.formtools,
+        tabs: []
     };
 
     async.series([
@@ -29,6 +30,120 @@ var route = function (req, res, next) {
 
             });
 
+        },
+
+        function (cb) {
+
+            //use utils.isEmptyObject to make sure tempTab.form is not an empty object
+            // if (!utils.isEmptyObject(tempTab.form)) {
+            //
+            // } else {
+            //  return cb(null);
+            // }
+            linz.formtools.form.generateFormFromModel(req.linz.model.schema, req.linz.model.linz.formtools.overview.details.form, req.linz.record, 'edit', function (err, viewForm) {
+
+                if (err) {
+                    return cb(err);
+                }
+
+                var detailForm = viewForm.render();
+
+                res.render(linz.api.views.viewPath('recordOverviewDetails.jade'), {
+                    form: detailForm
+                }, function (renderErr, html) {
+
+                    if (renderErr) {
+                        return cb(renderErr);
+                    }
+
+                    locals.overviewDetail = html;
+                    return cb(null);
+                });
+
+            });
+
+        },
+
+        function (cb) {
+
+            (function processTabs(i) {
+
+                if (req.linz.model.linz.formtools.overview.details.tabsArray.length) {
+
+                    var detailTab = req.linz.model.linz.formtools.overview.details.tabsArray[i];
+                    var tempTab = {};
+                    tempTab.label = detailTab.label;
+
+                    if (typeof detailTab.form === 'object') {
+
+                        linz.formtools.form.generateFormFromModel(req.linz.model.schema, detailTab.form, req.linz.record, 'edit', function (err, viewForm) {
+
+                            if (err) {
+                                return cb(err);
+                            }
+
+                            tempTab.form = viewForm.render();
+                            //use utils.isEmptyObject to make sure tempTab.form is not an empty object
+                            // if (!utils.isEmptyObject(tempTab.form)) {
+                            //
+                            // }
+                            locals.tabs.push(tempTab);
+
+                            i++;
+                            if(i < req.linz.model.linz.formtools.overview.details.tabsArray.length) {
+                                processTabs(i);
+                            } else {
+                                return cb(null);
+                            }
+                        });
+
+                    } else if(typeof detailTab.body === 'function') {
+
+                        // tempTab.body = ....
+                        locals.tabs.push(tempTab);
+                        i++;
+                        if(i < req.linz.model.linz.formtools.overview.details.tabsArray.length) {
+                            processTabs(i);
+                        } else {
+                            return cb(null);
+                        }
+                    } else {
+
+                        i++;
+                        if(i < req.linz.model.linz.formtools.overview.details.tabsArray.length) {
+                            processTabs(i);
+                        } else {
+                            return cb(null);
+                        }
+                    }
+
+                } else {
+                    return cb(null);
+                }
+
+            })(0);
+
+        },
+
+        function (cb) {
+
+            //render locals.tabs set by previous function in async.series
+            if (!locals.tabs.length) {
+
+                return cb(null);
+            }
+
+            res.render(linz.api.views.viewPath('recordOverviewDetails.jade'), {
+                tabs: locals.tabs
+            }, function (renderErr, html) {
+
+                if (renderErr) {
+                    return cb(renderErr);
+                }
+
+                locals.overviewDetail = locals.overviewDetail + html;
+                return cb(null);
+            });
         },
 
         function (cb) {
