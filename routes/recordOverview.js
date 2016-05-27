@@ -1,7 +1,8 @@
 
 var linz = require('linz'),
     async = require('async'),
-    clone = require('clone');
+    clone = require('clone'),
+    utils = require('../lib/utils');
 
 /* GET /admin/:model/:id/overview */
 var route = function (req, res, next) {
@@ -16,6 +17,7 @@ var route = function (req, res, next) {
 
     async.series([
 
+        //set summary content to overviewSummary
         function (cb) {
 
             req.linz.model.linz.formtools.overview.summary.renderer(req.linz.record, req.linz.model, function (err, content) {
@@ -32,14 +34,14 @@ var route = function (req, res, next) {
 
         },
 
+        //set detail content to overviewDetail
         function (cb) {
 
-            //use utils.isEmptyObject to make sure tempTab.form is not an empty object
-            // if (!utils.isEmptyObject(tempTab.form)) {
-            //
-            // } else {
-            //  return cb(null);
-            // }
+            //make sure form is object and is not empty
+            if (typeof req.linz.model.linz.formtools.overview.details.form !== 'object' || utils.isEmptyObject(req.linz.model.linz.formtools.overview.details.form)) {
+                return cb(null);
+            }
+
             linz.formtools.form.generateFormFromModel(req.linz.model.schema, req.linz.model.linz.formtools.overview.details.form, req.linz.record, 'edit', function (err, viewForm) {
 
                 if (err) {
@@ -61,53 +63,25 @@ var route = function (req, res, next) {
                 });
 
             });
-
         },
 
+        //process tabs of overview detials
         function (cb) {
+
+            if (!Array.isArray(req.linz.model.linz.formtools.overview.details.tabsArray) || !req.linz.model.linz.formtools.overview.details.tabsArray.length) {
+                return cb(null);
+            }
 
             (function processTabs(i) {
 
-                if (req.linz.model.linz.formtools.overview.details.tabsArray.length) {
+                var detailTab = req.linz.model.linz.formtools.overview.details.tabsArray[i];
+                var tempTab = {};
+                tempTab.label = detailTab.label;
 
-                    var detailTab = req.linz.model.linz.formtools.overview.details.tabsArray[i];
-                    var tempTab = {};
-                    tempTab.label = detailTab.label;
+                if (typeof detailTab.form === 'object') {
 
-                    if (typeof detailTab.form === 'object') {
-
-                        linz.formtools.form.generateFormFromModel(req.linz.model.schema, detailTab.form, req.linz.record, 'edit', function (err, viewForm) {
-
-                            if (err) {
-                                return cb(err);
-                            }
-
-                            tempTab.form = viewForm.render();
-                            //use utils.isEmptyObject to make sure tempTab.form is not an empty object
-                            // if (!utils.isEmptyObject(tempTab.form)) {
-                            //
-                            // }
-                            locals.tabs.push(tempTab);
-
-                            i++;
-                            if(i < req.linz.model.linz.formtools.overview.details.tabsArray.length) {
-                                processTabs(i);
-                            } else {
-                                return cb(null);
-                            }
-                        });
-
-                    } else if(typeof detailTab.body === 'function') {
-
-                        // tempTab.body = ....
-                        locals.tabs.push(tempTab);
-                        i++;
-                        if(i < req.linz.model.linz.formtools.overview.details.tabsArray.length) {
-                            processTabs(i);
-                        } else {
-                            return cb(null);
-                        }
-                    } else {
+                    //make sure detailTab.form is not an empty object
+                    if (utils.isEmptyObject(detailTab.form)) {
 
                         i++;
                         if(i < req.linz.model.linz.formtools.overview.details.tabsArray.length) {
@@ -117,14 +91,58 @@ var route = function (req, res, next) {
                         }
                     }
 
+                    linz.formtools.form.generateFormFromModel(req.linz.model.schema, detailTab.form, req.linz.record, 'edit', function (err, viewForm) {
+
+                        if (err) {
+                            return cb(err);
+                        }
+
+                        tempTab.form = viewForm.render();
+                        locals.tabs.push(tempTab);
+
+                        i++;
+                        if(i < req.linz.model.linz.formtools.overview.details.tabsArray.length) {
+                            processTabs(i);
+                        } else {
+                            return cb(null);
+                        }
+                    });
+
+                } else if(typeof detailTab.body === 'function') {
+
+                    detailTab.body(req, res, req.linz.record, req.linz.model, function (err, content) {
+
+                        if (err) {
+                            return cb(err);
+                        }
+
+                        tempTab.body = content;
+                        locals.tabs.push(tempTab);
+
+                        i++;
+                        if(i < req.linz.model.linz.formtools.overview.details.tabsArray.length) {
+                            processTabs(i);
+                        } else {
+                            return cb(null);
+                        }
+
+                    });
+
                 } else {
-                    return cb(null);
+
+                    i++;
+                    if(i < req.linz.model.linz.formtools.overview.details.tabsArray.length) {
+                        processTabs(i);
+                    } else {
+                        return cb(null);
+                    }
                 }
 
             })(0);
 
         },
 
+        //set tabs content to overviewDetail
         function (cb) {
 
             //render locals.tabs set by previous function in async.series
@@ -141,11 +159,13 @@ var route = function (req, res, next) {
                     return cb(renderErr);
                 }
 
-                locals.overviewDetail = locals.overviewDetail + html;
+                //append the html content of tabs to locals.overviewDetail
+                locals.overviewDetail = (locals.overviewDetail ? locals.overviewDetail : '') + html;
                 return cb(null);
             });
         },
 
+        //set body content to overviewBody
         function (cb) {
 
             if (!req.linz.model.linz.formtools.overview.body) {
