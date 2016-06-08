@@ -64,85 +64,70 @@
 
     }
 
-    form {
+    section.group {
 
-      background: #FFF;
+      margin-bottom: 35px;
 
-      .form-group {
-        padding: 0 15px 0 15px;
-      }
-
-      .form-group.control-bar {
-        padding-top: 15px;
-      }
-
-      & > fieldset > legend {
-
-        background: @grey;
-        border-bottom: 2px solid #E7EAEC;
-        padding: 25px 10px 10px 10px;
-        margin-bottom: 10px;
-
-      }
-
-      & > fieldset:first-child > legend {
-        padding-top: 0;
-      }
-
-    }
-
-    .overview-detail {
-
-        .form-horizontal.model {
-
-          background: #FFF;
-          margin-bottom: 20px;
-
-          .form-group {
-            padding: 0 15px 0 15px;
-          }
-
-          .form-group.control-bar {
-            padding-top: 15px;
-          }
-
-          & > fieldset > legend {
-
-            background: @grey;
-            border-bottom: 2px solid #E7EAEC;
-            padding: 25px 10px 10px 10px;
-            margin-bottom: 10px;
-
-          }
-
-          & > fieldset:first-child > legend {
-            padding-top: 0;
-          }
-
+        h1 {
+          border: none;
+          background: @grey;
+          border-bottom: 2px solid @border;
+          font-size: @font-size-h2;
+          font-weight: 200;
+          color: @font-color-grey;
+          padding: 10px 15px;
         }
 
-        .tabs {
+        .body{
 
-          margin-bottom: 20px;
+          padding: 15px;
+          background-color: #FFF;
 
-          .form-horizontal.model {
-            background-color: none;
-          }
+          .field {
 
-          .tab-content {
+            padding: 10px 0px;
+            margin-bottom: 25px;
 
-            padding: 20px;
-            border-bottom: 2px solid #e7eaec;
-            border-right: 2px solid #e7eaec;
-            border-left: 2px solid #e7eaec;
+            .label {
+              padding-top: 9px;
+              text-align: right;
+              color: #676a6c !important;
+              font-weight: 500 !important;
+              font-size: inherit !important;
+            }
 
-            .tab-pane {
-              background-color: #FFF;
+            .value {
+              height: 34px;
+              padding-top: 7px;
+              background-color: #eee;
+              border: 1px solid #ebebeb;
             }
 
           }
 
         }
+    }
+
+    .tabs {
+
+      margin-bottom: 20px;
+
+      .tab-content {
+
+        h1 {
+          font-size: 20px;
+        }
+
+        section.group {
+          margin-bottom: 0px;
+        }
+
+        padding: 20px;
+        border-bottom: 2px solid #e7eaec;
+        border-right: 2px solid #e7eaec;
+        border-left: 2px solid #e7eaec;
+
+      }
 
     }
 

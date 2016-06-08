@@ -53,7 +53,9 @@ block content
 				.overview-summary
 					div!= overviewSummary
 				.overview-detail
-					div!= overviewDetail
+					include overview/details
+				if tabs
+					include overview/tabs
 				.overview-body
 					if overviewBody
 						div!= overviewBody

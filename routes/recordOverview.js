@@ -4,6 +4,34 @@ var linz = require('linz'),
     clone = require('clone'),
     utils = require('../lib/utils');
 
+
+var filterForm = function (form, formFields) {
+
+    if (typeof form !== 'object' || utils.isEmptyObject(form)) {
+        return {};
+    }
+
+    var filteredForm = {};
+
+    if (!Array.isArray(formFields) || !formFields.length) {
+
+        filteredForm = clone(form);
+        return filteredForm;
+    }
+
+    formFields.forEach( function(field) {
+
+        if (form[field]) {
+            filteredForm[field] = form[field];
+        }
+
+    });
+
+    return filteredForm;
+
+};
+
+
 /* GET /admin/:model/:id/overview */
 var route = function (req, res, next) {
 
@@ -17,155 +45,125 @@ var route = function (req, res, next) {
 
     async.series([
 
-        //set summary content to overviewSummary
         function (cb) {
 
-            req.linz.model.linz.formtools.overview.summary.renderer(req.linz.record, req.linz.model, function (err, content) {
+            var details = req.linz.model.linz.formtools.overview.details;
 
-                if (err) {
-                    return cb(err);
-                }
+            //render default overview if details is not provided or details provided is not a function OR not an Array containing fileds
+            if ( !details || !(typeof details === 'function' || (Array.isArray(details) && details.length)) ) {
 
-                locals.overviewSummary = content;
+                var defaultOverview = ['dateCreated', 'dateModified'];
+                var defaultForm = filterForm(req.linz.model.linz.formtools.form, defaultOverview);
 
-                return cb(null);
+                linz.formtools.renderOverview.generateViewFromModel(req.linz.model.schema, defaultForm, req.linz.record, req.linz.model, function (err, overView) {
 
-            });
-
-        },
-
-        //set detail content to overviewDetail
-        function (cb) {
-
-            //make sure form is object and is not empty
-            if (typeof req.linz.model.linz.formtools.overview.details.form !== 'object' || utils.isEmptyObject(req.linz.model.linz.formtools.overview.details.form)) {
-                return cb(null);
-            }
-
-            linz.formtools.form.generateFormFromModel(req.linz.model.schema, req.linz.model.linz.formtools.overview.details.form, req.linz.record, 'edit', function (err, viewForm) {
-
-                if (err) {
-                    return cb(err);
-                }
-
-                var detailForm = viewForm.render();
-
-                res.render(linz.api.views.viewPath('recordOverviewDetails.jade'), {
-                    form: detailForm
-                }, function (renderErr, html) {
-
-                    if (renderErr) {
-                        return cb(renderErr);
+                    if (err) {
+                        return cb(err);
                     }
 
-                    locals.overviewDetail = html;
+                    locals.fields = overView;
                     return cb(null);
                 });
 
-            });
+            }
+
+            if (typeof details === 'function') {
+
+                req.linz.model.linz.formtools.overview.details(req, res, req.linz.record, req.linz.model, function (err, content) {
+
+                    if (err) {
+                        return cb(err);
+                    }
+
+                    locals.customOverview = content;
+                    return cb(null);
+                });
+            }
+
+            if ( Array.isArray(details) && details.length ) {
+
+                var form = filterForm(req.linz.model.linz.formtools.form, details);
+
+                linz.formtools.renderOverview.generateViewFromModel(req.linz.model.schema, form, req.linz.record, req.linz.model, function (err, overView) {
+
+                    if (err) {
+                        return cb(err);
+                    }
+
+                    locals.fields = overView;
+                    return cb(null);
+                });
+            }
+
         },
 
-        //process tabs of overview detials
+        // process tabs of overview detials
         function (cb) {
 
-            if (!Array.isArray(req.linz.model.linz.formtools.overview.details.tabsArray) || !req.linz.model.linz.formtools.overview.details.tabsArray.length) {
+            if (!Array.isArray(req.linz.model.linz.formtools.overview.tabs) || !req.linz.model.linz.formtools.overview.tabs.length) {
+
                 return cb(null);
             }
 
-            (function processTabs(i) {
+            async.eachSeries(req.linz.model.linz.formtools.overview.tabs, function (tab, callback) {
 
-                var detailTab = req.linz.model.linz.formtools.overview.details.tabsArray[i];
-                var tempTab = {};
-                tempTab.label = detailTab.label;
+                if ( !tab.fields && !tab.body ) {
+                    return callback(null);
+                }
 
-                if (typeof detailTab.form === 'object') {
+                // return if tab has fields but fileds is not an array or is an empty array
+                if ( tab.fields && (!Array.isArray(tab.fields) || !tab.fields.length) ) {
+                    return callback(null);
+                }
 
-                    //make sure detailTab.form is not an empty object
-                    if (utils.isEmptyObject(detailTab.form)) {
+                // return if tab has body but body is not a function
+                if ( tab.body && (typeof tab.body !== 'function') ) {
+                    return callback(null);
+                }
 
-                        i++;
-                        if(i < req.linz.model.linz.formtools.overview.details.tabsArray.length) {
-                            processTabs(i);
-                        } else {
-                            return cb(null);
-                        }
-                    }
+                var tempTab = {
+                    label: tab.label
+                };
 
-                    linz.formtools.form.generateFormFromModel(req.linz.model.schema, detailTab.form, req.linz.record, 'edit', function (err, viewForm) {
+                if (tab.fields) {
+
+                    var form = filterForm(req.linz.model.linz.formtools.form, tab.fields);
+
+                    linz.formtools.renderOverview.generateViewFromModel(req.linz.model.schema, form, req.linz.record, req.linz.model, function (err, overView) {
 
                         if (err) {
-                            return cb(err);
+                            return callback(err);
                         }
 
-                        tempTab.form = viewForm.render();
+                        tempTab.fields = overView;
                         locals.tabs.push(tempTab);
 
-                        i++;
-                        if(i < req.linz.model.linz.formtools.overview.details.tabsArray.length) {
-                            processTabs(i);
-                        } else {
-                            return cb(null);
-                        }
+                        return callback(null);
                     });
 
-                } else if(typeof detailTab.body === 'function') {
+                }
 
-                    detailTab.body(req, res, req.linz.record, req.linz.model, function (err, content) {
+                if (tab.body) {
+
+                    tab.body(req, res, req.linz.record, req.linz.model, function (err, content) {
 
                         if (err) {
-                            return cb(err);
+                            return callback(err);
                         }
 
                         tempTab.body = content;
                         locals.tabs.push(tempTab);
 
-                        i++;
-                        if(i < req.linz.model.linz.formtools.overview.details.tabsArray.length) {
-                            processTabs(i);
-                        } else {
-                            return cb(null);
-                        }
-
+                        return callback(null);
                     });
 
-                } else {
-
-                    i++;
-                    if(i < req.linz.model.linz.formtools.overview.details.tabsArray.length) {
-                        processTabs(i);
-                    } else {
-                        return cb(null);
-                    }
                 }
 
-            })(0);
+            }, cb);
 
         },
 
-        //set tabs content to overviewDetail
-        function (cb) {
-
-            //render locals.tabs set by previous function in async.series
-            if (!locals.tabs.length) {
-
-                return cb(null);
-            }
-
-            res.render(linz.api.views.viewPath('recordOverviewDetails.jade'), {
-                tabs: locals.tabs
-            }, function (renderErr, html) {
-
-                if (renderErr) {
-                    return cb(renderErr);
-                }
-
-                //append the html content of tabs to locals.overviewDetail
-                locals.overviewDetail = (locals.overviewDetail ? locals.overviewDetail : '') + html;
-                return cb(null);
-            });
-        },
-
-        //set body content to overviewBody
+        // set body content to overviewBody
         function (cb) {
 
             if (!req.linz.model.linz.formtools.overview.body) {

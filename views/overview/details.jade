@@ -1,0 +1,10 @@
+
+include ../mixins/overviewFields
+
+block content
+
+    if customOverview
+        div=customOverview
+
+    if fields
+        mixin overviewDetails(fields)

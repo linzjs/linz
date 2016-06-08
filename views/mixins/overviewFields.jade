@@ -1,0 +1,10 @@
+mixin overviewDetails(fields)
+	each fieldset, key in fields
+		section.group
+			h1=key
+			div.body
+				each field in fieldset
+					div.field
+						p
+							span.col-sm-2.label=field.label
+							span.col-sm-10.value=field.value
