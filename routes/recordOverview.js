@@ -11,13 +11,12 @@ var filterForm = function (form, formFields) {
         return {};
     }
 
-    var filteredForm = {};
-
     if (!Array.isArray(formFields) || !formFields.length) {
 
-        filteredForm = clone(form);
-        return filteredForm;
+        return {};
     }
+
+    var filteredForm = {};
 
     formFields.forEach( function(field) {
 
