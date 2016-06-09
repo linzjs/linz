@@ -2,33 +2,7 @@
 var linz = require('linz'),
     async = require('async'),
     clone = require('clone'),
-    utils = require('../lib/utils');
-
-
-var filterForm = function (form, formFields) {
-
-    if (typeof form !== 'object' || utils.isEmptyObject(form)) {
-        return {};
-    }
-
-    if (!Array.isArray(formFields) || !formFields.length) {
-
-        return {};
-    }
-
-    var filteredForm = {};
-
-    formFields.forEach( function(field) {
-
-        if (form[field]) {
-            filteredForm[field] = form[field];
-        }
-
-    });
-
-    return filteredForm;
-
-};
+    pluginHelpers = require('../lib/formtools/plugins/plugins-helpers');
 
 
 /* GET /admin/:model/:id/overview */
@@ -48,115 +22,79 @@ var route = function (req, res, next) {
 
             var details = req.linz.model.linz.formtools.overview.details;
 
-            //render default overview if details is not provided or details provided is not a function OR not an Array containing fileds
-            if ( !details || !(typeof details === 'function' || (Array.isArray(details) && details.length)) ) {
-
-                var defaultOverview = ['dateCreated', 'dateModified'];
-                var defaultForm = filterForm(req.linz.model.linz.formtools.form, defaultOverview);
-
-                linz.formtools.renderOverview.generateViewFromModel(req.linz.model.schema, defaultForm, req.linz.record, req.linz.model, function (err, overView) {
-
-                    if (err) {
-                        return cb(err);
-                    }
-
-                    locals.fields = overView;
-                    return cb(null);
-                });
-
-            }
-
             if (typeof details === 'function') {
 
-                req.linz.model.linz.formtools.overview.details(req, res, req.linz.record, req.linz.model, function (err, content) {
+                return req.linz.model.linz.formtools.overview.details(req, res, req.linz.record, req.linz.model, function (err, content) {
 
                     if (err) {
                         return cb(err);
                     }
 
                     locals.customOverview = content;
-                    return cb(null);
+                    return cb();
                 });
             }
 
-            if ( Array.isArray(details) && details.length ) {
+            var overviewFields = pluginHelpers.getOverviewFields(req.linz.model.linz.formtools.form, details);
+            linz.formtools.renderOverview.render(req.linz.model.schema, overviewFields, req.linz.record, req.linz.model, function (err, overview) {
 
-                var form = filterForm(req.linz.model.linz.formtools.form, details);
+                if (err) {
+                    return cb(err);
+                }
 
-                linz.formtools.renderOverview.generateViewFromModel(req.linz.model.schema, form, req.linz.record, req.linz.model, function (err, overView) {
-
-                    if (err) {
-                        return cb(err);
-                    }
-
-                    locals.fields = overView;
-                    return cb(null);
-                });
-            }
+                locals.fields = overview;
+                return cb();
+            });
 
         },
 
-        // process tabs of overview detials
+        // process overview tabs
         function (cb) {
 
             if (!Array.isArray(req.linz.model.linz.formtools.overview.tabs) || !req.linz.model.linz.formtools.overview.tabs.length) {
 
-                return cb(null);
+                return cb();
             }
 
             async.eachSeries(req.linz.model.linz.formtools.overview.tabs, function (tab, callback) {
 
-                if ( !tab.fields && !tab.body ) {
-                    return callback(null);
-                }
+                if (typeof tab.body === 'function' ) {
 
-                // return if tab has fields but fileds is not an array or is an empty array
-                if ( tab.fields && (!Array.isArray(tab.fields) || !tab.fields.length) ) {
-                    return callback(null);
-                }
-
-                // return if tab has body but body is not a function
-                if ( tab.body && (typeof tab.body !== 'function') ) {
-                    return callback(null);
-                }
-
-                var tempTab = {
-                    label: tab.label
-                };
-
-                if (tab.fields) {
-
-                    var form = filterForm(req.linz.model.linz.formtools.form, tab.fields);
-
-                    linz.formtools.renderOverview.generateViewFromModel(req.linz.model.schema, form, req.linz.record, req.linz.model, function (err, overView) {
+                    return tab.body(req, res, req.linz.record, req.linz.model, function (err, content) {
 
                         if (err) {
                             return callback(err);
                         }
 
-                        tempTab.fields = overView;
-                        locals.tabs.push(tempTab);
+                        locals.tabs.push({
+                            label: tab.label,
+                            body: content
+                        });
 
-                        return callback(null);
+                        return callback();
                     });
 
                 }
 
-                if (tab.body) {
+                if ( !Array.isArray(tab.fields) || !tab.fields.length ) {
+                    return callback();
+                }
 
-                    tab.body(req, res, req.linz.record, req.linz.model, function (err, content) {
+                var overviewFields = pluginHelpers.getOverviewFields(req.linz.model.linz.formtools.form, tab.fields);
 
-                        if (err) {
-                            return callback(err);
-                        }
+                linz.formtools.renderOverview.render(req.linz.model.schema, overviewFields, req.linz.record, req.linz.model, function (err, overview) {
 
-                        tempTab.body = content;
-                        locals.tabs.push(tempTab);
+                    if (err) {
+                        return callback(err);
+                    }
 
-                        return callback(null);
+                    locals.tabs.push({
+                        label: tab.label,
+                        fields: overview
                     });
 
-                }
+                    return callback();
+                });
 
             }, cb);
 
