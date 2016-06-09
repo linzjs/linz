@@ -1,8 +1,7 @@
 
 var linz = require('linz'),
     async = require('async'),
-    clone = require('clone'),
-    pluginHelpers = require('../lib/formtools/plugins/plugins-helpers');
+    clone = require('clone');
 
 
 /* GET /admin/:model/:id/overview */
@@ -35,14 +34,14 @@ var route = function (req, res, next) {
                 });
             }
 
-            var overviewFields = pluginHelpers.getOverviewFields(req.linz.model.linz.formtools.form, details);
-            linz.formtools.renderOverview.render(req.linz.model.schema, overviewFields, req.linz.record, req.linz.model, function (err, overview) {
+            linz.formtools.overview.getOverviewFields(req.linz.model.schema, req.linz.model.linz.formtools.form, details, req.linz.record, req.linz.model, function (err, fields) {
 
                 if (err) {
                     return cb(err);
                 }
 
-                locals.fields = overview;
+                locals.fields = fields;
+
                 return cb();
             });
 
@@ -80,9 +79,7 @@ var route = function (req, res, next) {
                     return callback();
                 }
 
-                var overviewFields = pluginHelpers.getOverviewFields(req.linz.model.linz.formtools.form, tab.fields);
-
-                linz.formtools.renderOverview.render(req.linz.model.schema, overviewFields, req.linz.record, req.linz.model, function (err, overview) {
+                linz.formtools.overview.getOverviewFields(req.linz.model.schema, req.linz.model.linz.formtools.form, tab.fields, req.linz.record, req.linz.model, function (err, fields) {
 
                     if (err) {
                         return callback(err);
@@ -90,7 +87,7 @@ var route = function (req, res, next) {
 
                     locals.tabs.push({
                         label: tab.label,
-                        fields: overview
+                        fields: fields
                     });
 
                     return callback();

@@ -1,7 +1,6 @@
 
 var linz = require('../'),
-    async = require('async'),
-    pluginHelpers = require('../lib/formtools/plugins/plugins-helpers');
+    async = require('async');
 
 
 /* GET /admin/config/:config/overview */
@@ -33,14 +32,13 @@ var route = function (req, res) {
                 });
             }
 
-            var overviewFields = pluginHelpers.getOverviewFields(req.linz.config.linz.formtools.form, details);
-            linz.formtools.renderOverview.render(req.linz.config.schema, overviewFields, req.linz.record, req.linz.config, function (err, overview) {
+            linz.formtools.overview.getOverviewFields(req.linz.config.schema, req.linz.config.linz.formtools.form, details, req.linz.record, req.linz.config, function (err, fields) {
 
                 if (err) {
                     return cb(err);
                 }
 
-                locals.fields = overview;
+                locals.fields = fields;
                 return cb();
             });
 
