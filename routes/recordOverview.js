@@ -31,7 +31,9 @@ var route = function (req, res, next) {
 
                     locals.customOverview = content;
                     return cb();
+
                 });
+
             }
 
             linz.formtools.overview.getOverviewFields(req.linz.model.schema, req.linz.model.linz.formtools.form, details, req.linz.record, req.linz.model, function (err, fields) {
@@ -43,6 +45,7 @@ var route = function (req, res, next) {
                 locals.fields = fields;
 
                 return cb();
+
             });
 
         },
@@ -51,7 +54,6 @@ var route = function (req, res, next) {
         function (cb) {
 
             if (!Array.isArray(req.linz.model.linz.formtools.overview.tabs) || !req.linz.model.linz.formtools.overview.tabs.length) {
-
                 return cb();
             }
 
@@ -75,7 +77,7 @@ var route = function (req, res, next) {
 
                 }
 
-                if ( !Array.isArray(tab.fields) || !tab.fields.length ) {
+                if (!Array.isArray(tab.fields) || !tab.fields.length) {
                     return callback();
                 }
 
@@ -91,6 +93,7 @@ var route = function (req, res, next) {
                     });
 
                     return callback();
+
                 });
 
             }, cb);
