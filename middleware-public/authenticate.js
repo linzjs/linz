@@ -1,4 +1,4 @@
-var linz = require('../');
+
 
 /**
  * This middleware provides a hook for those using a custom login process to remain integrated
@@ -16,6 +16,8 @@ module.exports = function (strategy, opts) {
     opts = opts || {};
 
     return function (req, res, next) {
+
+        var linz = require('../');
 
         // call the authenticate method, passing in the strategy, our custom call back and req, res and next
         linz.passport.authenticate(strategy, function (err, user, info) {

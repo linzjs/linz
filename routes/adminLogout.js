@@ -1,7 +1,9 @@
-var linz = require('../');
+
 
 /* GET /admin/login */
 var route = function (req, res) {
+
+	var linz = require('../');
 
 	// log user out
 	req.logout();
