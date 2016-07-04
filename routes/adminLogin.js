@@ -1,5 +1,4 @@
-var linz = require('../'),
-    path = require('path'),
+var path = require('path'),
     async = require('async');
 
 /* GET /admin/login */
@@ -7,8 +6,9 @@ var route = {
 
 	get: function (req, res, next) {
 
+        var linz = require('../'),
         // check if resetPassword() is defined for user model
-        var locals = {
+        locals = {
             hasResetPassword: linz.api.model.get(linz.get('user model')).sendPasswordResetEmail
         };
 
