@@ -1,0 +1,5 @@
+include ../mixins/overviewBody
+
+-	if (overviewBody && Array.isArray(overviewBody) && overviewBody.length)
+	block content
+		mixin overviewBody(overviewBody, true, false)

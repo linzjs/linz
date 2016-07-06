@@ -7,117 +7,109 @@ var linz = require('linz'),
 /* GET /admin/:model/:id/overview */
 var route = function (req, res, next) {
 
-    var locals = {
-        model: req.linz.model,
-        record: clone(req.linz.record.toObject({ virtuals: true})),
-        permissions: req.linz.model.linz.formtools.permissions,
-        formtools: req.linz.model.linz.formtools,
-        tabs: []
-    };
+    function transformDslToOverview (dsl, cb) {
 
-    async.series([
+        if (!(Array.isArray(dsl) && dsl.length)) {
+            return [];
+        }
 
-        function (cb) {
+        var overviewBody = [];
 
-            var details = req.linz.model.linz.formtools.overview.details;
+        async.eachSeries(dsl, function (elm, callback) {
 
-            if (typeof details === 'function') {
-
-                return req.linz.model.linz.formtools.overview.details(req, res, req.linz.record, req.linz.model, function (err, content) {
-
-                    if (err) {
-                        return cb(err);
-                    }
-
-                    locals.customOverview = content;
-                    return cb();
-
-                });
-
+            if (typeof elm !== 'object') {
+                return callback();
             }
 
-            linz.formtools.overview.getOverviewFields(req.linz.model.schema, req.linz.model.linz.formtools.form, details, req.linz.record, req.linz.model, function (err, fields) {
+            if (typeof elm.body === 'function') {
 
-                if (err) {
-                    return cb(err);
-                }
-
-                locals.fields = fields;
-
-                return cb();
-
-            });
-
-        },
-
-        // process overview tabs
-        function (cb) {
-
-            if (!Array.isArray(req.linz.model.linz.formtools.overview.tabs) || !req.linz.model.linz.formtools.overview.tabs.length) {
-                return cb();
-            }
-
-            async.eachSeries(req.linz.model.linz.formtools.overview.tabs, function (tab, callback) {
-
-                if (typeof tab.body === 'function' ) {
-
-                    return tab.body(req, res, req.linz.record, req.linz.model, function (err, content) {
-
-                        if (err) {
-                            return callback(err);
-                        }
-
-                        locals.tabs.push({
-                            label: tab.label,
-                            body: content
-                        });
-
-                        return callback();
-                    });
-
-                }
-
-                if (!Array.isArray(tab.fields) || !tab.fields.length) {
-                    return callback();
-                }
-
-                linz.formtools.overview.getOverviewFields(req.linz.model.schema, req.linz.model.linz.formtools.form, tab.fields, req.linz.record, req.linz.model, function (err, fields) {
+                return elm.body(req, res, req.linz.record, req.linz.model, function (err, content) {
 
                     if (err) {
                         return callback(err);
                     }
 
-                    locals.tabs.push({
-                        label: tab.label,
-                        fields: fields
+                    overviewBody.push({
+                        label: elm.label,
+                        body: content
                     });
 
                     return callback();
 
                 });
 
-            }, cb);
+            }
 
-        },
+            // make recursive call, if elm or elm.body is an Array
+            if (Array.isArray(elm) || Array.isArray(elm.body)) {
 
-        // set body content to overviewBody
-        function (cb) {
+                var elmDsl = (Array.isArray(elm)) ? elm : elm.body;
 
-            if (!req.linz.model.linz.formtools.overview.body) {
+                return transformDslToOverview(elmDsl, function (err, data) {
 
-                return cb(null);
+                    if (err) {
+                        return cb(err);
+                    }
+
+                    if (Array.isArray(data) && data.length) {
+
+                        var elmData = (Array.isArray(elm)) ? data : { label: elm.label, body: data };
+
+                        overviewBody.push(elmData);
+                    }
+
+                    return callback();
+                });
 
             }
 
-            req.linz.model.linz.formtools.overview.body(req, res, req.linz.record, req.linz.model, function (err, content) {
+            if (Array.isArray(elm.fields) && elm.fields.length) {
+
+                return linz.formtools.overview.getOverviewFields(req.linz.model.linz.formtools.labels, req.linz.model.linz.formtools.form, elm.label, elm.fields, req.linz.record, req.linz.model, function (err, fieldset) {
+
+                    if (err) {
+                        return callback(err);
+                    }
+
+                    overviewBody.push(fieldset);
+
+                    return callback();
+
+                });
+
+            }
+
+            // return if elm does not meet any of the above conditions
+            return callback();
+
+        }, function (err) {
+            return cb(err, overviewBody);
+        });
+
+    }
+
+    var locals = {
+            model: req.linz.model,
+            record: clone(req.linz.record.toObject({ virtuals: true})),
+            permissions: req.linz.model.linz.formtools.permissions,
+            formtools: req.linz.model.linz.formtools
+        };
+
+    async.series([
+
+        // set overviewBody
+        function (cb) {
+
+            // Transform overview.body DSL into data object that can be rendered by view
+            transformDslToOverview(req.linz.model.linz.formtools.overview.body, function (err, overviewData) {
 
                 if (err) {
                     return cb(err);
                 }
 
-                locals.overviewBody = content;
+                locals.overviewBody = overviewData;
 
-                return cb(null);
+                return cb();
 
             });
 

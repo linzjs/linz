@@ -50,13 +50,9 @@ block content
 	.container.linz-container.overview.config
 		.pane
 			.body
-				.overview-details
-					include overview/details
-				if tabs
-					include overview/tabs
 				.overview-body
 					if overviewBody
-						div!= overviewBody
+						include overview/body
 				if overviewVersions
 					.overview-versions
 						div!= overviewVersions

@@ -1,0 +1,44 @@
+mixin renderOverviewFields(obj, hasTitle, hasSubtitle)
+	section.group
+		div.panel
+			if hasTitle
+				div.panel-heading=obj.label
+			div.panel-body
+				if hasSubtitle
+					h4=obj.label
+				-	if (obj.body)
+					div=obj.body
+				-	if (obj.fields && Array.isArray(obj.fields))
+					ul.list-group
+						each field in obj.fields
+							li.list-group-item
+								span
+									strong=field.label + ':'
+								span='	' + field.value
+
+
+mixin renderTabs(tabs)
+	div.tabs
+		div
+			ul.nav.nav-tabs.nav-tabs-overview
+				each tab, index in tabs
+					- var tabLink = (tab.label || '').replace(/\s+/g, '-').toLowerCase() + index;
+					li(class="#{index === 0 ? 'active' : ''}")
+						a(href='#'+'#{tabLink}', role='tab' data-toggle='tab')
+							span=tab.label
+		div.tab-content
+			each tab, index in tabs
+				- var tabId = (tab.label || '').replace(/\s+/g, '-').toLowerCase() + index;
+				div(id='#{tabId}', class="#{index === 0 ? 'tab-pane active' : 'tab-pane'}")
+					- if (Array.isArray(tab.body))
+						+overviewBody(tab.body, false, true)
+					- if (!Array.isArray(tab.body))
+						+renderOverviewFields(tab, false, false)
+
+
+mixin overviewBody(array, hasTitle, hasSubtitle)
+	each elm in array
+		-	if (typeof elm === 'object' && !Array.isArray(elm))
+			+renderOverviewFields(elm, hasTitle, hasSubtitle)
+		-	if (typeof elm === 'object' && Array.isArray(elm))
+			+renderTabs(elm)

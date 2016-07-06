@@ -91,54 +91,9 @@
 
     }
 
-    section.group {
-
-      margin-bottom: 35px;
-
-        h1 {
-          border: none;
-          background: @grey;
-          border-bottom: 2px solid @border;
-          font-size: @font-size-h2;
-          font-weight: 200;
-          color: @font-color-grey;
-          padding: 10px 15px;
-          margin-bottom: 0;
-        }
-
-        .body{
-
-          padding: 15px;
-          background-color: #FFF;
-
-          .field {
-
-            padding: 10px 0px;
-            margin-right: 10px;
-
-            .label {
-              padding-top: 11px;
-              text-align: right;
-              color: #676a6c !important;
-              font-weight: 500 !important;
-              font-size: inherit !important;
-            }
-
-            .value {
-              height: 34px;
-              padding-top: 7px;
-              background-color: #eee;
-              border: 1px solid #ebebeb;
-            }
-
-          }
-
-        }
-    }
-
     .tabs {
 
-      margin-bottom: 20px;
+      padding-top: 10px;
 
       .tab-content {
 
@@ -147,13 +102,16 @@
         }
 
         section.group {
-          margin-bottom: 0px;
+          .panel {
+            margin-bottom: 0px;
+          }
         }
 
-        padding: 20px;
-        border-bottom: 2px solid #e7eaec;
-        border-right: 2px solid #e7eaec;
-        border-left: 2px solid #e7eaec;
+        section.group:last-child {
+          .panel {
+            margin-bottom: 20px;
+          }
+        }
 
       }
 
