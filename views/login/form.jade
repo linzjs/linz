@@ -10,4 +10,6 @@
 		if hasResetPassword
 			.form-group
 				a(href=linz.api.url.getAdminForgotPasswordLink()) Forgot your password?
+		if loginErrorMsg
+			div.alert.alert-danger= loginErrorMsg
 		button.btn.btn-primary(type='submit') Sign-in

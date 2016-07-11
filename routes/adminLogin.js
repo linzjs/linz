@@ -7,10 +7,11 @@ var route = {
 	get: function (req, res, next) {
 
         var linz = require('../'),
-        // check if resetPassword() is defined for user model
-        locals = {
-            hasResetPassword: linz.api.model.get(linz.get('user model')).sendPasswordResetEmail
-        };
+            loginError = req.flash('error'),
+            locals = {
+                hasResetPassword: linz.api.model.get(linz.get('user model')).sendPasswordResetEmail, // check if resetPassword() is defined for user model
+                loginErrorMsg: (!loginError.length) ? '' : loginError.toString() //set login error message
+            };
 
         // pre-render the admin view, ready to plug into the larger wrapper
         async.series([
