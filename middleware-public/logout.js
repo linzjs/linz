@@ -1,7 +1,7 @@
-var linz = require('../');
-
 /* GET /admin/login */
-var route = function (req, res) {
+module.exports = function (req, res) {
+
+	var linz = require('../');
 
 	// log user out
 	req.logout();
@@ -13,5 +13,3 @@ var route = function (req, res) {
 	res.redirect((linz.get('admin path') === '' ? '/' : linz.get('admin path')));
 
 };
-
-module.exports = route;
