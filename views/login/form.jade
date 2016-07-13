@@ -11,5 +11,7 @@
 			.form-group
 				a(href=linz.api.url.getAdminForgotPasswordLink()) Forgot your password?
 		if loginError.length
-			div.alert.alert-danger= loginError
+			div.alert.alert-danger
+				each error in loginError
+					p= error
 		button.btn.btn-primary(type='submit') Sign-in
