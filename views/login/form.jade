@@ -12,6 +12,7 @@
 				a(href=linz.api.url.getAdminForgotPasswordLink()) Forgot your password?
 		if loginError.length
 			div.alert.alert-danger
-				each error in loginError
-					p= error
+				ul
+					each error in loginError
+						li= error
 		button.btn.btn-primary(type='submit') Sign-in

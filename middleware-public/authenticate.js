@@ -43,7 +43,7 @@ module.exports = function (strategy, opts) {
                     }
 
                     flash.type = flash.type || 'error';
-                    flash.message = flash.message || info.message || info || 'Unauthorised';
+                    flash.message = flash.message || info || 'Unauthorised';
 
                     if (typeof flash.message === 'string') {
                         req.flash(flash.type, flash.message);
@@ -86,7 +86,7 @@ module.exports = function (strategy, opts) {
                     }
 
                     flash.type = flash.type || 'success';
-                    flash.message = flash.message || info.message || info || 'Successful login';
+                    flash.message = flash.message || info || 'Successful login';
 
                     if (typeof flash.message === 'string') {
                         req.flash(flash.type, flash.message);
