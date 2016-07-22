@@ -36,9 +36,12 @@ mixin renderTabs(tabs)
 						+renderOverviewFields(tab, false, false)
 
 
-mixin overviewBody(array, hasTitle, hasSubtitle)
-	each elm in array
-		-	if (typeof elm === 'object' && !Array.isArray(elm))
-			+renderOverviewFields(elm, hasTitle, hasSubtitle)
-		-	if (typeof elm === 'object' && Array.isArray(elm))
-			+renderTabs(elm)
+mixin overviewBody(overview, hasTitle, hasSubtitle)
+	-	if (typeof overview === 'object' && !Array.isArray(overview))
+		+renderOverviewFields(overview, hasTitle, hasSubtitle)
+	-	if (overview && Array.isArray(overview) && overview.length)
+		each elm in overview
+			-	if (typeof elm === 'object' && !Array.isArray(elm))
+				+renderOverviewFields(elm, hasTitle, hasSubtitle)
+			-	if (typeof elm === 'object' && Array.isArray(elm))
+				+renderTabs(elm)

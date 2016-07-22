@@ -7,87 +7,6 @@ var linz = require('linz'),
 /* GET /admin/:model/:id/overview */
 var route = function (req, res, next) {
 
-    function transformDslToOverview (dsl, cb) {
-
-        if (!(Array.isArray(dsl) && dsl.length)) {
-            return [];
-        }
-
-        var overviewBody = [];
-
-        async.eachSeries(dsl, function (elm, callback) {
-
-            if (typeof elm !== 'object') {
-                return callback();
-            }
-
-            if (typeof elm.body === 'function') {
-
-                return elm.body(req, res, req.linz.record, req.linz.model, function (err, content) {
-
-                    if (err) {
-                        return callback(err);
-                    }
-
-                    overviewBody.push({
-                        label: elm.label,
-                        body: content
-                    });
-
-                    return callback();
-
-                });
-
-            }
-
-            // make recursive call, if elm or elm.body is an Array
-            if (Array.isArray(elm) || Array.isArray(elm.body)) {
-
-                var elmDsl = (Array.isArray(elm)) ? elm : elm.body;
-
-                return transformDslToOverview(elmDsl, function (err, data) {
-
-                    if (err) {
-                        return cb(err);
-                    }
-
-                    if (Array.isArray(data) && data.length) {
-
-                        var elmData = (Array.isArray(elm)) ? data : { label: elm.label, body: data };
-
-                        overviewBody.push(elmData);
-                    }
-
-                    return callback();
-                });
-
-            }
-
-            if (Array.isArray(elm.fields) && elm.fields.length) {
-
-                return linz.formtools.overview.getOverviewFields(req.linz.model.linz.formtools.labels, req.linz.model.linz.formtools.form, elm.label, elm.fields, req.linz.record, req.linz.model, function (err, fieldset) {
-
-                    if (err) {
-                        return callback(err);
-                    }
-
-                    overviewBody.push(fieldset);
-
-                    return callback();
-
-                });
-
-            }
-
-            // return if elm does not meet any of the above conditions
-            return callback();
-
-        }, function (err) {
-            return cb(err, overviewBody);
-        });
-
-    }
-
     var locals = {
             model: req.linz.model,
             record: clone(req.linz.record.toObject({ virtuals: true})),
@@ -101,7 +20,7 @@ var route = function (req, res, next) {
         function (cb) {
 
             // Transform overview.body DSL into data object that can be rendered by view
-            transformDslToOverview(req.linz.model.linz.formtools.overview.body, function (err, overviewData) {
+            linz.formtools.overview.body(req, res, req.linz.record, req.linz.model, req.linz.model.linz.formtools.overview.body, function (err, overviewData) {
 
                 if (err) {
                     return cb(err);
