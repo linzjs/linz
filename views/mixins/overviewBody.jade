@@ -24,8 +24,7 @@ mixin renderTabs(tabs)
 				each tab, index in tabs
 					- var tabLink = (tab.label || '').replace(/\s+/g, '-').toLowerCase() + index;
 					li(class="#{index === 0 ? 'active' : ''}")
-						a(href='#'+'#{tabLink}', role='tab' data-toggle='tab')
-							span=tab.label
+						a(href='#'+'#{tabLink}', role='tab' data-toggle='tab')=tab.label
 		div.tab-content
 			each tab, index in tabs
 				- var tabId = (tab.label || '').replace(/\s+/g, '-').toLowerCase() + index;
