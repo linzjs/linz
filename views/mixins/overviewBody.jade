@@ -1,23 +1,35 @@
-mixin renderOverviewFields(obj, hasTitle, hasSubtitle)
-	section.group
+mixin nestedSection(section)
+	h3=section.label
+	if section.body
+		div!=section.body
+	if section.fields
+		ul.list-group
+			each field in section.fields
+				li.list-group-item
+					span
+						strong=field.label + ':'
+					span.item-value=field.value
+
+mixin section(section, bExcludeHeading)
+	section
 		div.panel
-			if hasTitle
-				div.panel-heading=obj.label
+			if !bExcludeHeading
+				div.panel-heading=section.label
 			div.panel-body
-				if hasSubtitle
-					h4=obj.label
-				-	if (obj.body)
-					div=obj.body
-				-	if (obj.fields && Array.isArray(obj.fields))
+				if Array.isArray(section.body)
+					each nestedSection in section.body
+						+nestedSection(nestedSection)
+				else if section.body
+					div!=section.body
+				if section.fields
 					ul.list-group
-						each field in obj.fields
+						each field in section.fields
 							li.list-group-item
 								span
 									strong=field.label + ':'
-								span='	' + field.value
+								span.item-value=field.value
 
-
-mixin renderTabs(tabs)
+mixin tabs(tabs)
 	div.tabs
 		div
 			ul.nav.nav-tabs.nav-tabs-overview
@@ -29,18 +41,4 @@ mixin renderTabs(tabs)
 			each tab, index in tabs
 				- var tabId = (tab.label || '').replace(/\s+/g, '-').toLowerCase() + index;
 				div(id='#{tabId}', class="#{index === 0 ? 'tab-pane active' : 'tab-pane'}")
-					- if (Array.isArray(tab.body))
-						+overviewBody(tab.body, false, true)
-					- if (!Array.isArray(tab.body))
-						+renderOverviewFields(tab, false, false)
-
-
-mixin overviewBody(overview, hasTitle, hasSubtitle)
-	-	if (typeof overview === 'object' && !Array.isArray(overview))
-		+renderOverviewFields(overview, hasTitle, hasSubtitle)
-	-	if (overview && Array.isArray(overview) && overview.length)
-		each elm in overview
-			-	if (typeof elm === 'object' && !Array.isArray(elm))
-				+renderOverviewFields(elm, hasTitle, hasSubtitle)
-			-	if (typeof elm === 'object' && Array.isArray(elm))
-				+renderTabs(elm)
+					+section(tab, true)

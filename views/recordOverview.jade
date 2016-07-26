@@ -51,8 +51,8 @@ block content
 		.pane
 			.body
 				.overview-body
-					if overviewBody
+					if overview.body
 						include overview/body
-				if overviewVersions
+				if overview.versions
 					.overview-versions
-						div!= overviewVersions
+						div!= overview.versions

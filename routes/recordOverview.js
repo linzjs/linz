@@ -11,22 +11,22 @@ var route = function (req, res, next) {
             model: req.linz.model,
             record: clone(req.linz.record.toObject({ virtuals: true})),
             permissions: req.linz.model.linz.formtools.permissions,
-            formtools: req.linz.model.linz.formtools
+            formtools: req.linz.model.linz.formtools,
+            overview: {}
         };
 
     async.series([
 
-        // set overviewBody
         function (cb) {
 
-            // Transform overview.body DSL into data object that can be rendered by view
-            linz.formtools.overview.body(req, res, req.linz.record, req.linz.model, req.linz.model.linz.formtools.overview.body, function (err, overviewData) {
+            linz.formtools.overview.body(req, res, req.linz.record, req.linz.model, function (err, body) {
 
                 if (err) {
                     return cb(err);
                 }
 
-                locals.overviewBody = overviewData;
+                // body could be a string of HTML content OR an array of objects
+                locals.overview.body = body;
 
                 return cb();
 
@@ -46,7 +46,7 @@ var route = function (req, res, next) {
                     return cb(err);
                 }
 
-                locals.overviewVersions = content;
+                locals.overview.versions = content;
 
                 return cb(null);
 

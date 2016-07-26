@@ -1,5 +1,12 @@
 include ../mixins/overviewBody
 
--	if (overviewBody && typeof overviewBody === 'object')
+if (overview.body)
 	block content
-		mixin overviewBody(overviewBody, true, false)
+		if (typeof overview.body === 'string')
+			div!=overview.body
+		else
+			each section in overview.body
+				if Array.isArray(section)
+					mixin tabs(section)
+				else
+					mixin section(section)

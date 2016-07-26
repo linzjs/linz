@@ -52,6 +52,10 @@
               top: 13px;
             }
 
+            span.item-value {
+              padding-left: 5px;
+            }
+
           }
 
           .list-group-item:last-child {
@@ -101,16 +105,38 @@
           font-size: 20px;
         }
 
-        section.group {
+        section {
+
           .panel {
+
             margin-bottom: 0px;
+
+            .panel-body {
+
+              .list-group-item {
+
+                span.item-value {
+                  padding-left: 5px;
+                }
+
+              }
+
+              h3 {
+                padding-left: 15px;
+              }
+
+            }
+
           }
+
         }
 
-        section.group:last-child {
+        section:last-child {
+
           .panel {
             margin-bottom: 20px;
           }
+
         }
 
       }
