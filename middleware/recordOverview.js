@@ -5,6 +5,8 @@ module.exports = function () {
 
 	return function (req, res, next) {
 
+        req.linz.overview = req.linz.overview || {};
+
         async.series([
 
             function (cb) {
@@ -59,14 +61,47 @@ module.exports = function () {
 
                 });
 
+            },
+
+            function (cb) {
+
+                linz.formtools.overview.body(req, res, req.linz.record, req.linz.model, function (err, body) {
+
+                    if (err) {
+                        return cb(err);
+                    }
+
+                    // body could be a string of HTML content OR an array of objects
+                    req.linz.overview.body = body;
+
+                    return cb();
+
+                });
+
+            },
+
+            function (cb) {
+
+                if (!req.linz.model.versions) {
+                    return cb();
+                }
+
+                req.linz.model.versions.renderer(req, res, req.linz.record, req.linz.model, req.linz.model.versions, function (err, content) {
+
+                    if (err) {
+                        return cb(err);
+                    }
+
+                    req.linz.overview.versions = content;
+
+                    return cb();
+
+                });
+
             }
 
-        ], function (err, results) {
+        ], next);
 
-            return next(err);
+	};
 
-        });
-
-	}
-
-}
+};

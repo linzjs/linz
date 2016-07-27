@@ -8,22 +8,17 @@ var route = function (req, res) {
         record: req.linz.record,
         permissions: req.linz.config.linz.formtools.permissions,
         formtools: req.linz.config.linz.formtools,
-        overview: {}
+        overview: req.linz.overview
     };
 
-    // Transform overview.body DSL into data object that can be rendered by view
-    linz.formtools.overview.body(req, res, req.linz.record, req.linz.config, function (err, body) {
+    if (Array.isArray(locals.overview.body)) {
 
-        if (!err) {
+        // Set tabId to each tab in locals.overview.body
+        linz.formtools.overview.setTabId(locals.overview.body);
 
-            // body could be a string of HTML content OR an array of objects
-            locals.overview.body = body;
+    }
 
-        }
-
-        res.render(linz.api.views.viewPath('configOverview.jade'), locals);
-
-    });
+    res.render(linz.api.views.viewPath('configOverview.jade'), locals);
 
 };
 

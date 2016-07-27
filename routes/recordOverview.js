@@ -12,47 +12,17 @@ var route = function (req, res, next) {
             record: clone(req.linz.record.toObject({ virtuals: true})),
             permissions: req.linz.model.linz.formtools.permissions,
             formtools: req.linz.model.linz.formtools,
-            overview: {}
+            overview: req.linz.overview
         };
 
+    if (Array.isArray(locals.overview.body)) {
+
+        // Set tabId to each tab in locals.overview.body
+        linz.formtools.overview.setTabId(locals.overview.body);
+
+    }
+
     async.series([
-
-        function (cb) {
-
-            linz.formtools.overview.body(req, res, req.linz.record, req.linz.model, function (err, body) {
-
-                if (err) {
-                    return cb(err);
-                }
-
-                // body could be a string of HTML content OR an array of objects
-                locals.overview.body = body;
-
-                return cb();
-
-            });
-
-        },
-
-        function (cb) {
-
-            if (!req.linz.model.versions) {
-                return cb(null);
-            }
-
-            req.linz.model.versions.renderer(req, res, req.linz.record, req.linz.model, req.linz.model.versions, function (err, content) {
-
-                if (err) {
-                    return cb(err);
-                }
-
-                locals.overview.versions = content;
-
-                return cb(null);
-
-            });
-
-        },
 
         // check if doc can be edited
         function (cb) {
