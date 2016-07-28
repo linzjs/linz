@@ -8,12 +8,12 @@ var linz = require('linz'),
 var route = function (req, res, next) {
 
     var locals = {
-            model: req.linz.model,
-            record: clone(req.linz.record.toObject({ virtuals: true})),
-            permissions: req.linz.model.linz.formtools.permissions,
-            formtools: req.linz.model.linz.formtools,
-            overview: req.linz.overview
-        };
+        model: req.linz.model,
+        record: clone(req.linz.record.toObject({ virtuals: true})),
+        permissions: req.linz.model.linz.formtools.permissions,
+        formtools: req.linz.model.linz.formtools,
+        overview: req.linz.overview
+    };
 
     if (Array.isArray(locals.overview.body)) {
 

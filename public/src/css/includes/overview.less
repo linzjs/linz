@@ -113,16 +113,28 @@
 
             .panel-body {
 
-              .list-group-item {
+              .list-group {
 
-                span.item-value {
-                  padding-left: 5px;
+                .list-group-item {
+
+                  span.item-value {
+                    padding-left: 5px;
+                  }
+
                 }
 
               }
 
               h3 {
                 padding-left: 15px;
+              }
+
+              h3 ~ .list-group {
+                margin: 0 20px;
+              }
+
+              h3 ~ .section-group {
+                margin: 0 15px;
               }
 
             }

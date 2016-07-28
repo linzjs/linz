@@ -1,14 +1,14 @@
 mixin nestedSection(section)
 	h3=section.label
 	if section.body
-		div!=section.body
+		div.section-group!=section.body
 	if section.fields
 		ul.list-group
 			each field in section.fields
 				li.list-group-item
 					span
 						strong=field.label + ':'
-					span.item-value=field.value
+					span.item-value!=field.value
 
 mixin section(section, bExcludeHeading)
 	section
@@ -20,14 +20,14 @@ mixin section(section, bExcludeHeading)
 					each nestedSection in section.body
 						+nestedSection(nestedSection)
 				else if section.body
-					div!=section.body
+					div.section-group!=section.body
 				if section.fields
 					ul.list-group
 						each field in section.fields
 							li.list-group-item
 								span
 									strong=field.label + ':'
-								span.item-value=field.value
+								span.item-value!=field.value
 
 mixin tabs(tabs)
 	div.tabs

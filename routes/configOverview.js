@@ -1,11 +1,12 @@
-var linz = require('../');
+var linz = require('../'),
+    clone = require('clone');
 
 /* GET /admin/config/:config/overview */
 var route = function (req, res) {
 
     var locals = {
         config: req.linz.config,
-        record: req.linz.record,
+        record: clone(req.linz.record),
         permissions: req.linz.config.linz.formtools.permissions,
         formtools: req.linz.config.linz.formtools,
         overview: req.linz.overview
@@ -18,7 +19,7 @@ var route = function (req, res) {
 
     }
 
-    res.render(linz.api.views.viewPath('configOverview.jade'), locals);
+    return res.render(linz.api.views.viewPath('configOverview.jade'), locals);
 
 };
 
