@@ -65,7 +65,7 @@ module.exports = {
 
                 // generate text diff for properties that are text fields
                 req.linz.diffs.forEach(diff => {
-                    if (diff.kind === 'E' && typeof diff.lhs === 'string' && typeof diff.rhs === 'string' && fieldsType[diff.path[0]] === 'text') {
+                    if (diff.kind === 'E' && typeof diff.lhs === 'string' && diff.lhs.length && typeof diff.rhs === 'string' && fieldsType[diff.path[0]] === 'text') {
                         diff.textDiff = textDiffUtils.diffWords(diff.lhs, diff.rhs);
                     }
                 });
