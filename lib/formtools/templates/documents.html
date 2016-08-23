@@ -1,11 +1,19 @@
-<div class="documents-container" data-document-field-for="{{name}}" data-document-field-label="{{label}}">
+<div class="documents-container" data-document-field-for="{{name}}" data-document-field-label="{{label}}"{{#if canCreate}} data-document-can-create{{/if}}{{#if canEdit}} data-document-can-edit{{/if}}{{#if canDelete}} data-document-can-delete{{/if}}{{#if setLabel}} data-document-set-label{{/if}}>
 
 	<template data-linz-template="document-{{name}}">{{{form}}}</template>
 
-	<a class="btn btn-default" data-toggle="modal" data-document-action="create">Create another</a>
+	{{#if canCreate}}
+		<a class="btn btn-default" data-toggle="modal" data-document-action="create">Create another</a>
+	{{/if}}
 
 	<input type="hidden" name="{{name}}" value="{{json}}" data-linz-conflict-handler="documentArrayConflictHandler" />
 
 	<div class="documents"></div>
 
+	{{#if setLabel}}
+		<script>
+			linz.documents = linz.documents || {};
+			linz.documents.{{name}}SetLabel = {{{setLabel}}}
+		</script>
+	{{/if}}
 </div>
