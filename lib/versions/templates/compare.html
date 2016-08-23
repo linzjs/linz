@@ -11,15 +11,15 @@
         </div>
         <div class="modal-body">
             {{#ifCond rollback '&&' diffs}}
-            <p>You have requested to rollback to version <strong>{{previous.date}} ({{previous.author}})</strong>. Please review the changes below before confirming the rollback operation.</p>
+            <p>You have requested to rollback to version <strong>{{{previous.date}}} ({{previous.author}})</strong>. Please review the changes below before confirming the rollback operation.</p>
             {{/ifCond}}
             <div class="form-group">
             {{#if diffs}}
                 <table class="table compare-versions">
                     <tr>
                         <th class="fieldName">Field name</th>
-                        <th>{{previous.date}} ({{previous.author}})</th>
-                        <th>{{latest.date}} ({{latest.author}})</th>
+                        <th>{{{previous.date}}} ({{previous.author}})</th>
+                        <th>{{{latest.date}}} ({{latest.author}})</th>
                     </tr>
                     {{{renderDiffs diffs}}}
                 </table>
