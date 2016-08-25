@@ -35,6 +35,11 @@ module.exports = function (req, res, next) {
 				return;
 			}
 
+			// if transpose is defined for this field, let's tranpose their change so it can compare in the correct format on client side
+			if (form[fieldName].transpose) {
+				theirChange[fieldName] = form[fieldName].transpose(theirChange[fieldName]);
+			}
+
 			switch (form[fieldName].type) {
 
 				case 'number':
