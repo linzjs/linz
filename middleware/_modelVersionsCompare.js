@@ -1,16 +1,15 @@
 var linz = require('../'),
     async = require('async');
 
-module.exports = function (req, res, next) {
+module.exports = function (req) {
 
-    var Model = linz.api.model.get(req.params.model),
+    var Model = req.linz.model,
         fieldExclusions = {
             '_id': 0,
             '__v': 0,
             'refId': 0,
             'refVersion': 0
-        },
-        fieldInclusions = { dateModified: 1, modifiedBy: 1};
+        };
 
     // add compare exclusion fields from model configs
     if (Model.versions.compare && Model.versions.compare.exclusions) {
@@ -20,12 +19,12 @@ module.exports = function (req, res, next) {
             'dateCreated': 0
         };
 
-        Object.keys(exclusions).forEach(function (fieldName) {
-            fieldExclusions[fieldName] = exclusions[fieldName];
-        });
+        // add in additional exclusion fields to fieldExclusions
+        Object.keys(exclusions).forEach(fieldName => fieldExclusions[fieldName] = exclusions[fieldName]);
+
     }
 
-    var getAuthor = function (record, cb) {
+    var getAuthor = (record, cb) => {
 
         Model.versions.cellRenderers.referenceName(record.modifiedBy, record, 'modifiedBy', Model, function (err, result) {
 
@@ -41,9 +40,9 @@ module.exports = function (req, res, next) {
 
     }
 
-    var getDate = function (record, cb) {
+    var getDate = (record, cb) => {
 
-        Model.versions.cellRenderers.date(record.dateModified, record, 'dateModified', Model, function (err, result) {
+        Model.versions.cellRenderers.date(record.dateCreated, record, 'dateCreated', Model, function (err, result) {
 
             if (err) {
                 return cb(err);
@@ -57,32 +56,11 @@ module.exports = function (req, res, next) {
 
     }
 
-    var getVersionById = function (id, exclusions, cb) {
+    var getReferenceNames = (record, cb) => {
 
-        Model.VersionedModel.findById(id, exclusions, { lean: 1 }, function (err, record) {
+        async.each(Object.keys(record), (fieldName, getReferenceDone) => {
 
-            if (err) {
-                return cb(err);
-            }
-
-            if (!record) {
-                return cb (new Error('Error: Record not found.'));
-            }
-
-            getReferenceNames(record, function (err, record) {
-                var recordWithLabel = getFieldNames(record);
-                return cb(null, recordWithLabel);
-            });
-
-        });
-
-    }
-
-    var getReferenceNames = function (record, cb) {
-
-        async.each(Object.keys(record), function (fieldName, getReferenceDone) {
-
-            linz.versions.renderers.cellRenderers.default(record[fieldName], record, fieldName, Model, function (err, str) {
+            linz.versions.renderers.cellRenderers.default(record[fieldName], record, fieldName, Model, (err, str) => {
                 if (err) {
                     return getReferenceDone(err);
                 }
@@ -90,18 +68,18 @@ module.exports = function (req, res, next) {
                 return getReferenceDone(null);
             });
 
-        }, function (err) {
+        }, err => {
             return cb(err, record);
         });
 
     }
 
-    var getFieldNames = function (record) {
+    var getFieldNames = record => {
 
         var recordWithFieldNames = {},
-            form = Model.linz.formtools.form;
+            form = req.linz.model.linz.formtools.form;
 
-        Object.keys(record).forEach(function (fieldName) {
+        Object.keys(record).forEach(fieldName => {
             if (!form[fieldName]) {
                 return;
             }
@@ -112,47 +90,55 @@ module.exports = function (req, res, next) {
 
     }
 
+    var getVersionById = (id, projection, bRenderFields, cb) => {
+
+        Model.VersionedModel.findById(id, projection, { lean: 1 }, (err, record) => {
+
+            if (err) {
+                return cb(err);
+            }
+
+            if (!record) {
+                return cb (new Error('Error: Record not found.'));
+            }
+
+            if (!bRenderFields) {
+                return cb(null, record);
+            }
+
+            getReferenceNames(record, (err, record) => cb(null, getFieldNames(record)));
+
+        });
+
+    }
+
     return {
 
-        getLastest: function (cb) {
+        getLastest: cb => getVersionById(req.params.revisionBId, fieldExclusions, false, cb),
 
-            getVersionById(req.params.revisionBId, fieldExclusions, cb);
+        getPrevious: cb => getVersionById(req.params.revisionAId, fieldExclusions, false, cb),
 
-        },
-
-        getPrevious: function (cb) {
-
-            getVersionById(req.params.revisionAId, fieldExclusions, cb);
-
-        },
-
-        getLatestVersionAdditionalProps: function (cb) {
+        getLatestVersionAdditionalProps: cb => {
 
             async.waterfall([
-
-                function (getValueDone) {
-                    getVersionById(req.params.revisionBId, fieldInclusions, getValueDone);
-                },
+                getValueDone => getVersionById(req.params.revisionBId, undefined, false, getValueDone),
                 getAuthor,
                 getDate
-
             ], cb);
 
         },
 
-        getPreviousVersionAdditionalProps: function (cb) {
+        getPreviousVersionAdditionalProps: cb => {
 
             async.waterfall([
-
-                function (getValueDone) {
-                    getVersionById(req.params.revisionAId, fieldInclusions, getValueDone);
-                },
+                getValueDone => getVersionById(req.params.revisionAId, undefined, false, getValueDone),
                 getAuthor,
                 getDate
-
             ], cb);
 
-        }
+        },
+
+        getVersionById: getVersionById
 
     }
 

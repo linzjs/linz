@@ -5,7 +5,7 @@ var linz = require('../'),
 
 module.exports = function (req, res, next) {
 
-	var Model = linz.api.model.get(req.params.model),
+	var Model = req.linz.model,
 		ccSettings = Model.concurrencyControl,
 		formData = req.body,
 		resData = {
@@ -33,6 +33,11 @@ module.exports = function (req, res, next) {
 				data.theirChange['versionNo'] = theirChange['__v'];
 
 				return;
+			}
+
+			// if transpose is defined for this field, let's tranpose their change so it can compare in the correct format on client side
+			if (form[fieldName].transpose) {
+				theirChange[fieldName] = form[fieldName].transpose(theirChange[fieldName]);
 			}
 
 			switch (form[fieldName].type) {
@@ -140,8 +145,8 @@ module.exports = function (req, res, next) {
 	});
 
 	// exclude fields that are not editable
-	Object.keys(Model.form).forEach(function (fieldName) {
-		if (Model.form[fieldName].edit && Model.form[fieldName].edit.disabled) {
+	Object.keys(Model.linz.formtools.form).forEach(function (fieldName) {
+		if (Model.linz.formtools.form[fieldName].edit && Model.linz.formtools.form[fieldName].edit.disabled) {
 			exclusionFields[fieldName] = 0;
 		}
 	});
@@ -221,12 +226,12 @@ module.exports = function (req, res, next) {
 			var fieldName = diff.path[0];
 
 			// change fieldname to the related field defined in the relationship
-			if (Model.form[fieldName].relationship) {
-				fieldName = Model.form[fieldName].relationship;
+			if (Model.linz.formtools.form[fieldName].relationship) {
+				fieldName = Model.linz.formtools.form[fieldName].relationship;
 			}
 
 			if (!diffKeys[fieldName]) {
-				diffKeys[fieldName] = Model.form[fieldName].type;
+				diffKeys[fieldName] = Model.linz.formtools.form[fieldName].type;
 			}
 
 		});
