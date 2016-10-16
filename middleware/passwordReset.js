@@ -58,6 +58,9 @@ module.exports = {
             throw new Error('updatePassword() is not defined for user model.');
         }
 
+        // clear res.clearCookie('linz-return-url') so if use logs in after resetting password, it doesn't redirect back to the password reset page
+        res.clearCookie('linz-return-url');
+
         User.updatePassword(req.body.id, req.body.password, req, res, next);
 
     }

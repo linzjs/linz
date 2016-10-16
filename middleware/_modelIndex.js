@@ -61,7 +61,7 @@ module.exports = function  (req, res, next) {
                         return cb(null);
                     }
 
-                    formtoolsAPI.grid.renderFilters(req.params.model, function (err, result) {
+                    formtoolsAPI.grid.renderFilters(req.user, req.params.model, function (err, result) {
 
                         if (err) {
                             return cb(err);
@@ -84,7 +84,7 @@ module.exports = function  (req, res, next) {
                         return cb(null);
                     }
 
-                    formtoolsAPI.grid.getActiveFilters(session.grid.formData.selectedFilters.split(','), session.grid.formData, req.params.model, function (err, result) {
+                    formtoolsAPI.grid.getActiveFilters(req.user, session.grid.formData.selectedFilters.split(','), session.grid.formData, req.params.model, function (err, result) {
 
                         if (err) {
                             return cb(err);
@@ -105,7 +105,7 @@ module.exports = function  (req, res, next) {
                         return cb(null);
                     }
 
-                    formtoolsAPI.grid.renderSearchFilters(session.grid.formData.selectedFilters.split(','), session.grid.formData, req.params.model, function (err, result) {
+                    formtoolsAPI.grid.renderSearchFilters(req.user, session.grid.formData.selectedFilters.split(','), session.grid.formData, req.params.model, function (err, result) {
 
                         if (err) {
                             return cb(err);

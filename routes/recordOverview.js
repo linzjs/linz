@@ -81,7 +81,7 @@ var route = function (req, res, next) {
 
             if (typeof action.modal === 'object') {
                 modal = action.modal;
-                modal.active = true;
+                modal.active = !(modal.active === false); // defaults to true
             } else if (typeof action.modal === 'boolean') {
                 modal.active = action.modal;
             }

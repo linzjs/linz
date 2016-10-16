@@ -9,24 +9,25 @@
                     <li class="list-group-item">
 
                         <h4>
-                            {{{this.authorLink}}} <small>updated this record on {{this.date}}</small> {{#if @first}} (latest){{/if}}
+                            {{{this.authorLink}}} <small>updated this record on {{{this.date}}}</small> {{#if @first}} (latest){{/if}}
                         </h4>
 
                         {{#unless @first}}
 
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default" data-target="#linzModal" data-linz-control="versions-rollback" data-href="{{./../../adminPath}}/model/{{../../../modelName}}/{{../../../pageId}}/versions-rollback/{{this._id}}/{{../../../versions.0._id}}">Roll back to this version</button>
-        						<button type="button" class="btn btn-default" data-target="#linzModal" data-linz-control="versions-compare-latest" data-href="{{../../adminPath}}/model/{{../../modelName}}/{{../../pageId}}/versions-compare/{{this._id}}/{{../../versions.0._id}}">Compare with latest</button>
+                                <button type="button" class="btn btn-default" data-target="#linzModal" data-linz-control="versions-compare-latest" data-href="{{../../adminPath}}/model/{{../../modelName}}/{{../../pageId}}/versions-compare/{{this._id}}/{{../../versions.0._id}}">Compare with latest</button>
                                 {{#if this.history.length}}
-            						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            							<span class="caret"></span>
-            							<span class="sr-only">Toggle Dropdown</span>
-            						</button>
-            						<ul class="dropdown-menu" role="menu">
-            							{{#each this.history}}
-                                            <li><a href="{{../../../../adminPath}}/model/{{../../../../modelName}}/{{../../../../pageId}}/versions-compare/{{this._id}}/{{../_id}}" data-linz-control="versions-compare">{{this.date}} ({{this.author}})</a></li>
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li class="dropdown-header">Compare with previous versions</li>
+                                        {{#each this.history}}
+                                            <li><a href="{{../../../../adminPath}}/model/{{../../../../modelName}}/{{../../../../pageId}}/versions-compare/{{this._id}}/{{../_id}}" data-linz-control="versions-compare">{{{this.date}}} ({{this.author}})</a></li>
                                         {{/each}}
-            						</ul>
+                                    </ul>
                                 {{/if}}
                             </div>
 
@@ -52,7 +53,26 @@
             var queryObj = $(this),
                 url = queryObj[0].nodeName === 'BUTTON' ? queryObj.attr('data-href') : queryObj.attr('href');
 
-            $('#linzModal').modal().load(url, function () {});
+            // open modal and load URL
+            $('#linzModal').modal().load(url);
+
+            // remove modal shown event
+            $('#linzModal').off('shown.bs.modal');
+
+            // re-bind the shown event
+            $('#linzModal').on('shown.bs.modal', function (e) {
+
+                // convert UTC to local datetime
+                $(this).find('[data-linz-local-date]').each(function () {
+
+                    var dateFormat = $(this).attr('data-linz-date-format') || 'ddd DD/MM/YYYY';
+                    var localDateTime = moment(new Date($(this).attr('data-linz-utc-date'))).format(dateFormat);
+
+                    $(this).html(localDateTime);
+
+                });
+
+            });
 
            return false;
 

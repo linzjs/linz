@@ -18,5 +18,7 @@
         "no-trailing-spaces": 1,
         "no-process-env": 0,
         "no-process-exit": 0
-    }
+    },
+    # if you are receiving errors for eslint, comment out the line below or upgrade to 7.2.2+
+    "extends": "eslint:recommended"
 }

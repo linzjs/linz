@@ -6,8 +6,8 @@ module.exports = {
 
         var locals = {
                 label: 'Compare versions',
-                latest: req.linz.history.latest,
-                previous: req.linz.history.previous,
+                latest: req.linz.history && req.linz.history.latest ? req.linz.history.latest : undefined,
+                previous: req.linz.history && req.linz.history.previous ? req.linz.history.previous : undefined,
                 diffs: req.linz.diffs
             },
             content = templates.compare(locals);
