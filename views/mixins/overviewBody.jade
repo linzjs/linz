@@ -1,5 +1,6 @@
 mixin nestedSection(section)
-	h3=section.label
+	if section.label
+		h3=section.label
 	if section.body
 		div.section-group!=section.body
 	if section.fields
