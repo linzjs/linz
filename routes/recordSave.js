@@ -30,6 +30,22 @@ var route = function (req, res, next) {
                         // merge edit object back into form object (overrides)
                         utils.merge(req.linz.model.linz.formtools.form[field], req.linz.model.linz.formtools.form[field]['edit'] || {});
 
+                        if (formUtils.schemaType(req.linz.model.schema.paths[field]) === 'array') {
+
+                            if (!Array.isArray(req.body[field])) {
+                                req.body[field] = [];
+                            } else {
+
+                              // req.body[filed] may contain '[]' value passed from hiddend input element which has same name as
+                              // 'field', which is used to pass value to serve from client side when no checkboxes are selcted on client side
+                              var filteredArr = req.body[field].filter(e => e !== '[]');
+
+                              req.body[field] = filteredArr;
+
+                            }
+
+                        }
+
                         if (formUtils.schemaType(req.linz.model.schema.paths[field]) === 'documentarray') {
 
                             // turn the json into an object
