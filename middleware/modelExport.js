@@ -4,19 +4,6 @@ var linz = require('../'),
 
 var modelExportHelpers = function modelExportHelpers (req, res) {
 
-    var getRecordData = function getRecordData (fields, record) {
-
-        var orderedRecord = {};
-
-        // order field names in the selected order
-        fields.forEach(function (fieldName) {
-            orderedRecord[fieldName] = prettifyData(fieldName, record[fieldName]);
-        });
-
-        return linz.utils.json2CSV(orderedRecord);
-
-    };
-
     var prettifyData = function prettifyData (fieldName, val) {
 
         if (val === undefined || val === '' || val === null) {
@@ -70,7 +57,42 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
             return (linz.utils.asBoolean(val) ? 'Yes' : 'No');
         }
 
+        if (typeof val === 'object') {
+
+            if (!Model.linz.formtools.form[fieldName].exportTransform) {
+                return '';
+            }
+
+            return Model.linz.formtools.form[fieldName].exportTransform(val, 'data');
+
+        }
+
         return val;
+
+    };
+
+    var getRecordData = function getRecordData (fields, record) {
+
+        var orderedRecord = {};
+
+        // order field names in the selected order
+        fields.forEach(function (fieldName) {
+
+            var val = prettifyData(fieldName, record[fieldName]);
+
+            if (val !== null && typeof val === 'object') {
+
+                Object.keys(val).forEach(function(key) {
+                    orderedRecord[key] = val[key];
+                });
+
+            } else {
+                orderedRecord[fieldName] = val;
+            }
+
+        });
+
+        return linz.utils.json2CSV(orderedRecord);
 
     };
 
@@ -93,7 +115,15 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
                 // get field labels
                 fields.forEach(function (fieldName) {
-                    arr.push(form[fieldName].label);
+
+                    if (!form[fieldName].exportTransform) {
+                        return arr.push(form[fieldName].label);
+                    }
+
+                    var strFields = form[fieldName].exportTransform(record[fieldName], 'label');
+
+                    return arr.push(strFields ? strFields : '');
+
                 });
 
                 str = arr.join() + '\n';
