@@ -16,7 +16,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
         var Model = req.linz.model;
 
-        if (Model.schema.tree[fieldName].ref) {
+        if (fieldName && Model.schema.tree[fieldName].ref) {
             return val.title;
         }
 
@@ -36,13 +36,17 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
                     // tostring embedded object
                     Object.keys(obj).forEach(function (key) {
+
                         if (key === '_id' || key === 'id' || key === 'dateModified' || key === 'dateCreated' || obj[key] === '' || obj[key] === undefined) {
                             return;
                         }
+
                         return arr.push(key + ': ' + obj[key].toString());
+
                     });
 
                     return strArr.push(arr.join(', '));
+
                 }
 
                 return strArr.push(obj.toString());
@@ -59,11 +63,15 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
         if (typeof val === 'object') {
 
-            if (!Model.linz.formtools.form[fieldName].exportTransform) {
-                return '';
+            if (!fieldName) {
+                return val;
             }
 
-            return Model.linz.formtools.form[fieldName].exportTransform(val, 'data');
+            if (!Model.linz.formtools.form[fieldName].exportTransform) {
+                return val;
+            }
+
+            return Model.linz.formtools.form[fieldName].exportTransform(val);
 
         }
 
@@ -71,26 +79,63 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
     };
 
-    var getRecordData = function getRecordData (fields, record) {
+    var getData = function (obj) {
 
-        var orderedRecord = {};
+        let keyVal = {};
+
+        function recur(data) {
+
+            Object.keys(data).forEach(function(key) {
+
+                // key here is not a form field, so we pass '' to "fieldName" parameter of prettifyData
+                let val = prettifyData('', data[key]);
+
+                if (typeof val === 'object' && Object.keys(val).length) {
+                    return recur(val);
+                }
+
+                keyVal[key] = val;
+
+            });
+
+            return keyVal;
+
+        }
+
+        return recur(obj);
+
+    };
+
+    var getRecordData = function getRecordData (fields, record, form, recordIndex) {
+
+        let orderedRecord = {};
 
         // order field names in the selected order
         fields.forEach(function (fieldName) {
 
-            var val = prettifyData(fieldName, record[fieldName]);
+            let val = prettifyData(fieldName, record[fieldName]);
 
-            if (val !== null && typeof val === 'object') {
+            if (!val || typeof val !== 'object') {
 
-                Object.keys(val).forEach(function(key) {
-                    orderedRecord[key] = val[key];
-                });
-
-            } else {
                 orderedRecord[fieldName] = val;
+
+                return;
+
             }
 
+            // val is an object, iterate through object to add each key and its value (including embedded) to orderedRecord
+            let data = getData(val);
+
+            Object.keys(data).forEach(function(key) {
+                orderedRecord[key] = data[key];
+            });
+
         });
+
+        // pass form to json2CSV method to add headers only when json2CSV is called firt time
+        if (recordIndex === 0) {
+            return linz.utils.json2CSV(orderedRecord, form);
+        }
 
         return linz.utils.json2CSV(orderedRecord);
 
@@ -108,29 +153,14 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
                     record = doc.toObject({virtuals: true });
 
                 if (count !== 0) {
-                    return getRecordData(fields, record);
+                    return getRecordData(fields, record, form, count);
                 }
 
-                var arr = [];
-
-                // get field labels
-                fields.forEach(function (fieldName) {
-
-                    if (!form[fieldName].exportTransform) {
-                        return arr.push(form[fieldName].label);
-                    }
-
-                    var strFields = form[fieldName].exportTransform(record[fieldName], 'label');
-
-                    return arr.push(strFields ? strFields : '');
-
-                });
-
-                str = arr.join() + '\n';
+                let recordData = getRecordData(fields, record, form, count);
 
                 count++;
 
-                return str + getRecordData(fields, record);
+                return str + recordData;
 
             };
 
