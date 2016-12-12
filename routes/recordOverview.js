@@ -3,6 +3,7 @@ var linz = require('linz'),
     async = require('async'),
     clone = require('clone');
 
+
 /* GET /admin/:model/:id/overview */
 var route = function (req, res, next) {
 
@@ -10,68 +11,18 @@ var route = function (req, res, next) {
         model: req.linz.model,
         record: clone(req.linz.record.toObject({ virtuals: true})),
         permissions: req.linz.model.linz.formtools.permissions,
-        formtools: req.linz.model.linz.formtools
+        formtools: req.linz.model.linz.formtools,
+        overview: req.linz.overview
     };
 
+    if (Array.isArray(locals.overview.body)) {
+
+        // Set tabId to each tab in locals.overview.body
+        linz.formtools.overview.setTabId(locals.overview.body);
+
+    }
+
     async.series([
-
-        function (cb) {
-
-            req.linz.model.linz.formtools.overview.summary.renderer(req.linz.record, req.linz.model, function (err, content) {
-
-                if (err) {
-                    return cb(err);
-                }
-
-                locals.overviewSummary = content;
-
-                return cb(null);
-
-            });
-
-        },
-
-        function (cb) {
-
-            if (!req.linz.model.linz.formtools.overview.body) {
-
-                return cb(null);
-
-            }
-
-            req.linz.model.linz.formtools.overview.body(req, res, req.linz.record, req.linz.model, function (err, content) {
-
-                if (err) {
-                    return cb(err);
-                }
-
-                locals.overviewBody = content;
-
-                return cb(null);
-
-            });
-
-        },
-
-        function (cb) {
-
-            if (!req.linz.model.versions) {
-                return cb(null);
-            }
-
-            req.linz.model.versions.renderer(req, res, req.linz.record, req.linz.model, req.linz.model.versions, function (err, content) {
-
-                if (err) {
-                    return cb(err);
-                }
-
-                locals.overviewVersions = content;
-
-                return cb(null);
-
-            });
-
-        },
 
         // check if doc can be edited
         function (cb) {

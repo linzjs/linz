@@ -1,0 +1,43 @@
+mixin nestedSection(section)
+	if section.label
+		h3=section.label
+	if section.body
+		div.section-group!=section.body
+	if section.fields
+		ul.list-group
+			each field in section.fields
+				li.list-group-item
+					span
+						strong=field.label + ':'
+					span.item-value!=field.value
+
+mixin section(section, bExcludeHeading)
+	section
+		div.panel
+			if !bExcludeHeading
+				div.panel-heading=section.label
+			div.panel-body
+				if Array.isArray(section.body)
+					each nestedSection in section.body
+						+nestedSection(nestedSection)
+				else if section.body
+					div.section-group!=section.body
+				if section.fields
+					ul.list-group
+						each field in section.fields
+							li.list-group-item
+								span
+									strong=field.label + ':'
+								span.item-value!=field.value
+
+mixin tabs(tabs)
+	div.tabs
+		div
+			ul.nav.nav-tabs.nav-tabs-overview
+				each tab, index in tabs
+					li(class="#{index === 0 ? 'active' : ''}")
+						a(href='#'+'#{tab.tabId}', role='tab' data-toggle='tab')=tab.label
+		div.tab-content
+			each tab, index in tabs
+				div(id='#{tab.tabId}', class="#{index === 0 ? 'tab-pane active' : 'tab-pane'}")
+					+section(tab, true)
