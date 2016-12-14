@@ -1,5 +1,5 @@
-if Object.keys(model.grid.filters).length
-	.model-filters
+.model-filters
+	if Object.keys(model.grid.filters).length
 		.dropdown.addFilterBtn
 			a(data-toggle='dropdown', role='button', class="btn btn-default")
 				i.fa.fa-filter
@@ -10,11 +10,12 @@ if Object.keys(model.grid.filters).length
 					li
 						a.control-addFilter(data-filter-field='' + key + '')= filterField['label']
 						span.controlField!= filterField.formControls
-		form.filters(method='post', role='form')
-			input.page(type='hidden', name='page', value=''+ page +'')
-			input.pageSize(type='hidden', name='pageSize', value=''+ pageSize +'')
-			input.selectedFilters(type='hidden', name='selectedFilters', value='' + ((form.selectedFilters) ? form.selectedFilters : '') + '')
-			input.selectedSort(type='hidden', name='sort', value='' + form.sort + '')
+	form.filters(method='post', role='form')
+		input.page(type='hidden', name='page', value=''+ page +'')
+		input.pageSize(type='hidden', name='pageSize', value=''+ pageSize +'')
+		input.selectedFilters(type='hidden', name='selectedFilters', value='' + ((form.selectedFilters) ? form.selectedFilters : '') + '')
+		input.selectedSort(type='hidden', name='sort', value='' + form.sort + '')
+		if Object.keys(model.grid.filters).length
 			.filter-list
 				if model.grid.activeFilters
 					for activeFilter, fieldName in model.grid.activeFilters
