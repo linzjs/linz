@@ -20,6 +20,14 @@ Linz is quite new and under rapid development. It is used quite successfully in 
 
    getting_started
 
+.. _contribution-docs:
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contributing documentation
+
+   contributors_getting_started
+
 .. _example-projects:
 
 .. toctree::
