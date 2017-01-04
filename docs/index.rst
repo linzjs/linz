@@ -36,3 +36,9 @@ Linz is quite new and under rapid development. It is used quite successfully in 
    :caption: Example projects
 
    mini_twitter
+
+.. toctree::
+   :maxdepth: 2
+   :caption: About Linz
+
+   definitions
