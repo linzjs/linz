@@ -143,4 +143,38 @@ grid.groupActions
 
 Each record displayed on a model index has a checkbox, checking two or more records creates a group. If ``groupActions`` have been defined for that model, those actions will become chooseable by the user.
 
-``grid.groupActions`` should be an Array of Objects. Each object describes an action that a user can make, and the object takes on the same form as those describe in `grid.actions`_.
+``grid.groupActions`` should be an Array of Objects. Each object describes an action that a user can make, and the object takes on the same form as those described in `grid.actions`_.
+
+You're responsible for mounting a ``GET`` route in Express to respond to it.
+
+grid.recordActions
+==================
+
+``grid.recordActions`` can be used to customise record specific actions. These are actions that act upon a specific model record. They appear in a drop-down list under the Actions column in a model index table.
+
+``grid.recordActions`` should be an Array of Objects. Each object describes an action that a user can make, specific to the record, and the object takes on the same form as those described in `grid.actions`_.
+
+You're responsible for mounting a ``GET`` route in Express to respond to it.
+
+grid.export
+===========
+
+``grid.export`` is used to denote that a particular model is exportable. Linz takes care of the exporting for you, unless you want to provide a custom action to handle it yourself.
+
+When a user clicks on an export, they'll be provided a pop-up modal asking them to choose and order the columns they'd like to export.
+
+``grid.export`` should be an Array of Objects. Each object describes an export option, for example::
+
+  export: [
+    {
+      label: 'Choose columns to export',
+      exclusions: 'dateModified,dateCreated'
+    }
+  ]
+
+Each object should contain the following keys:
+
+- ``label`` which is the name of the export.
+- ``exclusions`` which is a list of fields that can't be exported.
+
+If you'd like to provide your own export route, you can. Replace the ``exclusions`` key with an ``action`` key that works the same as `grid.actions`_. Rather than a modal, a request to that route will be made. You're responsible for mounting a ``GET`` route in Express to respond to it.
