@@ -18,6 +18,11 @@ Linz does make use of many other open source tools, such as Mongoose or Express.
 
 The following will be a general overview of some of the core concepts of Linz.
 
+Singleton
+=========
+
+When you require Linz, you're returned a singleton. This has the advantage that no matter where you require Linz, you get the same Linz instance.
+
 Initialization
 ==============
 
@@ -39,7 +44,7 @@ For example::
     'load configs': false
   });
 
-If neither an initialized instance of Express, Passport or Mongoose have been passed, or an options object, Linz will create it's own::
+If neither an initialized instance of Express, Passport or Mongoose have been passed, or an options object, Linz will create them::
 
   // use anything that is passed in
   _app = _app || express();
@@ -56,9 +61,53 @@ An object can be used to customize Linz. For example::
     'mongo': `mongodb://${process.env.MONGO_HOST}/db`
   });
 
-For a complete list of keys you can use to customise Linz, view Linz's defaults_.
+For a complete list of customizations you can make, view Linz's defaults_.
 
 .. _defaults: https://github.com/linzjs/linz/blob/master/lib/defaults.js
+
+Events
+======
+
+The Linz object is an event emitter, and will emit the ``initialized`` event, and an event whenever a configuration is set, of the same name.
+
+A common pattern for setting up Linz, using the event emitter, is as follows:
+
+**server.js**::
+
+  var linz = require('linz');
+
+  linz.on('initialised', require('./app'));
+
+  // Initialize Linz.
+  linz.init({
+    mongo: `mongodb://${process.env.DB_HOST || 'localhost'}/lmt`,
+    'user model': 'mtUser'
+  });
+
+**app.js**::
+
+  var http = require('http'),
+    linz = require('linz'),
+    routes = require('./routes'),
+    port = process.env.APP_PORT || 4000;
+
+  module.exports = function () {
+
+    // Mount routes on Express.
+    linz.app.get('/', routes.home);
+    linz.app.get('/bootstrap-users', routes.users);
+
+    // Linz error handling midleware.
+    linz.app.use(linz.middleware.error);
+
+    // Start the app.
+    http.createServer(linz.app).listen(port, function(){
+      console.log('');
+      console.log(`mini-twitter app started and running on port ${port}`);
+    });
+
+  };
+
 
 Directory structure
 ===================
