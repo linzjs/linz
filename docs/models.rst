@@ -118,7 +118,7 @@ You supply the DSL to Linz in the form of an object, to the ``linz.formtools.plu
 model
 -----
 
-``model`` should be an object with two keys ``label`` and ``description`` The ``label`` should be a singular noun describing the model, and the ``description`` a short sentence describing the noun.
+``model`` should be an Object with two keys ``label`` and ``description`` The ``label`` should be a singular noun describing the model, and the ``description`` a short sentence describing the noun.
 
 The ``label`` is used in many places and is automatically pluralized based on the usage context. The ``description`` is only used on the Models index within Linz.
 
@@ -134,7 +134,7 @@ labels
 
 ``labels`` is used to provide a label and description for the model.
 
-``labels`` should be an object, keyed by field names and strings of the human friendly versions of your field names.
+``labels`` should be an Object, keyed by field names and strings of the human friendly versions of your field names.
 
 For example::
 
@@ -150,7 +150,7 @@ grid
 
 ``grid`` is used to customise the model index that is generated for each model.
 
-``grid`` should be an object, containing the following top-level keys:
+``grid`` should be an Object, containing the following top-level keys:
 
 - ``actions``
 - ``columns``
@@ -164,3 +164,43 @@ grid
 - ``export``
 
 These allow you to describe how the model index should function. The grid DSL is discussed in more detail in :ref:`models-grid-reference`.
+
+form
+----
+
+``form`` is used to customise the model record create and edit pages.
+
+``form`` should be an Object, keyed by field names of the model, in the order you'd like each field's edit control rendered. For example::
+
+  form: {
+    name: {
+      fieldset: 'Details',
+      helpText: 'The users full name.'
+    },
+    email: {
+      fieldset: 'Details'
+    }
+  }
+
+This will generate a form with two fields that you can provide data for. Both fields will appear in the *Details* fieldset, in the order ``name`` and then ``email``.
+
+Each field object can contain the following keys:
+
+- ``label``
+- ``placeholder``
+- ``helpText``
+- ``type``
+- ``default``
+- ``list``
+- ``visible``
+- ``disabled``
+- ``fieldset``
+- ``widget``
+- ``required``
+- ``query``
+- ``transform``
+- ``transpose``
+- ``schema``
+- ``relationship``
+
+These allow you to describe how the create and edit forms should function. The form DSL is discussed in more detail in :ref:`models-form-reference`.
