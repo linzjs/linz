@@ -26,6 +26,7 @@ Linz is quite new and under rapid development. It is used quite successfully in 
    :caption: Models
 
    models_grid
+   models_form
 
 .. _contribution-docs:
 
