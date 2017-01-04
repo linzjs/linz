@@ -1,3 +1,5 @@
+.. highlight:: javascript
+
 *************************
 Getting started with Linz
 *************************
@@ -57,3 +59,14 @@ An object can be used to customize Linz. For example::
 For a complete list of keys you can use to customise Linz, view Linz's defaults_.
 
 .. _defaults: https://github.com/linzjs/linz/blob/master/lib/defaults.js
+
+Directory structure
+===================
+
+Linz expects a common directory structure. If provided, it will load content from these directories. These directories should live alongside your Node.js entry point file (i.e. ``node server.js``).
+
+- ``models``: a directory of model files.
+- ``schemas``: a directory of schemas, which are used as nested schemas within a model.
+- ``configs``: a directory of config files.
+
+You can read more about each of the above and what Linz expects in the documentation covering each area.
