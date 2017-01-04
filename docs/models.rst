@@ -6,6 +6,11 @@ Models
 
 One of the primary reasons to use Linz is to ease model development and scaffold highly customizable interfaces for managing these models. Linz provides a simple DSL you can use to describe your model. Using the content of your DSL, Linz will scaffold an index, overview, edit handlers and provide a basic CRUD HTTP API for your model.
 
+All Linz models are bootstrapped with two mandatory properties:
+
+- ``dateCreated`` with a label of *Date created*.
+- ``dateModified`` with a label of *Date modified*.
+
 You create Models in the ``model`` directory, one file per model. The file should have the following basic structure:
 
 **person.js**::
@@ -138,6 +143,8 @@ For example::
     email: 'Email'
   }
 
+You can custom the labels for the default ``dateModified`` and ``dateCreated`` using this object.
+
 grid
 ----
 
@@ -156,25 +163,4 @@ grid
 - ``recordActions``
 - ``export``
 
-These allow you to describe how the model index should function.
-
-grid.actions
-------------
-
-``grid.actions`` should be an Array of Objects. Each object dscribes an action that a user can make, at the model level. Each action should be an Object with the following keys:
-
-- ``label`` is the name of the action.
-- ``action`` is the last portion of a URL, which is used to perform the action.
-
-For example::
-
-  actions: [
-    {
-      label: 'Import people',
-      action: 'import-from-csv'
-    }
-  ]
-
-This will generate a button, on the model index, next to the model label. Multiple actions will produce a button titled *Actions* with a drop-down list attached to it, containing all possible actions.
-
-The evaluated string ``/{linz-admin-path}/model/{model-name}/action/{action.action}`` will be prefixed to the value provided for ``action`` to generate a URL, for example ``/admin/model/person/import-from-csv``. It is the developers responsibility to mount the ``GET`` route using Express, and respond to it accordingly.
+These allow you to describe how the model index should function. The grid DSL is discussed in more detail in :ref:`models-grid-reference`.
