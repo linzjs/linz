@@ -21,6 +21,12 @@ Linz is quite new and under rapid development. It is used quite successfully in 
    getting_started
    models
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Models
+
+   models_grid
+
 .. _contribution-docs:
 
 .. toctree::
