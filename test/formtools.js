@@ -637,18 +637,6 @@ describe('formtools', function () {
                         gridOpts.columns.title.should.be.an.instanceOf(Object).and.have.property('renderer', linz.formtools.cellRenderers.overviewLink);
                     });
 
-                    it('should have a status', function () {
-                        gridOpts.columns.status.should.be.an.instanceOf(Object).and.have.property('label', 'Status');
-                    });
-
-                    it('should have a published date', function () {
-                        gridOpts.columns.publishDate.should.be.an.instanceOf(Object).and.have.property('label', 'Publish date');
-                    });
-
-                    it('should have a date renderer for title', function () {
-                        gridOpts.columns.publishDate.should.be.an.instanceOf(Object).and.have.property('renderer', linz.formtools.cellRenderers.date);
-                    });
-
                     it('should have a created date', function () {
                         gridOpts.columns.dateCreated.should.be.an.instanceOf(Object).and.have.property('label', 'Date created');
                     });
@@ -660,11 +648,6 @@ describe('formtools', function () {
                 }); // end describe('columns defaults')
 
                 describe("allowing column overrides", function () {
-
-                    it('should overrides default column fields', function () {
-                        // ensure default column fields are cleared
-                        (overridesGridOpts.columns.status === undefined).should.be.true;
-                    });
 
                     it('should set custom fields', function () {
                         overridesGridOpts.columns.firstName.should.have.property({
