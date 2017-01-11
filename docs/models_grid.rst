@@ -154,6 +154,10 @@ grid.recordActions
 
 ``grid.recordActions`` should be an Array of Objects. Each object describes an action that a user can make, specific to the record, and the object takes on the same form as those described in `grid.actions`_.
 
+``grid.recordActions`` can also accept a function, as the value to a ``disabled`` property. If provided, the function will be excuted with the following signature ``disabled (record, callback)``.
+
+The callback has the following signature ``callback (error, isDisabled, message)``. ``isDisabled`` should be a boolean ``true`` to disable the record action, ``false`` to enable it and you can provide a message if the action is to be disabled.
+
 You're responsible for mounting a ``GET`` route in Express to respond to it.
 
 grid.export
