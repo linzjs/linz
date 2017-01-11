@@ -115,8 +115,10 @@ You supply the DSL to Linz in the form of an object, to the ``linz.formtools.plu
     }
   });
 
-model
------
+.. _models-model-dsl-summary-reference:
+
+Models model DSL
+----------------
 
 ``model`` should be an Object with two keys ``label`` and ``description`` The ``label`` should be a singular noun describing the model, and the ``description`` a short sentence describing the noun.
 
@@ -129,8 +131,10 @@ For example::
     description: 'A person.'
   }
 
-labels
-------
+.. _models-label-dsl-summary-reference:
+
+Models label DSL
+----------------
 
 ``labels`` is used to provide a label and description for the model.
 
@@ -145,8 +149,10 @@ For example::
 
 You can custom the labels for the default ``dateModified`` and ``dateCreated`` using this object.
 
-grid
-----
+.. _models-grid-dsl-summary-reference:
+
+Models grid DSL
+---------------
 
 ``grid`` is used to customise the model index that is generated for each model.
 
@@ -165,8 +171,10 @@ grid
 
 These allow you to describe how the model index should function. The grid DSL is discussed in more detail in :ref:`models-grid-reference`.
 
-form
-----
+.. _models-form-dsl-summary-reference:
+
+Models form DSL
+---------------
 
 ``form`` is used to customise the model record create and edit pages.
 
