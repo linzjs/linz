@@ -75,10 +75,16 @@ The file is broken down in the following parts:
 - Use the ``linz.formtools.plugins.document`` Mongoose plugin to register the model with Linz, passing in an object containing Linz's model DSL.
 - Create a Mongoose model from the schema, and ``export`` it.
 
-Mongose schemas
-===============
+.. _models-mongoose-schemas-reference:
 
-Linz works directly with Mongoose schemas. Anything you can do with a Mongoose schema is acceptable to Linz.
+Mongoose schemas
+================
+
+Linz works directly with `Mongoose schemas`_. Anything you can do with a Mongoose schema is acceptable to Linz.
+
+.. _Mongoose schemas: http://mongoosejs.com/docs/guide.html
+
+.. _models-model-dsl-reference:
 
 Model DSL
 =========
