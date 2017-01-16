@@ -22,12 +22,22 @@ Linz is quite new and under rapid development. It is used quite successfully in 
    models
    permissions
 
+.. _model-docs:
+
 .. toctree::
    :maxdepth: 2
    :caption: Models
 
    models_grid
    models_form
+
+.. _advanced-docs:
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Advanced concepts
+
+   cell_renderers
 
 .. _contribution-docs:
 
