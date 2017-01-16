@@ -97,6 +97,7 @@ Linz uses a Model DSL, which is an object that can be used to describe your mode
 - ``form`` contains information used to scaffold the edit handler for a model record.
 - ``overview`` containers information used to scaffold the overview for a model record.
 - ``fields`` contains directives to enable/disable fields that Linz automatically adds to models.
+- ``permissions`` is a function used to limit access to a model.
 
 You supply the DSL to Linz in the form of an object, to the ``linz.formtools.plugins.document`` Mongoose plugin::
 
@@ -118,6 +119,8 @@ You supply the DSL to Linz in the form of an object, to the ``linz.formtools.plu
     },
     fields: {
       // ...
+    },
+    permissions: function () {
     }
   });
 
@@ -218,3 +221,8 @@ Each field object can contain the following keys:
 - ``relationship``
 
 These allow you to describe how the create and edit forms should function. The form DSL is discussed in more detail in :ref:`models-form-reference`.
+
+Model permissions
+-----------------
+
+Model permissions is an in-depth topic and should be considered amongst other permission capabilities. Read more about :ref:`permissions-reference`.
