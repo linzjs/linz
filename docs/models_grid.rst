@@ -2,9 +2,9 @@
 
 .. _models-grid-reference:
 
-***************
-Models grid DSL
-***************
+********
+Grid DSL
+********
 
 The Models grid DSL is used to customise the model index that is generated for each model. The grid DSL has quite a few options as the model index is highly customizable.
 
@@ -55,6 +55,21 @@ grid.columns
     name: true,
     username: true
   }
+
+Linz will convert the following into::
+
+  columns: {
+    name: {
+      label: 'Name',
+      renderer: linz.formtools.cellRenderers.default
+    },
+    username: {
+      label: 'Username',
+      renderer: linz.formtools.cellRenderers.default
+    }
+  }
+
+If you like, you can pass an object rather than the boolean. This also allows you to customise the cell renderer used to display the data within the column.
 
 grid.sortBy
 ===========

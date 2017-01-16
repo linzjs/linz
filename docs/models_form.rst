@@ -2,9 +2,9 @@
 
 .. _models-form-reference:
 
-***************
-Models form DSL
-***************
+********
+Form DSL
+********
 
 The Models form DSL is used to customise the create and edit forms that are generated for each model. The form DSL has quite a few options as the model create and edit forms are highly customizable.
 
