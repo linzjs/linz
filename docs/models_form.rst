@@ -43,8 +43,6 @@ Each field object can contain the following top-level keys:
 - ``query``
 - ``transform``
 - ``transpose``
-- ``schema``
-- ``relationship``
 
 These allow you to describe how the model create and edit forms should function.
 
@@ -114,19 +112,145 @@ The ``type`` property is intended to help Linz with two things:
 
 ``type`` accepts the following strings:
 
-- ``array``
-- ``boolean``
-- ``date``
-- ``datetime``
-- ``datetimeLocal``
-- ``digit``
-- ``documentarray``
-- ``documentarray``
-- ``email``
-- ``enum``
-- ``hidden``
-- ``number``
-- ``password``
-- ``tel``
-- ``text``
-- ``url``
+- ``array`` to render checkboxes for multiple select.
+- ``boolean`` to render radio inputs.
+- ``date`` to render a date input.
+- ``datetime`` to render a datetime input.
+- ``datetimeLocal`` to render a datetime-local input.
+- ``digit`` to render a text input with a regex of ``[0-9]*``.
+- ``documentarray`` to render a custom control to manage multiple sub-documents.
+- ``email`` to render an email input.
+- ``enum`` to render a select input.
+- ``hidden`` to render a hidden input.
+- ``number`` to render a text input with a regex of ``[0-9,.]*``.
+- ``password`` to render a password input.
+- ``string`` to render a text input.
+- ``tel`` to render a tel input with a regex of ``^[0-9 +]+$``.
+- ``text`` to render a text input.
+- ``url`` to render a url input.
+
+The default widget, and the widget for all other types is the text widget.
+
+{field-name}.default
+====================
+
+The ``default`` property can be supplied to define the default value of the field. The default if provided, will be used when a field has no value.
+
+If the ``default`` property is not provided, Linz will fallback to the ``default`` value as provided when defining the :ref:`models-mongoose-schemas-reference`.
+
+{field-name}.list
+=================
+
+The ``list`` property is a special property for use with the ``enum`` type. It is used to provide all values from which a list field value can be derived.
+
+Please bear in mind, that the ``list`` property is not involved in Mongoose validation.
+
+The ``list`` property can either be an array of strings, or an array of objects. If an array of objects is supplied it must be in the format::
+
+  form: {
+    sounds: {
+      list: [
+        {
+          name: 'Dog',
+          value: 'woof.mp3'
+        },
+        {
+          name: 'Cat',
+          value: 'meow.mp3'
+        },
+        {
+          name: 'Sheep',
+          value: 'baa.mp3'
+        }
+      ]
+    }
+  }
+
+{field-name}.visible
+====================
+
+The boolean ``visible`` property can be set to a value of ``false`` to stop the field from being rendered on the form.
+
+{field-name}.disabled
+=====================
+
+The boolean ``disabled`` property can be set to a value of ``true`` to render the input field, with a `disabled attribute`_.
+
+.. _disabled attribute: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-disabled
+
+{field-name}.fieldset
+=====================
+
+The ``fieldset`` property should be supplied to control which fields are grouped together under the same `fieldset`_.
+
+The ``fieldset`` property should be human readable, such as::
+
+  form: {
+    username: {
+      fieldset: 'User access details'
+    }
+  }
+
+.. _fieldset: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/fieldset
+
+{field-name}.widget
+===================
+
+The ``widget`` property can be set to one of the many `built-in Linz widgets`_. For example::
+
+  form: {
+    sounds: {
+      widget: linz.formtools.widget.multipleSelect()
+      list: [
+        {
+          name: 'Dog',
+          value: 'woof.mp3'
+        },
+        {
+          name: 'Cat',
+          value: 'meow.mp3'
+        },
+        {
+          name: 'Sheep',
+          value: 'baa.mp3'
+        }
+      ]
+    }
+  }
+
+.. _built-in Linz widgets: https://github.com/linzjs/linz/tree/master/lib/formtools/widgets
+
+{field-name}.required
+=====================
+
+The boolean ``required`` property can be set to ``true`` to require that a field has a value before the form can be saved (using client-side) validation.
+
+{field-name}.query
+==================
+
+The ``query`` property can be used to directly alter the Mongoose query object that is generated while querying the database for records to display.
+
+``query`` should be an object with the following keys:
+
+- ``filter``
+- ``sort``
+- ``select``
+- ``label``
+
+{field-name}.transform
+======================
+
+The ``transform`` property will accept a function that if provided, will be executed before a record is saved to the database.
+
+Define a ``transform`` function if you'd like to manipulate the client-side data that is stored in the database.
+
+In some instances, client-side data requirements are different from that of data storage requirements. ``transform`` in combination with ``transpose`` can be used effectively to manage these scenarios.
+
+{field-name}.transpose
+======================
+
+The ``transpose`` property will accept a function that if provided, will be executed before a field's value is rendered to a form.
+
+Define a ``transpose`` function if you'd like to manipulate the server-side data that is rendered to a form.
+
+In some instances, data storage requirements are different form that of client-side data requirements. ``transpose`` in combination with ``transform`` can be used effectively to manage these scenarios.
