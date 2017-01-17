@@ -166,6 +166,27 @@ The ``list`` property can either be an array of strings, or an array of objects.
     }
   }
 
+There is also a more advanced use case in which you can provide a function which Linz will execute. This will allow you to generate at run time rather than start time, after Linz has been initialized::
+
+  form: {
+    sounds: {
+      list: function (cb) {
+        return cb(null, {
+          name: 'Dog',
+          value: 'woof.mp3'
+        },
+        {
+          name: 'Cat',
+          value: 'meow.mp3'
+        },
+        {
+          name: 'Sheep',
+          value: 'baa.mp3'
+        });
+      }
+    }
+  }
+
 {field-name}.visible
 ====================
 
