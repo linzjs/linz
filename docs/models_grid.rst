@@ -44,6 +44,8 @@ This will generate a button, on the model index, next to the model label. Multip
 
 The evaluated string ``/{linz-admin-path}/model/{model-name}/action/{action.action}`` will be prefixed to the value provided for ``action`` to generate a URL, for example ``/admin/model/person/import-from-csv``. It is the developers responsibility to mount the ``GET`` route using Express, and respond to it accordingly.
 
+The actions will be rendered in the order they're provided.
+
 grid.columns
 ============
 
@@ -70,6 +72,10 @@ Linz will convert the following into::
   }
 
 If you like, you can pass an object rather than the boolean. This also allows you to customise the cell renderer used to display the data within the column.
+
+If you provide a ``label``, it will override what is defined in the :ref:`models-label-dsl-summary-reference`.
+
+The columns will be rendered in the order they're provided.
 
 grid.sortBy
 ===========
