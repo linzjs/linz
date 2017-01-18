@@ -92,6 +92,8 @@ Send an email
 
 Once you have the link, you simply need to send it to the email address with instructions on what to do next; click on the link.
 
+This is something you'll have to implement yourself. Linz does not provide any capabilities to send emails. Linz is based on Express though, so you have all of it's templating capabilities at hand. See `using template engines with Express`_.
+
 Verifying ownership of the email address
 ========================================
 
@@ -135,3 +137,4 @@ The user will be notified that their password has been updated, and prompted to 
 .. _Mongoose static: http://mongoosejs.com/docs/guide.html#statics
 .. _Mongoose method: http://mongoosejs.com/docs/guide.html#methods
 .. _bcrypt.js: https://www.npmjs.com/package/bcryptjs
+.. _using template engines with Express: https://expressjs.com/en/guide/using-template-engines.html
