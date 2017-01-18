@@ -1,3 +1,9 @@
+# v0.6.0.1 (18 January 2017)
+
+## IMPROVEMENTS
+
+- Updated `lib.api.url.getAdminPasswordResetLink` to accept an `id` and `hash`. If included, it will add those to the URL it returns.
+
 # v0.6.0.0 (11 January 2017)
 
 ## BREAKING CHANGES
