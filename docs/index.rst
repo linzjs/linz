@@ -38,6 +38,7 @@ Linz is quite new and under rapid development. It is used quite successfully in 
    :caption: Advanced concepts
 
    cell_renderers
+   forgot_password
 
 .. _contribution-docs:
 
