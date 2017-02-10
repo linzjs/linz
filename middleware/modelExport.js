@@ -63,11 +63,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
         if (typeof val === 'object') {
 
-            if (!fieldName) {
-                return val;
-            }
-
-            if (!Model.linz.formtools.form[fieldName].exportTransform) {
+            if (!fieldName || !Model.linz.formtools.form[fieldName].exportTransform) {
                 return val;
             }
 
@@ -79,6 +75,11 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
     };
 
+    // The job of this function is to recursively loop through an object (including nested object)
+    // and return a simple object with key:value, where value is not an object.
+    // i.e Object being returned will not contain any nested object within it.
+    // Example: getData({ k1: v1, k2: { k2-k1: k2-k1-v1, k2-k2: k2-k2-v2 }, k3: v3 }) will return following:
+    // { k1: v1, k2-k1: k2-k1-v1, k2-k2: k2-k2-v2, k3: v3 }
     var getData = function (obj) {
 
         let keyVal = {};
@@ -106,6 +107,9 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
     };
 
+    // This function first, orders the fields of the record in the order in which user has selected them to be exported to CSV,
+    // and then returns the record data into CSV format.
+    // It will also return Headers with record data in CSV format, if value of 1 is provided as recordIndex parameter.
     var getRecordData = function getRecordData (fields, record, form, recordIndex) {
 
         let orderedRecord = {};
@@ -132,8 +136,8 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
         });
 
-        // pass form to json2CSV method to add headers only when json2CSV is called firt time
-        if (recordIndex === 0) {
+        // pass form to json2CSV method to add headers only when json2CSV is called first time
+        if (recordIndex === 1) {
             return linz.utils.json2CSV(orderedRecord, form);
         }
 
@@ -149,18 +153,12 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
             return function (doc) {
 
-                var str = '',
-                    record = doc.toObject({virtuals: true });
-
-                if (count !== 0) {
-                    return getRecordData(fields, record, form, count);
-                }
-
-                let recordData = getRecordData(fields, record, form, count);
-
+                // count is used by getRecordData to return headers together with record data in CSV format when count is 1
                 count++;
 
-                return str + recordData;
+                var record = doc.toObject({virtuals: true });
+
+                return getRecordData(fields, record, form, count);
 
             };
 
@@ -245,7 +243,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
             filters['$and'] = filters['$and'] || [];
 
             var ids = [],
-                db  = linz.mongoose.connection.db;
+                db = linz.mongoose.connection.db;
 
             // compile ids into ObjectId type
             req.body.selectedIds.split(',').forEach(function (id) {
@@ -305,7 +303,7 @@ var getExport = function (exports) {
 
     return exp;
 
-}
+};
 
 module.exports = {
 
