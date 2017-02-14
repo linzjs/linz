@@ -139,18 +139,26 @@ module.exports = function  (req, res, next) {
                 // get page total
                 function (cb) {
 
-                    query.exec(function (err, docs) {
+                    req.linz.model.getCount(req, filters, function (err, countQuery) {
 
-                        if (!err && docs.length === 0) {
-                            return cb(new Error('No records found'));
+                        if (err) {
+                            return cb(err);
                         }
 
-                        if (!err) {
+                        countQuery.exec(function (countQueryErr, count) {
 
-                            totalRecords = docs.length;
-                        }
+                            if (!countQueryErr && count === 0) {
+                                return cb(new Error('No records found'));
+                            }
 
-                        return cb(err);
+                            if (!countQueryErr) {
+                                totalRecords = count;
+                            }
+
+                            return cb(countQueryErr);
+
+                        });
+
 
                     });
 
