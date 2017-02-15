@@ -23,7 +23,8 @@ module.exports = function  (req, res, next) {
                 totalRecords = 0,
                 pageSize = linz.get('page size'),
                 pageIndex = session.grid.formData.page || 1,
-                query;
+                query,
+                mongooseRecords;
 
             // cloned a copy of grid settings and append it to the request model
             req.linz.model.grid = clone(req.linz.model.linz.formtools.grid);
