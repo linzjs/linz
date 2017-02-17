@@ -283,17 +283,19 @@ module.exports = function  (req, res, next) {
                     // Determine if there are any columns with refs
                     for (let column in req.linz.model.grid.columns) {
 
+                        // Support multiple types ref fields.
+
                         if (req.linz.model.schema.tree[column] && req.linz.model.schema.tree[column].ref) {
 
                             // Get the records.
+                            // Start by filtering records which have valid ObjectIds (support multiple types of reference fields).
+                            // Then deduplicate them using a custom hashing function.
                             refColData[column] = {
-                                records: dedupe(records.filter(record => !(!record[column])), record => record[column].toString())
+                                records: dedupe(records.filter(record => !(!record[column]) && linz.api.model.getObjectIdFromRefField(record[column]) instanceof linz.mongoose.Types.ObjectId), record => linz.api.model.getObjectIdFromRefField(record[column]).toString())
                             };
 
                             // Now get the values.
-                            refColData[column].values = refColData[column].records.map(function (record) {
-                                return record[column];
-                            });
+                            refColData[column].values = refColData[column].records.map(record => linz.api.model.getObjectIdFromRefField(record[column]));
 
                         }
 
@@ -352,10 +354,12 @@ module.exports = function  (req, res, next) {
                                 // The default value, but could be replaced below if the conditions are right.
                                 records[index]['rendered'][column] = records[index][column];
 
-                                // Do we have a rendered result for this column in this particular record?
-                                if (refColData[column].rendered && records[index][column] && refColData[column].rendered[records[index][column].toString()]) {
 
-                                    records[index]['rendered'][column] = refColData[column].rendered[records[index][column].toString()];
+                                // Do we have a rendered result for this column in this particular record?
+                                // Support multiple types ref fields.
+                                if (refColData[column].rendered && records[index][column] && refColData[column].rendered[linz.api.model.getObjectIdFromRefField(records[index][column]).toString()]) {
+
+                                    records[index]['rendered'][column] = refColData[column].rendered[linz.api.model.getObjectIdFromRefField(records[index][column]).toString()];
 
                                 }
 
