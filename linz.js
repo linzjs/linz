@@ -527,6 +527,21 @@ Linz.prototype.bootstrapExpress = function (cb) {
 
     debugGeneral('Bootstrapping express');
 
+    // Setup `/public` middleware first as we don't need session handle to resolve this routes
+
+    if ((process.env.NODE_ENV || 'development') === 'development') {
+        this.app.use(this.get('admin path') + '/public', lessMiddleware(__dirname + '/public', {
+            preprocess: {
+                path: function (pathname, req) {
+                    return pathname.replace(/\/css/, '/src/css');
+                }
+            }
+        }));
+    }
+
+    // setup admin static routes
+    this.app.use(this.get('admin path') + '/public/', express.static(path.resolve(__dirname, 'public')));
+
     this.app.engine('jade', require('jade').__express);
     this.app.set('view engine', 'jade');
 
@@ -557,18 +572,6 @@ Linz.prototype.bootstrapExpress = function (cb) {
     this.app.use(this.passport.initialize());
     this.app.use(this.passport.session());
 
-    if ((process.env.NODE_ENV || 'development') === 'development') {
-        this.app.use(this.get('admin path') + '/public', lessMiddleware(__dirname + '/public', {
-            preprocess: {
-                path: function (pathname, req) {
-                    return pathname.replace(/\/css/, '/src/css');
-                }
-            }
-        }));
-    }
-
-    // setup admin static routes
-    this.app.use(this.get('admin path') + '/public/', express.static(path.resolve(__dirname, 'public')));
 
     return cb(null);
 
