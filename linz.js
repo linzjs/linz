@@ -248,6 +248,8 @@ Linz.prototype.configure = function() {
                     throw new Error('You must either supply a connected mongoose object, or a mongo URI');
                 }
 
+                debugGeneral('Connecting to the database');
+
                 _this.mongoose.connect(_this.get('mongo'));
                 _this.mongoose.connection.on('connected', function () {
                     _this.initConfigs(cb);
