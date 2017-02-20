@@ -29,7 +29,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
         var Model = req.linz.model;
 
-        if (Model.schema.tree[fieldName].ref && linz.api.model.getObjectIdFromRefField(val) instanceof linz.mongoose.Types.ObjectId) {
+        if (Model.schema.tree[fieldName].ref) {
             return val.title;
         }
 
