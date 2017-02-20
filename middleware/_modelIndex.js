@@ -167,6 +167,21 @@ module.exports = function  (req, res, next) {
 
                 },
 
+                // minimise the fields we're selecting
+                function (cb) {
+
+                    let select = Object.keys(req.linz.model.grid.columns).join(' ');
+                    query.select(select);
+
+                    // If they've provided the `gridQuery` static, use it to allow customisation of the fields we'll retrieve.
+                    if (!req.linz.model.gridQuery) {
+                        return cb();
+                    }
+
+                    req.linz.model.gridQuery(query, cb);
+
+                },
+
                 // find the docs
                 function (cb) {
 
