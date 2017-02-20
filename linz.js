@@ -215,6 +215,24 @@ Linz.prototype.configure = function() {
 
     var _this = this;
 
+    // Start connecting to the database, prior to actually needing it.
+    // This will speed up Initialisation of Linz a little.
+    // Check for either a connect(ed|ing) mongoose object, or mongoose URI.
+    if ([1,2].indexOf(_this.mongoose.connection.readyState) < 0) {
+
+        if (!_this.get('mongo')) {
+            throw new Error('You must either supply a connected mongoose object, or a mongo URI');
+        }
+
+        debugGeneral('Connecting to the database');
+
+        _this.mongoose.connect(_this.get('mongo'));
+        _this.mongoose.connection.once('connected', function () {
+            debugGeneral('Database connected');
+        });
+
+    }
+
     async.series([
 
         function (cb) {
@@ -241,23 +259,15 @@ Linz.prototype.configure = function() {
 
             _this.set('app', _this.app);
 
-            // check for either a connect(ed|ing) mongoose object, or mongoose URI
-            if ([1,2].indexOf(_this.mongoose.connection.readyState) < 0) {
+            // Wait until we have a connection to the database to proceed.
+            var intervalId = setInterval(function () {
 
-                if (!_this.get('mongo')) {
-                    throw new Error('You must either supply a connected mongoose object, or a mongo URI');
+                if (_this.mongoose.connection.readyState === 1) {
+                    clearInterval(intervalId);
+                    _this.initConfigs(cb);
                 }
 
-                debugGeneral('Connecting to the database');
-
-                _this.mongoose.connect(_this.get('mongo'));
-                _this.mongoose.connection.on('connected', function () {
-                    _this.initConfigs(cb);
-                });
-
-            } else {
-                return cb(null);
-            }
+            }, 100);
 
         },
 
