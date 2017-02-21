@@ -10,7 +10,7 @@ While we're working on our documentation, you can get started with Linz via our 
 
 Linz tries to force as little new syntax on you as possible. Of course, this is unavoidable in certain situations, and there are some conventions you'll need to learn. We've tried to keep them as simple as possible.
 
-Linz does make use of many other open source tools, such as Mongoose or Express. Linz tries to keep the usage of these tools as plain and simple as possible. Linz doesn't wrap, customise or pretify syntax for other libraries/tools used within Linz. The three primary opensource tools that Linz relies on are:
+Linz does make use of many other open source tools, such as Mongoose or Express. Linz tries to keep the usage of these tools as plain and simple as possible. Linz doesn't wrap, customise or prettify syntax for other libraries/tools used within Linz. The three primary opensource tools that Linz relies on are:
 
 - Express
 - Mongoose
@@ -44,7 +44,7 @@ For example::
     'load configs': false
   });
 
-If neither an initialized instance of Express, Passport or Mongoose have been passed, or an options object, Linz will create them::
+If neither an initialized instance of Express, Passport or Mongoose, nor an options object have been passed, Linz will create them:
 
   // use anything that is passed in
   _app = _app || express();
@@ -68,7 +68,9 @@ For a complete list of customizations you can make, view Linz's defaults_.
 Events
 ======
 
-The Linz object is an event emitter, and will emit the ``initialized`` event, and an event whenever a configuration is set, of the same name.
+The Linz object is an event emitter, and will emit the ``initialized`` event when Linz has finished initializing.
+
+It will also emit an event whenever a configuration is set (i.e. using the `linz.set` method). The name of the event will be the same as the name of the configuration that is set.
 
 A common pattern for setting up Linz, using the event emitter, is as follows:
 
