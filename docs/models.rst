@@ -89,13 +89,13 @@ Linz works directly with `Mongoose schemas`_. Anything you can do with a Mongoos
 Model DSL
 =========
 
-Linz uses a Model DSL, which is an object that can be used to describe your model. Linz will use this information scaffold user interfaces for you. The Model DSL contains six main parts:
+Linz uses a Model DSL, which is an object that can be used to describe your model. Linz will use this information to scaffold user interfaces for you. The Model DSL contains six main parts:
 
 - ``model`` contains basic information such as the ``label`` and ``description`` of the model.
 - ``labels`` contains human friendly versions of your model's properties, keyed by the property name.
 - ``grid`` contains information used to scaffold the table displaying model records.
 - ``form`` contains information used to scaffold the edit handler for a model record.
-- ``overview`` containers information used to scaffold the overview for a model record.
+- ``overview`` contains information used to scaffold the overview for a model record.
 - ``fields`` contains directives to enable/disable fields that Linz automatically adds to models.
 - ``permissions`` is a function used to limit access to a model.
 
@@ -129,7 +129,7 @@ You supply the DSL to Linz in the form of an object, to the ``linz.formtools.plu
 Models model DSL
 ----------------
 
-``model`` should be an Object with two keys ``label`` and ``description`` The ``label`` should be a singular noun describing the model, and the ``description`` a short sentence describing the noun.
+``model`` should be an Object with two keys ``label`` and ``description``. The ``label`` should be a singular noun describing the model, and the ``description`` a short sentence describing the noun.
 
 The ``label`` is used in many places and is automatically pluralized based on the usage context. The ``description`` is only used on the Models index within Linz.
 
@@ -156,14 +156,14 @@ For example::
     email: 'Email'
   }
 
-You can custom the labels for the default ``dateModified`` and ``dateCreated`` using this object.
+You can customize the labels for the default ``dateModified`` and ``dateCreated`` using this object.
 
 .. _models-grid-dsl-summary-reference:
 
 Models grid DSL
 ---------------
 
-``grid`` is used to customise the model index that is generated for each model.
+``grid`` is used to customize the model index that is generated for each model.
 
 ``grid`` should be an Object, containing the following top-level keys:
 
@@ -185,7 +185,7 @@ These allow you to describe how the model index should function. The grid DSL is
 Models form DSL
 ---------------
 
-``form`` is used to customise the model record create and edit pages.
+``form`` is used to customize the model record create and edit pages.
 
 ``form`` should be an Object, keyed by field names of the model, in the order you'd like each field's edit control rendered. For example::
 
