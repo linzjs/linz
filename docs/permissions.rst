@@ -41,7 +41,7 @@ Linz enforces permissions in two places:
 - The UI
 - A route execution
 
-Linz will not render buttons, links to or actions for functionality that a user doesn't have access to. Route are completely protected. So even if a route was discovered, a user without permissions would not be able to resolve it.
+Linz will not render buttons, links to or actions for functionality that a user doesn't have access to. Routes are completely protected. So even if a route was discovered, a user without permissions would not be able to resolve it.
 
 Default permissions
 ===================
@@ -98,9 +98,9 @@ The ``callback`` accepts the following signature::
 
   function callback (result)
 
-``result`` is a boolean. Please note, this is different from the standard Node.js callback signature of ``function callback (err, result)``. You should design your function so that it returns false in the even of an error and logs the error for a post-mortem.
+``result`` is a boolean. Please note, this is different from the standard Node.js callback signature of ``function callback (err, result)``. You should design your function so that it returns false in the event of an error and logs the error for a post-mortem.
 
-Throwing errors and failing at the point of checking permissions would not be a good look for anyone, hence the design to not provide this capability. This is something that needs to be handle by a developer.
+Throwing errors and failing at the point of checking permissions would not be a good look for anyone, hence the design to not provide this capability. This is something that needs to be handled by a developer.
 
 Model and config permissions function
 =====================================
@@ -117,7 +117,7 @@ The callback accepts the following signature::
 
 ``err`` should be ``null`` if no error occurred. If an error has occurred, you can return it to the callback which will then default the ``result`` to ``false``. ``result`` should be an object.
 
-The result object should contain optionally the following keys with boolean values:
+The result object should contain, optionally, the following keys with boolean values:
 
 - ``canEdit``
 - ``canDelete``
