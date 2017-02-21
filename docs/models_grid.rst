@@ -6,7 +6,7 @@
 Grid DSL
 ********
 
-The Models grid DSL is used to customise the model index that is generated for each model. The grid DSL has quite a few options as the model index is highly customizable.
+The Models grid DSL is used to customise the model index that is generated for each model. The grid DSL has quite a few options, as the model index is highly customizable.
 
 ``grid`` should be an object, containing the following top-level keys:
 
@@ -26,7 +26,7 @@ These allow you to describe how the model index should function.
 grid.actions
 ============
 
-``grid.actions`` should be an Array of Objects. Each object dscribes an action that a user can make, at the model level. Each action should be an Object with the following keys:
+``grid.actions`` should be an Array of Objects. Each object describes an action that a user can make, at the model level. Each action should be an Object with the following keys:
 
 - ``label`` is the name of the action.
 - ``action`` is the last portion of a URL, which is used to perform the action.
@@ -49,7 +49,7 @@ The actions will be rendered in the order they're provided.
 grid.columns
 ============
 
-``grid.columns`` is used to customise the columns that appear in the table on the model index.
+``grid.columns`` is used to customize the columns that appear in the table on the model index.
 
 ``grid.columns`` should be an Object, keyed by each field in your model. The value for each key should be ``true`` to include the field or ``false`` to exclude the field. For example::
 
@@ -71,7 +71,7 @@ Linz will convert the following into::
     }
   }
 
-If you like, you can pass an object rather than the boolean. This also allows you to customise the cell renderer used to display the data within the column.
+If you like, you can pass an object rather than the boolean. This also allows you to customize the cell renderer used to display the data within the column.
 
 If you provide a ``label``, it will override what is defined in the :ref:`models-label-dsl-summary-reference`.
 
@@ -177,7 +177,7 @@ grid.recordActions
 
 ``grid.recordActions`` can also accept a function, as the value to a ``disabled`` property. If provided, the function will be excuted with the following signature ``disabled (record, callback)``.
 
-The callback has the following signature ``callback (error, isDisabled, message)``. ``isDisabled`` should be a boolean ``true`` to disable the record action, ``false`` to enable it and you can provide a message if the action is to be disabled.
+The callback has the following signature ``callback (error, isDisabled, message)``. ``isDisabled`` should be a boolean. ``true`` to disable the record action, ``false`` to enable it and you can provide a message if the action is to be disabled.
 
 You're responsible for mounting a ``GET`` route in Express to respond to it.
 
