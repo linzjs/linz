@@ -8,7 +8,7 @@ Form DSL
 
 The Models form DSL is used to customise the create and edit forms that are generated for each model. The form DSL has quite a few options as the model create and edit forms are highly customizable.
 
-The form DSL is used to construct create and edit form controls (for example checkboxes, or text inputs) for a model record. Each key in the ``form`` object represents of your model's fields.
+The form DSL is used to construct create and edit form controls (for example checkboxes, or text inputs) for a model record. Each key in the ``form`` object represents one of your model's fields.
 
 The type of form control used for each field can be defined explicitly, or determined by Linz (the default) based on the fields data type, as specificed when defining the field with Mongoose.
 
@@ -49,7 +49,7 @@ These allow you to describe how the model create and edit forms should function.
 Specialized contexts
 ====================
 
-The area two specialized contexts in which the ``form`` DSL operates:
+There are two specialized contexts in which the ``form`` DSL operates:
 
 - When creating a model
 - When editing a model
@@ -88,14 +88,14 @@ The specialized ``create`` and ``edit`` contexts always supersede the default co
 {field-name}.label
 ==================
 
-The ``label`` property is optional. If not provided, it takes the label from the :ref:`models-label-dsl-summary-reference`. It a label hasn't been provided for that particular model field, it simply shows the name of the field itself.
+The ``label`` property is optional. If not provided, it takes the label from the :ref:`models-label-dsl-summary-reference`. If a label hasn't been provided for that particular model field, it simply shows the name of the field itself.
 
-The label property gives you an opportunity to customise it explicitly for the create and edit views.
+The label property gives you an opportunity to customize it explicitly for the create and edit views.
 
 {field-name}.placeholder
 ========================
 
-When you have a field of an appropriate type (such as text field), you can define the ``placeholder`` which sets the content of the HTML's ``<input>`` tag ``placeholder`` attribute.
+When you have the field of an appropriate type (such as text field), you can define the ``placeholder`` which sets the content of the HTML's ``<input>`` tag ``placeholder`` attribute.
 
 {field-name}.helpText
 =====================
