@@ -170,7 +170,7 @@ module.exports = function  (req, res, next) {
                 // minimise the fields we're selecting
                 function (cb) {
 
-                    let select = Object.keys(req.linz.model.list.columns).join(' ');
+                    let select = Object.keys(req.linz.model.list.fields).join(' ');
                     query.select(select);
 
                     // If they've provided the `listQuery` static, use it to allow customisation of the fields we'll retrieve.
@@ -295,22 +295,22 @@ module.exports = function  (req, res, next) {
 
                 function (cb) {
 
-                    // Determine if there are any columns with refs
-                    for (let column in req.linz.model.list.columns) {
+                    // Determine if there are any fields with refs
+                    for (let field in req.linz.model.list.fields) {
 
                         // Support multiple types ref fields.
 
-                        if (req.linz.model.schema.tree[column] && req.linz.model.schema.tree[column].ref) {
+                        if (req.linz.model.schema.tree[field] && req.linz.model.schema.tree[field].ref) {
 
                             // Get the records.
                             // Start by filtering records which have valid ObjectIds (support multiple types of reference fields).
                             // Then deduplicate them using a custom hashing function.
-                            refColData[column] = {
-                                records: dedupe(records.filter(record => !(!record[column]) && linz.api.model.getObjectIdFromRefField(record[column]) instanceof linz.mongoose.Types.ObjectId), record => linz.api.model.getObjectIdFromRefField(record[column]).toString())
+                            refColData[field] = {
+                                records: dedupe(records.filter(record => !(!record[field]) && linz.api.model.getObjectIdFromRefField(record[field]) instanceof linz.mongoose.Types.ObjectId), record => linz.api.model.getObjectIdFromRefField(record[field]).toString())
                             };
 
                             // Now get the values.
-                            refColData[column].values = refColData[column].records.map(record => linz.api.model.getObjectIdFromRefField(record[column]));
+                            refColData[field].values = refColData[field].records.map(record => linz.api.model.getObjectIdFromRefField(record[field]));
 
                         }
 
@@ -318,18 +318,18 @@ module.exports = function  (req, res, next) {
 
                     // Now we have the objectIds, asynchronously loop through them
                     // and retrieve the actual values from the database.
-                    async.each(Object.keys(refColData), function (column, columnDone) {
+                    async.each(Object.keys(refColData), function (field, fieldDone) {
 
                         let args = [
-                            refColData[column].values,
-                            refColData[column].records,
-                            column,
+                            refColData[field].values,
+                            refColData[field].records,
+                            field,
                             req.linz.model,
                             function (err, value) {
 
-                                refColData[column].rendered = value;
+                                refColData[field].rendered = value;
 
-                                return columnDone(err);
+                                return fieldDone(err);
 
                             }
                         ];
@@ -359,55 +359,55 @@ module.exports = function  (req, res, next) {
                         // store the rendered content into a separate property
                         records[index]['rendered'] = {};
 
-                        // loop through each column
-                        async.each(Object.keys(req.linz.model.list.columns), function (column, columnDone) {
+                        // loop through each field
+                        async.each(Object.keys(req.linz.model.list.fields), function (field, fieldDone) {
 
-                            // If we have a reference column, data has been pre-rendered.
+                            // If we have a reference field, data has been pre-rendered.
                             // Let's grab it from there.
-                            if (req.linz.model.schema.tree[column] && req.linz.model.schema.tree[column].ref) {
+                            if (req.linz.model.schema.tree[field] && req.linz.model.schema.tree[field].ref) {
 
                                 // The default value, but could be replaced below if the conditions are right.
-                                records[index]['rendered'][column] = records[index][column];
+                                records[index]['rendered'][field] = records[index][field];
 
 
-                                // Do we have a rendered result for this column in this particular record?
+                                // Do we have a rendered result for this field in this particular record?
                                 // Support multiple types ref fields.
-                                if (refColData[column].rendered && records[index][column] && refColData[column].rendered[linz.api.model.getObjectIdFromRefField(records[index][column]).toString()]) {
+                                if (refColData[field].rendered && records[index][field] && refColData[field].rendered[linz.api.model.getObjectIdFromRefField(records[index][field]).toString()]) {
 
-                                    records[index]['rendered'][column] = refColData[column].rendered[linz.api.model.getObjectIdFromRefField(records[index][column]).toString()];
+                                    records[index]['rendered'][field] = refColData[field].rendered[linz.api.model.getObjectIdFromRefField(records[index][field]).toString()];
 
                                 }
 
                                 // We're all done here.
-                                return columnDone();
+                                return fieldDone();
 
                             }
 
-                            // This will only execute if we don't have a ref column.
+                            // This will only execute if we don't have a ref field.
 
                             let args = [];
 
-                            // value is not applicable for virtual column
-                            if (!req.linz.model.list.columns[column].virtual) {
-                                args.push(records[index][column]);
+                            // value is not applicable for virtual field
+                            if (!req.linz.model.list.fields[field].virtual) {
+                                args.push(records[index][field]);
                             }
 
                             args.push(mongooseRecords[index]);
-                            args.push(column);
+                            args.push(field);
                             args.push(req.linz.model);
                             args.push(function (err, value) {
 
                                 if (!err) {
-                                    records[index]['rendered'][column] = value;
+                                    records[index]['rendered'][field] = value;
                                 }
 
-                                return columnDone(err);
+                                return fieldDone(err);
 
                             });
 
                             // call the cell renderer and update the content with the result
                             // val, record, fieldname, model, callback
-                            req.linz.model.list.columns[column].renderer.apply(this, args);
+                            req.linz.model.list.fields[field].renderer.apply(this, args);
 
                         }, function (err) {
 

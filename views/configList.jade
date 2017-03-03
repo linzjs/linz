@@ -13,16 +13,16 @@ block content
 							thead
 								tr
 									th #
-									if renderActionsColumn
+									if renderActionsField
 										th Actions
-									for column in list.columns
-										th= column.label
+									for field in list.fields
+										th= field.label
 							tbody
 								for record, index in records
 									if record.permissions.canList !== false
 										tr
 											td= index+1
-											if renderActionsColumn
+											if renderActionsField
 												td
 													div.btn-group
 														if record.permissions.canEdit !== false
@@ -31,7 +31,7 @@ block content
 														if record.permissions.canReset !== false
 															a.btn.btn-default(href='' + linz.api.url.getAdminLink(configs[Object.keys(configs)[0]], 'default', record._id), data-linz-control="config-default")
 																span(class="glyphicon glyphicon-refresh")
-											each val in Object.keys(list.columns)
+											each val in Object.keys(list.fields)
 												td!= record[val]
 
 block script
