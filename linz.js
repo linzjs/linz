@@ -215,6 +215,24 @@ Linz.prototype.configure = function() {
 
     var _this = this;
 
+    // Start connecting to the database, prior to actually needing it.
+    // This will speed up Initialisation of Linz a little.
+    // Check for either a connect(ed|ing) mongoose object, or mongoose URI.
+    if ([1,2].indexOf(_this.mongoose.connection.readyState) < 0) {
+
+        if (!_this.get('mongo')) {
+            throw new Error('You must either supply a connected mongoose object, or a mongo URI');
+        }
+
+        debugGeneral('Connecting to the database');
+
+        _this.mongoose.connect(_this.get('mongo'));
+        _this.mongoose.connection.once('connected', function () {
+            debugGeneral('Database connected');
+        });
+
+    }
+
     async.series([
 
         function (cb) {
@@ -241,21 +259,15 @@ Linz.prototype.configure = function() {
 
             _this.set('app', _this.app);
 
-            // check for either a connect(ed|ing) mongoose object, or mongoose URI
-            if ([1,2].indexOf(_this.mongoose.connection.readyState) < 0) {
+            // Wait until we have a connection to the database to proceed.
+            var intervalId = setInterval(function () {
 
-                if (!_this.get('mongo')) {
-                    throw new Error('You must either supply a connected mongoose object, or a mongo URI');
+                if (_this.mongoose.connection.readyState === 1) {
+                    clearInterval(intervalId);
+                    _this.initConfigs(cb);
                 }
 
-                _this.mongoose.connect(_this.get('mongo'));
-                _this.mongoose.connection.on('connected', function () {
-                    _this.initConfigs(cb);
-                });
-
-            } else {
-                return cb(null);
-            }
+            }, 100);
 
         },
 
@@ -527,6 +539,21 @@ Linz.prototype.bootstrapExpress = function (cb) {
 
     debugGeneral('Bootstrapping express');
 
+    // Setup `/public` middleware first as we don't need session handle to resolve this routes
+
+    if ((process.env.NODE_ENV || 'development') === 'development') {
+        this.app.use(this.get('admin path') + '/public', lessMiddleware(__dirname + '/public', {
+            preprocess: {
+                path: function (pathname, req) {
+                    return pathname.replace(/\/css/, '/src/css');
+                }
+            }
+        }));
+    }
+
+    // setup admin static routes
+    this.app.use(this.get('admin path') + '/public/', express.static(path.resolve(__dirname, 'public')));
+
     this.app.engine('jade', require('jade').__express);
     this.app.set('view engine', 'jade');
 
@@ -557,18 +584,6 @@ Linz.prototype.bootstrapExpress = function (cb) {
     this.app.use(this.passport.initialize());
     this.app.use(this.passport.session());
 
-    if ((process.env.NODE_ENV || 'development') === 'development') {
-        this.app.use(this.get('admin path') + '/public', lessMiddleware(__dirname + '/public', {
-            preprocess: {
-                path: function (pathname, req) {
-                    return pathname.replace(/\/css/, '/src/css');
-                }
-            }
-        }));
-    }
-
-    // setup admin static routes
-    this.app.use(this.get('admin path') + '/public/', express.static(path.resolve(__dirname, 'public')));
 
     return cb(null);
 

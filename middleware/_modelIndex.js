@@ -1,7 +1,8 @@
 var linz = require('../'),
     async = require('async'),
     formtoolsAPI = require('../lib/api/formtools'),
-    clone = require('clone');
+    clone = require('clone'),
+    dedupe = require('dedupe');
 
 module.exports = function  (req, res, next) {
 
@@ -20,10 +21,12 @@ module.exports = function  (req, res, next) {
 
             var records = [],
                 filters = {},
+                refColData = {},
                 totalRecords = 0,
                 pageSize = linz.get('page size'),
                 pageIndex = session.grid.formData.page || 1,
-                query;
+                query,
+                mongooseRecords;
 
             // cloned a copy of grid settings and append it to the request model
             req.linz.model.grid = clone(req.linz.model.linz.formtools.grid);
@@ -139,20 +142,43 @@ module.exports = function  (req, res, next) {
                 // get page total
                 function (cb) {
 
-                    query.exec(function (err, docs) {
+                    req.linz.model.getCount(req, filters, function (err, countQuery) {
 
-                        if (!err && docs.length === 0) {
-                            return cb(new Error('No records found'));
+                        if (err) {
+                            return cb(err);
                         }
 
-                        if (!err) {
+                        countQuery.exec(function (countQueryErr, count) {
 
-                            totalRecords = docs.length;
-                        }
+                            if (!countQueryErr && count === 0) {
+                                return cb(new Error('No records found'));
+                            }
 
-                        return cb(err);
+                            if (!countQueryErr) {
+                                totalRecords = count;
+                            }
+
+                            return cb(countQueryErr);
+
+                        });
+
 
                     });
+
+                },
+
+                // minimise the fields we're selecting
+                function (cb) {
+
+                    let select = Object.keys(req.linz.model.grid.columns).join(' ');
+                    query.select(select);
+
+                    // If they've provided the `gridQuery` static, use it to allow customisation of the fields we'll retrieve.
+                    if (!req.linz.model.gridQuery) {
+                        return cb();
+                    }
+
+                    req.linz.model.gridQuery(query, cb);
 
                 },
 
@@ -267,6 +293,63 @@ module.exports = function  (req, res, next) {
 
                 },
 
+                function (cb) {
+
+                    // Determine if there are any columns with refs
+                    for (let column in req.linz.model.grid.columns) {
+
+                        // Support multiple types ref fields.
+
+                        if (req.linz.model.schema.tree[column] && req.linz.model.schema.tree[column].ref) {
+
+                            // Get the records.
+                            // Start by filtering records which have valid ObjectIds (support multiple types of reference fields).
+                            // Then deduplicate them using a custom hashing function.
+                            refColData[column] = {
+                                records: dedupe(records.filter(record => !(!record[column]) && linz.api.model.getObjectIdFromRefField(record[column]) instanceof linz.mongoose.Types.ObjectId), record => linz.api.model.getObjectIdFromRefField(record[column]).toString())
+                            };
+
+                            // Now get the values.
+                            refColData[column].values = refColData[column].records.map(record => linz.api.model.getObjectIdFromRefField(record[column]));
+
+                        }
+
+                    }
+
+                    // Now we have the objectIds, asynchronously loop through them
+                    // and retrieve the actual values from the database.
+                    async.each(Object.keys(refColData), function (column, columnDone) {
+
+                        let args = [
+                            refColData[column].values,
+                            refColData[column].records,
+                            column,
+                            req.linz.model,
+                            function (err, value) {
+
+                                refColData[column].rendered = value;
+
+                                return columnDone(err);
+
+                            }
+                        ];
+
+                        // Call the cell renderer and update the content with the result.
+                        // val, record, fieldname, model, callback
+                        linz.formtools.cellRenderers.reference.apply(null, args);
+
+                    }, function (err) {
+
+                        if (err) {
+                            return cb(err);
+                        }
+
+                        return cb();
+
+                    });
+
+                },
+
                 // create the values for the datagrids for each doc
                 function (cb) {
 
@@ -279,7 +362,30 @@ module.exports = function  (req, res, next) {
                         // loop through each column
                         async.each(Object.keys(req.linz.model.grid.columns), function (column, columnDone) {
 
-                            var args = [];
+                            // If we have a reference column, data has been pre-rendered.
+                            // Let's grab it from there.
+                            if (req.linz.model.schema.tree[column] && req.linz.model.schema.tree[column].ref) {
+
+                                // The default value, but could be replaced below if the conditions are right.
+                                records[index]['rendered'][column] = records[index][column];
+
+
+                                // Do we have a rendered result for this column in this particular record?
+                                // Support multiple types ref fields.
+                                if (refColData[column].rendered && records[index][column] && refColData[column].rendered[linz.api.model.getObjectIdFromRefField(records[index][column]).toString()]) {
+
+                                    records[index]['rendered'][column] = refColData[column].rendered[linz.api.model.getObjectIdFromRefField(records[index][column]).toString()];
+
+                                }
+
+                                // We're all done here.
+                                return columnDone();
+
+                            }
+
+                            // This will only execute if we don't have a ref column.
+
+                            let args = [];
 
                             // value is not applicable for virtual column
                             if (!req.linz.model.grid.columns[column].virtual) {
@@ -300,7 +406,8 @@ module.exports = function  (req, res, next) {
                             });
 
                             // call the cell renderer and update the content with the result
-                            req.linz.model.grid.columns[column].renderer.apply(this,args);
+                            // val, record, fieldname, model, callback
+                            req.linz.model.grid.columns[column].renderer.apply(this, args);
 
                         }, function (err) {
 
