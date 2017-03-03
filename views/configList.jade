@@ -15,7 +15,7 @@ block content
 									th #
 									if renderActionsColumn
 										th Actions
-									for column in grid.columns
+									for column in list.columns
 										th= column.label
 							tbody
 								for record, index in records
@@ -31,7 +31,7 @@ block content
 														if record.permissions.canReset !== false
 															a.btn.btn-default(href='' + linz.api.url.getAdminLink(configs[Object.keys(configs)[0]], 'default', record._id), data-linz-control="config-default")
 																span(class="glyphicon glyphicon-refresh")
-											each val in Object.keys(grid.columns)
+											each val in Object.keys(list.columns)
 												td!= record[val]
 
 block script

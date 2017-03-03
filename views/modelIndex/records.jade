@@ -6,9 +6,9 @@ if records.length > 0
 						th #
 						th
 							input(type="checkbox", data-linz-control="checked-all")
-						if permissions.canDelete !== false || permissions.canEdit !== false || model.grid.recordActions.length
+						if permissions.canDelete !== false || permissions.canEdit !== false || model.list.recordActions.length
 							th.actions Actions
-						for column in model.grid.columns
+						for column in model.list.columns
 							th= column.label
 				tbody
 					for record, index in records
@@ -16,7 +16,7 @@ if records.length > 0
 							td= from + index + 1
 							td
 								input(type="checkbox", name="ids[]", value="#{record._id}", data-linz-control="checked-record")
-							if permissions.canDelete !== false || permissions.canEdit !== false || model.grid.recordActions.length
+							if permissions.canDelete !== false || permissions.canEdit !== false || model.list.recordActions.length
 								td
 									div.btn-group
 
@@ -36,12 +36,12 @@ if records.length > 0
 												a.btn.btn-default(href=linz.api.url.getAdminLink(model, 'delete', record._id), data-linz-control="delete")
 													span(class="glyphicon glyphicon-trash")
 
-										if model.grid.recordActions.length
+										if model.list.recordActions.length
 											div.btn-group
 												button.btn.btn-default.dropdown-toggle(type="button", data-toggle="dropdown")
 													span.caret
 												ul.dropdown-menu(role="menu")
-													for action in model.grid.recordActions
+													for action in model.list.recordActions
 														li(role='presentation')
 															if action.type === 'header'
 																li(role='presentation', class='dropdown-header')= action.label
@@ -53,5 +53,5 @@ if records.length > 0
 																else
 																	a(href=linz.api.url.getAdminLink(model, action.action, record._id) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback)= action.label
 
-							each val in Object.keys(model.grid.columns)
+							each val in Object.keys(model.list.columns)
 								td!= record['rendered'][val]

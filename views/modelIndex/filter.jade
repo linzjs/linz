@@ -1,5 +1,5 @@
 .form-group
-	label.control-label.filter-name(for='' + ((fieldName) ? fieldName: '') + '')= ((fieldName) ? (( model.grid.activeFilters[fieldName] && model.grid.activeFilters[fieldName].label) ? model.grid.activeFilters[fieldName].label: '') : '')
+	label.control-label.filter-name(for='' + ((fieldName) ? fieldName: '') + '')= ((fieldName) ? (( model.list.activeFilters[fieldName] && model.list.activeFilters[fieldName].label) ? model.list.activeFilters[fieldName].label: '') : '')
 	.filter-control
 		i.fa.fa-times(data-filter-field='' + ((fieldName) ? fieldName: '') + '')
 		!= filterControl

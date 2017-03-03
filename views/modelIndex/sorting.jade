@@ -1,11 +1,11 @@
 .model-sort
-	if model.grid.sortBy.length
+	if model.list.sortBy.length
 		div #{total} records sorted by
 		.dropdown
 			.field(data-toggle='dropdown')= sort.label
 				span.caret
 			ul.dropdown-menu(role='menu')
-				for sortField in model.grid.sortBy
+				for sortField in model.list.sortBy
 					li
 						a(data-sort-field='' + sortField.field + '')
 							if '-' + sortField.field === form.sort

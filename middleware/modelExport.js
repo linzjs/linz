@@ -124,25 +124,25 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
                 function (callback) {
 
-                    Model.getGrid(req.user, function (err, grid) {
+                    Model.getList(req.user, function (err, list) {
 
                         if (err) {
                             return cb(err);
                         }
 
-                        return callback(null, grid);
+                        return callback(null, list);
 
                     });
                 },
 
-                function (grid, callback) {
+                function (list, callback) {
 
                     var filters = {};
 
                     async.each(form.selectedFilters.split(','), function (fieldName, filtersDone) {
 
                         // call the filter renderer and update the content with the result
-                        grid.filters[fieldName].filter.filter(fieldName, form, function (err, result) {
+                        list.filters[fieldName].filter.filter(fieldName, form, function (err, result) {
 
                             if (err) {
                                 return filtersDone(err);
@@ -209,10 +209,10 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
         },
 
-        getGrid: function getGrid (filters, form, cb) {
+        getList: function getList (filters, form, cb) {
 
-            req.linz.model.getGrid(req.user, function (err, grid) {
-                return cb(err, filters, form, grid);
+            req.linz.model.getList(req.user, function (err, list) {
+                return cb(err, filters, form, list);
             });
 
         }
@@ -223,7 +223,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
 // this will retrieve the export object, using Linz's default export handler amongst custom export handlers
 // this is based on the knowledge that only Linz's default export handler can have an `action` of `export`
-// `exports` should be model.grid.export
+// `exports` should be model.list.export
 var getExport = function (exports) {
 
     var exp = undefined;
@@ -240,7 +240,7 @@ var getExport = function (exports) {
 
     // if the export object could not be found, throw an error
     if (!exp) {
-        throw new Error('The export was using Linz default export method, yet the model\'s grid.export object could not be found.');
+        throw new Error('The export was using Linz default export method, yet the model\'s list.export object could not be found.');
     }
 
     return exp;
@@ -251,17 +251,17 @@ module.exports = {
 
     get: function (req, res, next) {
 
-        req.linz.model.getGrid(req.user, function (err, grid) {
+        req.linz.model.getList(req.user, function (err, list) {
 
             if (err) {
                 return next(err);
             }
 
-            // attach our grid object to the model
-            req.linz.model.grid = grid;
+            // attach our list object to the model
+            req.linz.model.list = list;
 
             // retrieve the export object
-            req.linz.export = getExport(grid.export);
+            req.linz.export = getExport(list.export);
             req.linz.export.fields = {};
 
             // retrieve the form to provide a list of fields to choose from
@@ -314,20 +314,20 @@ module.exports = {
         asyncFn.push(helpers.getFilters);
         asyncFn.push(helpers.addIdFilters);
         asyncFn.push(helpers.getForm);
-        asyncFn.push(helpers.getGrid);
+        asyncFn.push(helpers.getList);
 
         // get the actual export object
-        asyncFn.push(function (filters, form, grid, callback) {
+        asyncFn.push(function (filters, form, list, callback) {
 
             // retrieve the export
-            var _export = getExport(grid.export);
+            var _export = getExport(list.export);
             _export.fields = {};
 
-            return callback(null, filters, form, grid, _export);
+            return callback(null, filters, form, list, _export);
 
         });
 
-        async.waterfall(asyncFn, function (err, filters, form, grid, exportObj) {
+        async.waterfall(asyncFn, function (err, filters, form, list, exportObj) {
 
             if (err) {
                 return next(err);

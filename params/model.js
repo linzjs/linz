@@ -23,13 +23,13 @@ module.exports = function (router) {
 
 			function (cb) {
 
-				linz.api.model.grid(req.user, modelName, function (err, grid) {
+				linz.api.model.list(req.user, modelName, function (err, list) {
 
 					if (err) {
 						return cb(err);
 					}
 
-					req.linz.model.linz.formtools.grid = grid;
+					req.linz.model.linz.formtools.list = list;
 
 					return cb(null);
 

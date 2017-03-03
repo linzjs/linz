@@ -12,11 +12,11 @@ module.exports = function  (req, res, next) {
 
             // set up session control
             var session = req.session[req.params.model] = req.session[req.params.model] || {};
-                session.grid = session.grid || {};
-                session.grid.formData = session.grid.formData || {};
+                session.list = session.list || {};
+                session.list.formData = session.list.formData || {};
 
             if (Object.keys(req.body).length) {
-                session.grid.formData = req.body;
+                session.list.formData = req.body;
             }
 
             var records = [],
@@ -24,31 +24,31 @@ module.exports = function  (req, res, next) {
                 refColData = {},
                 totalRecords = 0,
                 pageSize = linz.get('page size'),
-                pageIndex = session.grid.formData.page || 1,
+                pageIndex = session.list.formData.page || 1,
                 query,
                 mongooseRecords;
 
-            // cloned a copy of grid settings and append it to the request model
-            req.linz.model.grid = clone(req.linz.model.linz.formtools.grid);
+            // cloned a copy of list settings and append it to the request model
+            req.linz.model.list = clone(req.linz.model.linz.formtools.list);
 
             // reset the pageSize value
-            pageSize = session.grid.formData.pageSize || req.linz.model.grid.paging.size;
+            pageSize = session.list.formData.pageSize || req.linz.model.list.paging.size;
 
             // holder for the sortingBy value
-            req.linz.model.grid.sortingBy = {};
+            req.linz.model.list.sortingBy = {};
 
             async.series([
 
                 // check if there are toolbar items required
                 function (cb) {
 
-                    formtoolsAPI.grid.renderToolbarItems(req, res, req.params.model, function (err, result) {
+                    formtoolsAPI.list.renderToolbarItems(req, res, req.params.model, function (err, result) {
 
                         if (err) {
                             return cb(err);
                         }
 
-                        req.linz.model.grid.toolbarItems = result;
+                        req.linz.model.list.toolbarItems = result;
 
                         return cb(null);
 
@@ -60,17 +60,17 @@ module.exports = function  (req, res, next) {
                 function (cb) {
 
                     // check if we need to render the filters
-                    if (!Object.keys(req.linz.model.grid.filters).length) {
+                    if (!Object.keys(req.linz.model.list.filters).length) {
                         return cb(null);
                     }
 
-                    formtoolsAPI.grid.renderFilters(req.user, req.params.model, function (err, result) {
+                    formtoolsAPI.list.renderFilters(req.user, req.params.model, function (err, result) {
 
                         if (err) {
                             return cb(err);
                         }
 
-                        req.linz.model.grid.filters = result;
+                        req.linz.model.list.filters = result;
 
                         return cb(null);
                     });
@@ -80,20 +80,20 @@ module.exports = function  (req, res, next) {
                 // render the active filters
                 function (cb) {
 
-                    req.linz.model.grid.activeFilters = {};
+                    req.linz.model.list.activeFilters = {};
 
                     // check if there are any filters in the form post
-                    if (!session.grid.formData.selectedFilters) {
+                    if (!session.list.formData.selectedFilters) {
                         return cb(null);
                     }
 
-                    formtoolsAPI.grid.getActiveFilters(req.user, session.grid.formData.selectedFilters.split(','), session.grid.formData, req.params.model, function (err, result) {
+                    formtoolsAPI.list.getActiveFilters(req.user, session.list.formData.selectedFilters.split(','), session.list.formData, req.params.model, function (err, result) {
 
                         if (err) {
                             return cb(err);
                         }
 
-                        req.linz.model.grid.activeFilters = result;
+                        req.linz.model.list.activeFilters = result;
 
                         return cb(null);
                     });
@@ -104,11 +104,11 @@ module.exports = function  (req, res, next) {
                 function (cb) {
 
                     // check if there are any filters in the form post
-                    if (!session.grid.formData.selectedFilters) {
+                    if (!session.list.formData.selectedFilters) {
                         return cb(null);
                     }
 
-                    formtoolsAPI.grid.renderSearchFilters(req.user, session.grid.formData.selectedFilters.split(','), session.grid.formData, req.params.model, function (err, result) {
+                    formtoolsAPI.list.renderSearchFilters(req.user, session.list.formData.selectedFilters.split(','), session.list.formData, req.params.model, function (err, result) {
 
                         if (err) {
                             return cb(err);
@@ -170,41 +170,41 @@ module.exports = function  (req, res, next) {
                 // minimise the fields we're selecting
                 function (cb) {
 
-                    let select = Object.keys(req.linz.model.grid.columns).join(' ');
+                    let select = Object.keys(req.linz.model.list.columns).join(' ');
                     query.select(select);
 
-                    // If they've provided the `gridQuery` static, use it to allow customisation of the fields we'll retrieve.
-                    if (!req.linz.model.gridQuery) {
+                    // If they've provided the `listQuery` static, use it to allow customisation of the fields we'll retrieve.
+                    if (!req.linz.model.listQuery) {
                         return cb();
                     }
 
-                    req.linz.model.gridQuery(query, cb);
+                    req.linz.model.listQuery(query, cb);
 
                 },
 
                 // find the docs
                 function (cb) {
 
-                    if (!session.grid.formData.sort && req.linz.model.grid.sortBy.length) {
+                    if (!session.list.formData.sort && req.linz.model.list.sortBy.length) {
 
-                        req.linz.model.grid.sortingBy = req.linz.model.grid.sortBy[0];
+                        req.linz.model.list.sortingBy = req.linz.model.list.sortBy[0];
 
                         // set default form sort
-                        session.grid.formData.sort = req.linz.model.grid.sortingBy.field;
+                        session.list.formData.sort = req.linz.model.list.sortingBy.field;
 
                     } else {
 
-                        req.linz.model.grid.sortBy.forEach(function (sort) {
-                            if (sort.field === session.grid.formData.sort || '-' + sort.field === session.grid.formData.sort) {
-                                req.linz.model.grid.sortingBy = sort;
+                        req.linz.model.list.sortBy.forEach(function (sort) {
+                            if (sort.field === session.list.formData.sort || '-' + sort.field === session.list.formData.sort) {
+                                req.linz.model.list.sortingBy = sort;
                             }
                         });
 
                     }
 
-                    query.sort(session.grid.formData.sort);
+                    query.sort(session.list.formData.sort);
 
-                    if (req.linz.model.grid.paging.active === true) {
+                    if (req.linz.model.list.paging.active === true) {
                         // add in paging skip and limit
                         query.skip(pageIndex*pageSize-pageSize).limit(pageSize);
                     }
@@ -296,7 +296,7 @@ module.exports = function  (req, res, next) {
                 function (cb) {
 
                     // Determine if there are any columns with refs
-                    for (let column in req.linz.model.grid.columns) {
+                    for (let column in req.linz.model.list.columns) {
 
                         // Support multiple types ref fields.
 
@@ -350,7 +350,7 @@ module.exports = function  (req, res, next) {
 
                 },
 
-                // create the values for the datagrids for each doc
+                // create the values for the datalists for each doc
                 function (cb) {
 
                     // loop through each record
@@ -360,7 +360,7 @@ module.exports = function  (req, res, next) {
                         records[index]['rendered'] = {};
 
                         // loop through each column
-                        async.each(Object.keys(req.linz.model.grid.columns), function (column, columnDone) {
+                        async.each(Object.keys(req.linz.model.list.columns), function (column, columnDone) {
 
                             // If we have a reference column, data has been pre-rendered.
                             // Let's grab it from there.
@@ -388,7 +388,7 @@ module.exports = function  (req, res, next) {
                             let args = [];
 
                             // value is not applicable for virtual column
-                            if (!req.linz.model.grid.columns[column].virtual) {
+                            if (!req.linz.model.list.columns[column].virtual) {
                                 args.push(records[index][column]);
                             }
 
@@ -407,7 +407,7 @@ module.exports = function  (req, res, next) {
 
                             // call the cell renderer and update the content with the result
                             // val, record, fieldname, model, callback
-                            req.linz.model.grid.columns[column].renderer.apply(this, args);
+                            req.linz.model.list.columns[column].renderer.apply(this, args);
 
                         }, function (err) {
 
@@ -427,11 +427,11 @@ module.exports = function  (req, res, next) {
                 // check if we need to process each record again record actions
                 function (cb) {
 
-                    if (!req.linz.model.grid.recordActions.length) {
+                    if (!req.linz.model.list.recordActions.length) {
                         return cb(null);
                     }
 
-                    async.each(req.linz.model.grid.recordActions, function (action, actionDone) {
+                    async.each(req.linz.model.list.recordActions, function (action, actionDone) {
 
                         if (!action.disabled) {
                             return actionDone(null);
@@ -481,7 +481,7 @@ module.exports = function  (req, res, next) {
                     pageSize: pageSize
                 };
 
-                req.linz.model.formData = session.grid.formData;
+                req.linz.model.formData = session.list.formData;
 
                 if (err && err.message === 'No records found') {
                     err = null;

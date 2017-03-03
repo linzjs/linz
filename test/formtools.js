@@ -254,8 +254,8 @@ describe('formtools', function () {
 
         var OverridesPostSchema,
             OverridesPostModel,
-            gridOpts,
-            overridesGridOpts,
+            listOpts,
+            overridesListOpts,
             formOpts,
             overridesFormOpts,
             list = [
@@ -392,7 +392,7 @@ describe('formtools', function () {
             });
 
             OverridesPostSchema.plugin(formtools.plugins.document, {
-                grid: {
+                list: {
                     columns: {
                         title: 'Label',
                         firstName: {
@@ -571,15 +571,15 @@ describe('formtools', function () {
             async.parallel([
 
                 function (cb) {
-                    PostModel.getGrid(function (err, result) {
-                        gridOpts = result;
+                    PostModel.getList(function (err, result) {
+                        listOpts = result;
                         cb(null);
                     });
                 },
 
                 function (cb) {
-                    OverridesPostModel.getGrid(function (err, result) {
-                        overridesGridOpts = result;
+                    OverridesPostModel.getList(function (err, result) {
+                        overridesListOpts = result;
                         cb(null);
                     });
                 },
@@ -623,26 +623,26 @@ describe('formtools', function () {
 
 		}); // end before() for describe('scaffold')
 
-        describe('grid', function () {
+        describe('list', function () {
 
             describe('columns', function () {
 
                 describe('with columns defaults', function () {
 
                     it('should have a title', function () {
-                        gridOpts.columns.title.should.be.an.instanceOf(Object).and.have.property('label', 'Label');
+                        listOpts.columns.title.should.be.an.instanceOf(Object).and.have.property('label', 'Label');
                     });
 
                     it('should have a overview link renderer for title', function () {
-                        gridOpts.columns.title.should.be.an.instanceOf(Object).and.have.property('renderer', linz.formtools.cellRenderers.overviewLink);
+                        listOpts.columns.title.should.be.an.instanceOf(Object).and.have.property('renderer', linz.formtools.cellRenderers.overviewLink);
                     });
 
                     it('should have a created date', function () {
-                        gridOpts.columns.dateCreated.should.be.an.instanceOf(Object).and.have.property('label', 'Date created');
+                        listOpts.columns.dateCreated.should.be.an.instanceOf(Object).and.have.property('label', 'Date created');
                     });
 
                     it('should have a link renderer for created date', function () {
-                        gridOpts.columns.dateCreated.should.be.an.instanceOf(Object).and.have.property('renderer', linz.formtools.cellRenderers.date);
+                        listOpts.columns.dateCreated.should.be.an.instanceOf(Object).and.have.property('renderer', linz.formtools.cellRenderers.date);
                     });
 
                 }); // end describe('columns defaults')
@@ -650,14 +650,14 @@ describe('formtools', function () {
                 describe("allowing column overrides", function () {
 
                     it('should set custom fields', function () {
-                        overridesGridOpts.columns.firstName.should.have.property({
+                        overridesListOpts.columns.firstName.should.have.property({
                             label: 'Name',
                             renderer: linz.formtools.cellRenderers.overviewLink
                         });
                     });
 
                     it('should default to overview link rendered for title, if renderer is not provided', function () {
-                        overridesGridOpts.columns.title.renderer.name.should.equal('overviewLinkRenderer');
+                        overridesListOpts.columns.title.renderer.name.should.equal('overviewLinkRenderer');
                     });
 
                 }); // end describe('column overrides')
@@ -765,19 +765,19 @@ describe('formtools', function () {
                 describe('default actions', function () {
 
                     it('should be able to create new record', function () {
-                        gridOpts.canCreate.should.be.true;
+                        listOpts.canCreate.should.be.true;
                     });
 
                     it('should be able to edit a record', function () {
-                        gridOpts.canEdit.should.be.true;
+                        listOpts.canEdit.should.be.true;
                     });
 
                     it('should be able to delete a record', function () {
-                        gridOpts.canDelete.should.be.true;
+                        listOpts.canDelete.should.be.true;
                     });
 
                     it('should display a summary', function () {
-                        gridOpts.showSummary.should.be.true;
+                        listOpts.showSummary.should.be.true;
                     });
 
                 }); // end describe('default actions')
@@ -785,19 +785,19 @@ describe('formtools', function () {
                 describe('overrides actions', function () {
 
                     it('should override can create', function () {
-                        overridesGridOpts.canCreate.should.be.false;
+                        overridesListOpts.canCreate.should.be.false;
                     })
 
                     it('should override can edit', function () {
-                        overridesGridOpts.canEdit.should.be.false;
+                        overridesListOpts.canEdit.should.be.false;
                     })
 
                     it('should override can delete', function () {
-                        overridesGridOpts.canDelete.should.be.false;
+                        overridesListOpts.canDelete.should.be.false;
                     })
 
                     it('should override show summary', function () {
-                        overridesGridOpts.showSummary.should.be.false;
+                        overridesListOpts.showSummary.should.be.false;
                     })
 
                 }); // end describe('overrides actions')
@@ -807,13 +807,13 @@ describe('formtools', function () {
             describe('group actions', function () {
 
                 it('should defaults empty array', function () {
-                    gridOpts.groupActions.should.be.an.instanceof(Array);
-                    gridOpts.groupActions.length.should.equal(0);
+                    listOpts.groupActions.should.be.an.instanceof(Array);
+                    listOpts.groupActions.length.should.equal(0);
                 });
 
                 it('should override group actions', function () {
-                    overridesGridOpts.groupActions.should.be.an.instanceof(Array);
-                    overridesGridOpts.groupActions[0].should.have.properties({
+                    overridesListOpts.groupActions.should.be.an.instanceof(Array);
+                    overridesListOpts.groupActions[0].should.have.properties({
                         label: 'Assign category',
                         action: 'group/category'
                     });
@@ -824,13 +824,13 @@ describe('formtools', function () {
             describe('record actions', function () {
 
                 it('should defaults empty array', function () {
-                    gridOpts.recordActions.should.be.an.instanceof(Array);
-                    gridOpts.recordActions.length.should.equal(0);
+                    listOpts.recordActions.should.be.an.instanceof(Array);
+                    listOpts.recordActions.length.should.equal(0);
                 });
 
                 it('should override record actions', function () {
-                    overridesGridOpts.recordActions.should.be.an.instanceof(Array);
-                    overridesGridOpts.recordActions[0].should.have.properties({
+                    overridesListOpts.recordActions.should.be.an.instanceof(Array);
+                    overridesListOpts.recordActions[0].should.have.properties({
                         label: 'Send welcome email',
                         action: 'send-welcome-email'
                     });
@@ -843,28 +843,28 @@ describe('formtools', function () {
                 describe('defaults', function () {
 
                     it('export object should exist', function () {
-                        (gridOpts.export !== undefined).should.be.ok;
-                        (typeof gridOpts.export === 'object').should.be.ok;
+                        (listOpts.export !== undefined).should.be.ok;
+                        (typeof listOpts.export === 'object').should.be.ok;
                     });
 
                     it('export should be disabled', function () {
-                        gridOpts.export.should.have.property.enable;
-                        gridOpts.export.enable.should.be.false;
+                        listOpts.export.should.have.property.enable;
+                        listOpts.export.enable.should.be.false;
                     });
 
                     it('export should have a label', function () {
-                        gridOpts.export.should.have.property.label;
-                        gridOpts.export.label.should.equal('Export');
+                        listOpts.export.should.have.property.label;
+                        listOpts.export.label.should.equal('Export');
                     });
 
                     it('export should have an action', function () {
-                        gridOpts.export.should.have.property.action;
-                        gridOpts.export.action.should.equal('export');
+                        listOpts.export.should.have.property.action;
+                        listOpts.export.action.should.equal('export');
                     });
 
                     it('export should have an exclusions', function () {
-                        gridOpts.export.should.have.property.exclusions;
-                        gridOpts.export.exclusions.should.equal('_id,dateCreated,dateModified,createdBy,modifiedBy');
+                        listOpts.export.should.have.property.exclusions;
+                        listOpts.export.exclusions.should.equal('_id,dateCreated,dateModified,createdBy,modifiedBy');
                     });
 
                 }); // end describe('defaults')
@@ -872,28 +872,28 @@ describe('formtools', function () {
                 describe('overrides', function () {
 
                     it('export object should exist', function () {
-                        (overridesGridOpts.export !== undefined).should.be.ok;
-                        (typeof overridesGridOpts.export === 'object').should.be.ok;
+                        (overridesListOpts.export !== undefined).should.be.ok;
+                        (typeof overridesListOpts.export === 'object').should.be.ok;
                     });
 
                     it('should overwrite enable', function () {
-                        overridesGridOpts.export.should.have.property.enable;
-                        overridesGridOpts.export.enable.should.be.true;
+                        overridesListOpts.export.should.have.property.enable;
+                        overridesListOpts.export.enable.should.be.true;
                     });
 
                     it('should overwrite label', function () {
-                        overridesGridOpts.export.should.have.property.label;
-                        overridesGridOpts.export.label.should.equal('Custom export');
+                        overridesListOpts.export.should.have.property.label;
+                        overridesListOpts.export.label.should.equal('Custom export');
                     });
 
                     it('should overwrite action', function () {
-                        overridesGridOpts.export.should.have.property.action;
-                        overridesGridOpts.export.action.should.equal('custom-export-url');
+                        overridesListOpts.export.should.have.property.action;
+                        overridesListOpts.export.action.should.equal('custom-export-url');
                     });
 
                     it('should overwrite the exclusions', function () {
-                        overridesGridOpts.export.should.have.property.exclusions;
-                        overridesGridOpts.export.exclusions.should.equal('_id,groups');
+                        overridesListOpts.export.should.have.property.exclusions;
+                        overridesListOpts.export.exclusions.should.equal('_id,groups');
                     });
 
                 }); // end describe('overrides')
@@ -905,23 +905,23 @@ describe('formtools', function () {
                 describe('defaults', function () {
 
                     it('paging object should exist', function () {
-                        (gridOpts.paging !== undefined).should.be.ok;
-                        (typeof gridOpts.paging === 'object').should.be.ok;
-                        gridOpts.paging.should.have.property.active;
-                        gridOpts.paging.should.have.property.size;
-                        gridOpts.paging.should.have.property.sizes;
+                        (listOpts.paging !== undefined).should.be.ok;
+                        (typeof listOpts.paging === 'object').should.be.ok;
+                        listOpts.paging.should.have.property.active;
+                        listOpts.paging.should.have.property.size;
+                        listOpts.paging.should.have.property.sizes;
                     });
 
                     it('paging should be active', function () {
-                        gridOpts.paging.active.should.be.true;
+                        listOpts.paging.active.should.be.true;
                     });
 
                     it('should have a page size of 20', function () {
-                        (gridOpts.paging.size === 20).should.be.ok;
+                        (listOpts.paging.size === 20).should.be.ok;
                     });
 
                     it('should have sizes [20,50,100,200]', function () {
-                        gridOpts.paging.sizes.should.be.eql([20,50,100,200]);
+                        listOpts.paging.sizes.should.be.eql([20,50,100,200]);
                     });
 
                 }); // end describe('defaults')
@@ -929,23 +929,23 @@ describe('formtools', function () {
                 describe('overrides', function () {
 
                     it('paging object should exist', function () {
-                        (overridesGridOpts.paging !== undefined).should.be.ok;
-                        (typeof overridesGridOpts.paging === 'object').should.be.ok;
-                        overridesGridOpts.paging.should.have.property.active;
-                        overridesGridOpts.paging.should.have.property.size;
-                        gridOpts.paging.should.have.property.sizes;
+                        (overridesListOpts.paging !== undefined).should.be.ok;
+                        (typeof overridesListOpts.paging === 'object').should.be.ok;
+                        overridesListOpts.paging.should.have.property.active;
+                        overridesListOpts.paging.should.have.property.size;
+                        listOpts.paging.should.have.property.sizes;
                     });
 
                     it('should override active', function () {
-                        overridesGridOpts.paging.active.should.be.false;
+                        overridesListOpts.paging.active.should.be.false;
                     });
 
                     it('should override size', function () {
-                        (overridesGridOpts.paging.size === 50).should.be.ok;
+                        (overridesListOpts.paging.size === 50).should.be.ok;
                     });
 
                     it('should override sizes [25,50,75,100]', function () {
-                        overridesGridOpts.paging.sizes.should.be.eql([25,50,75,100]);
+                        overridesListOpts.paging.sizes.should.be.eql([25,50,75,100]);
                     });
 
                 }); // end describe('overrides')
@@ -957,7 +957,7 @@ describe('formtools', function () {
                 describe('default sorting', function () {
 
                     it('should be sorted by date modified', function () {
-                        gridOpts.sortBy[0].should.have.property({
+                        listOpts.sortBy[0].should.have.property({
                             label: 'Date modified',
                             field: 'dateModified'
                         });
@@ -969,7 +969,7 @@ describe('formtools', function () {
 
                     it('should overrides sorting options', function () {
 
-                        overridesGridOpts.sortBy.should.eql([
+                        overridesListOpts.sortBy.should.eql([
                             {
                                 label: 'First Name',
                                 field: 'firstName'
@@ -992,11 +992,11 @@ describe('formtools', function () {
             describe('virtual columns',function () {
 
                 it('should assign custom cell renderer for virtual column', function () {
-                    overridesGridOpts.columns.sendWelcomeEmail.renderer.name.should.equal('sendWelcomeEmailRenderer');
+                    overridesListOpts.columns.sendWelcomeEmail.renderer.name.should.equal('sendWelcomeEmailRenderer');
                 });
 
                 it('should execute custom cell renderer for virtual column', function (done) {
-                    overridesGridOpts.columns.sendWelcomeEmail.renderer({}, 'sendWelcomeEmail', 'mmsUser', function (err, value) {
+                    overridesListOpts.columns.sendWelcomeEmail.renderer({}, 'sendWelcomeEmail', 'mmsUser', function (err, value) {
 
                         if (err) {
                             throw err;
@@ -1030,7 +1030,7 @@ describe('formtools', function () {
                     try {
 
                         ErrorVirtualColumnsSchema.plugin(formtools.plugins.document, {
-                            grid: {
+                            list: {
                                 columns: {
                                     title: 'Label',
                                     firstName: {
@@ -1086,7 +1086,7 @@ describe('formtools', function () {
 
                     } catch (e) {
 
-                        e.message.should.equal('Renderer attribute is missing for virtual column options.grid.columns.sendWelcomeEmail');
+                        e.message.should.equal('Renderer attribute is missing for virtual column options.list.columns.sendWelcomeEmail');
 
                     }
 
@@ -1099,19 +1099,19 @@ describe('formtools', function () {
                 describe('setting filters', function () {
 
                     it('should convert a key name with string value in the filters to an object', function () {
-                        overridesGridOpts.filters.firstName.should.have.property('label', 'First name');
+                        overridesListOpts.filters.firstName.should.have.property('label', 'First name');
                     });
 
                     it('should default to key name if a label is not provided in the filters object', function () {
-                        overridesGridOpts.filters.lastName.should.have.property('label', 'lastName');
+                        overridesListOpts.filters.lastName.should.have.property('label', 'lastName');
                     });
 
                     it('should set default filter if none provided', function () {
-                        overridesGridOpts.filters.firstName.filter.should.equal(linz.formtools.filters.default);
+                        overridesListOpts.filters.firstName.filter.should.equal(linz.formtools.filters.default);
                     });
 
                     it('should set custom filter, renderer & bind functions if provided', function () {
-                        (overridesGridOpts.filters.lastName.filter.renderer.name === 'customFilterRenderer' && overridesGridOpts.filters.lastName.filter.filter.name === 'customFilterFilter' && overridesGridOpts.filters.lastName.filter.bind.name === 'customFilterBinder').should.be.true;
+                        (overridesListOpts.filters.lastName.filter.renderer.name === 'customFilterRenderer' && overridesListOpts.filters.lastName.filter.filter.name === 'customFilterFilter' && overridesListOpts.filters.lastName.filter.bind.name === 'customFilterBinder').should.be.true;
                     });
 
                 });
@@ -1469,7 +1469,7 @@ describe('formtools', function () {
 
                         it('should render a select field', function (done) {
                             var fieldName = 'groups';
-                            overridesGridOpts.filters.groups.filter.renderer(fieldName,function (err, result) {
+                            overridesListOpts.filters.groups.filter.renderer(fieldName,function (err, result) {
                                 result.should.equal('<select name="' + fieldName + '[]" class="form-control multiselect"><option value="one">option 1</option><option value="two">option 2</option></select>');
                                 done();
                             });
@@ -1504,7 +1504,7 @@ describe('formtools', function () {
 
                         it('should return a filter using $in operator for OR matching on the selected values', function (done) {
                             var fieldName = 'groups';
-                            overridesGridOpts.filters.groups.filter.filter(fieldName, { groups: list}, function (err, result) {
+                            overridesListOpts.filters.groups.filter.filter(fieldName, { groups: list}, function (err, result) {
                                 result.should.have.property(fieldName, { $in: list });
                                 done();
                             });
@@ -1512,7 +1512,7 @@ describe('formtools', function () {
 
                         it('should render select field with form values selected', function (done) {
                             var fieldName = 'groups';
-                            overridesGridOpts.filters.groups.filter.bind(fieldName,{ groups: ['one'] }, function (err, result) {
+                            overridesListOpts.filters.groups.filter.bind(fieldName,{ groups: ['one'] }, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
                                 result[0].should.equal('<select name="' + fieldName + '[]" class="form-control multiselect"><option value="one" selected>option 1</option><option value="two">option 2</option></select>');
                                 done();
@@ -1579,14 +1579,14 @@ describe('formtools', function () {
                 describe('custom filter', function () {
 
                    it('should render custom filter', function (done) {
-                        overridesGridOpts.filters.lastName.filter.renderer('lastName', function(err, result) {
+                        overridesListOpts.filters.lastName.filter.renderer('lastName', function(err, result) {
                             result.should.equal('<input type="text" name="test1"><input type="text" name="test2">');
                             done();
                         });
                    });
 
                    it('should return custom filter', function (done) {
-                        overridesGridOpts.filters.lastName.filter.filter('lastName', { test1: 'john', test2: 'jane'}, function(err, result) {
+                        overridesListOpts.filters.lastName.filter.filter('lastName', { test1: 'john', test2: 'jane'}, function(err, result) {
                             result.should.have.properties({
                                 firstName: ['john','jane'],
                                 lastName: 'doyle'
@@ -1707,7 +1707,7 @@ describe('formtools', function () {
 
                     it('should handle custom filter', function () {
 
-                        overridesGridOpts.filters.lastName.filter.filter('lastName',{test1: 'john', test2: 'jane'}, function (err, result) {
+                        overridesListOpts.filters.lastName.filter.filter('lastName',{test1: 'john', test2: 'jane'}, function (err, result) {
 
                             filters = OverridesPostModel.addSearchFilter(filters, result);
 
@@ -1780,7 +1780,7 @@ describe('formtools', function () {
 
             }); // end describe('filters')
 
-        }); // end  describe('grid')
+        }); // end  describe('list')
 
 
         describe('form', function () {
