@@ -362,6 +362,11 @@ module.exports = function  (req, res, next) {
                         // loop through each field
                         async.each(Object.keys(req.linz.model.list.fields), function (field, fieldDone) {
 
+                            // Skip this field if we have a falsy value
+                            if (!req.linz.model.list.fields[field]) {
+                                return fieldDone();
+                            }
+
                             // If we have a reference field, data has been pre-rendered.
                             // Let's grab it from there.
                             if (req.linz.model.schema.tree[field] && req.linz.model.schema.tree[field].ref) {
