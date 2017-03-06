@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased (6 March 2017)
+
+- Search and replace `Grid` with `List`.
+
 ## v0.7.0.0 (3 March 2017)
 
 ### BREAKING CHANGES
