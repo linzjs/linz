@@ -6,6 +6,7 @@
 
 - Linz will automatically look for `label` and `name` fields when trying to determine the `title` of a record. When producing the list of fields to include in the select portion of the query, it will now include those, if the model has fields of the same names.
 - Linz will not attempt to render fields in the `columns` list, if its value is `falsy`.
+- When overriding the default `grid.columns`, there was no easy way to have it render the `title` property without coping and pasting core Linz code. You can how provide `'title': true` in the Object of columns to have list provide a correct `title` object for column rendering.
 
 ## v0.7.0.0 (3 March 2017)
 
