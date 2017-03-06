@@ -372,6 +372,11 @@ module.exports = function  (req, res, next) {
                         // loop through each column
                         async.each(Object.keys(req.linz.model.grid.columns), function (column, columnDone) {
 
+                            // Skip this field if we have a falsy value
+                            if (!req.linz.model.grid.columns[column]) {
+                                return columnDone();
+                            }
+
                             // If we have a reference column, data has been pre-rendered.
                             // Let's grab it from there.
                             if (req.linz.model.schema.tree[column] && req.linz.model.schema.tree[column].ref) {
