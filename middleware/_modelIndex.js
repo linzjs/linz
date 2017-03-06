@@ -170,7 +170,19 @@ module.exports = function  (req, res, next) {
                 // minimise the fields we're selecting
                 function (cb) {
 
-                    let select = Object.keys(req.linz.model.list.fields).join(' ');
+                    let fields = Object.keys(req.linz.model.list.fields);
+
+                    // Add the default fields we'll look for in the title virtual.
+                    if (req.linz.model.schema.tree.label) {
+                        fields.push('label');
+                    }
+
+                    if (req.linz.model.schema.tree.name) {
+                        fields.push('name');
+                    }
+
+                    const select = fields.join(' ');
+
                     query.select(select);
 
                     // If they've provided the `listQuery` static, use it to allow customisation of the fields we'll retrieve.
