@@ -393,7 +393,7 @@ describe('formtools', function () {
 
             OverridesPostSchema.plugin(formtools.plugins.document, {
                 list: {
-                    columns: {
+                    fields: {
                         title: 'Label',
                         firstName: {
                             label: 'Name',
@@ -625,42 +625,42 @@ describe('formtools', function () {
 
         describe('list', function () {
 
-            describe('columns', function () {
+            describe('fields', function () {
 
-                describe('with columns defaults', function () {
+                describe('with fields defaults', function () {
 
                     it('should have a title', function () {
-                        listOpts.columns.title.should.be.an.instanceOf(Object).and.have.property('label', 'Label');
+                        listOpts.fields.title.should.be.an.instanceOf(Object).and.have.property('label', 'Label');
                     });
 
                     it('should have a overview link renderer for title', function () {
-                        listOpts.columns.title.should.be.an.instanceOf(Object).and.have.property('renderer', linz.formtools.cellRenderers.overviewLink);
+                        listOpts.fields.title.should.be.an.instanceOf(Object).and.have.property('renderer', linz.formtools.cellRenderers.overviewLink);
                     });
 
                     it('should have a created date', function () {
-                        listOpts.columns.dateCreated.should.be.an.instanceOf(Object).and.have.property('label', 'Date created');
+                        listOpts.fields.dateCreated.should.be.an.instanceOf(Object).and.have.property('label', 'Date created');
                     });
 
                     it('should have a link renderer for created date', function () {
-                        listOpts.columns.dateCreated.should.be.an.instanceOf(Object).and.have.property('renderer', linz.formtools.cellRenderers.date);
+                        listOpts.fields.dateCreated.should.be.an.instanceOf(Object).and.have.property('renderer', linz.formtools.cellRenderers.date);
                     });
 
-                }); // end describe('columns defaults')
+                }); // end describe('fields defaults')
 
-                describe("allowing column overrides", function () {
+                describe("allowing field overrides", function () {
 
                     it('should set custom fields', function () {
-                        overridesListOpts.columns.firstName.should.have.property({
+                        overridesListOpts.fields.firstName.should.have.property({
                             label: 'Name',
                             renderer: linz.formtools.cellRenderers.overviewLink
                         });
                     });
 
                     it('should default to overview link rendered for title, if renderer is not provided', function () {
-                        overridesListOpts.columns.title.renderer.name.should.equal('overviewLinkRenderer');
+                        overridesListOpts.fields.title.renderer.name.should.equal('overviewLinkRenderer');
                     });
 
-                }); // end describe('column overrides')
+                }); // end describe('field overrides')
 
                 describe("using cell renderer", function () {
 
@@ -758,7 +758,7 @@ describe('formtools', function () {
 
                 });
 
-            })// end describe('columns')
+            })// end describe('fields')
 
             describe('actions', function () {
 
@@ -989,14 +989,14 @@ describe('formtools', function () {
 
             }); // end describe('sorting')
 
-            describe('virtual columns',function () {
+            describe('virtual fields',function () {
 
-                it('should assign custom cell renderer for virtual column', function () {
-                    overridesListOpts.columns.sendWelcomeEmail.renderer.name.should.equal('sendWelcomeEmailRenderer');
+                it('should assign custom cell renderer for virtual field', function () {
+                    overridesListOpts.fields.sendWelcomeEmail.renderer.name.should.equal('sendWelcomeEmailRenderer');
                 });
 
-                it('should execute custom cell renderer for virtual column', function (done) {
-                    overridesListOpts.columns.sendWelcomeEmail.renderer({}, 'sendWelcomeEmail', 'mmsUser', function (err, value) {
+                it('should execute custom cell renderer for virtual field', function (done) {
+                    overridesListOpts.fields.sendWelcomeEmail.renderer({}, 'sendWelcomeEmail', 'mmsUser', function (err, value) {
 
                         if (err) {
                             throw err;
@@ -1009,12 +1009,12 @@ describe('formtools', function () {
                     });
                 });
 
-                it('should throw an error if custom renderer is not provided for virtual column', function () {
+                it('should throw an error if custom renderer is not provided for virtual field', function () {
 
-                    var ErrorVirtualColumnsSchema,
-                        ErrorVirtualColumnsModel;
+                    var ErrorVirtualFieldsSchema,
+                        ErrorVirtualFieldsModel;
 
-                    ErrorVirtualColumnsSchema = new mongoose.Schema({
+                    ErrorVirtualFieldsSchema = new mongoose.Schema({
                         firstName: String,
                         lastName: String,
                         username: String,
@@ -1029,9 +1029,9 @@ describe('formtools', function () {
 
                     try {
 
-                        ErrorVirtualColumnsSchema.plugin(formtools.plugins.document, {
+                        ErrorVirtualFieldsSchema.plugin(formtools.plugins.document, {
                             list: {
-                                columns: {
+                                fields: {
                                     title: 'Label',
                                     firstName: {
                                         label: 'Name',
@@ -1086,13 +1086,13 @@ describe('formtools', function () {
 
                     } catch (e) {
 
-                        e.message.should.equal('Renderer attribute is missing for virtual column options.list.columns.sendWelcomeEmail');
+                        e.message.should.equal('Renderer attribute is missing for virtual field options.list.fields.sendWelcomeEmail');
 
                     }
 
                 });
 
-            }); // end describe('virtual columns')
+            }); // end describe('virtual fields')
 
             describe('filters', function () {
 

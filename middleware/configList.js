@@ -11,7 +11,7 @@ module.exports = function () {
 
         // construct the list object
         req.linz.configList = {
-            columns: {
+            fields: {
                 label: {
                     label: 'Label',
                     renderer: linz.formtools.cellRenderers.overviewLink
@@ -87,19 +87,19 @@ module.exports = function () {
                 // loop through each record
                 async.each(records, function (record, recordDone) {
 
-                    // loop through each column
-                    async.each(Object.keys(req.linz.configList.columns), function (column, columnDone) {
+                    // loop through each field
+                    async.each(Object.keys(req.linz.configList.fields), function (field, fieldDone) {
 
-                        req.linz.configList.columns[column].renderer(record[column], record, column, req.linz.configs[record._id], function (err, value) {
+                        req.linz.configList.fields[field].renderer(record[field], record, field, req.linz.configs[record._id], function (err, value) {
 
                             if (err) {
-                                return columnDone(err, records);
+                                return fieldDone(err, records);
                             }
 
                             var index = records.indexOf(record);
-                            records[index][column] = value;
+                            records[index][field] = value;
 
-                            return columnDone(null, records);
+                            return fieldDone(null, records);
 
                         });
 

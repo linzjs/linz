@@ -4,23 +4,23 @@ var linz = require('../'),
 /* GET /admin/configs/list */
 var route = function (req, res) {
 
-	// determine if we need to render the actions column
+	// determine if we need to render the actions field
 	async.some(req.linz.records, function (record, cb) {
 
-		// if any of these records can edit or reset, we should show the column
+		// if any of these records can edit or reset, we should show the field
 		if (record.permissions.canEdit !== false || record.permissions.canReset !== false) {
 			return cb(true);
 		}
 
 		return cb(false);
 
-	}, function (renderActionsColumn) {
+	}, function (renderActionsField) {
 
 		res.render(linz.api.views.viewPath('configList.jade'), {
 			list: req.linz.configList,
 			configs: req.linz.configs,
 			records: req.linz.records,
-			renderActionsColumn: renderActionsColumn
+			renderActionsField: renderActionsField
 		});
 
 	});
