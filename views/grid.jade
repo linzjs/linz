@@ -1,58 +1,59 @@
 extends modelIndex
 block main-content
-	div(class="table-responsive")
-		table.table.table-hover
-				thead
-					tr
-						th #
-						th
-							input(type="checkbox", data-linz-control="checked-all")
-						if permissions.canDelete !== false || permissions.canEdit !== false || model.list.recordActions.length
-							th.actions Actions
-						for field in model.list.fields
-							th= field.label
-				tbody
-					for record, index in records
+	.body
+		div(class="table-responsive")
+			table.table.table-hover
+					thead
 						tr
-							td= from + index + 1
-							td
-								input(type="checkbox", name="ids[]", value="#{record._id}", data-linz-control="checked-record")
+							th #
+							th
+								input(type="checkbox", data-linz-control="checked-all")
 							if permissions.canDelete !== false || permissions.canEdit !== false || model.list.recordActions.length
+								th.actions Actions
+							for field in model.list.fields
+								th= field.label
+					tbody
+						for record, index in records
+							tr
+								td= from + index + 1
 								td
-									div.btn-group
+									input(type="checkbox", name="ids[]", value="#{record._id}", data-linz-control="checked-record")
+								if permissions.canDelete !== false || permissions.canEdit !== false || model.list.recordActions.length
+									td
+										div.btn-group
 
-										if permissions.canEdit !== false
-											if record.edit && record.edit.disabled
-												a.btn.btn-default(href='', data-linz-control="edit", data-linz-disabled='true', data-linz-disabled-message=record.edit.message)
-													span(class="glyphicon glyphicon-pencil")
-											else
-												a.btn.btn-default(href=linz.api.url.getAdminLink(model, 'edit', record._id), data-linz-control="edit")
-													span(class="glyphicon glyphicon-pencil")
+											if permissions.canEdit !== false
+												if record.edit && record.edit.disabled
+													a.btn.btn-default(href='', data-linz-control="edit", data-linz-disabled='true', data-linz-disabled-message=record.edit.message)
+														span(class="glyphicon glyphicon-pencil")
+												else
+													a.btn.btn-default(href=linz.api.url.getAdminLink(model, 'edit', record._id), data-linz-control="edit")
+														span(class="glyphicon glyphicon-pencil")
 
-										if permissions.canDelete !== false
-											if record.delete && record.delete.disabled
-												a.btn.btn-default(href='', data-linz-control="delete", data-linz-disabled='true', data-linz-disabled-message=record.delete.message)
-													span(class="glyphicon glyphicon-trash")
-											else
-												a.btn.btn-default(href=linz.api.url.getAdminLink(model, 'delete', record._id), data-linz-control="delete")
-													span(class="glyphicon glyphicon-trash")
+											if permissions.canDelete !== false
+												if record.delete && record.delete.disabled
+													a.btn.btn-default(href='', data-linz-control="delete", data-linz-disabled='true', data-linz-disabled-message=record.delete.message)
+														span(class="glyphicon glyphicon-trash")
+												else
+													a.btn.btn-default(href=linz.api.url.getAdminLink(model, 'delete', record._id), data-linz-control="delete")
+														span(class="glyphicon glyphicon-trash")
 
-										if model.list.recordActions.length
-											div.btn-group
-												button.btn.btn-default.dropdown-toggle(type="button", data-toggle="dropdown")
-													span.caret
-												ul.dropdown-menu(role="menu")
-													for action in model.list.recordActions
-														li(role='presentation')
-															if action.type === 'header'
-																li(role='presentation', class='dropdown-header')= action.label
-															else if action.type === 'divider'
-																li(role='presentation', class='divider')
-															else
-																if (record.recordActions && record.recordActions[action.label] && record.recordActions[action.label].disabled)
-																	a(href='', data-linz-disabled='true', data-linz-disabled-message=record.recordActions[action.label].message)= action.label
+											if model.list.recordActions.length
+												div.btn-group
+													button.btn.btn-default.dropdown-toggle(type="button", data-toggle="dropdown")
+														span.caret
+													ul.dropdown-menu(role="menu")
+														for action in model.list.recordActions
+															li(role='presentation')
+																if action.type === 'header'
+																	li(role='presentation', class='dropdown-header')= action.label
+																else if action.type === 'divider'
+																	li(role='presentation', class='divider')
 																else
-																	a(href=linz.api.url.getAdminLink(model, action.action, record._id) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback)= action.label
+																	if (record.recordActions && record.recordActions[action.label] && record.recordActions[action.label].disabled)
+																		a(href='', data-linz-disabled='true', data-linz-disabled-message=record.recordActions[action.label].message)= action.label
+																	else
+																		a(href=linz.api.url.getAdminLink(model, action.action, record._id) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback)= action.label
 
-							each val in Object.keys(model.list.fields)
-								td!= record['rendered'][val]
+								each val in Object.keys(model.list.fields)
+									td!= record['rendered'][val]
