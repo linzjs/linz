@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v0.7.0.1 (6 March)
 
 ### IMPROVEMENTS
 
