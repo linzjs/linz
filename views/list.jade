@@ -1,0 +1,8 @@
+extends modelIndex
+block main-content
+	.list-group
+		each record in records
+			a(href='').list-group-item
+				h3.list-group-item-heading= record['rendered']['title']
+				if record['rendered']['title']
+					p.list-group-item-text= record['rendered']['title']
