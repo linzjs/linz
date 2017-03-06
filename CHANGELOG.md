@@ -4,8 +4,8 @@
 
 ### BREAKING CHANGES
 
-- Search and replaced `Grid` with `List`. You will need to change all your models to use `list` rather than `grid` now.
-- Search and replace `Columns` with `Fields`.
+- Search and replaced `Grid` with `List`. You will need to update all your models to use `list` rather than `grid` now.
+- Search and replaced `Columns` with `Fields`. You will need to update all your models to use `fields` rather than `columns` now.
 
 ## v0.7.0.0 (3 March 2017)
 
