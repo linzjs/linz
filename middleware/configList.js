@@ -9,8 +9,8 @@ module.exports = function () {
 		req.linz.configs = linz.get('configs');
         req.linz.configsPerm = {};
 
-        // construct the grid object
-        req.linz.configGrid = {
+        // construct the list object
+        req.linz.configList = {
             columns: {
                 label: {
                     label: 'Label',
@@ -88,9 +88,9 @@ module.exports = function () {
                 async.each(records, function (record, recordDone) {
 
                     // loop through each column
-                    async.each(Object.keys(req.linz.configGrid.columns), function (column, columnDone) {
+                    async.each(Object.keys(req.linz.configList.columns), function (column, columnDone) {
 
-                        req.linz.configGrid.columns[column].renderer(record[column], record, column, req.linz.configs[record._id], function (err, value) {
+                        req.linz.configList.columns[column].renderer(record[column], record, column, req.linz.configs[record._id], function (err, value) {
 
                             if (err) {
                                 return columnDone(err, records);

@@ -15,17 +15,17 @@ var route = function (req, res, next) {
         to = total;
     }
 
-    if (Object.keys(req.linz.model.grid.sortingBy).length) {
+    if (Object.keys(req.linz.model.list.sortingBy).length) {
 
         if (!req.linz.model.formData.sort) {
-            req.linz.model.formData.sort = req.linz.model.grid.sortingBy.field;
+            req.linz.model.formData.sort = req.linz.model.list.sortingBy.field;
         }
 
         sortDirection = ((req.linz.model.formData.sort.charAt(0) === '-') ? 'desc' : 'asc')
     }
 
-    // define default grid record actions modal settings in a format that jade can access easily
-    req.linz.model.grid.recordActions.forEach(function (action) {
+    // define default list record actions modal settings in a format that jade can access easily
+    req.linz.model.list.recordActions.forEach(function (action) {
 
         var modal = { active: false };
 
@@ -40,8 +40,8 @@ var route = function (req, res, next) {
 
     });
 
-    // define default grid action modal settings in a format that jade can access easily
-    req.linz.model.grid.actions.forEach(function (action) {
+    // define default list action modal settings in a format that jade can access easily
+    req.linz.model.list.actions.forEach(function (action) {
 
         var modal = { active: false };
 
@@ -65,11 +65,11 @@ var route = function (req, res, next) {
         total: total,
         pages: pages,
         pageSize: pageSize,
-        pageSizes: req.linz.model.grid.paging.sizes || linz.get('page sizes'),
+        pageSizes: req.linz.model.list.paging.sizes || linz.get('page sizes'),
         from: pageSize*page-pageSize,
         to: to,
-        pagination: (req.linz.model.grid.paging.active === true && total > pageSize),
-        sort: req.linz.model.grid.sortingBy,
+        pagination: (req.linz.model.list.paging.active === true && total > pageSize),
+        sort: req.linz.model.list.sortingBy,
         sortDirection: sortDirection,
         label: {
             singular: inflection.humanize(req.linz.model.linz.formtools.model.label, true),

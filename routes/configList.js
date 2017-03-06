@@ -17,7 +17,7 @@ var route = function (req, res) {
 	}, function (renderActionsColumn) {
 
 		res.render(linz.api.views.viewPath('configList.jade'), {
-			grid: req.linz.configGrid,
+			list: req.linz.configList,
 			configs: req.linz.configs,
 			records: req.linz.records,
 			renderActionsColumn: renderActionsColumn
