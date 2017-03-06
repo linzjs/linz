@@ -2,7 +2,9 @@
 
 ## Unreleased (6 March 2017)
 
-- Search and replace `Grid` with `List`.
+### BREAKING CHANGES
+
+- Search and replaced `Grid` with `List`. You will need to change all your models to use `list` rather than `grid` now.
 
 ## v0.7.0.0 (3 March 2017)
 
