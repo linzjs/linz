@@ -7,6 +7,11 @@
 - Search and replaced `Grid` with `List`. You will need to update all your models to use `list` rather than `grid` now.
 - Search and replaced `Columns` with `Fields`. You will need to update all your models to use `fields` rather than `columns` now.
 
+### IMPROVEMENTS
+
+- Model `list` now includes a `renderer` property. currently available renderers include `linz.formtools.listRenderers.default`, `linz.formtools.listRenderers.grid`, and `linz.formtools.listRenderers.list`.
+- If a listRenderer has not been set, the default `linz.formtools.listRenderers.grid` will be used.
+
 ## v0.7.0.0 (3 March 2017)
 
 ### BREAKING CHANGES
