@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### IMPROVEMENTS
+
+- Linz will automatically look for `label` and `name` fields when trying to determine the `title` of a record. When producing the list of fields to include in the select portion of the query, it will now include those, if the model has fields of the same names.
+
 ## v0.7.0.0 (3 March 2017)
 
 ### BREAKING CHANGES

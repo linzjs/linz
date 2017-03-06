@@ -170,8 +170,18 @@ module.exports = function  (req, res, next) {
                 // minimise the fields we're selecting
                 function (cb) {
 
-                    let select = Object.keys(req.linz.model.grid.columns).join(' ');
-                    query.select(select);
+                    let fields = Object.keys(req.linz.model.grid.columns);
+
+                    // Add the default fields we'll look for in the title virtual.
+                    if (req.linz.model.schema.tree.label) {
+                        fields.push('label');
+                    }
+
+                    if (req.linz.model.schema.tree.name) {
+                        fields.push('name');
+                    }
+
+                    query.select(fields.join(' '));
 
                     // If they've provided the `gridQuery` static, use it to allow customisation of the fields we'll retrieve.
                     if (!req.linz.model.gridQuery) {
