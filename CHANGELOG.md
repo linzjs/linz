@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased (6 March 2017)
+## v0.7.0.1 (10 March 2017)
 
 ### BREAKING CHANGES
 
