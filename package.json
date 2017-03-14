@@ -1,14 +1,14 @@
 {
   "name": "linz",
-  "version": "0.2.1",
-  "description": "NodeJS Content Management System.",
+  "version": "1.0.0-7.0.0",
+  "description": "Node.js administration interface framework",
   "main": "linz.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/mocha"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/smebberson/linz.git"
+    "url": "https://github.com/linzjs/linz.git"
   },
   "author": "Scott Mebberson",
   "readmeFilename": "README.md",
