@@ -1,5 +1,7 @@
 # linz
 
+[![npm](https://img.shields.io/npm/v/linz.svg)](https://www.npmjs.com/package/linz)
+
 An administration interface framework for Node.js.
 
 Linz is not a CMS, but is capable of CMS like functionality. Linz is a good choice of framework when the administration interface _is_ the website _itself_.
