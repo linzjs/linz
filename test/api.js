@@ -102,11 +102,11 @@ describe('Linz has an api', function () {
         });
 
         it('it should generate url with one query parameter', function () {
-            expect(linz.api.url.getLink(['one'])).to.equal('/admin/one');
+            expect(linz.api.url.getLink('one')).to.equal('/admin/one');
         });
 
         it('it should generate url with multiple query parameters', function () {
-            expect(linz.api.url.getLink(['one','two','three'])).to.equal('/admin/one/two/three');
+            expect(linz.api.url.getLink('one', 'two', 'three')).to.equal('/admin/one/two/three');
         });
 
     });
