@@ -3,13 +3,6 @@
 var should = require('should'),
     linz = require('../linz');
 
-linz.init({
-    'mongo': 'mongodb://127.0.0.1/mongoose-versions-test',
-    'user model': 'user',
-    'load models': false,
-    'load configs': false
-});
-
 // setup a basic user model
 var UserSchema = new linz.mongoose.Schema({
     username: String,

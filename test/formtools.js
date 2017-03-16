@@ -6,13 +6,6 @@ var linz = require('../linz'),
 // We'll also need `should`.
 require('should');
 
-linz.init({
-    'mongo': 'mongodb://127.0.0.1/mongoose-formtools-test',
-    'user model': 'user',
-    'load models': false,
-    'load configs': false
-});
-
 // setup a basic user model
 var UserSchema = new linz.mongoose.Schema({
     username: String,
@@ -1873,12 +1866,12 @@ describe('formtools', function () {
 
                     });
 
-                    // it('should execute the query in mongoose find() with no error', function (done) {
-                    //     OverridesPostModel.find(result, function (err) {
-                    //         (err === null).should.be.true;
-                    //         done();
-                    //     });
-                    // });
+                    it('should execute the query in mongoose find() with no error', function (done) {
+                        OverridesPostModel.find(result, function (err) {
+                            (err === null).should.be.true;
+                            done();
+                        });
+                    });
 
                 });
 
