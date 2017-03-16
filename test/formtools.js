@@ -1719,7 +1719,7 @@ describe('formtools', function () {
 
                     it('should handle number filter', function () {
 
-                        var filter = { code: '100' };
+                        var filter = { code: 100 };
 
                         filters = OverridesPostModel.addSearchFilter(filters, filter);
 
