@@ -1,5 +1,5 @@
 
-var linz = require('linz'),
+var linz = require('../linz'),
     async = require('async'),
     clone = require('clone');
 
