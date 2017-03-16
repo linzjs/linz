@@ -3,10 +3,18 @@ language: node_js
 node_js:
 - '6'
 env:
-  - NODE_ENV=development
+- NODE_ENV=development
 services:
 - docker
 before_script:
 - npm install
 script:
 - npm test
+deploy:
+  provider: npm
+  email: scott@scottmebberson.com
+  api_key:
+    secure: J/A6HqYCU9Bg7YxQA+erI3TBw2nFfQxM4ELpjx+6YfJ1NPDkPmBuJ0uEXj7tiuuPcPxPE+IPcWlJKdFtjpt1iJNW6GHwUJ59zYhSBFjwRL0XpMDAH4K2YApGuolxVucgAyU0HAfJYXYwUpEOnOcnCyu5ynyRFeCWtSFBVVhHD+k=
+  on:
+    tags: true
+    repo: linzjs/linz
