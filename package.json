@@ -4,6 +4,7 @@
   "description": "Node.js administration interface framework",
   "main": "linz.js",
   "scripts": {
+    "pretest": "./test/scripts/pretest.sh",
     "test": "./node_modules/.bin/mocha"
   },
   "repository": {

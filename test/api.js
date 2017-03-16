@@ -1,3 +1,5 @@
+/* eslint-env mocha */
+
 var expect = require('chai').expect,
     linz = require('../linz'),
     mongoose;
@@ -14,9 +16,9 @@ mongoose = linz.mongoose;
 
 describe('Linz has an api', function () {
 
-    var UserSchema = new mongoose.Schema({ label: String }),
-        UserModel = mongoose.model('user', UserSchema);
+    var UserSchema = new mongoose.Schema({ label: String });
 
+    mongoose.model('user', UserSchema);
 
 	describe('has a getAdminLink method', function () {
 
@@ -24,7 +26,7 @@ describe('Linz has an api', function () {
             expect(linz.api.url.getAdminLink()).to.equal('/admin');
         });
 
-        describe("on models", function () {
+        describe('on models', function () {
 
             it('it should allow a list action', function () {
                 expect(linz.api.url.getAdminLink(mongoose.model('user'))).to.equal('/admin/model/user/list');
@@ -40,7 +42,7 @@ describe('Linz has an api', function () {
             });
         });
 
-        describe("on records", function () {
+        describe('on records', function () {
 
             it('it should allow an overview action', function () {
                 expect(linz.api.url.getAdminLink(mongoose.model('user'), undefined, 'id')).to.equal('/admin/model/user/id/overview');
@@ -61,7 +63,7 @@ describe('Linz has an api', function () {
 
         });
 
-        describe("on configs", function () {
+        describe('on configs', function () {
 
             var config = {
                     schema: new mongoose.Schema({ label: String }),

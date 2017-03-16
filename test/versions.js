@@ -1,3 +1,5 @@
+/* eslint-env mocha */
+
 var should = require('should'),
     linz = require('../linz');
 
@@ -19,12 +21,9 @@ UserSchema.virtual('hasAdminAccess').get(function () {
     return true;
 });
 
-var User = linz.mongoose.model('UserVersions', UserSchema);
-
 // setup easy references
 var mongoose = linz.mongoose,
-    versions = linz.versions,
-    async = require('async');
+    versions = linz.versions;
 
 describe('versions', function () {
 
@@ -60,14 +59,14 @@ describe('versions', function () {
                     collection: 'testschema_versions'
                 });
 
-                TestModel = mongoose.model('TestModel', TestSchema);
+                let TestModelDefaults = mongoose.model('TestModelDefaults', TestSchema);
 
-                TestModel.getVersionsSettings(function (err, settings) {
-                    if (err) {
-                        done(err);
-                    }
+                TestModelDefaults.getVersionsSettings(function (err, settings) {
+
                     versionsSetting = settings;
-                    return done(null);
+
+                    return done(err);
+
                 });
 
             });
@@ -99,13 +98,13 @@ describe('versions', function () {
                 TestSchema1 = new mongoose.Schema({ label: String }),
                 dateRenderer = function (cb) {
                     return cb(null, 'date');
-                }
+                },
                 referenceRenderer = function (cb) {
                     return cb(null, 'reference');
-                }
+                },
                 referenceNameRenderer = function (cb) {
                     return cb(null, 'referenceName');
-                }
+                },
                 versionsRenderer = function (cb) {
                     return cb(null, 'body');
                 };
@@ -125,14 +124,14 @@ describe('versions', function () {
                     }
                 });
 
-                TestModel1 = mongoose.model('TestModel1', TestSchema1);
+                let TestModelOverwrites = mongoose.model('TestModelOverwrites', TestSchema1);
 
-                TestModel1.getVersionsSettings(function (err, settings) {
-                    if (err) {
-                        done(err);
-                    }
+                TestModelOverwrites.getVersionsSettings(function (err, settings) {
+
                     versionsSetting = settings;
-                    return done(null);
+
+                    return done(err);
+
                 });
 
             });

@@ -1,6 +1,10 @@
-var should = require('should'),
-    linz = require('../linz'),
+/* eslint-env mocha */
+
+var linz = require('../linz'),
     moment = require('moment');
+
+// We'll also need `should`.
+require('should');
 
 linz.init({
     'mongo': 'mongodb://127.0.0.1/mongoose-formtools-test',
@@ -37,8 +41,7 @@ var mongoose = linz.mongoose,
 describe('formtools', function () {
 
 	var PostSchema,
-		PostModel,
-		Text;
+		PostModel;
 
 	describe('extends the schema', function () {
 
@@ -124,6 +127,7 @@ describe('formtools', function () {
 
         var postModel,
             postModelOptions,
+            CommentSchema,
             commentModel,
             commentModelOptions,
             LocationSchema,
@@ -254,10 +258,15 @@ describe('formtools', function () {
 
         var OverridesPostSchema,
             OverridesPostModel,
+            labelsOpts,
             listOpts,
             overridesListOpts,
             formOpts,
+            overviewOpts,
             overridesFormOpts,
+            overridesOverviewOpts,
+            permissionsOpts,
+            overridesPermissionsOpts,
             list = [
                 { label: 'option 1', value: 'one'},
                 { label: 'option 2', value: 'two'},
@@ -268,7 +277,6 @@ describe('formtools', function () {
                 'nt': 'Northern Territory'
             },
             CategoriesSchema,
-            CategoriesModel,
             CommentsSchema;
 
         before(function (done) {
@@ -280,7 +288,7 @@ describe('formtools', function () {
 
             CategoriesSchema.plugin(formtools.plugins.document, {});
 
-            CategoriesModel = mongoose.model('CategoriesModel', CategoriesSchema);
+            mongoose.model('CategoriesModel', CategoriesSchema);
 
             CommentsSchema = new mongoose.Schema({
                 body: String,
@@ -336,7 +344,7 @@ describe('formtools', function () {
                         type: 'text'
                     },
                     favourites: {
-                        transform: function (value, mode) {
+                        transform: function (value) {
                             return value;
                         }
                     },
@@ -392,6 +400,15 @@ describe('formtools', function () {
             });
 
             OverridesPostSchema.plugin(formtools.plugins.document, {
+                labels: {
+                    firstName: 'First Name',
+                    username: 'Username',
+                    password: 'Password',
+                    email: 'Email',
+                    bActive: 'Is active',
+                    groups: 'Groups',
+                    sendWelcomeEmail: 'Welcome email'
+                },
                 list: {
                     fields: {
                         title: 'Label',
@@ -399,29 +416,23 @@ describe('formtools', function () {
                             label: 'Name',
                             renderer: linz.formtools.cellRenderers.overviewLink
                         },
-                        email: 'Email',
-                        username: 'Username',
-                        bActive: 'Is active',
-                        groups: {
-                            label: 'Groups'
-                        },
+                        email: true,
+                        username: true,
+                        bActive: true,
+                        groups: true,
                         sendWelcomeEmail: {
-                            label: 'Welcome email',
+                            label: 'Welcome emails',
                             virtual: true,
                             renderer: function sendWelcomeEmailRenderer(record, fieldName, model, callback) {
-                               callback(null,'success');
+                               callback(null, 'success');
                             }
                         }
                     },
-                    sortBy: ['firstName','lastName','dateModified'],
-                    canCreate: false,
-                    canEdit: false,
-                    canDelete: false,
-                    showSummary: false,
+                    sortBy: ['firstName', 'lastName', 'dateModified'],
                     paging: {
                         active: false,
                         size: 50,
-                        sizes: [25,50,75,100]
+                        sizes: [25, 50, 75, 100]
                     },
                     filters: {
                         firstName: 'First name',
@@ -500,16 +511,16 @@ describe('formtools', function () {
                         }
                     },
                     favourites: {
-                        transform: function transformFavourites (value, mode) {
+                        transform: function transformFavourites (value) {
                             return value;
                         },
                         create: {
-                            transform: function transformFavouritesCreate (value, mode) {
+                            transform: function transformFavouritesCreate (value) {
                                 return value;
                             }
                         },
                         edit: {
-                            transform: function transformFavouritesEdit(value, mode) {
+                            transform: function transformFavouritesEdit(value) {
                                 return value;
                             }
                         }
@@ -563,6 +574,15 @@ describe('formtools', function () {
                     body: function bodyRenderer (record, callback) {
                         return callback('body content');
                     }
+                },
+                permissions: {
+                    canCreate: false,
+                    canEdit: false,
+                    canDelete: false,
+                    canExport: false,
+                    canList: false,
+                    canView: false,
+                    canViewRaw: false
                 }
             });
 
@@ -571,44 +591,63 @@ describe('formtools', function () {
             async.parallel([
 
                 function (cb) {
-                    PostModel.getList(function (err, result) {
+                    PostModel.getLabels(function (err, result) {
+                        labelsOpts = result;
+                        cb(null);
+                    });
+                },
+
+                function (cb) {
+                    PostModel.getList(undefined, function (err, result) {
                         listOpts = result;
                         cb(null);
                     });
                 },
 
                 function (cb) {
-                    OverridesPostModel.getList(function (err, result) {
+                    OverridesPostModel.getList(undefined, function (err, result) {
                         overridesListOpts = result;
                         cb(null);
                     });
                 },
 
                 function (cb) {
-
-                    PostModel.getForm(function (err, result) {
+                    PostModel.getForm(undefined, function (err, result) {
                         formOpts = result;
                         cb(null);
                     });
                 },
 
                 function (cb) {
+                    PostModel.getPermissions(undefined, function (err, result) {
+                        permissionsOpts = result;
+                        cb(null);
+                    });
+                },
 
-                    OverridesPostModel.getForm(function (err, result) {
+                function (cb) {
+                    OverridesPostModel.getPermissions(undefined, function (err, result) {
+                        overridesPermissionsOpts = result;
+                        cb(null);
+                    });
+                },
+
+                function (cb) {
+                    OverridesPostModel.getForm(undefined, function (err, result) {
                         overridesFormOpts = result;
                         cb(null);
                     });
                 },
 
                 function (cb) {
-                    PostModel.getOverview(function (err, result) {
+                    PostModel.getOverview(undefined, function (err, result) {
                         overviewOpts = result;
                         cb(null);
                     });
                 },
 
                 function (cb) {
-                    OverridesPostModel.getOverview(function (err, result) {
+                    OverridesPostModel.getOverview(undefined, function (err, result) {
                         overridesOverviewOpts = result;
                         cb(null);
                     });
@@ -622,6 +661,31 @@ describe('formtools', function () {
             });
 
 		}); // end before() for describe('scaffold')
+
+        describe('labels', function () {
+
+            it('should complete any missing labels with thier field names', function () {
+
+                labelsOpts.should.have.property('secondCategory');
+                labelsOpts.secondCategory.should.equal('secondCategory');
+
+            });
+
+            it('should default date modified', function () {
+
+                labelsOpts.should.have.property('dateModified');
+                labelsOpts.dateModified.should.equal('Date modified');
+
+            });
+
+            it('should default date created', function () {
+
+                labelsOpts.should.have.property('dateCreated');
+                labelsOpts.dateCreated.should.equal('Date created');
+
+            });
+
+        });
 
         describe('list', function () {
 
@@ -647,7 +711,7 @@ describe('formtools', function () {
 
                 }); // end describe('fields defaults')
 
-                describe("allowing field overrides", function () {
+                describe('allowing field overrides', function () {
 
                     it('should set custom fields', function () {
                         overridesListOpts.fields.firstName.should.have.property({
@@ -662,13 +726,13 @@ describe('formtools', function () {
 
                 }); // end describe('field overrides')
 
-                describe("using cell renderer", function () {
+                describe('using cell renderer', function () {
 
-                    describe("array", function () {
+                    describe('array', function () {
 
-                        it("format an array of strings", function (done) {
+                        it('format an array of strings', function (done) {
 
-                            linz.formtools.cellRenderers.array(['one','two','three'], [], 'firstName', PostModel, function (err, result) {
+                            linz.formtools.cellRenderers.array(['one', 'two', 'three'], [], 'firstName', PostModel, function (err, result) {
 
                                 (err === null).should.be.ok;
                                 result.should.equal('one, two, three');
@@ -680,14 +744,16 @@ describe('formtools', function () {
 
                     });
 
-                    describe("date", function () {
+                    describe('date', function () {
 
-                        it("format a date object", function (done) {
+                        it('format a date object', function (done) {
 
-                            linz.formtools.cellRenderers.date(new Date(2014,0,1,0,0,0), [], 'firstName', PostModel, function (err, result) {
+                            const d = new Date(2014, 0, 1, 0, 0, 0);
+
+                            linz.formtools.cellRenderers.date(d, [], 'firstName', PostModel, function (err, result) {
 
                                 (err === null).should.be.ok;
-                                result.should.equal('Wed 01/01/2014');
+                                result.should.equal(moment(d).format(linz.get('date format')));
                                 done();
 
                             });
@@ -696,9 +762,9 @@ describe('formtools', function () {
 
                     });
 
-                    describe("link", function () {
+                    describe('link', function () {
 
-                        it("format a string with a link to the overview", function (done) {
+                        it('format a string with a link to the overview', function (done) {
 
                             linz.formtools.cellRenderers.overviewLink('label', {_id: '1'}, 'firstName', PostModel, function (err, result) {
 
@@ -712,9 +778,9 @@ describe('formtools', function () {
 
                     });
 
-                    describe("url", function () {
+                    describe('url', function () {
 
-                        it("format a url string", function (done) {
+                        it('format a url string', function (done) {
 
                             linz.formtools.cellRenderers.url('http://www.google.com', {}, 'firstName', PostModel.modelName, function (err, result) {
 
@@ -728,11 +794,11 @@ describe('formtools', function () {
 
                     });
 
-                    describe("default", function () {
+                    describe('default', function () {
 
-                        it("format an array of strings", function (done) {
+                        it('format an array of strings', function (done) {
 
-                            linz.formtools.cellRenderers.default(['one','two','three'], [], 'firstName', PostModel, function (err, result) {
+                            linz.formtools.cellRenderers.default(['one', 'two', 'three'], [], 'firstName', PostModel, function (err, result) {
 
                                 (err === null).should.be.ok;
                                 result.should.equal('one, two, three');
@@ -742,12 +808,14 @@ describe('formtools', function () {
 
                         });
 
-                        it("format a date object", function (done) {
+                        it('format a date object', function (done) {
 
-                            linz.formtools.cellRenderers.default(new Date(2014,0,1,0,0,0), [], 'firstName', PostModel, function (err, result) {
+                            const d = new Date(2014, 0, 1, 0, 0, 0);
+
+                            linz.formtools.cellRenderers.default(d, [], 'firstName', PostModel, function (err, result) {
 
                                 (err === null).should.be.ok;
-                                result.should.equal('Wed 01/01/2014');
+                                result.should.equal(moment(d).format(linz.get('date format')));
                                 done();
 
                             });
@@ -760,45 +828,76 @@ describe('formtools', function () {
 
             })// end describe('fields')
 
-            describe('actions', function () {
+            describe('permissions', function () {
 
-                describe('default actions', function () {
+                describe('default permissions', function () {
 
-                    it('should be able to create new record', function () {
-                        listOpts.canCreate.should.be.true;
+                    it('should override can create', function () {
+                        permissionsOpts.should.be.empty;
                     });
 
-                    it('should be able to edit a record', function () {
-                        listOpts.canEdit.should.be.true;
+                    it('should override can edit', function () {
+                        permissionsOpts.should.be.empty;
                     });
 
-                    it('should be able to delete a record', function () {
-                        listOpts.canDelete.should.be.true;
+                    it('should override can delete', function () {
+                        permissionsOpts.should.be.empty;
                     });
 
-                    it('should display a summary', function () {
-                        listOpts.showSummary.should.be.true;
+                    it('should override can export', function () {
+                        permissionsOpts.should.be.empty;
+                    });
+
+                    it('should override can list', function () {
+                        permissionsOpts.should.be.empty;
+                    });
+
+                    it('should override can view', function () {
+                        permissionsOpts.should.be.empty;
+                    });
+
+                    it('should override can view raw', function () {
+                        permissionsOpts.should.be.empty
                     });
 
                 }); // end describe('default actions')
 
-                describe('overrides actions', function () {
+                describe('overrides permissions', function () {
 
                     it('should override can create', function () {
-                        overridesListOpts.canCreate.should.be.false;
-                    })
+                        overridesPermissionsOpts.canCreate.should.exist;
+                        overridesPermissionsOpts.canCreate.should.be.false;
+                    });
 
                     it('should override can edit', function () {
-                        overridesListOpts.canEdit.should.be.false;
-                    })
+                        overridesPermissionsOpts.canEdit.should.exist;
+                        overridesPermissionsOpts.canEdit.should.be.false;
+                    });
 
                     it('should override can delete', function () {
-                        overridesListOpts.canDelete.should.be.false;
-                    })
+                        overridesPermissionsOpts.canDelete.should.exist;
+                        overridesPermissionsOpts.canDelete.should.be.false;
+                    });
 
-                    it('should override show summary', function () {
-                        overridesListOpts.showSummary.should.be.false;
-                    })
+                    it('should override can export', function () {
+                        overridesPermissionsOpts.canExport.should.exist;
+                        overridesPermissionsOpts.canExport.should.be.false;
+                    });
+
+                    it('should override can list', function () {
+                        overridesPermissionsOpts.canList.should.exist;
+                        overridesPermissionsOpts.canList.should.be.false;
+                    });
+
+                    it('should override can view', function () {
+                        overridesPermissionsOpts.canView.should.exist;
+                        overridesPermissionsOpts.canView.should.be.false;
+                    });
+
+                    it('should override can view raw', function () {
+                        overridesPermissionsOpts.canViewRaw.should.exist;
+                        overridesPermissionsOpts.canViewRaw.should.be.false;
+                    });
 
                 }); // end describe('overrides actions')
 
@@ -815,7 +914,7 @@ describe('formtools', function () {
                     overridesListOpts.groupActions.should.be.an.instanceof(Array);
                     overridesListOpts.groupActions[0].should.have.properties({
                         label: 'Assign category',
-                        action: 'group/category'
+                        action: 'action/group/category'
                     });
                 });
 
@@ -832,7 +931,7 @@ describe('formtools', function () {
                     overridesListOpts.recordActions.should.be.an.instanceof(Array);
                     overridesListOpts.recordActions[0].should.have.properties({
                         label: 'Send welcome email',
-                        action: 'send-welcome-email'
+                        action: 'action/send-welcome-email'
                     });
                 });
 
@@ -844,27 +943,9 @@ describe('formtools', function () {
 
                     it('export object should exist', function () {
                         (listOpts.export !== undefined).should.be.ok;
+                        listOpts.export.should.be.an.instanceOf(Array);
+                        listOpts.export.should.be.empty;
                         (typeof listOpts.export === 'object').should.be.ok;
-                    });
-
-                    it('export should be disabled', function () {
-                        listOpts.export.should.have.property.enable;
-                        listOpts.export.enable.should.be.false;
-                    });
-
-                    it('export should have a label', function () {
-                        listOpts.export.should.have.property.label;
-                        listOpts.export.label.should.equal('Export');
-                    });
-
-                    it('export should have an action', function () {
-                        listOpts.export.should.have.property.action;
-                        listOpts.export.action.should.equal('export');
-                    });
-
-                    it('export should have an exclusions', function () {
-                        listOpts.export.should.have.property.exclusions;
-                        listOpts.export.exclusions.should.equal('_id,dateCreated,dateModified,createdBy,modifiedBy');
                     });
 
                 }); // end describe('defaults')
@@ -872,28 +953,31 @@ describe('formtools', function () {
                 describe('overrides', function () {
 
                     it('export object should exist', function () {
+
                         (overridesListOpts.export !== undefined).should.be.ok;
-                        (typeof overridesListOpts.export === 'object').should.be.ok;
+                        overridesListOpts.export.should.be.an.instanceOf(Array);
+                        overridesListOpts.export.should.have.length(1);
+
                     });
 
                     it('should overwrite enable', function () {
-                        overridesListOpts.export.should.have.property.enable;
-                        overridesListOpts.export.enable.should.be.true;
+                        overridesListOpts.export[0].should.have.property.enabled;
+                        overridesListOpts.export[0].enabled.should.be.false;
                     });
 
                     it('should overwrite label', function () {
-                        overridesListOpts.export.should.have.property.label;
-                        overridesListOpts.export.label.should.equal('Custom export');
+                        overridesListOpts.export[0].should.have.property.label;
+                        overridesListOpts.export[0].label.should.equal('Custom export');
                     });
 
                     it('should overwrite action', function () {
-                        overridesListOpts.export.should.have.property.action;
-                        overridesListOpts.export.action.should.equal('custom-export-url');
+                        overridesListOpts.export[0].should.have.property.action;
+                        overridesListOpts.export[0].action.should.equal('custom-export-url');
                     });
 
                     it('should overwrite the exclusions', function () {
-                        overridesListOpts.export.should.have.property.exclusions;
-                        overridesListOpts.export.exclusions.should.equal('_id,groups');
+                        overridesListOpts.export[0].should.have.property.exclusions;
+                        overridesListOpts.export[0].exclusions.should.equal('_id,groups');
                     });
 
                 }); // end describe('overrides')
@@ -921,7 +1005,7 @@ describe('formtools', function () {
                     });
 
                     it('should have sizes [20,50,100,200]', function () {
-                        listOpts.paging.sizes.should.be.eql([20,50,100,200]);
+                        listOpts.paging.sizes.should.be.eql([20, 50, 100, 200]);
                     });
 
                 }); // end describe('defaults')
@@ -945,7 +1029,7 @@ describe('formtools', function () {
                     });
 
                     it('should override sizes [25,50,75,100]', function () {
-                        overridesListOpts.paging.sizes.should.be.eql([25,50,75,100]);
+                        overridesListOpts.paging.sizes.should.be.eql([25, 50, 75, 100]);
                     });
 
                 }); // end describe('overrides')
@@ -989,7 +1073,7 @@ describe('formtools', function () {
 
             }); // end describe('sorting')
 
-            describe('virtual fields',function () {
+            describe('virtual fields', function () {
 
                 it('should assign custom cell renderer for virtual field', function () {
                     overridesListOpts.fields.sendWelcomeEmail.renderer.name.should.equal('sendWelcomeEmailRenderer');
@@ -1011,10 +1095,7 @@ describe('formtools', function () {
 
                 it('should throw an error if custom renderer is not provided for virtual field', function () {
 
-                    var ErrorVirtualFieldsSchema,
-                        ErrorVirtualFieldsModel;
-
-                    ErrorVirtualFieldsSchema = new mongoose.Schema({
+                    var ErrorVirtualFieldsSchema = new mongoose.Schema({
                         firstName: String,
                         lastName: String,
                         username: String,
@@ -1048,7 +1129,7 @@ describe('formtools', function () {
                                         virtual: true
                                     }
                                 },
-                                sortBy: ['firstName','lastName','dateModified'],
+                                sortBy: ['firstName', 'lastName', 'dateModified'],
                                 canCreate: false,
                                 canEdit: false,
                                 canDelete: false,
@@ -1122,7 +1203,7 @@ describe('formtools', function () {
 
                         it('should render text input field', function (done) {
                             var fieldName = 'firstName';
-                            linz.formtools.filters.default.renderer(fieldName,function (err, result) {
+                            linz.formtools.filters.default.renderer(fieldName, function (err, result) {
                                 result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" required>');
                                 done();
                             });
@@ -1131,7 +1212,7 @@ describe('formtools', function () {
 
                         it('should render text input field with form value', function (done) {
                             var fieldName = 'firstName';
-                            linz.formtools.filters.default.bind(fieldName, { firstName: ['john'] },function (err, result) {
+                            linz.formtools.filters.default.bind(fieldName, { firstName: ['john'] }, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
                                 result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="john" required>');
                                 done();
@@ -1140,7 +1221,7 @@ describe('formtools', function () {
 
                         it('should render multiple text input fields with form values if there are multiple filters on the same field', function (done) {
                             var fieldName = 'firstName';
-                            linz.formtools.filters.default.bind(fieldName, { firstName: ['john','jane'] },function (err, result) {
+                            linz.formtools.filters.default.bind(fieldName, { firstName: ['john', 'jane'] }, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(2);
                                 result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="john" required>');
                                 result[1].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="jane" required>');
@@ -1150,28 +1231,28 @@ describe('formtools', function () {
 
                         it('should create filter using regex matching one keyword search', function () {
                            var fieldName = 'firstName';
-                           linz.formtools.filters.default.filter(fieldName,{ 'firstName': ['john'] }, function (err, result) {
+                           linz.formtools.filters.default.filter(fieldName, { 'firstName': ['john'] }, function (err, result) {
                                result.should.have.property(fieldName, { $regex: /john/ig});
                            });
                         });
 
                         it('should create filter using regex matching multiple keywords search', function () {
                            var fieldName = 'firstName';
-                           linz.formtools.filters.default.filter(fieldName,{ 'firstName': ['john william'] }, function (err, result) {
+                           linz.formtools.filters.default.filter(fieldName, { 'firstName': ['john william'] }, function (err, result) {
                                result.should.have.property(fieldName, { $regex: /john william/ig});
                            });
                         });
 
                         it('should create filter using regex (OR) matching for multiple filters on the same field', function () {
                            var fieldName = 'firstName';
-                           linz.formtools.filters.default.filter(fieldName,{ 'firstName': ['john','jane'] }, function (err, result) {
+                           linz.formtools.filters.default.filter(fieldName, { 'firstName': ['john', 'jane'] }, function (err, result) {
                                result.should.have.property(fieldName, { $regex: /john|jane/ig});
                            });
                         });
 
                         it('should trim leading and trailing spaces on search keywords and any additional one between words', function () {
                            var fieldName = 'firstName';
-                           linz.formtools.filters.default.filter(fieldName,{ 'firstName': ['   john    william   '] }, function (err, result) {
+                           linz.formtools.filters.default.filter(fieldName, { 'firstName': ['   john    william   '] }, function (err, result) {
                                result.should.have.property(fieldName, { $regex: /john william/ig});
                            });
                         });
@@ -1190,7 +1271,7 @@ describe('formtools', function () {
 
                         it('should render date input field', function (done) {
                             var fieldName = 'dateCreated';
-                            linz.formtools.filters.date.renderer(fieldName,function (err, result) {
+                            linz.formtools.filters.date.renderer(fieldName, function (err, result) {
                                 result.should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" data-ui-datepicker="true" required>');
                                 done();
                             });
@@ -1199,7 +1280,7 @@ describe('formtools', function () {
 
                         it('should render date input field with form value', function (done) {
                             var fieldName = 'dateCreated';
-                            linz.formtools.filters.date.bind(fieldName, { dateCreated: ['2014-05-16'] },function (err, result) {
+                            linz.formtools.filters.date.bind(fieldName, { dateCreated: ['2014-05-16'] }, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
                                 result[0].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-16" data-ui-datepicker="true" required>');
                                 done();
@@ -1209,7 +1290,7 @@ describe('formtools', function () {
 
                         it('should render multiple date input fields with form values if there are multiple filters on the same field', function (done) {
                             var fieldName = 'dateCreated';
-                            linz.formtools.filters.date.bind(fieldName, { dateCreated: ['2014-05-16','2014-05-17'] },function (err, result) {
+                            linz.formtools.filters.date.bind(fieldName, { dateCreated: ['2014-05-16', '2014-05-17'] }, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(2);
                                 result[0].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-16" data-ui-datepicker="true" required>');
                                 result[1].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-17" data-ui-datepicker="true" required>');
@@ -1221,7 +1302,7 @@ describe('formtools', function () {
 
                             var fieldName = 'dateCreated',
                                 filterDates = ['2014-05-16'];
-                            linz.formtools.filters.date.filter(fieldName,{ 'dateCreated': filterDates }, function (err, result) {
+                            linz.formtools.filters.date.filter(fieldName, { 'dateCreated': filterDates }, function (err, result) {
                                 result.should.have.property(fieldName, {
                                     $gte: moment(filterDates[0], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates[0], 'YYYY-MM-DD').endOf('day').toDate()
                                 });
@@ -1232,9 +1313,9 @@ describe('formtools', function () {
                         it('should return a filter object for multiple date inputs', function () {
 
                             var fieldName = 'dateCreated',
-                                filterDates = ['2014-05-16','2014-05-18','2014-05-20'];
+                                filterDates = ['2014-05-16', '2014-05-18', '2014-05-20'];
 
-                            linz.formtools.filters.date.filter(fieldName,{ 'dateCreated': filterDates }, function (err, result) {
+                            linz.formtools.filters.date.filter(fieldName, { 'dateCreated': filterDates }, function (err, result) {
                                result.should.have.property(fieldName, [
                                         { $gte: moment(filterDates[0], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates[0], 'YYYY-MM-DD').endOf('day').toDate() },
                                         { $gte: moment(filterDates[1], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates[1], 'YYYY-MM-DD').endOf('day').toDate() },
@@ -1249,7 +1330,7 @@ describe('formtools', function () {
 
                             var fieldName = 'dateCreated',
                                 filterDates = [];
-                            linz.formtools.filters.date.filter(fieldName,{ 'dateCreated': filterDates }, function (err, result) {
+                            linz.formtools.filters.date.filter(fieldName, { 'dateCreated': filterDates }, function (err) {
                                 err.message.should.equal('Date field is empty');
                             });
 
@@ -1258,9 +1339,9 @@ describe('formtools', function () {
                         it('should throw error if a date in one the multiple date filters is not a valid date', function () {
 
                             var fieldName = 'dateCreated',
-                                filterDates = ['2014-05-16','2014-05-18','test date'];
+                                filterDates = ['2014-05-16', '2014-05-18', 'test date'];
 
-                            linz.formtools.filters.date.filter(fieldName,{ 'dateCreated': filterDates }, function (err, result) {
+                            linz.formtools.filters.date.filter(fieldName, { 'dateCreated': filterDates }, function (err) {
                                 err.message.should.equal('One of the dates is invalid');
                             });
 
@@ -1272,7 +1353,7 @@ describe('formtools', function () {
 
                         it('should render 2 date input fields', function (done) {
                             var fieldName = 'dateModified';
-                            linz.formtools.filters.dateRange.renderer(fieldName,function (err, result) {
+                            linz.formtools.filters.dateRange.renderer(fieldName, function (err, result) {
                                 result.should.equal('<span><input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" data-ui-datepicker="true" required></span><span><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" data-ui-datepicker="true" required></span>');
                                 done();
                             });
@@ -1291,7 +1372,7 @@ describe('formtools', function () {
 
                         it('should render multiple date range input fields with form values for multiple filters on the same field', function () {
                             var fieldName = 'dateCreated',
-                                filterDates = { dateCreated: { dateFrom: ['2014-05-16','2014-05-18'], dateTo: ['2014-05-17','2014-05-19'] } };
+                                filterDates = { dateCreated: { dateFrom: ['2014-05-16', '2014-05-18'], dateTo: ['2014-05-17', '2014-05-19'] } };
 
                             linz.formtools.filters.dateRange.bind(fieldName, filterDates, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(2);
@@ -1312,7 +1393,7 @@ describe('formtools', function () {
                         it('should return a filter object using OR opertor when filtering on multiple date range inputs', function () {
 
                             var fieldName = 'dateCreated',
-                                filterDates = { dateCreated: { dateFrom: ['2014-05-16','2014-05-18','2014-05-20'], dateTo: ['2014-05-16','2014-05-18','2014-05-20'] } };
+                                filterDates = { dateCreated: { dateFrom: ['2014-05-16', '2014-05-18', '2014-05-20'], dateTo: ['2014-05-16', '2014-05-18', '2014-05-20'] } };
 
                             linz.formtools.filters.dateRange.filter(fieldName, filterDates, function (err, result) {
 
@@ -1331,7 +1412,7 @@ describe('formtools', function () {
                             var fieldName = 'dateCreated',
                                 filterDates = { dateCreated: { dateFrom: ['2014-05-16'] } };
 
-                            linz.formtools.filters.dateRange.filter(fieldName, filterDates, function (err, result) {
+                            linz.formtools.filters.dateRange.filter(fieldName, filterDates, function (err) {
                                 err.message.should.equal('One of the date fields is empty');
                             });
 
@@ -1342,7 +1423,7 @@ describe('formtools', function () {
                             var fieldName = 'dateCreated',
                                 filterDates = { dateCreated: { dateFrom: ['2014-05-16'], dateTo: [] } };
 
-                            linz.formtools.filters.dateRange.filter(fieldName, filterDates, function (err, result) {
+                            linz.formtools.filters.dateRange.filter(fieldName, filterDates, function (err) {
                                 err.message.should.equal('One of the date fields is empty');
                             });
 
@@ -1351,9 +1432,9 @@ describe('formtools', function () {
                         it('should throw error if one of date is invalid in one of multiple date range filters', function () {
 
                             var fieldName = 'dateCreated',
-                                filterDates = { dateCreated: { dateFrom: ['2014-05-16','2014-05-20'], dateTo: ['2014-05-17','test date'] } };
+                                filterDates = { dateCreated: { dateFrom: ['2014-05-16', '2014-05-20'], dateTo: ['2014-05-17', 'test date'] } };
 
-                            linz.formtools.filters.dateRange.filter(fieldName, filterDates, function (err, result) {
+                            linz.formtools.filters.dateRange.filter(fieldName, filterDates, function (err) {
                                 err.message.should.equal('One of the dates is invalid');
                             });
 
@@ -1365,7 +1446,7 @@ describe('formtools', function () {
 
                         it('should render checkbox input field', function (done) {
                             var fieldName = 'dateModified';
-                            linz.formtools.filters.boolean.renderer(fieldName,function (err, result) {
+                            linz.formtools.filters.boolean.renderer(fieldName, function (err, result) {
                                 result.should.equal('<label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="true" required> Yes</label><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="false" required> No</label>');
                                 done();
                             });
@@ -1373,14 +1454,14 @@ describe('formtools', function () {
 
                         it('should return a filter object containing a field name and a boolean as the value', function () {
                             var fieldName = 'bActive';
-                            linz.formtools.filters.boolean.filter(fieldName,{ 'bActive': 'true' }, function (err, result) {
+                            linz.formtools.filters.boolean.filter(fieldName, { 'bActive': 'true' }, function (err, result) {
                                result.should.have.property(fieldName, true);
                             });
                         });
 
                         it('should render checkbox input field with form value of true', function (done) {
                             var fieldName = 'bActive';
-                            linz.formtools.filters.boolean.bind(fieldName, { 'bActive': 'true' },function (err, result) {
+                            linz.formtools.filters.boolean.bind(fieldName, { 'bActive': 'true' }, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
                                 result[0].should.equal('<label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="true" checked required> Yes</label><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="false" required> No</label>');
                                 done();
@@ -1389,7 +1470,7 @@ describe('formtools', function () {
 
                         it('should render checkbox input field with form value of false', function (done) {
                             var fieldName = 'bActive';
-                            linz.formtools.filters.boolean.bind(fieldName, { 'bActive': 'false' },function (err, result) {
+                            linz.formtools.filters.boolean.bind(fieldName, { 'bActive': 'false' }, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
                                 result[0].should.equal('<label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="true" required> Yes</label><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="false" checked required> No</label>');
                                 done();
@@ -1402,7 +1483,7 @@ describe('formtools', function () {
 
                         it('should render text input field', function (done) {
                             var fieldName = 'firstName';
-                            linz.formtools.filters.fulltext.renderer(fieldName,function (err, result) {
+                            linz.formtools.filters.fulltext.renderer(fieldName, function (err, result) {
                                 result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" required>');
                                 done();
                             });
@@ -1411,7 +1492,7 @@ describe('formtools', function () {
 
                         it('should render text input field with form value', function (done) {
                             var fieldName = 'firstName';
-                            linz.formtools.filters.fulltext.bind(fieldName, { firstName: ['john'] },function (err, result) {
+                            linz.formtools.filters.fulltext.bind(fieldName, { firstName: ['john'] }, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
                                 result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="john" required>');
                                 done();
@@ -1420,7 +1501,7 @@ describe('formtools', function () {
 
                         it('should render multiple text input fields with form values if there are multiple filters on the same field', function (done) {
                             var fieldName = 'firstName';
-                            linz.formtools.filters.fulltext.bind(fieldName, { firstName: ['john','jane'] },function (err, result) {
+                            linz.formtools.filters.fulltext.bind(fieldName, { firstName: ['john', 'jane'] }, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(2);
                                 result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="john" required>');
                                 result[1].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="jane" required>');
@@ -1430,35 +1511,35 @@ describe('formtools', function () {
 
                         it('should create filter using regex matching one keyword search', function () {
                            var fieldName = 'firstName';
-                           linz.formtools.filters.fulltext.filter(fieldName,{ 'firstName': ['john'] }, function (err, result) {
+                           linz.formtools.filters.fulltext.filter(fieldName, { 'firstName': ['john'] }, function (err, result) {
                                result.should.have.property(fieldName, { $regex: /john/ig});
                            });
                         });
 
                         it('should create filter using regex OR matching multiple keywords search', function () {
                            var fieldName = 'firstName';
-                           linz.formtools.filters.fulltext.filter(fieldName,{ 'firstName': ['john william'] }, function (err, result) {
+                           linz.formtools.filters.fulltext.filter(fieldName, { 'firstName': ['john william'] }, function (err, result) {
                                result.should.have.property(fieldName, { $regex: /john|william/ig});
                            });
                         });
 
                         it('should handle multiple spaces between search keywords', function () {
                            var fieldName = 'firstName';
-                           linz.formtools.filters.fulltext.filter(fieldName,{ 'firstName': ['john    william'] }, function (err, result) {
+                           linz.formtools.filters.fulltext.filter(fieldName, { 'firstName': ['john    william'] }, function (err, result) {
                                result.should.have.property(fieldName, { $regex: /john|william/ig});
                            });
                         });
 
                         it('should handle trim leading and trailing spaces on search keywords', function () {
                            var fieldName = 'firstName';
-                           linz.formtools.filters.fulltext.filter(fieldName,{ 'firstName': ['   john    william   '] }, function (err, result) {
+                           linz.formtools.filters.fulltext.filter(fieldName, { 'firstName': ['   john    william   '] }, function (err, result) {
                                result.should.have.property(fieldName, { $regex: /john|william/ig});
                            });
                         });
 
                         it('should create filter using regex OR matching for multiple keyword filters on the same field', function () {
                            var fieldName = 'firstName';
-                           linz.formtools.filters.fulltext.filter(fieldName,{ 'firstName': ['john','jane'] }, function (err, result) {
+                           linz.formtools.filters.fulltext.filter(fieldName, { 'firstName': ['john', 'jane'] }, function (err, result) {
                                result.should.have.property(fieldName, { $regex: /john|jane/ig});
                            });
                         });
@@ -1469,7 +1550,7 @@ describe('formtools', function () {
 
                         it('should render a select field', function (done) {
                             var fieldName = 'groups';
-                            overridesListOpts.filters.groups.filter.renderer(fieldName,function (err, result) {
+                            overridesListOpts.filters.groups.filter.renderer(fieldName, function (err, result) {
                                 result.should.equal('<select name="' + fieldName + '[]" class="form-control multiselect"><option value="one">option 1</option><option value="two">option 2</option></select>');
                                 done();
                             });
@@ -1477,8 +1558,8 @@ describe('formtools', function () {
 
                         it('should render a select field with multiple selection option attribute', function (done) {
                             var fieldName = 'groups',
-                                listFilter = linz.formtools.filters.list(list,true);
-                            listFilter.renderer(fieldName,function (err, result) {
+                                listFilter = linz.formtools.filters.list(list, true);
+                            listFilter.renderer(fieldName, function (err, result) {
                                 result.should.equal('<select name="' + fieldName + '[]" class="form-control multiselect" multiple><option value="one">option 1</option><option value="two">option 2</option></select>');
                                 done();
                             });
@@ -1486,8 +1567,8 @@ describe('formtools', function () {
 
                         it('should handle array of string literals as the options', function (done) {
                             var fieldName = 'groups',
-                                listFilter = linz.formtools.filters.list(['one','two'],true);
-                            listFilter.renderer(fieldName,function (err, result) {
+                                listFilter = linz.formtools.filters.list(['one', 'two'], true);
+                            listFilter.renderer(fieldName, function (err, result) {
                                 result.should.equal('<select name="' + fieldName + '[]" class="form-control multiselect" multiple><option value="one">one</option><option value="two">two</option></select>');
                                 done();
                             });
@@ -1495,7 +1576,7 @@ describe('formtools', function () {
 
                         it('should throw error is list attribute is missing', function () {
                             try {
-                                var listFilter = linz.formtools.filters.list();
+                                linz.formtools.filters.list();
                             } catch (e) {
                                 e.message.should.equal('List paramenter is missing for the list filter');
                             }
@@ -1512,7 +1593,7 @@ describe('formtools', function () {
 
                         it('should render select field with form values selected', function (done) {
                             var fieldName = 'groups';
-                            overridesListOpts.filters.groups.filter.bind(fieldName,{ groups: ['one'] }, function (err, result) {
+                            overridesListOpts.filters.groups.filter.bind(fieldName, { groups: ['one'] }, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
                                 result[0].should.equal('<select name="' + fieldName + '[]" class="form-control multiselect"><option value="one" selected>option 1</option><option value="two">option 2</option></select>');
                                 done();
@@ -1525,7 +1606,7 @@ describe('formtools', function () {
 
                         it('should render text input field', function (done) {
                             var fieldName = 'code';
-                            linz.formtools.filters.number.renderer(fieldName,function (err, result) {
+                            linz.formtools.filters.number.renderer(fieldName, function (err, result) {
                                 result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" required pattern="[0-9]*" placeholder="Only digits are allowed.">');
                                 done();
                             });
@@ -1534,7 +1615,7 @@ describe('formtools', function () {
 
                         it('should render text input field with form value', function (done) {
                             var fieldName = 'code';
-                            linz.formtools.filters.number.bind(fieldName, { code: ['100'] },function (err, result) {
+                            linz.formtools.filters.number.bind(fieldName, { code: ['100'] }, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
                                 result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="100" required>');
                                 done();
@@ -1543,7 +1624,7 @@ describe('formtools', function () {
 
                         it('should render multiple text input fields with form values if there are multiple filters on the same field', function (done) {
                             var fieldName = 'code';
-                            linz.formtools.filters.number.bind(fieldName, { code: ['100','200'] },function (err, result) {
+                            linz.formtools.filters.number.bind(fieldName, { code: ['100', '200'] }, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(2);
                                 result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="100" required>');
                                 result[1].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" value="200" required>');
@@ -1553,22 +1634,22 @@ describe('formtools', function () {
 
                         it('should create filter to match a "one keyword" search', function () {
                            var fieldName = 'code';
-                           linz.formtools.filters.number.filter(fieldName,{ 'code': ['100'] }, function (err, result) {
+                           linz.formtools.filters.number.filter(fieldName, { 'code': ['100'] }, function (err, result) {
                                result.should.have.property(fieldName, [100]);
                            });
                         });
 
                         it('should create filter to match on a "multiple keywords" search', function () {
                            var fieldName = 'code';
-                           linz.formtools.filters.number.filter(fieldName,{ 'code': ['100','200'] }, function (err, result) {
-                               result.should.have.property(fieldName, [100,200]);
+                           linz.formtools.filters.number.filter(fieldName, { 'code': ['100', '200'] }, function (err, result) {
+                               result.should.have.property(fieldName, [100, 200]);
                            });
                         });
 
                         it('should trim leading and trailing spaces on search keywords and any additional found between words', function () {
                            var fieldName = 'code';
-                           linz.formtools.filters.number.filter(fieldName,{ 'code': ['100',' 200','300 ', ' 400 ', '  500  '] }, function (err, result) {
-                               result.should.have.property(fieldName, [100,200,300,400,500]);
+                           linz.formtools.filters.number.filter(fieldName, { 'code': ['100', ' 200', '300 ', ' 400 ', '  500  '] }, function (err, result) {
+                               result.should.have.property(fieldName, [100, 200, 300, 400, 500]);
                            });
                         });
 
@@ -1588,7 +1669,7 @@ describe('formtools', function () {
                    it('should return custom filter', function (done) {
                         overridesListOpts.filters.lastName.filter.filter('lastName', { test1: 'john', test2: 'jane'}, function(err, result) {
                             result.should.have.properties({
-                                firstName: ['john','jane'],
+                                firstName: ['john', 'jane'],
                                 lastName: 'doyle'
                             });
                             done();
@@ -1632,7 +1713,7 @@ describe('formtools', function () {
                         filters = OverridesPostModel.addSearchFilter(filters, filter);
 
                         filters.should.have.properties({
-                            firstName: ['john',{ $regex: /john/ig }]
+                            firstName: ['john', { $regex: /john/ig }]
                         });
 
                     });
@@ -1648,7 +1729,7 @@ describe('formtools', function () {
                         filters = OverridesPostModel.addSearchFilter(filters, filter);
 
                         filters.should.have.properties({
-                            firstName: ['john',{ $regex: /john/ig }],
+                            firstName: ['john', { $regex: /john/ig }],
                             dateCreated: [
                                 { '$gte': moment('2014-05-16', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-16', 'YYYY-MM-DD').endOf('day').toDate() },
                                 { '$gte': moment('2014-05-20', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-20', 'YYYY-MM-DD').endOf('day').toDate() },
@@ -1667,7 +1748,7 @@ describe('formtools', function () {
                         filters = OverridesPostModel.addSearchFilter(filters, filter);
 
                         filters.should.have.properties({
-                            firstName: ['john',{ $regex: /john/ig }],
+                            firstName: ['john', { $regex: /john/ig }],
                             dateCreated: [
                                 { '$gte': moment('2014-05-16', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-16', 'YYYY-MM-DD').endOf('day').toDate() },
                                 { '$gte': moment('2014-05-20', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-20', 'YYYY-MM-DD').endOf('day').toDate() },
@@ -1685,13 +1766,13 @@ describe('formtools', function () {
                                 { '$gte': moment('2014-06-04', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-06-04', 'YYYY-MM-DD').endOf('day').toDate() }
                             ],
                             bActive: true,
-                            group: ['bdm','rm']
+                            group: ['bdm', 'rm']
                         };
 
                         filters = OverridesPostModel.addSearchFilter(filters, filter);
 
                         filters.should.have.properties({
-                            firstName: ['john',{ $regex: /john/ig }],
+                            firstName: ['john', { $regex: /john/ig }],
                             dateCreated: [
                                 { '$gte': moment('2014-05-16', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-16', 'YYYY-MM-DD').endOf('day').toDate() },
                                 { '$gte': moment('2014-05-20', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-20', 'YYYY-MM-DD').endOf('day').toDate() },
@@ -1700,19 +1781,19 @@ describe('formtools', function () {
                                 { '$gte': moment('2014-06-04', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-06-04', 'YYYY-MM-DD').endOf('day').toDate() }
                             ],
                             bActive: [true],
-                            group: ['bdm','rm']
+                            group: ['bdm', 'rm']
                         });
 
                     });
 
                     it('should handle custom filter', function () {
 
-                        overridesListOpts.filters.lastName.filter.filter('lastName',{test1: 'john', test2: 'jane'}, function (err, result) {
+                        overridesListOpts.filters.lastName.filter.filter('lastName', {test1: 'john', test2: 'jane'}, function (err, result) {
 
                             filters = OverridesPostModel.addSearchFilter(filters, result);
 
                             filters.should.have.properties({
-                                firstName: ['john',{ $regex: /john/ig },'john','jane'],
+                                firstName: ['john', { $regex: /john/ig }, 'john', 'jane'],
                                 dateCreated: [
                                     { '$gte': moment('2014-05-16', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-16', 'YYYY-MM-DD').endOf('day').toDate() },
                                     { '$gte': moment('2014-05-20', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-05-20', 'YYYY-MM-DD').endOf('day').toDate() },
@@ -1721,7 +1802,7 @@ describe('formtools', function () {
                                     { '$gte': moment('2014-06-04', 'YYYY-MM-DD').startOf('day').toDate(), '$lte': moment('2014-06-04', 'YYYY-MM-DD').endOf('day').toDate() }
                                 ],
                                 bActive: [true],
-                                group: ['bdm','rm'],
+                                group: ['bdm', 'rm'],
                                 lastName: ['doyle']
                             });
 
@@ -1770,7 +1851,7 @@ describe('formtools', function () {
                     });
 
                     it('should execute the query in mongoose find() with no error', function (done) {
-                        OverridesPostModel.find(result, function (err, result) {
+                        OverridesPostModel.find(result, function (err) {
                             (err === null).should.be.true;
                             done();
                         });
@@ -1789,384 +1870,384 @@ describe('formtools', function () {
                 describe('for each field', function () {
 
                     it('should set the label, if provided', function () {
-                        formOpts['firstName'].label.should.equal('First Name');
+                        formOpts.firstName.label.should.equal('First Name');
                     });
 
                     it('should default label to field name, if none provided', function () {
-                        formOpts['lastName'].label.should.equal('lastName');
+                        formOpts.lastName.label.should.equal('lastName');
                     });
 
                     it('should set visible, if provided', function () {
-                        formOpts['password'].visible.should.be.false;
+                        formOpts.password.visible.should.be.false;
                     });
 
                     it('should default visible to true, if none provided', function () {
-                        formOpts['firstName'].visible.should.be.true;
+                        formOpts.firstName.visible.should.be.true;
                     });
 
                     it('should set disabled, if provided', function () {
-                        formOpts['password'].disabled.should.be.true;
+                        formOpts.password.disabled.should.be.true;
                     });
 
                     it('should default disabled to false, if none provided', function () {
-                        formOpts['firstName'].disabled.should.be.false;
+                        formOpts.firstName.disabled.should.be.false;
                     });
 
                     it('should set helpText, if provided', function () {
-                        formOpts['firstName'].helpText.should.equal('Enter your first name');
+                        formOpts.firstName.helpText.should.equal('Enter your first name');
                     });
 
                     it('should default helpText to undefined, if none provided', function () {
-                        (formOpts['password'].helpText === undefined).should.equal.true;
+                        (formOpts.password.helpText === undefined).should.equal.true;
                     });
 
                     it('should set type, if provided', function () {
-                        formOpts['description'].type.should.equal('text');
+                        formOpts.description.type.should.equal('text');
                     });
 
                     it('should default type to schema type if none provided', function () {
-                        formOpts['firstName'].type.should.equal('string');
+                        formOpts.firstName.type.should.equal('string');
                     });
 
                     it('should set default value, if provided', function () {
-                        formOpts['bActive'].default.should.be.true;
+                        formOpts.bActive.default.should.be.true;
                     });
 
                     it('should set default value to undefined, if none provided', function () {
-                        (formOpts['description'].default === undefined).should.equal.true;
+                        (formOpts.description.default === undefined).should.equal.true;
                     });
 
                     it('should set list, if provided', function () {
-                        formOpts['groups'].list.should.equal(list);
+                        formOpts.groups.list.should.eql(list);
                     });
 
                     it('should default list to undefined, if none provided', function () {
-                        (formOpts['description'].list === undefined).should.equal.true;
+                        (formOpts.description.list === undefined).should.equal.true;
                     });
 
                     it('should default fieldset to undefined, if none provided', function () {
-                        (formOpts['firstName'].fieldset === undefined).should.be.ok;
-                        formOpts['firstName'].should.have.property('fieldset');
+                        (formOpts.firstName.fieldset === undefined).should.be.ok;
+                        formOpts.firstName.should.have.property('fieldset');
                     });
 
                     it('should set fieldset, if provided', function () {
-                        overridesFormOpts['description'].fieldset.should.equal('Fieldset');
+                        overridesFormOpts.description.fieldset.should.equal('Fieldset');
                     });
 
                     it('should default widget to undefined, if none provided', function () {
-                        (formOpts['firstName'].widget === undefined).should.be.ok;
-                        formOpts['firstName'].should.have.property('widget');
+                        (formOpts.firstName.widget === undefined).should.be.ok;
+                        formOpts.firstName.should.have.property('widget');
                     });
 
                     it('should set widget, if provided', function () {
-                        formOpts['states'].widget.should.equal('multipleSelect');
+                        formOpts.states.widget.should.equal('multipleSelect');
                     });
 
                     it('should set disabled, if provided', function () {
-                        formOpts['states'].required.should.equal(false);
+                        formOpts.states.required.should.equal(false);
                     });
 
                     it('should default disabled to false, if none provided', function () {
-                        formOpts['firstName'].required.should.equal(true);
+                        formOpts.firstName.required.should.equal(true);
                     });
 
                     it('should set disabled, if provided', function () {
-                        formOpts['states'].required.should.equal(false);
+                        formOpts.states.required.should.equal(false);
                     });
 
                     it('should default disabled to false, if none provided', function () {
-                        formOpts['firstName'].required.should.equal(true);
+                        formOpts.firstName.required.should.equal(true);
                     });
 
                     it('should set placeholder, if provided', function () {
-                        formOpts['firstName'].placeholder.should.equal('Enter your first name');
+                        formOpts.firstName.placeholder.should.equal('Enter your first name');
                     });
 
                     it('should default placeholder to undefined, if none provided', function () {
-                        formOpts['firstName'].should.have.property('placeholder');
+                        formOpts.firstName.should.have.property('placeholder');
                     });
 
                     it('should set query, if provided', function () {
-                        formOpts['secondCategory'].should.have.property('query');
-                        formOpts['secondCategory'].query.should.have.property('filter');
-                        formOpts['secondCategory'].query.filter.should.eql({alias:'second-value'});
-                        formOpts['secondCategory'].query.should.have.property('sort');
-                        formOpts['secondCategory'].query.sort.should.equal('sort');
-                        formOpts['secondCategory'].query.should.have.property('select');
-                        formOpts['secondCategory'].query.select.should.equal('select');
-                        formOpts['secondCategory'].query.should.have.property('label');
-                        (typeof formOpts['secondCategory'].query.label === 'function').should.equal(true);
+                        formOpts.secondCategory.should.have.property('query');
+                        formOpts.secondCategory.query.should.have.property('filter');
+                        formOpts.secondCategory.query.filter.should.eql({alias:'second-value'});
+                        formOpts.secondCategory.query.should.have.property('sort');
+                        formOpts.secondCategory.query.sort.should.equal('sort');
+                        formOpts.secondCategory.query.should.have.property('select');
+                        formOpts.secondCategory.query.select.should.equal('select');
+                        formOpts.secondCategory.query.should.have.property('label');
+                        (typeof formOpts.secondCategory.query.label === 'function').should.equal(true);
                     });
 
                     it('should default query to default object, if none provided', function () {
-                        formOpts['username'].should.have.property('query');
-                        formOpts['username'].query.should.have.property('filter');
-                        formOpts['username'].query.should.have.property('sort');
-                        formOpts['username'].query.should.have.property('select');
-                        formOpts['username'].query.should.have.property('label');
-                        (formOpts['username'].query.filter === undefined).should.equal(true);
-                        (formOpts['username'].query.sort === undefined).should.equal(true);
-                        (formOpts['username'].query.select === undefined).should.equal(true);
-                        (formOpts['username'].query.label === undefined).should.equal(true);
+                        formOpts.username.should.have.property('query');
+                        formOpts.username.query.should.have.property('filter');
+                        formOpts.username.query.should.have.property('sort');
+                        formOpts.username.query.should.have.property('select');
+                        formOpts.username.query.should.have.property('label');
+                        (formOpts.username.query.filter === undefined).should.equal(true);
+                        (formOpts.username.query.sort === undefined).should.equal(true);
+                        (formOpts.username.query.select === undefined).should.equal(true);
+                        (formOpts.username.query.label === undefined).should.equal(true);
                     });
 
                     it('should set default query properties, if not all provided', function () {
-                        formOpts['category'].should.have.property('query');
-                        formOpts['category'].query.should.have.property('filter');
-                        formOpts['category'].query.should.have.property('sort');
-                        formOpts['category'].query.should.have.property('select');
-                        formOpts['category'].query.should.have.property('label');
-                        formOpts['category'].query.filter.should.eql({alias:'specific-value'});
-                        (formOpts['category'].query.sort === undefined).should.equal(true);
-                        (formOpts['category'].query.select === undefined).should.equal(true);
-                        (formOpts['category'].query.label === undefined).should.equal(true);
+                        formOpts.category.should.have.property('query');
+                        formOpts.category.query.should.have.property('filter');
+                        formOpts.category.query.should.have.property('sort');
+                        formOpts.category.query.should.have.property('select');
+                        formOpts.category.query.should.have.property('label');
+                        formOpts.category.query.filter.should.eql({alias:'specific-value'});
+                        (formOpts.category.query.sort === undefined).should.equal(true);
+                        (formOpts.category.query.select === undefined).should.equal(true);
+                        (formOpts.category.query.label === undefined).should.equal(true);
                     });
 
                     it('should set transform if provided', function () {
-                        formOpts['favourites'].should.have.property('transform');
-                        (typeof formOpts['favourites'].transform === 'function').should.equal(true);
+                        formOpts.favourites.should.have.property('transform');
+                        (typeof formOpts.favourites.transform === 'function').should.equal(true);
                     });
 
                     it('should set transform to undefined, if none provided', function () {
-                        formOpts['category'].should.have.property('transform');
-                        (formOpts['category'].transform === undefined).should.equal(true);
+                        formOpts.category.should.have.property('transform');
+                        (formOpts.category.transform === undefined).should.equal(true);
                     });
 
                     it('should set schema to undefined, if none provided', function () {
-                        formOpts['username'].should.have.property('schema');
-                        (formOpts['username'].schema === undefined).should.equal(true);
+                        formOpts.username.should.have.property('schema');
+                        (formOpts.username.schema === undefined).should.equal(true);
                     });
 
                     it('should set schema if provided', function () {
-                        formOpts['comments'].should.have.property('schema');
-                        formOpts['comments'].schema.should.be.an.Object;
+                        formOpts.comments.should.have.property('schema');
+                        formOpts.comments.schema.should.be.an.Object;
                     });
 
                 });
             }); // end describe('form default')
 
-    		describe('create form', function () {
+            describe('create form', function () {
 
-    			describe('for each field', function () {
+                describe('for each field', function () {
 
                     it('should inherit from visible', function () {
-                        formOpts['password'].create.visible.should.be.false;
+                        formOpts.password.create.visible.should.be.false;
                     });
 
                     it('should override visible', function () {
-                        formOpts['firstName'].create.visible.should.be.false;
+                        formOpts.firstName.create.visible.should.be.false;
                     });
 
                     it('should inherit from disabled', function () {
-                        formOpts['password'].create.disabled.should.be.true;
+                        formOpts.password.create.disabled.should.be.true;
                     });
 
                     it('should override disabled', function () {
-                        formOpts['firstName'].create.disabled.should.be.true;
+                        formOpts.firstName.create.disabled.should.be.true;
                     });
 
                     it('should inherit from fieldset', function () {
-                        formOpts['firstName'].create.should.have.property('fieldset');
-                        (formOpts['firstName'].create.fieldset === undefined).should.be.ok;
+                        formOpts.firstName.create.should.have.property('fieldset');
+                        (formOpts.firstName.create.fieldset === undefined).should.be.ok;
                     });
 
                     it('should override from fieldset', function () {
-                        overridesFormOpts['description'].create.should.have.property('fieldset');
-                        overridesFormOpts['description'].create.fieldset.should.equal('Create fieldset');
+                        overridesFormOpts.description.create.should.have.property('fieldset');
+                        overridesFormOpts.description.create.fieldset.should.equal('Create fieldset');
                     });
 
                     it('should inherit widget', function () {
-                        formOpts['description'].create.should.have.property('widget');
-                        (formOpts['description'].create.widget === undefined).should.be.ok;
+                        formOpts.description.create.should.have.property('widget');
+                        (formOpts.description.create.widget === undefined).should.be.ok;
                     });
 
                     it('should override widget', function () {
-                        overridesFormOpts['states'].create.should.have.property('widget');
-                        overridesFormOpts['states'].create.widget.should.equal('createWidget');
+                        overridesFormOpts.states.create.should.have.property('widget');
+                        overridesFormOpts.states.create.widget.should.equal('createWidget');
                     });
 
                     it('should inherit placeholder', function () {
-                        formOpts['firstName'].create.should.have.property('placeholder');
-                        formOpts['firstName'].create.placeholder.should.equal('Enter your first name');
+                        formOpts.firstName.create.should.have.property('placeholder');
+                        formOpts.firstName.create.placeholder.should.equal('Enter your first name');
                     });
 
                     it('should override placeholder', function () {
-                        overridesFormOpts['firstName'].create.should.have.property('placeholder');
-                        overridesFormOpts['firstName'].create.placeholder.should.equal('Enter your first name (create)');
+                        overridesFormOpts.firstName.create.should.have.property('placeholder');
+                        overridesFormOpts.firstName.create.placeholder.should.equal('Enter your first name (create)');
                     });
 
                     it('should inherit query, if provided', function () {
-                        formOpts['secondCategory'].create.should.have.property('query');
-                        formOpts['secondCategory'].create.query.should.have.property('filter');
-                        formOpts['secondCategory'].create.query.filter.should.eql({alias:'second-value'});
-                        formOpts['secondCategory'].create.query.should.have.property('sort');
-                        formOpts['secondCategory'].create.query.sort.should.equal('sort');
-                        formOpts['secondCategory'].create.query.should.have.property('select');
-                        formOpts['secondCategory'].create.query.select.should.equal('select');
-                        formOpts['secondCategory'].create.query.should.have.property('label');
-                        (typeof formOpts['secondCategory'].create.query.label === 'function').should.equal(true);
+                        formOpts.secondCategory.create.should.have.property('query');
+                        formOpts.secondCategory.create.query.should.have.property('filter');
+                        formOpts.secondCategory.create.query.filter.should.eql({alias:'second-value'});
+                        formOpts.secondCategory.create.query.should.have.property('sort');
+                        formOpts.secondCategory.create.query.sort.should.equal('sort');
+                        formOpts.secondCategory.create.query.should.have.property('select');
+                        formOpts.secondCategory.create.query.select.should.equal('select');
+                        formOpts.secondCategory.create.query.should.have.property('label');
+                        (typeof formOpts.secondCategory.create.query.label === 'function').should.equal(true);
                     });
 
                     it('should default query to default object, if none provided', function () {
-                        formOpts['username'].create.should.have.property('query');
-                        formOpts['username'].create.query.should.have.property('filter');
-                        formOpts['username'].create.query.should.have.property('sort');
-                        formOpts['username'].create.query.should.have.property('select');
-                        formOpts['username'].create.query.should.have.property('label');
-                        (formOpts['username'].create.query.filter === undefined).should.equal(true);
-                        (formOpts['username'].create.query.sort === undefined).should.equal(true);
-                        (formOpts['username'].create.query.select === undefined).should.equal(true);
-                        (formOpts['username'].create.query.label === undefined).should.equal(true);
+                        formOpts.username.create.should.have.property('query');
+                        formOpts.username.create.query.should.have.property('filter');
+                        formOpts.username.create.query.should.have.property('sort');
+                        formOpts.username.create.query.should.have.property('select');
+                        formOpts.username.create.query.should.have.property('label');
+                        (formOpts.username.create.query.filter === undefined).should.equal(true);
+                        (formOpts.username.create.query.sort === undefined).should.equal(true);
+                        (formOpts.username.create.query.select === undefined).should.equal(true);
+                        (formOpts.username.create.query.label === undefined).should.equal(true);
                     });
 
                     it('should set default query properties, if not all provided', function () {
-                        formOpts['category'].create.should.have.property('query');
-                        formOpts['category'].create.query.should.have.property('filter');
-                        formOpts['category'].create.query.should.have.property('sort');
-                        formOpts['category'].create.query.should.have.property('select');
-                        formOpts['category'].create.query.should.have.property('label');
-                        formOpts['category'].create.query.filter.should.eql({alias:'specific-value'});
-                        (formOpts['category'].create.query.sort === undefined).should.equal(true);
-                        (formOpts['category'].create.query.select === undefined).should.equal(true);
-                        (formOpts['category'].create.query.label === undefined).should.equal(true);
+                        formOpts.category.create.should.have.property('query');
+                        formOpts.category.create.query.should.have.property('filter');
+                        formOpts.category.create.query.should.have.property('sort');
+                        formOpts.category.create.query.should.have.property('select');
+                        formOpts.category.create.query.should.have.property('label');
+                        formOpts.category.create.query.filter.should.eql({alias:'specific-value'});
+                        (formOpts.category.create.query.sort === undefined).should.equal(true);
+                        (formOpts.category.create.query.select === undefined).should.equal(true);
+                        (formOpts.category.create.query.label === undefined).should.equal(true);
                     });
 
                     it('should override query', function () {
-                        overridesFormOpts['category'].create.should.have.property('query');
-                        overridesFormOpts['category'].create.query.filter.should.eql({alias:'specific-value-create'});
-                        formOpts['category'].create.query.should.have.property('sort');
-                        formOpts['category'].create.query.should.have.property('select');
-                        formOpts['category'].create.query.should.have.property('label');
-                        (formOpts['category'].create.query.sort === undefined).should.equal(true);
-                        (formOpts['category'].create.query.select === undefined).should.equal(true);
-                        (formOpts['category'].create.query.label === undefined).should.equal(true);
+                        overridesFormOpts.category.create.should.have.property('query');
+                        overridesFormOpts.category.create.query.filter.should.eql({alias:'specific-value-create'});
+                        formOpts.category.create.query.should.have.property('sort');
+                        formOpts.category.create.query.should.have.property('select');
+                        formOpts.category.create.query.should.have.property('label');
+                        (formOpts.category.create.query.sort === undefined).should.equal(true);
+                        (formOpts.category.create.query.select === undefined).should.equal(true);
+                        (formOpts.category.create.query.label === undefined).should.equal(true);
                     });
 
                     it('should inherit transform', function () {
-                        formOpts['category'].create.should.have.property('transform');
-                        (formOpts['category'].create.transform === undefined).should.equal(true);
+                        formOpts.category.create.should.have.property('transform');
+                        (formOpts.category.create.transform === undefined).should.equal(true);
                     });
 
                     it('should override transform', function () {
-                        overridesFormOpts['favourites'].should.have.property('transform');
-                        (typeof overridesFormOpts['favourites'].transform === 'function').should.equal(true);
-                        overridesFormOpts['favourites'].create.should.have.property('transform');
-                        (typeof overridesFormOpts['favourites'].create.transform === 'function').should.equal(true);
-                        overridesFormOpts['favourites'].create.transform.name.should.equal('transformFavouritesCreate');
+                        overridesFormOpts.favourites.should.have.property('transform');
+                        (typeof overridesFormOpts.favourites.transform === 'function').should.equal(true);
+                        overridesFormOpts.favourites.create.should.have.property('transform');
+                        (typeof overridesFormOpts.favourites.create.transform === 'function').should.equal(true);
+                        overridesFormOpts.favourites.create.transform.name.should.equal('transformFavouritesCreate');
                     });
 
-    			});
+                });
 
-    		}); // end describe('create form')
+            }); // end describe('create form')
 
             describe('edit form', function () {
 
                 describe('for each field', function () {
 
                     it('should inherit visible', function () {
-                        formOpts['firstName'].edit.visible.should.be.false;
+                        formOpts.firstName.edit.visible.should.be.false;
                     });
 
                     it('should override visible', function () {
-                        formOpts['password'].edit.visible.should.be.false;;
+                        formOpts.password.edit.visible.should.be.false;
                     });
 
                     it('should inherit disabled', function () {
-                        formOpts['password'].edit.disabled.should.be.true;
+                        formOpts.password.edit.disabled.should.be.true;
                     });
 
                     it('should override disabled', function () {
-                        formOpts['firstName'].edit.disabled.should.be.true;
+                        formOpts.firstName.edit.disabled.should.be.true;
                     });
 
                     it('should inherit from fieldset', function () {
-                        formOpts['firstName'].edit.should.have.property('fieldset');
-                        (formOpts['firstName'].edit.fieldset === undefined).should.be.ok;
+                        formOpts.firstName.edit.should.have.property('fieldset');
+                        (formOpts.firstName.edit.fieldset === undefined).should.be.ok;
                     });
 
                     it('should override from fieldset', function () {
-                        overridesFormOpts['description'].edit.should.have.property('fieldset');
-                        overridesFormOpts['description'].edit.fieldset.should.equal('Edit fieldset');
+                        overridesFormOpts.description.edit.should.have.property('fieldset');
+                        overridesFormOpts.description.edit.fieldset.should.equal('Edit fieldset');
                     });
 
                     it('should inherit widget', function () {
-                        formOpts['description'].edit.should.have.property('widget');
-                        (formOpts['description'].edit.widget === undefined).should.be.ok;
+                        formOpts.description.edit.should.have.property('widget');
+                        (formOpts.description.edit.widget === undefined).should.be.ok;
                     });
 
                     it('should override widget', function () {
-                        overridesFormOpts['states'].edit.should.have.property('widget');
-                        overridesFormOpts['states'].edit.widget.should.equal('editWidget');
+                        overridesFormOpts.states.edit.should.have.property('widget');
+                        overridesFormOpts.states.edit.widget.should.equal('editWidget');
                     });
 
                     it('should inherit placeholder', function () {
-                        formOpts['firstName'].edit.should.have.property('placeholder');
-                        formOpts['firstName'].edit.placeholder.should.equal('Enter your first name');
+                        formOpts.firstName.edit.should.have.property('placeholder');
+                        formOpts.firstName.edit.placeholder.should.equal('Enter your first name');
                     });
 
                     it('should override placeholder', function () {
-                        overridesFormOpts['firstName'].edit.should.have.property('placeholder');
-                        overridesFormOpts['firstName'].edit.placeholder.should.equal('Enter your first name (edit)');
+                        overridesFormOpts.firstName.edit.should.have.property('placeholder');
+                        overridesFormOpts.firstName.edit.placeholder.should.equal('Enter your first name (edit)');
                     });
 
                     it('should inherit query, if provided', function () {
-                        formOpts['secondCategory'].edit.should.have.property('query');
-                        formOpts['secondCategory'].edit.query.should.have.property('filter');
-                        formOpts['secondCategory'].edit.query.filter.should.eql({alias:'second-value'});
-                        formOpts['secondCategory'].edit.query.should.have.property('sort');
-                        formOpts['secondCategory'].edit.query.sort.should.equal('sort');
-                        formOpts['secondCategory'].edit.query.should.have.property('select');
-                        formOpts['secondCategory'].edit.query.select.should.equal('select');
-                        formOpts['secondCategory'].edit.query.should.have.property('label');
-                        (typeof formOpts['secondCategory'].edit.query.label === 'function').should.equal(true);
+                        formOpts.secondCategory.edit.should.have.property('query');
+                        formOpts.secondCategory.edit.query.should.have.property('filter');
+                        formOpts.secondCategory.edit.query.filter.should.eql({alias:'second-value'});
+                        formOpts.secondCategory.edit.query.should.have.property('sort');
+                        formOpts.secondCategory.edit.query.sort.should.equal('sort');
+                        formOpts.secondCategory.edit.query.should.have.property('select');
+                        formOpts.secondCategory.edit.query.select.should.equal('select');
+                        formOpts.secondCategory.edit.query.should.have.property('label');
+                        (typeof formOpts.secondCategory.edit.query.label === 'function').should.equal(true);
                     });
 
                     it('should default query to default object, if none provided', function () {
-                        formOpts['username'].edit.should.have.property('query');
-                        formOpts['username'].edit.query.should.have.property('filter');
-                        formOpts['username'].edit.query.should.have.property('sort');
-                        formOpts['username'].edit.query.should.have.property('select');
-                        formOpts['username'].edit.query.should.have.property('label');
-                        (formOpts['username'].edit.query.filter === undefined).should.equal(true);
-                        (formOpts['username'].edit.query.sort === undefined).should.equal(true);
-                        (formOpts['username'].edit.query.select === undefined).should.equal(true);
-                        (formOpts['username'].edit.query.label === undefined).should.equal(true);
+                        formOpts.username.edit.should.have.property('query');
+                        formOpts.username.edit.query.should.have.property('filter');
+                        formOpts.username.edit.query.should.have.property('sort');
+                        formOpts.username.edit.query.should.have.property('select');
+                        formOpts.username.edit.query.should.have.property('label');
+                        (formOpts.username.edit.query.filter === undefined).should.equal(true);
+                        (formOpts.username.edit.query.sort === undefined).should.equal(true);
+                        (formOpts.username.edit.query.select === undefined).should.equal(true);
+                        (formOpts.username.edit.query.label === undefined).should.equal(true);
                     });
 
                     it('should set default query properties, if not all provided', function () {
-                        formOpts['category'].edit.should.have.property('query');
-                        formOpts['category'].edit.query.should.have.property('filter');
-                        formOpts['category'].edit.query.should.have.property('sort');
-                        formOpts['category'].edit.query.should.have.property('select');
-                        formOpts['category'].edit.query.should.have.property('label');
-                        formOpts['category'].edit.query.filter.should.eql({alias:'specific-value'});
-                        (formOpts['category'].edit.query.sort === undefined).should.equal(true);
-                        (formOpts['category'].edit.query.select === undefined).should.equal(true);
-                        (formOpts['category'].edit.query.label === undefined).should.equal(true);
+                        formOpts.category.edit.should.have.property('query');
+                        formOpts.category.edit.query.should.have.property('filter');
+                        formOpts.category.edit.query.should.have.property('sort');
+                        formOpts.category.edit.query.should.have.property('select');
+                        formOpts.category.edit.query.should.have.property('label');
+                        formOpts.category.edit.query.filter.should.eql({alias:'specific-value'});
+                        (formOpts.category.edit.query.sort === undefined).should.equal(true);
+                        (formOpts.category.edit.query.select === undefined).should.equal(true);
+                        (formOpts.category.edit.query.label === undefined).should.equal(true);
                     });
 
                     it('should override query', function () {
-                        overridesFormOpts['category'].edit.should.have.property('query');
-                        overridesFormOpts['category'].edit.query.filter.should.eql({alias:'specific-value-edit'});
-                        overridesFormOpts['category'].edit.query.should.have.property('sort');
-                        overridesFormOpts['category'].edit.query.should.have.property('select');
-                        overridesFormOpts['category'].edit.query.should.have.property('label');
-                        (overridesFormOpts['category'].edit.query.sort === undefined).should.equal(true);
-                        (overridesFormOpts['category'].edit.query.select === undefined).should.equal(true);
-                        (overridesFormOpts['category'].edit.query.label === undefined).should.equal(true);
+                        overridesFormOpts.category.edit.should.have.property('query');
+                        overridesFormOpts.category.edit.query.filter.should.eql({alias:'specific-value-edit'});
+                        overridesFormOpts.category.edit.query.should.have.property('sort');
+                        overridesFormOpts.category.edit.query.should.have.property('select');
+                        overridesFormOpts.category.edit.query.should.have.property('label');
+                        (overridesFormOpts.category.edit.query.sort === undefined).should.equal(true);
+                        (overridesFormOpts.category.edit.query.select === undefined).should.equal(true);
+                        (overridesFormOpts.category.edit.query.label === undefined).should.equal(true);
                     });
 
                     it('should inherit transform', function () {
-                        formOpts['category'].edit.should.have.property('transform');
-                        (formOpts['category'].edit.transform === undefined).should.equal(true);
+                        formOpts.category.edit.should.have.property('transform');
+                        (formOpts.category.edit.transform === undefined).should.equal(true);
                     });
 
                     it('should override transform', function () {
-                        overridesFormOpts['favourites'].should.have.property('transform');
-                        (typeof overridesFormOpts['favourites'].transform === 'function').should.equal(true);
-                        overridesFormOpts['favourites'].edit.should.have.property('transform');
-                        (typeof overridesFormOpts['favourites'].edit.transform === 'function').should.equal(true);
-                        overridesFormOpts['favourites'].edit.transform.name.should.equal('transformFavouritesEdit');
+                        overridesFormOpts.favourites.should.have.property('transform');
+                        (typeof overridesFormOpts.favourites.transform === 'function').should.equal(true);
+                        overridesFormOpts.favourites.edit.should.have.property('transform');
+                        (typeof overridesFormOpts.favourites.edit.transform === 'function').should.equal(true);
+                        overridesFormOpts.favourites.edit.transform.name.should.equal('transformFavouritesEdit');
                     });
 
                 });
@@ -2177,7 +2258,7 @@ describe('formtools', function () {
 
         describe('overview', function () {
 
-            describe('defaults',function () {
+            describe('defaults', function () {
 
                 it('actions should default to []', function () {
 
@@ -2187,35 +2268,20 @@ describe('formtools', function () {
 
                 });
 
-                it('canEdit should default to true', function () {
+
+                it('body should default to []', function () {
 
                     (overviewOpts).should.be.ok;
-                    overviewOpts.should.have.property('canEdit');
-                    overviewOpts.canEdit.should.eql(true);
+                    overviewOpts.should.have.property('body');
+                    overviewOpts.body.should.be.an.instanceOf(Array);
 
-                });
+                    const first = overviewOpts.body[0];
 
-                it('canDelete should default to true', function () {
+                    first.should.have.property('label');
+                    first.label.should.equal('Summary');
 
-                    (overviewOpts).should.be.ok;
-                    overviewOpts.should.have.property('canDelete');
-                    overviewOpts.canDelete.should.eql(true);
-
-                });
-
-                it('viewAll should default to true', function () {
-
-                    (overviewOpts).should.be.ok;
-                    overviewOpts.should.have.property('viewAll');
-                    overviewOpts.canDelete.should.eql(true);
-
-                });
-
-
-                it('body should default to undefined', function () {
-
-                    (overviewOpts).should.be.ok;
-                    (overviewOpts.body === undefined).should.be.true;
+                    first.should.have.property('fields');
+                    first.should.be.an.instanceOf(Object);
 
                 });
 

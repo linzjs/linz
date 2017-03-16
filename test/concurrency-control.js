@@ -1,3 +1,5 @@
+/* eslint-env mocha */
+
 var should = require('should'),
     linz = require('../linz');
 
@@ -19,12 +21,9 @@ UserSchema.virtual('hasAdminAccess').get(function () {
     return true;
 });
 
-var User = linz.mongoose.model('ConcurrencyTestUser', UserSchema);
-
 // setup easy references
 var mongoose = linz.mongoose,
-    concurrencyControl = linz.concurrencyControl,
-    async = require('async');
+    concurrencyControl = linz.concurrencyControl;
 
 describe('concurrency control', function () {
 
