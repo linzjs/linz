@@ -1,6 +1,7 @@
 # linz
 
 [![npm](https://img.shields.io/npm/v/linz.svg)](https://www.npmjs.com/package/linz)
+[![Build Status](https://travis-ci.org/smebberson/linz.svg?branch=master)](https://travis-ci.org/smebberson/linz)
 
 An administration interface framework for Node.js.
 
