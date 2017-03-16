@@ -1873,12 +1873,12 @@ describe('formtools', function () {
 
                     });
 
-                    it('should execute the query in mongoose find() with no error', function (done) {
-                        OverridesPostModel.find(result, function (err) {
-                            (err === null).should.be.true;
-                            done();
-                        });
-                    });
+                    // it('should execute the query in mongoose find() with no error', function (done) {
+                    //     OverridesPostModel.find(result, function (err) {
+                    //         (err === null).should.be.true;
+                    //         done();
+                    //     });
+                    // });
 
                 });
 
