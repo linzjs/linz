@@ -737,7 +737,7 @@ describe('formtools', function () {
                 describe('allowing field overrides', function () {
 
                     it('should set custom fields', function () {
-                        overridesListOpts.fields.firstName.should.have.property({
+                        overridesListOpts.fields.firstName.should.have.properties({
                             label: 'Name',
                             renderer: linz.formtools.cellRenderers.overviewLink
                         });
@@ -1064,7 +1064,7 @@ describe('formtools', function () {
                 describe('default sorting', function () {
 
                     it('should be sorted by date modified', function () {
-                        listOpts.sortBy[0].should.have.property({
+                        listOpts.sortBy[0].should.have.properties({
                             label: 'Date modified',
                             field: 'dateModified'
                         });
