@@ -136,46 +136,69 @@ describe('formtools', function () {
 
         before(function (done) {
 
-            PostSchema = new mongoose.Schema({ label: String });
-            PostSchema.plugin(formtools.plugins.document);
+            async.parallel([
 
-            postModel = mongoose.model('postModel', PostSchema);
+                function (cb) {
 
-            postModel.getModelOptions(function (err, result) {
-                postModelOptions = result;
-            });
+                    PostSchema = new mongoose.Schema({ label: String });
+                    PostSchema.plugin(formtools.plugins.document);
 
-            CommentSchema = new mongoose.Schema({ label: String });
-            CommentSchema.plugin(formtools.plugins.document, {
-                model: {
-                    hide: true,
-                    label: 'Comment',
-                    plural: 'Comments',
-                    description: 'Responses to blog posts'
+                    postModel = mongoose.model('postModel', PostSchema);
+
+                    postModel.getModelOptions(function (err, result) {
+
+                        postModelOptions = result;
+                        return cb(err);
+
+                    });
+
+                },
+
+                function (cb) {
+
+                    CommentSchema = new mongoose.Schema({ label: String });
+                    CommentSchema.plugin(formtools.plugins.document, {
+                        model: {
+                            hide: true,
+                            label: 'Comment',
+                            plural: 'Comments',
+                            description: 'Responses to blog posts'
+                        }
+                    });
+
+                    commentModel = mongoose.model('commentModel', CommentSchema);
+
+                    commentModel.getModelOptions(function (err, result) {
+
+                        commentModelOptions = result;
+                        return cb(err);
+
+                    });
+
+                },
+
+                function (cb) {
+
+                    LocationSchema = new mongoose.Schema({ label: String });
+                    LocationSchema.plugin(formtools.plugins.document, {
+                        model: {
+                            hide: true,
+                            label: 'Location'
+                        }
+                    });
+
+                    locationModel = mongoose.model('locationModel', LocationSchema);
+
+                    locationModel.getModelOptions(function (err, result) {
+
+                        locationModelOptions = result;
+                        return cb(err);
+
+                    });
+
                 }
-            });
 
-            commentModel = mongoose.model('commentModel', CommentSchema);
-
-            commentModel.getModelOptions(function (err, result) {
-                commentModelOptions = result;
-                done(null);
-            });
-
-            LocationSchema = new mongoose.Schema({ label: String });
-            LocationSchema.plugin(formtools.plugins.document, {
-                model: {
-                    hide: true,
-                    label: 'Location'
-                }
-            });
-
-            locationModel = mongoose.model('locationModel', LocationSchema);
-
-            locationModel.getModelOptions(function (err, result) {
-                locationModelOptions = result;
-                done(null);
-            });
+            ], done);
 
         });
 
