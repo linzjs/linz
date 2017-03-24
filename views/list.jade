@@ -12,7 +12,7 @@ block main-content
 
                     if record['title']
                         div.title
-                            a(href='' + linz.api.url.getAdminLink(model))
+                            a(href=linz.api.url.getAdminLink(model, record._id) + '/overview')
                                 h1.entry-title= record['title']
 
                     each val in Object.keys(model.list.fields)
