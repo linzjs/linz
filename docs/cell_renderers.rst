@@ -15,10 +15,10 @@ Built-in cell renderers
 
 There are already `many built-in cell renderers`_. They can all be accessed in the following namespace ``linz.formtools.cellRenderers``.
 
-The following shows how to define a specific cell renderer for a field in a grid column::
+The following shows how to define a specific cell renderer for a list field::
 
-  grid: {
-    columns: {
+  list: {
+    fields: {
       websiteUrl: {
         label: 'Website url',
         renderer: linz.formtools.cellRenderers.url
@@ -32,7 +32,7 @@ The following provides a description of each built-in cell renderer:
 - ``datetime`` used with ``datetime`` field types to render a datetime, as per the ``datetime format`` setting.
 - ``localDate`` used with ``datetime`` field types to render a ``<time>`` tag as per the ``date format`` setting.
 - ``datetimeLocal`` used with ``datetime-local`` field types to render a ``<time>`` tag as per the ``datetime format`` setting.
-- ``overviewLink`` can be used to provide a link in the grid, to the overview for a particular record.
+- ``overviewLink`` can be used to provide a link in the list, to the overview for a particular record.
 - ``array`` can be used to format an array in the format ``value 1, value 2, value 3``.
 - ``boolean`` can be used to format a boolean in the format ``Yes`` or ``No``.
 - ``reference`` can be used to render the title for a ``ref`` field type.

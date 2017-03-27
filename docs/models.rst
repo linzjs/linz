@@ -33,8 +33,8 @@ You create Models in the ``model`` directory, one file per model. The file shoul
       name: 'Name',
       email: 'Email'
     },
-    grid: {
-      columns: {
+    list: {
+      fields: {
         name: true,
         email: true
       }
@@ -93,7 +93,7 @@ Linz uses a Model DSL, which is an object that can be used to describe your mode
 
 - ``model`` contains basic information such as the ``label`` and ``description`` of the model.
 - ``labels`` contains human friendly versions of your model's properties, keyed by the property name.
-- ``grid`` contains information used to scaffold the table displaying model records.
+- ``list`` contains information used to scaffold the list displaying model records.
 - ``form`` contains information used to scaffold the edit handler for a model record.
 - ``overview`` contains information used to scaffold the overview for a model record.
 - ``fields`` contains directives to enable/disable fields that Linz automatically adds to models.
@@ -108,7 +108,7 @@ You supply the DSL to Linz in the form of an object, to the ``linz.formtools.plu
     labels: {
       // ...
     },
-    grid: {
+    list: {
       // ...
     },
     form: {
@@ -158,17 +158,17 @@ For example::
 
 You can customize the labels for the default ``dateModified`` and ``dateCreated`` using this object.
 
-.. _models-grid-dsl-summary-reference:
+.. _models-list-dsl-summary-reference:
 
-Models grid DSL
+Models list DSL
 ---------------
 
-``grid`` is used to customize the model index that is generated for each model.
+``list`` is used to customize the model index that is generated for each model.
 
-``grid`` should be an Object, containing the following top-level keys:
+``list`` should be an Object, containing the following top-level keys:
 
 - ``actions``
-- ``columns``
+- ``fields``
 - ``sortBy``
 - ``toolbarItems``
 - ``showSummary``
@@ -178,7 +178,7 @@ Models grid DSL
 - ``recordActions``
 - ``export``
 
-These allow you to describe how the model index should function. The grid DSL is discussed in more detail in :ref:`models-grid-reference`.
+These allow you to describe how the model index should function. The list DSL is discussed in more detail in :ref:`models-list-reference`.
 
 .. _models-form-dsl-summary-reference:
 

@@ -28,7 +28,7 @@ Linz is quite new and under rapid development. It is used quite successfully in 
    :maxdepth: 2
    :caption: Models
 
-   models_grid
+   models_list
    models_form
 
 .. _advanced-docs:
