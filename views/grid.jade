@@ -6,8 +6,9 @@ block main-content
                     thead
                         tr
                             th #
-                            th
-                                input(type="checkbox", data-linz-control="checked-all")
+                            if model.list.groupActions && model.list.groupActions.length
+                                th
+                                    input(type="checkbox", data-linz-control="checked-all")
                             if permissions.canDelete !== false || permissions.canEdit !== false || model.list.recordActions.length
                                 th.actions Actions
                             for field in model.list.fields
@@ -16,8 +17,9 @@ block main-content
                         for record, index in records
                             tr
                                 td= from + index + 1
-                                td
-                                    input(type="checkbox", name="ids[]", value="#{record._id}", data-linz-control="checked-record")
+                                if model.list.groupActions && model.list.groupActions.length
+	                                td
+	                                    input(type="checkbox", name="ids[]", value="#{record._id}", data-linz-control="checked-record")
                                 if permissions.canDelete !== false || permissions.canEdit !== false || model.list.recordActions.length
                                     td
                                         div.btn-group

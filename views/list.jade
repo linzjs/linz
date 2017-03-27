@@ -4,9 +4,11 @@ block main-content
         each record, index in records
             article.list-group-item.record-list-item
 
-                div.linz-control
+                if model.list.groupActions && model.list.groupActions.length
 
-                    input(type="checkbox", name="ids[]", value="#{record._id}", data-linz-control="checked-record")
+                    div.linz-control
+
+                        input(type="checkbox", name="ids[]", value="#{record._id}", data-linz-control="checked-record")
 
                 dl.entry-content
 
