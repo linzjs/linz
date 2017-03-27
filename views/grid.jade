@@ -18,8 +18,8 @@ block main-content
                             tr
                                 td= from + index + 1
                                 if model.list.groupActions && model.list.groupActions.length
-	                                td
-	                                    input(type="checkbox", name="ids[]", value="#{record._id}", data-linz-control="checked-record")
+                                    td
+                                        input(type="checkbox", name="ids[]", value="#{record._id}", data-linz-control="checked-record")
                                 if permissions.canDelete !== false || permissions.canEdit !== false || model.list.recordActions.length
                                     td
                                         div.btn-group
