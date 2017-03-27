@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v1.0.0-8.0.0 (27 March 2017)
 
 ### BREAKING CHANGES
 
@@ -11,9 +11,9 @@
 ### IMPROVEMENTS
 
 - The List DSL now includes a `renderer` property. currently available renderers include `linz.formtools.listRenderers.default` (alias for `grid`), `linz.formtools.listRenderers.grid`, and `linz.formtools.listRenderers.list`.
-- If a listRenderer has not been set, the default `linz.formtools.listRenderers.grid` will be used.
+- If a `listRenderer` has not been set, the default `linz.formtools.listRenderers.grid` will be used.
 
-## v0.7.0.0 (3 March 2017)
+## v1.0.0-7.0.0 (3 March 2017)
 
 ### BREAKING CHANGES
 
