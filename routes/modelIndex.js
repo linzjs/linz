@@ -1,5 +1,6 @@
 var linz = require('../'),
-    inflection = require('inflection');
+    inflection = require('inflection'),
+    listRenderers = require('../lib/formtools/renderers-list');
 
 /* GET /admin/model/:model/list */
 var route = function (req, res, next) {
@@ -56,7 +57,9 @@ var route = function (req, res, next) {
 
     });
 
-    res.render(linz.api.views.viewPath('modelIndex.jade'), {
+    const renderList = req.linz.model.list.renderer || listRenderers.default;
+
+    renderList(res, {
         model: req.linz.model,
         permissions: req.linz.model.linz.formtools.permissions,
         form: req.linz.model.formData || {},
