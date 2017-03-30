@@ -145,21 +145,27 @@ The ``list`` property is a special property for use with the ``enum`` type. It i
 
 Please bear in mind, that the ``list`` property is not involved in Mongoose validation.
 
-The ``list`` property can either be an array of strings, or an array of objects. If an array of objects is supplied it must be in the format::
+The ``list`` property can either be an array of strings, or an array of objects.
+
+For example, an array of strings::
+
+  list: [ 'Dog', 'Cat', 'Sheep' ]
+
+If an array of objects is supplied, it must be in the format::
 
   form: {
     sounds: {
       list: [
         {
-          name: 'Dog',
+          label: 'Dog',
           value: 'woof.mp3'
         },
         {
-          name: 'Cat',
+          label: 'Cat',
           value: 'meow.mp3'
         },
         {
-          name: 'Sheep',
+          label: 'Sheep',
           value: 'baa.mp3'
         }
       ]
@@ -172,15 +178,15 @@ There is also a more advanced use case in which you can provide a function which
     sounds: {
       list: function (cb) {
         return cb(null, {
-          name: 'Dog',
+          label: 'Dog',
           value: 'woof.mp3'
         },
         {
-          name: 'Cat',
+          label: 'Cat',
           value: 'meow.mp3'
         },
         {
-          name: 'Sheep',
+          label: 'Sheep',
           value: 'baa.mp3'
         });
       }
