@@ -15,10 +15,12 @@ block content
                             include modelIndex/paging
 
             if records.length > 0
-                if (typeof records.template === 'string')
+                block main-content
                     != records.template
 
         .modal.fade.modal-linz#groupActionModal(tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
+            .modal-dialog
+        .modal.fade.modal-linz#recordActionModal(tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
             .modal-dialog
         .modal.fade.modal-linz#exportModal(tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
             .modal-dialog

@@ -166,6 +166,18 @@
        return false;
     });
 
+    // bind record action buttons
+    $('[data-linz-control="record-action"]').click(function () {
+
+        var queryObj = $(this),
+            url = queryObj.attr('href');
+
+        $('#recordActionModal').modal().find('.modal-dialog').load(url, function () {});
+
+       return false;
+
+    });
+
     // bind model save button and update the selected ids to modal form
     $('#groupActionModal').on('shown.bs.modal', function (e) {
 
