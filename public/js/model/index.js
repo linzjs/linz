@@ -196,6 +196,16 @@
 
     });
 
+    // bind model save button
+    $('#recordActionModal').on('shown.bs.modal', function (e) {
+
+        var _this = this;
+
+        // add form validation
+        $(_this).find('form[data-linz-validation="true"]').bootstrapValidator({});
+
+    });
+
     // bind export button
     $('[data-linz-control="export"]').click(function (event) {
 
