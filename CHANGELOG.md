@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.0.0-8.0.1 (11 April 2017)
+## Unreleased
 
 - Fixes a bug when trying to wrap the list DSL with a `(user, callback)` function.
 
