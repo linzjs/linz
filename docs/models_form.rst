@@ -97,6 +97,8 @@ The label property gives you an opportunity to customize it explicitly for the c
 
 When you have the field of an appropriate type (such as text field), you can define the ``placeholder`` which sets the content of the HTML's ``<input>`` tag ``placeholder`` attribute.
 
+When used in conjunction with a ``ref`` field, it can be used to create optional references. For example, a ``select`` in which the first ``option`` has no ``value`` but contains the ``placeholder`` value as the label.
+
 {field-name}.helpText
 =====================
 
