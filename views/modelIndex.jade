@@ -16,7 +16,7 @@ block content
 
             if records.length > 0
                 if (typeof records.template === 'string')
-                    .main-content!= records.template
+                    != records.template
 
         .modal.fade.modal-linz#groupActionModal(tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
             .modal-dialog
