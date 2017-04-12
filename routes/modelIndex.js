@@ -59,7 +59,7 @@ var route = function (req, res, next) {
 
     const renderList = req.linz.model.list.renderer || listRenderers.default;
 
-    renderList(res, {
+    const data = {
         model: req.linz.model,
         permissions: req.linz.model.linz.formtools.permissions,
         form: req.linz.model.formData || {},
@@ -79,6 +79,18 @@ var route = function (req, res, next) {
             plural: req.linz.model.linz.formtools.model.plural
         },
         modelQuery: JSON.stringify(req.linz.model.formData)
+    };
+
+    renderList(data, (err, html) => {
+
+        if (err) {
+            return res.send(err);
+        }
+
+        data.records.template = html;
+
+        return res.render(linz.api.views.viewPath('modelIndex.jade'), data);
+
     });
 
 };
