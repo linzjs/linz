@@ -3,8 +3,8 @@
 ## Unreleased
 
 - Fixed a bug when trying to wrap the list DSL with a `(user, callback)` function.
-- Fixed the List DSL to allow custom renderers.
-- Add support record action renderers.
+- Fixed the List DSL to support renderers that return HTML.
+- Created record action renderers, which can be used in conjunction with a custom List renderer.
 
 ## v1.0.0-8.0.0 (27 March 2017)
 
