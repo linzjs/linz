@@ -1,0 +1,25 @@
+.body
+    div(class="table-responsive")
+        table.table.table-hover
+                thead
+                    tr
+                        th #
+                        if model.list.groupActions && model.list.groupActions.length
+                            th
+                                input(type="checkbox", data-linz-control="checked-all")
+                        if model.list.recordActions.length
+                            th.actions Actions
+                        for field in model.list.fields
+                            th= field.label
+                tbody
+                    for record, index in records
+                        tr
+                            td= from + index + 1
+                            if model.list.groupActions && model.list.groupActions.length
+                                td
+                                    input(type="checkbox", name="ids[]", value="#{record._id}", data-linz-control="checked-record")
+                            if model.list.recordActions.length
+                                td!= record.actionsTemplate
+
+                            each val in Object.keys(model.list.fields)
+                                td!= record['rendered'][val]

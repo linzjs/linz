@@ -1,6 +1,7 @@
-var linz = require('../'),
-    inflection = require('inflection'),
-    listRenderers = require('../lib/formtools/renderers-list');
+const linz = require('../');
+const inflection = require('inflection');
+const listRenderers = require('../lib/formtools/renderers-list');
+const recordActionRenderers = require('../lib/formtools/renderers-action-record');
 
 /* GET /admin/model/:model/list */
 var route = function (req, res, next) {
@@ -57,9 +58,7 @@ var route = function (req, res, next) {
 
     });
 
-    const renderList = req.linz.model.list.renderer || listRenderers.default;
-
-    renderList(res, {
+    const data = {
         model: req.linz.model,
         permissions: req.linz.model.linz.formtools.permissions,
         form: req.linz.model.formData || {},
@@ -79,6 +78,41 @@ var route = function (req, res, next) {
             plural: req.linz.model.linz.formtools.model.plural
         },
         modelQuery: JSON.stringify(req.linz.model.formData)
+    };
+
+    const renderRecordAction = data.model.list.recordActions.renderer || recordActionRenderers.defaultRenderer;
+
+    data.records.forEach((record, index) => {
+
+        renderRecordAction({
+            model: data.model,
+            permissions: data.permissions,
+            record
+        }, (err, html) => {
+
+            // Throw rather than return to break out of the loop.
+            if (err) {
+                throw err;
+            }
+
+            data.records[index].actionsTemplate = html;
+
+        });
+
+    });
+
+    const renderList = data.model.list.renderer || listRenderers.default;
+
+    renderList(data, (err, html) => {
+
+        if (err) {
+            return res.send(err);
+        }
+
+        data.records.template = html;
+
+        return res.render(linz.api.views.viewPath('modelIndex.jade'), data);
+
     });
 
 };

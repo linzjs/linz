@@ -2,7 +2,9 @@
 
 ## Unreleased
 
-- Fixes a bug when trying to wrap the list DSL with a `(user, callback)` function.
+- Fixed a bug when trying to wrap the list DSL with a `(user, callback)` function.
+- Fixed the List DSL to allow custom renderers.
+- Add support record action renderers.
 
 ## v1.0.0-8.0.0 (27 March 2017)
 

@@ -1,0 +1,27 @@
+div.list-group
+    each record, index in records
+        article.list-group-item.record-list-item
+
+            if model.list.groupActions && model.list.groupActions.length
+
+                div.linz-control
+
+                    input(type="checkbox", name="ids[]", value="#{record._id}", data-linz-control="checked-record")
+
+            dl.entry-content
+
+                if record['title']
+                    div.title
+                        a(href=linz.api.url.getAdminLink(model, record._id) + '/overview')
+                            h1.entry-title= record['title']
+
+                each val in Object.keys(model.list.fields)
+                    if record[val] != record['title']
+                        div.content
+                            dt!= val
+                            dd!= record['rendered'][val]
+
+            if model.list.recordActions.length
+                .actions!= record.actionsTemplate
+
+            div.clearfix
