@@ -21,6 +21,7 @@ div.list-group
                             dt!= val
                             dd!= record['rendered'][val]
 
-            .actions!= record.actionsTemplate
+            if model.list.recordActions.length
+                .actions!= record.actionsTemplate
 
             div.clearfix
