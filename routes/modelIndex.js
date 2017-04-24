@@ -77,7 +77,8 @@ var route = function (req, res, next) {
             singular: inflection.humanize(req.linz.model.linz.formtools.model.label, true),
             plural: req.linz.model.linz.formtools.model.plural
         },
-        modelQuery: JSON.stringify(req.linz.model.formData)
+        modelQuery: JSON.stringify(req.linz.model.formData),
+        user: req.user
     };
 
     const renderRecordAction = data.model.list.recordActions.renderer || recordActionRenderers.defaultRenderer;
