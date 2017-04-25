@@ -12,7 +12,8 @@ var route = function (req, res, next) {
         record: clone(req.linz.record.toObject({ virtuals: true})),
         permissions: req.linz.model.linz.formtools.permissions,
         formtools: req.linz.model.linz.formtools,
-        overview: req.linz.overview
+        overview: req.linz.overview,
+        user: req.user
     };
 
     if (Array.isArray(locals.overview.body)) {
