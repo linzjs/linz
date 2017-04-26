@@ -5,6 +5,9 @@
 - Fixed a bug when trying to wrap the list DSL with a `(user, callback)` function.
 - Fixed the List DSL to support renderers that return HTML.
 - Created record action renderers, which can be used in conjunction with a custom List renderer.
+- All modal containers now contain the `div.modal-dialog > div.modal-content` structure.
+- Record actions now support `modal: true` to have the URL content displayed within a modal.
+- Fixed issue in which action URLs are sometimes updated twice and then no longer function correctly.
 
 ## v1.0.0-8.0.0 (27 March 2017)
 
