@@ -30,13 +30,15 @@ list.actions
 
 - ``label`` is the name of the action.
 - ``action`` is the last portion of a URL, which is used to perform the action.
+- ``modal`` optionally render the results in a modal view.
 
 For example::
 
   actions: [
     {
       label: 'Import people',
-      action: 'import-from-csv'
+      action: 'import-from-csv',
+      modal: true
     }
   ]
 

@@ -161,9 +161,21 @@
         var queryObj = $(this),
             url = queryObj.attr('href');
 
-        $('#groupActionModal').modal().find('.modal-dialog').load(url, function () {});
+        $('#groupActionModal').modal().find('.modal-content').load(url, function () {});
 
        return false;
+    });
+
+    // bind record action buttons
+    $('[data-linz-control="record-action"]').click(function () {
+
+        var queryObj = $(this),
+            url = queryObj.attr('href');
+
+        $('#recordActionModal').modal().find('.modal-content').load(url, function () {});
+
+       return false;
+
     });
 
     // bind model save button and update the selected ids to modal form
@@ -184,6 +196,16 @@
 
     });
 
+    // bind model save button
+    $('#recordActionModal').on('shown.bs.modal', function (e) {
+
+        var _this = this;
+
+        // add form validation
+        $(_this).find('form[data-linz-validation="true"]').bootstrapValidator({});
+
+    });
+
     // bind export button
     $('[data-linz-control="export"]').click(function (event) {
 
@@ -195,7 +217,7 @@
             useModal = (queryObj.attr('data-target') === "#exportModal");
 
         if (useModal) {
-            $('#exportModal').modal().find('.modal-dialog').load(url, function () {});
+            $('#exportModal').modal().find('.modal-content').load(url, function () {});
             return false;
         }
 
