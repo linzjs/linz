@@ -134,7 +134,7 @@ if (!linz) {
             var url = button[0].nodeName === 'BUTTON' ? button.attr('data-href') : button.attr('href');
 
             // open modal and load URL
-            $('#linzModal').modal().find('.modal-dialog').load(url);
+            $('#linzModal').modal().find('.modal-content').load(url);
 
             // remove modal shown event
             $('#linzModal').off('shown.bs.modal');

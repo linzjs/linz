@@ -161,7 +161,7 @@
         var queryObj = $(this),
             url = queryObj.attr('href');
 
-        $('#groupActionModal').modal().find('.modal-dialog').load(url, function () {});
+        $('#groupActionModal').modal().find('.modal-content').load(url, function () {});
 
        return false;
     });
@@ -172,7 +172,7 @@
         var queryObj = $(this),
             url = queryObj.attr('href');
 
-        $('#recordActionModal').modal().find('.modal-dialog').load(url, function () {});
+        $('#recordActionModal').modal().find('.modal-content').load(url, function () {});
 
        return false;
 
@@ -217,7 +217,7 @@
             useModal = (queryObj.attr('data-target') === "#exportModal");
 
         if (useModal) {
-            $('#exportModal').modal().find('.modal-dialog').load(url, function () {});
+            $('#exportModal').modal().find('.modal-content').load(url, function () {});
             return false;
         }
 
