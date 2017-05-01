@@ -6,10 +6,12 @@ var expect = require('chai').expect,
 
 // init linz
 linz.init({
-    'mongo': 'mongodb://localhost:27777/mongoose-formtools-test',
-    'user model': 'user',
-    'load models': false,
-    'load configs': false
+    options: {
+        'mongo': 'mongodb://localhost:27777/mongoose-formtools-test',
+        'user model': 'user',
+        'load models': false,
+        'load configs': false
+    }
 });
 
 mongoose = linz.mongoose;
