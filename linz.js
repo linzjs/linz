@@ -156,47 +156,15 @@ var middlewareManager = require('./lib/middleware'),
  * signature: app, mongoose, options
  *
  */
-Linz.prototype.init = function () {
+Linz.prototype.init = function (opts = {}) {
 
-    var _app,
-        _mongoose,
-        _passport,
-        _options;
-
-    // loop through the arguments, and determine what is what
-    for (var i = 0; i < arguments.length; i++) {
-
-        var arg = arguments[i];
-
-        if (arg.constructor.name === 'Mongoose') {
-            debugGeneral('Using passed in mongoose object');
-            _mongoose = arg;
-        } else if (arg.constructor.name === 'Authenticator') {
-            debugGeneral('Using passed in passport object');
-            _passport = arg;
-        } else if ((arg.constructor.name === 'EventEmitter' || arg.constructor.name === 'Function') && typeof arg === 'function') {
-            debugGeneral('Using passed in express app');
-            _app = arg;
-        } else  if (arg.constructor.name === 'Object' && typeof arg === 'object') {
-            debugGeneral('Found options configuration object');
-            _options = arg;
-        }
-
-    }
-
-    // use anything that is passed in
-    _app = _app || express();
-    _mongoose = _mongoose || require('mongoose');
-    _passport = _passport || require('passport');
-    _options = _options || {};
-
-    // reference required properties
-    this.app = _app;
-    this.mongoose = _mongoose;
-    this.passport = _passport;
+    // Use anything that has been passed through, or default it as required.
+    this.app = opts.express || express();
+    this.mongoose = opts.mongoose || require('mongoose');
+    this.passport = opts.passport || require('passport');
 
     // overlay runtime options, these will override linz defaults
-    this.options(_options);
+    this.options(opts.options || {});
 
     // configure everything
     this.configure();

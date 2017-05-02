@@ -26,12 +26,12 @@ When you require Linz, you're returned a singleton. This has the advantage that 
 Initialization
 ==============
 
-Linz must be initialized. During initialization, Linz can optionally accept any of the following (in any order):
+Linz must be initialized. During initialization, Linz accepts an options object with any of the following optional keys:
 
-- An initialized Express intance.
-- An initialized Passport instance.
-- An initialized Mongoose instance.
-- An options object to customise Linz.
+- ``express``: An initialized Express intance.
+- ``passport``: An initialized Passport instance.
+- ``mongoose``: An initialized Mongoose instance.
+- ``options``: An options object to customise Linz.
 
 For example::
 
@@ -40,17 +40,24 @@ For example::
       passport = require('passport'),
       linz = require('linz');
 
-  linz.init(express(), mongoose, passport, {
-    'load configs': false
+  linz.init({
+      express: express(),
+      mongoose: mongoose
+      passport: passport,
+      options: {
+          'load configs': false
+      }
   });
 
-If neither an initialized instance of Express, Passport or Mongoose, nor an options object have been passed, Linz will create them:
+If neither an initialized instance of Express, Passport or Mongoose, nor an options object have been passed, Linz will create them for you::
 
-  // use anything that is passed in
-  _app = _app || express();
-  _mongoose = _mongoose || require('mongoose');
-  _passport = _passport || require('passport');
-  _options = _options || {};
+  // Use anything that has been passed through, or default it as required.
+  this.app = opts.express || express();
+  this.mongoose = opts.mongoose || require('mongoose');
+  this.passport = opts.passport || require('passport');
+
+  // overlay runtime options, these will override linz defaults
+  this.options(opts.options || {});
 
 Options object
 --------------
@@ -58,7 +65,9 @@ Options object
 An object can be used to customize Linz. For example::
 
   linz.init({
-    'mongo': `mongodb://${process.env.MONGO_HOST}/db`
+      options: {
+          'mongo': `mongodb://${process.env.MONGO_HOST}/db`
+      }
   });
 
 For a complete list of customizations you can make, view Linz's defaults_.
@@ -82,8 +91,10 @@ A common pattern for setting up Linz, using the event emitter, is as follows:
 
   // Initialize Linz.
   linz.init({
-    mongo: `mongodb://${process.env.DB_HOST || 'localhost'}/lmt`,
-    'user model': 'mtUser'
+      options: {
+          mongo: `mongodb://${process.env.DB_HOST || 'localhost'}/lmt`,
+          'user model': 'mtUser'
+      }
   });
 
 **app.js**::
