@@ -9,6 +9,7 @@
 - Record actions now support `modal: true` to have the URL content displayed within a modal.
 - Fixed issue in which action URLs are sometimes updated twice and then no longer function correctly.
 - Rather than supplying Mongoose, Express, Passport and an options object as arguments to Linz's init function (in any order), Linz now expects an object. The object can have `mongoose`, `express`, `passport` and `options` keys as required.
+- Added ability to customise the homepage route.
 
 ## v1.0.0-8.0.0 (27 March 2017)
 
