@@ -39,7 +39,7 @@ html(lang="en")&attributes(attributes)
 			ul
 				each node,index in linzNavigation
 					if node.children && node.children.length
-						if node.href === request.path
+						if request && request.path && node.href === request.path
 							li(class='active')
 								mixin submenu(node)
 						else

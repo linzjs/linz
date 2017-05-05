@@ -11,7 +11,7 @@ mixin submenu(node)
 	a(href=node.href)= node.name
 	ul
 		each childNode,childIndex in node.children
-			if (childNode.href === request.path)
+			if (request && request.path && childNode.href === request.path)
 				li(class='active')
 					a(href=childNode.href)= childNode.name
 			else
