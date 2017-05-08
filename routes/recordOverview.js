@@ -92,7 +92,7 @@ var route = function (req, res, next) {
         });
 
         // Define default overview action modal settings in a format that jade can access easily.
-        req.linz.model.linz.formtools.overview.footerActions.forEach(action => {
+        req.linz.model.linz.formtools.overview.footerActions.forEach((action) => {
 
             let modal = { active: false };
 
