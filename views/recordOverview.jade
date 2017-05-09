@@ -76,7 +76,10 @@ block content
                                                 | Delete
                             for action in formtools.overview.footerActions
                                 .actions
-                                    a.btn.btn-default(href=linz.api.url.getAdminLink(model, action.action, record._id) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback)= action.label
+                                    if action.isDisabled
+                                        a.btn.btn-default(role='menuitem', tabindex='-1', href='', data-linz-disabled='true', data-linz-disabled-message=action.disabledMessage)= action.label
+                                    else
+                                        a.btn.btn-default(href=linz.api.url.getAdminLink(model, action.action, record._id) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback)= action.label
 
 block script
     script(src='' + linz.get('admin path') + '/public/js/model/index.js')
