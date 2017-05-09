@@ -26,37 +26,11 @@ var route = function (req, res, next) {
         sortDirection = ((req.linz.model.formData.sort.charAt(0) === '-') ? 'desc' : 'asc')
     }
 
-    // define default list record actions modal settings in a format that jade can access easily
-    req.linz.model.list.recordActions.forEach(function (action) {
+    const { actions, recordActions } = req.linz.model.list;
+    const { parseModalProperties } = linz.api.formtools.actions;
 
-        var modal = { active: false };
-
-        if (typeof action.modal === 'object') {
-            modal = action.modal;
-            modal.active = true;
-        } else if (typeof action.modal === 'boolean') {
-            modal.active = action.modal;
-        }
-
-        action.modal = modal;
-
-    });
-
-    // define default list action modal settings in a format that jade can access easily
-    req.linz.model.list.actions.forEach(function (action) {
-
-        var modal = { active: false };
-
-        if (typeof action.modal === 'object') {
-            modal = action.modal;
-            modal.active = true;
-        } else if (typeof action.modal === 'boolean') {
-            modal.active = action.modal;
-        }
-
-        action.modal = modal;
-
-    });
+    req.linz.model.list.actions = parseModalProperties(actions);
+    req.linz.model.list.recordActions = parseModalProperties(recordActions);
 
     const data = {
         model: req.linz.model,

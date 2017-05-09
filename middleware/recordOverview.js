@@ -6,6 +6,7 @@ module.exports = function () {
 	return function (req, res, next) {
 
         req.linz.overview = req.linz.overview || {};
+        const { parseDisabledProperties } = linz.api.formtools.actions;
 
         async.series([
 
@@ -26,40 +27,45 @@ module.exports = function () {
 
             },
 
-            // check if we need to process custom actions
+            // Check if we need to process custom actions.
             function (cb) {
 
-                if (!req.linz.model.linz.formtools.overview.actions.length) {
+                let actions = req.linz.model.linz.formtools.overview.actions;
+
+                if (!actions.length) {
                     return cb(null);
                 }
 
-                async.each(req.linz.model.linz.formtools.overview.actions, function (action, actionDone) {
+                parseDisabledProperties(req.linz.record, actions)
+                    .then((parsedActions) => {
 
-                    if (!action.disabled) {
-                        return actionDone(null);
-                    }
+                        actions = parsedActions;
 
-                    if (typeof action.disabled !== 'function') {
-                        throw new Error('Invalid type for overview.action.disabled. It must be a function.');
-                    }
+                        return cb();
 
-                    action.disabled(req.linz.record, function (err, isDisabled, message) {
+                    })
+                    .catch(cb);
 
-                        action.isDisabled = isDisabled;
+            },
 
-                        if (isDisabled === true) {
-                            action.disabledMessage = message;
-                        }
+            // Check if we need to process custom footer actions.
+            function (cb) {
 
-                        return actionDone(err);
+                let footerActions = req.linz.model.linz.formtools.overview.footerActions;
 
-                    });
+                if (!footerActions.length) {
+                    return cb();
+                }
 
-                }, function (err) {
+                parseDisabledProperties(req.linz.record, footerActions)
+                    .then((parsedActions) => {
 
-                    return cb(err);
+                        footerActions = parsedActions;
 
-                });
+                        return cb();
+
+                    })
+                    .catch(cb);
 
             },
 

@@ -56,6 +56,30 @@ block content
                 if overview.versions
                     .overview-versions
                         div!= overview.versions
+    if formtools.overview.footerActions && formtools.overview.footerActions.length
+        .container
+            .row
+                .col-xs-12
+                    .linz-overview-footer-actions
+                        .model-actions
+                            if permissions.canEdit !== false || permissions.canDelete !== false
+                                .actions
+                                    if permissions.canEdit !== false
+                                        span.edit
+                                            a.btn.btn-primary(href='' + linz.api.url.getAdminLink(model, 'edit', record._id), data-linz-control="edit", data-linz-disabled=((record.edit && record.edit.disabled) ? 'true' : false), data-linz-disabled-message=((record.edit && record.edit.disabled) ? record.edit.message : false))
+                                                i.fa.fa-edit
+                                                | Edit
+                                    if permissions.canDelete !== false
+                                        span.delete
+                                            a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, 'delete', record._id), data-linz-control="delete", data-linz-disabled=((record.delete && record.delete.disabled) ? 'true' : false), data-linz-disabled-message=((record.delete && record.delete.disabled) ? record.delete.message : false))
+                                                i.fa.fa-trash-o
+                                                | Delete
+                            for action in formtools.overview.footerActions
+                                .actions
+                                    if action.isDisabled
+                                        a.btn.btn-default(role='menuitem', tabindex='-1', href='', data-linz-disabled='true', data-linz-disabled-message=action.disabledMessage)= action.label
+                                    else
+                                        a.btn.btn-default(href=linz.api.url.getAdminLink(model, action.action, record._id) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback)= action.label
 
 block script
     script(src='' + linz.get('admin path') + '/public/js/model/index.js')
