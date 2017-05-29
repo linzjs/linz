@@ -11,6 +11,7 @@
 - Rather than supplying Mongoose, Express, Passport and an options object as arguments to Linz's init function (in any order), Linz now expects an object. The object can have `mongoose`, `express`, `passport` and `options` keys as required.
 - Added ability to customise the homepage route by setting `admin home` in the `options` object or using `linz.set('admin home', '/new/path')`.
 - Added the ability to render a view in the context of Linz.
+- The `list.showSummary` boolean now excludes record count and sorting if set to `false`.
 
 ## v1.0.0-8.0.0 (27 March 2017)
 
