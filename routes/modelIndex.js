@@ -52,7 +52,8 @@ var route = function (req, res, next) {
             plural: req.linz.model.linz.formtools.model.plural
         },
         modelQuery: JSON.stringify(req.linz.model.formData),
-        user: req.user
+        user: req.user,
+        query: req.query,
     };
 
     const renderRecordAction = data.model.list.recordActions.renderer || recordActionRenderers.defaultRenderer;
