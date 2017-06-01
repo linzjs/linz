@@ -12,6 +12,7 @@
 - Added ability to customise the homepage route by setting `admin home` in the `options` object or using `linz.set('admin home', '/new/path')`.
 - Added the ability to render a view in the context of Linz.
 - The `list.showSummary` boolean now excludes record count and sorting if set to `false`.
+- The list render data now contains the query parameters.
 
 ## v1.0.0-8.0.0 (27 March 2017)
 
