@@ -6,7 +6,7 @@ var linz = require('../'),
 
 module.exports = function  (req, res, next) {
 
-    const isDevelopment = process.env.NODE_ENV === 'developmentt';
+    const isDevelopment = process.env.NODE_ENV === 'development';
     let body = req.body;
 
     // set up session control
@@ -29,12 +29,15 @@ module.exports = function  (req, res, next) {
      */
     function handleQueryError (err) {
 
+        // Reset the last known working state.
+        session.list.formData = session.list.previous.formData;
+
+        // If we're in development mode, return the error
+        // so that the developers are aware of it and can fix it.
         if (isDevelopment) {
             return next(err);
         }
 
-        // Reset the last known working state.
-        session.list.formData = session.list.previous.formData;
 
         // Rerun the query at the last known working state.
         // eslint-disable-next-line no-use-before-define
