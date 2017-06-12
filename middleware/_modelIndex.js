@@ -38,6 +38,11 @@ module.exports = function  (req, res, next) {
             return next(err);
         }
 
+        // Notify the user that an error has occured.
+        req.linz.notifications.push(linz.api.views.notification({
+            text: 'An error has occured with one of the filters you added. It has been removed.',
+            type: 'error'
+        }));
 
         // Rerun the query at the last known working state.
         // eslint-disable-next-line no-use-before-define
