@@ -60,8 +60,8 @@ module.exports = function  (req, res, next) {
             filters = {},
             refColData = {},
             totalRecords = 0,
-            pageSize = linz.get('page size'),
-            pageIndex = session.list.formData.page || 1,
+            pageSize = Number(linz.get('page size')),
+            pageIndex = Number(session.list.formData.page || 1),
             query,
             mongooseRecords;
 
@@ -69,7 +69,7 @@ module.exports = function  (req, res, next) {
         req.linz.model.list = clone(req.linz.model.linz.formtools.list);
 
         // reset the pageSize value
-        pageSize = session.list.formData.pageSize || req.linz.model.list.paging.size;
+        pageSize = Number(session.list.formData.pageSize || req.linz.model.list.paging.size);
 
         // holder for the sortingBy value
         req.linz.model.list.sortingBy = {};
