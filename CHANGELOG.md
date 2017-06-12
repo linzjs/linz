@@ -14,6 +14,7 @@
 - The `list.showSummary` boolean now excludes record count and sorting if set to `false`.
 - The list render data now contains the query parameters.
 - Linz filters that render will no longer get stuck.
+- Linz can now show alerts (model list view) to the user by pushing objects (formatted via `linz.api.views.notification`) into the `req.linz.notifications` array. Uses the Noty library.
 
 ## v1.0.0-8.0.0 (27 March 2017)
 
