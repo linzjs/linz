@@ -8,6 +8,7 @@ module.exports = function  (req, res, next) {
 
     const isDevelopment = process.env.NODE_ENV === 'development';
     let body = req.body;
+    let queryErrorCount = 0;
 
     // set up session control
     var session = req.session[req.params.model] = req.session[req.params.model] || {};
@@ -29,6 +30,26 @@ module.exports = function  (req, res, next) {
      */
     function handleQueryError (err) {
 
+        queryErrorCount++;
+
+        // Something has gone terribly wrong. Break from loop.
+        if (queryErrorCount > 1) {
+
+            // Reset all filters.
+            session.list.formData = {};
+
+            // Notify the user that an error has occured.
+            req.linz.notifications.push(linz.api.views.notification({
+                text: 'One of the filters is repeatedly generating an error. All filters have been removed.',
+                type: 'error'
+            }));
+
+            // Rerun the query at the last known working state.
+            // eslint-disable-next-line no-use-before-define
+            return getModelIndex();
+
+        }
+
         // Reset the last known working state.
         session.list.formData = session.list.previous.formData;
 
@@ -46,7 +67,7 @@ module.exports = function  (req, res, next) {
 
         // Rerun the query at the last known working state.
         // eslint-disable-next-line no-use-before-define
-        getModelIndex();
+        return getModelIndex();
 
     }
 
