@@ -92,5 +92,5 @@ html(lang="en")&attributes(attributes)
 		script. linz.loadLibraries('#{linz.get('admin path')}');
 		block script
 
-		if notifications && notifications.length
-			.notifications(data-len=notifications.length)!= notifications
+		if notifications
+			!= notifications

@@ -54,13 +54,16 @@ var route = function (req, res, next) {
         },
         modelQuery: JSON.stringify(req.linz.model.formData),
         user: req.user,
-        query: req.query,
-        notifications: []
+        query: req.query
     };
 
     async.parallel([
 
         (cb) => {
+
+            if (!req.linz.notifications.length) {
+                return cb();
+            }
 
             linz.api.views.renderPartial('notifications', { notifications: req.linz.notifications }, (err, notificationHtml) => {
 
@@ -68,11 +71,11 @@ var route = function (req, res, next) {
                     return res.send(err);
                 }
 
-                data.notifications.push(notificationHtml);
+                data.notifications = notificationHtml;
+
+                return cb();
 
             });
-
-            return cb();
 
         },
 
