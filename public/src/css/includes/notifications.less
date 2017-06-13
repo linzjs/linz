@@ -1,0 +1,51 @@
+
+// Animation updates.
+@keyframes linz-noty-anim-in {
+  100% {
+    transform: translate(0%);
+    opacity: 1;
+  }
+}
+
+@keyframes linz-noty-anim-out {
+  100% {
+    transform: translate(0%, 100%);
+    opacity: 0;
+  }
+}
+
+.linz-noty-effects-open {
+  opacity: 0;
+  transform: translate(0em, -100%);
+  animation: linz-noty-anim-in .4s cubic-bezier(.49, 0, .65, .39);
+  animation-fill-mode: forwards;
+}
+
+.linz-noty-effects-close {
+  animation: linz-noty-anim-out .2s cubic-bezier(.49, 0, .65, .39);
+  animation-fill-mode: forwards;
+}
+
+// Make the default one a little wider.
+#noty_layout__topCenter {
+  width: 80%;
+  max-width: 600px;
+  transform: translate(calc(-50%)) translateZ(0) scale(1, 1);
+}
+
+// Background colours.
+.noty_theme__sunset.noty_type__alert, .noty_theme__sunset.noty_type__notification {
+  background-color: #314E67;
+}
+
+.noty_theme__sunset.noty_type__alert, .noty_theme__sunset.noty_type__notification {
+  background-color: #314E67;
+}
+
+.noty_theme__sunset.noty_type__error {
+  background-color: #C1080B;
+}
+
+.noty_theme__sunset.noty_type__warning {
+  background-color: #FFAD00;
+}

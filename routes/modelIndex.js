@@ -2,6 +2,7 @@ const linz = require('../');
 const inflection = require('inflection');
 const listRenderers = require('../lib/formtools/renderers-list');
 const recordActionRenderers = require('../lib/formtools/renderers-action-record');
+const async = require('async');
 
 /* GET /admin/model/:model/list */
 var route = function (req, res, next) {
@@ -53,41 +54,72 @@ var route = function (req, res, next) {
         },
         modelQuery: JSON.stringify(req.linz.model.formData),
         user: req.user,
-        query: req.query,
+        query: req.query
     };
 
-    const renderRecordAction = data.model.list.recordActions.renderer || recordActionRenderers.defaultRenderer;
+    async.parallel([
 
-    data.records.forEach((record, index) => {
+        (cb) => {
 
-        renderRecordAction({
-            model: data.model,
-            permissions: data.permissions,
-            record
-        }, (err, html) => {
-
-            // Throw rather than return to break out of the loop.
-            if (err) {
-                throw err;
+            if (!req.linz.notifications.length) {
+                return cb();
             }
 
-            data.records[index].actionsTemplate = html;
+            linz.api.views.renderPartial('notifications', { notifications: req.linz.notifications }, (err, notificationHtml) => {
 
-        });
+                if (err) {
+                    return res.send(err);
+                }
 
-    });
+                data.notifications = notificationHtml;
 
-    const renderList = data.model.list.renderer || listRenderers.default;
+                return cb();
 
-    renderList(data, (err, html) => {
+            });
+
+        },
+
+        (cb) => {
+
+            const renderRecordAction = data.model.list.recordActions.renderer || recordActionRenderers.defaultRenderer;
+
+            async.eachOf(data.records, (record, index, callback) => {
+
+                renderRecordAction({
+                    model: data.model,
+                    permissions: data.permissions,
+                    record
+                }, (err, html) => {
+
+                    data.records[index].actionsTemplate = html;
+
+                    callback(err);
+
+                });
+
+            }, cb);
+
+        }
+
+    ], (err) => {
 
         if (err) {
             return res.send(err);
         }
 
-        data.records.template = html;
+        const renderList = data.model.list.renderer || listRenderers.default;
 
-        return res.render(linz.api.views.viewPath('modelIndex.jade'), data);
+        renderList(data, (renderErr, html) => {
+
+            if (renderErr) {
+                return res.send(renderErr);
+            }
+
+            data.records.template = html;
+
+            return res.render(linz.api.views.viewPath('modelIndex.jade'), data);
+
+        });
 
     });
 

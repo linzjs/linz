@@ -16,6 +16,8 @@ html(lang="en")&attributes(attributes)
 			link(href='//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css', rel='stylesheet')
 			link(href='//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css', rel='stylesheet')
 		link(href='' + linz.get('admin path') + '/public/css/multiselect.min.css', rel='stylesheet')
+		link(href='' + linz.get('admin path') + '/public/css/multiselect.min.css', rel='stylesheet')
+		link(href='' + linz.get('admin path') + '/public/css/noty.css', rel='stylesheet')
 		link(href='' + linz.get('admin path') + '/public/css/linz.css?v2', rel='stylesheet')
 		if adminCSSFile !== undefined
 			link(href='' + adminCSSFile, rel='stylesheet')
@@ -79,6 +81,7 @@ html(lang="en")&attributes(attributes)
 		script(src='' + linz.get('admin path') + '/public/js/template.js')
 		script(src='' + linz.get('admin path') + '/public/js/moment.min.js')
 		script(src='' + linz.get('admin path') + '/public/ckeditor/ckeditor.js')
+		script(src='' + linz.get('admin path') + '/public/js/noty.min.js')
 		script.
 			CKEDITOR.replaceClass = null; // Disable replacing by class
 			CKEDITOR.disableAutoInline = true;
@@ -88,3 +91,6 @@ html(lang="en")&attributes(attributes)
 
 		script. linz.loadLibraries('#{linz.get('admin path')}');
 		block script
+
+		if notifications
+			!= notifications
