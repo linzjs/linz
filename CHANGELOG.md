@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.0-9.0.1 (14 June 2017)
+
+- Fixes an issue with the pre-save middleware (when `req` doesn't exist).
+
 ## v1.0.0-9.0.0 (13 June 2017)
 
 - Fixed a bug when trying to wrap the list DSL with a `(user, callback)` function.
