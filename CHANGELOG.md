@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v1.0.0-9.0.0 (13 June 2017)
 
 - Fixed a bug when trying to wrap the list DSL with a `(user, callback)` function.
 - Fixed the List DSL to support renderers that return HTML.
