@@ -1,4 +1,8 @@
-# Changelog
+# CHANGELOG
+
+## Unreleased (27 June 2017)
+
+- Fixes an issue with the grid renderer not showing default record actions (edit and delete).
 
 ## v1.0.0-9.0.1 (14 June 2017)
 
