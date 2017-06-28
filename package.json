@@ -1,6 +1,6 @@
 {
   "name": "linz",
-  "version": "1.0.0-9.0.1",
+  "version": "1.0.0-9.0.2",
   "description": "Node.js administration interface framework",
   "main": "linz.js",
   "scripts": {
