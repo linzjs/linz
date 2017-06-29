@@ -35,7 +35,7 @@ html(lang="en")&attributes(attributes)
 						li
 							a(href=linz.get('admin path') + '/logout') Logout
 
-		nav
+		nav.linz
 			ul
 				each node,index in linzNavigation
 					if node.children && node.children.length
@@ -80,7 +80,7 @@ html(lang="en")&attributes(attributes)
 		script.
 			CKEDITOR.replaceClass = null; // Disable replacing by class
 			CKEDITOR.disableAutoInline = true;
-		
+
 		if adminJSFile !== undefined
 			script(src='' + adminJSFile)
 
