@@ -13,6 +13,11 @@
 
 - Fixes an issue with the grid renderer not showing default record actions (edit and delete).
 
+## Unreleased
+
+- Added ability to provide Linz with custom navigation via setting `linz.set('navigation', navigation);`.
+- Added ability to display icons (html) in custom navigations by adding an icon property `icon: '<i class="fa fa-home" aria-hidden="true"></i>'`.
+
 ## v1.0.0-9.0.1 (14 June 2017)
 
 - Fixes an issue with the pre-save middleware (when `req` doesn't exist).
