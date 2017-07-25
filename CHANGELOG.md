@@ -1,4 +1,12 @@
-# Changelog
+# CHANGELOG
+
+## v1.0.0-9.0.3 (28 June 2017)
+
+- Add `.linz` class to the Linz navbar.
+
+## v1.0.0-9.0.2 (28 June 2017)
+
+- Fixes an issue with the grid renderer not showing default record actions (edit and delete).
 
 ## v1.0.0-9.0.1 (14 June 2017)
 
