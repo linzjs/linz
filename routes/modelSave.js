@@ -47,7 +47,7 @@ var route = function (req, res, next) {
 
                     if (form[field].transform) {
 
-                        req.body[field] = form[field].transform(req.body[field], 'beforeSave');
+                        req.body[field] = form[field].transform(req.body[field], 'beforeSave', req.body, req.user);
 
                     }
 
