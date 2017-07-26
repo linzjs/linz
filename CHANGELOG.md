@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Add `navigationTransform` property to the Linz initialisation options. This is a function that accepts a navigation and data object parameter `(nav, { user })` and allows customisation of the main navigation menu with additional contexts not available at initialisation.
 - Now passing `form` and `user` to `transform` function.
 - Now passing `record` to `transpose` function.
 
