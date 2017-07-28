@@ -6,10 +6,12 @@ var route = function (req, res) {
 
     var locals = {
         config: req.linz.config,
-        record: clone(req.linz.record),
-        permissions: req.linz.config.linz.formtools.permissions,
         formtools: req.linz.config.linz.formtools,
-        overview: req.linz.overview
+        overview: req.linz.overview,
+        permissions: req.linz.config.linz.formtools.permissions,
+        record: clone(req.linz.record),
+        scripts: res.locals.scripts,
+        styles: res.locals.styles,
     };
 
     if (Array.isArray(locals.overview.body)) {

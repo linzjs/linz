@@ -36,7 +36,9 @@ var route = {
 
             // now render the final template, within the layout
             return res.render(linz.api.views.viewPath('adminLogin.jade'), {
-                html: html
+                html: html,
+                scripts: res.locals.scripts,
+                styles: res.locals.styles,
             });
 
         });

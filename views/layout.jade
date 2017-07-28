@@ -22,6 +22,7 @@ html(lang="en")&attributes(attributes)
 		if adminCSSFile !== undefined
 			link(href='' + adminCSSFile, rel='stylesheet')
 		script(src='' + linz.get('admin path') + '/public/js/utils.js')
+		include partials/head
 	- bodyAttributes = []
 	if customAttributes && customAttributes.length
 		each attribute in customAttributes
@@ -102,3 +103,4 @@ html(lang="en")&attributes(attributes)
 
 		if notifications
 			!= notifications
+		include partials/foot

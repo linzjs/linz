@@ -39,7 +39,7 @@ var route = function (req, res, next) {
         from: pageSize*page-pageSize,
         label: {
             singular: inflection.humanize(req.linz.model.linz.formtools.model.label, true),
-            plural: req.linz.model.linz.formtools.model.plural
+            plural: req.linz.model.linz.formtools.model.plural,
         },
         model: req.linz.model,
         modelQuery: JSON.stringify(req.linz.model.formData),
@@ -55,6 +55,8 @@ var route = function (req, res, next) {
         sortDirection: sortDirection,
         to: to,
         total: total,
+        scripts: res.locals.scripts,
+        styles: res.locals.styles,
         user: req.user,
     };
 

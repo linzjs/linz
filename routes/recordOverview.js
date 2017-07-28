@@ -14,6 +14,8 @@ var route = function (req, res, next) {
         overview: req.linz.overview,
         permissions: req.linz.model.linz.formtools.permissions,
         record: clone(req.linz.record.toObject({ virtuals: true})),
+        scripts: res.locals.scripts,
+        styles: res.locals.styles,
         user: req.user,
     };
 
