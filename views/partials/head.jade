@@ -1,5 +1,7 @@
-each style in styles
-	link(as=style.as crossorigin=style.crossorigin href=style.href hreflang=style.hreflang media=style.media rel=style.rel sizes=style.sizes title=style.title type=style.type)
-each script in scripts
-	if script.inHead
-		script(async=script.async crossorigin=script.crossorigin defer=script.defer integrity=script.integrity src=script.src text=script.text type=script.type)
+if styles && styles.length
+	each style in styles
+		link(as=style.as crossorigin=style.crossorigin href=style.href hreflang=style.hreflang media=style.media rel=style.rel sizes=style.sizes title=style.title type=style.type)
+if scripts && scripts.length
+	each script in scripts
+		if script.inHead
+			script(async=script.async crossorigin=script.crossorigin defer=script.defer integrity=script.integrity src=script.src text=script.text type=script.type)
