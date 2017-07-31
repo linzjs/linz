@@ -38,7 +38,7 @@ var route = function (req, res, next) {
                         }
 
                         // go through the transform function if one exists
-                        record[field] = (req.linz.model.linz.formtools.form[field].transform) ? req.linz.model.linz.formtools.form[field].transform(req.body[field], 'beforeSave') : req.body[field];
+                        record[field] = (req.linz.model.linz.formtools.form[field].transform) ? req.linz.model.linz.formtools.form[field].transform(req.body[field], 'beforeSave', req.body, req.user) : req.body[field];
 
                     }
 
