@@ -256,7 +256,7 @@ You can create a Mongoose method called ``canDelete`` for a model, with the foll
 
 If found, Linz will execute this function before rendering the Model index page. This provides an opportunity to customise the delete record action. Because it is a Mongoose method, inside the function ``this`` is scoped to the record itself.
 
-The callback has the following signature ``callback (err, isDisabled, message)``. ``isDisabled`` should be a boolean; ``true`` to disable the delete action, ``false`` to enable it. If it is disabled, you can use ``message`` that will be displayed to the user if they click on the button.
+The callback has the following signature ``callback (err, isEnabled, message)``. ``isEnabled`` should be a boolean; ``true`` to enable the delete action, ``false`` to disable it. If it is disabled, you can use ``message`` to provide a message that will be displayed to the user if they click on the delete button.
 
 canEdit method
 --------------
@@ -267,4 +267,4 @@ You can create a Mongoose method called ``canEdit`` for a model, with the follow
 
 If found, Linz will execute this function before rendering the Model index page. This provides an opportunity to customise the edit record action. Because it is a Mongoose method, inside the function ``this`` is scoped to the record itself.
 
-The callback has the following signature ``callback (err, isDisabled, message)``. ``isDisabled`` should be a boolean; ``true`` to disable the edit action, ``false`` to enable it. If it is disabled, you can use ``message`` that will be displayed to the user if they click on the button.
+The callback has the following signature ``callback (err, isEnabled, message)``. ``isEnabled`` should be a boolean; ``true`` to enable the edit action, ``false`` to disable it. If it is disabled, you can use ``message`` to provide a message that will be displayed to the user if they click on the edit button.
