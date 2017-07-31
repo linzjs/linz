@@ -278,7 +278,7 @@ In some instances, client-side data requirements are different from that of data
 {field-name}.transpose
 ======================
 
-The ``transpose`` property will accept a function that if provided, will be executed before a field's value is rendered to a form.
+The ``transpose`` property will accept a function with the parameter `(field)` that if provided, will be executed before a field's value is rendered to a form.
 
 Define a ``transpose`` function if you'd like to manipulate the server-side data that is rendered to a form.
 
