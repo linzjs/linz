@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+
+- Now passing `form` and `user` to `transform` function.
+- Now passing `record` to `transpose` function.
+
 ## v1.0.0-9.0.3 (28 June 2017)
 
 - Add `.linz` class to the Linz navbar.
