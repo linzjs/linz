@@ -269,17 +269,21 @@ The ``query`` property can be used to directly alter the Mongoose query object t
 {field-name}.transform
 ======================
 
-The ``transform`` property will accept a function with the parameters `(field, 'beforeSave', form, user)` that if provided, will be executed before a record is saved to the database.
+The ``transform`` property will accept a function with the signature::
 
-Define a ``transform`` function if you'd like to manipulate the client-side data that is stored in the database.
+  transform (field, 'beforeSave', form, user)
 
-In some instances, client-side data requirements are different from that of data storage requirements. ``transform`` in combination with ``transpose`` can be used effectively to manage these scenarios.
+If provided, it will be executed before a record is saved to the database. It is useful if you need to manipulate client side data before it is stored in the database.
+
+In some instances, client side data requirements are different from that of data storage requirements. ``transform`` in combination with ``transpose`` can be used effectively to manage these scenarios.
 
 {field-name}.transpose
 ======================
 
-The ``transpose`` property will accept a function with the parameter `(field)` that if provided, will be executed before a field's value is rendered to a form.
+The ``transpose`` property will accept a function with the signature::
 
-Define a ``transpose`` function if you'd like to manipulate the server-side data that is rendered to a form.
+  transpose (field, record)
 
-In some instances, data storage requirements are different form that of client-side data requirements. ``transpose`` in combination with ``transform`` can be used effectively to manage these scenarios.
+If provided, it will be executed before a field's value is rendered to a form. It is useful if you'd like to manipulate the server-side data that is rendered to a form.
+
+In some instances, data storage requirements are different form that of client side data requirements. ``transpose`` in combination with ``transform`` can be used effectively to manage these scenarios.
