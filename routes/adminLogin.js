@@ -8,8 +8,9 @@ var route = {
 
         var linz = require('../'),
             locals = {
+                customAttributes: res.locals.customAttributes,
                 hasResetPassword: linz.api.model.get(linz.get('user model')).sendPasswordResetEmail, // check if resetPassword() is defined for user model
-                loginError: req.flash('error') //set login error message
+                loginError: req.flash('error'), //set login error message
             };
 
         // pre-render the admin view, ready to plug into the larger wrapper

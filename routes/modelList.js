@@ -60,7 +60,8 @@ var route = function (req, res, next) {
         }
 
         res.render(linz.api.views.viewPath('modelList.jade'), {
-            models: modelsList
+            customAttributes: res.locals.customAttributes,
+            models: modelsList,
         });
 
     });

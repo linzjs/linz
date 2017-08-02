@@ -22,7 +22,11 @@ html(lang="en")&attributes(attributes)
 		if adminCSSFile !== undefined
 			link(href='' + adminCSSFile, rel='stylesheet')
 		script(src='' + linz.get('admin path') + '/public/js/utils.js')
-	body
+	- bodyAttributes = []
+	if customAttributes && customAttributes.length
+		each attribute in customAttributes
+			- bodyAttributes[attribute.name] = attribute.value
+	body&attributes(bodyAttributes)
 		.navbar.navbar-inverse.navbar-fixed-top.linz-navbar-inverse(role='navigation')
 			.container
 				.navbar-header
@@ -50,10 +54,14 @@ html(lang="en")&attributes(attributes)
 					else
 						if (node.href === request.path)
 							li(class='active')
-								a(href=node.href)= node.name
+								a(href=node.href)
+									span.icon!= node.icon
+									span.name= node.name
 						else
 							li
-								a(href=node.href)= node.name
+								a(href=node.href)
+									span.icon!= node.icon
+									span.name= node.name
 		.wrap
 			block page
 				header

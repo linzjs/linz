@@ -34,27 +34,28 @@ var route = function (req, res, next) {
     req.linz.model.list.recordActions = parseModalProperties(recordActions);
 
     const data = {
-        model: req.linz.model,
-        permissions: req.linz.model.linz.formtools.permissions,
+        customAttributes: res.locals.customAttributes,
         form: req.linz.model.formData || {},
-        records: req.linz.records.records,
-        page: page,
-        total: total,
-        pages: pages,
-        pageSize: pageSize,
-        pageSizes: req.linz.model.list.paging.sizes || linz.get('page sizes'),
         from: pageSize*page-pageSize,
-        to: to,
-        pagination: (req.linz.model.list.paging.active === true && total > pageSize),
-        sort: req.linz.model.list.sortingBy,
-        sortDirection: sortDirection,
         label: {
             singular: inflection.humanize(req.linz.model.linz.formtools.model.label, true),
             plural: req.linz.model.linz.formtools.model.plural
         },
+        model: req.linz.model,
         modelQuery: JSON.stringify(req.linz.model.formData),
+        page: page,
+        pages: pages,
+        pageSize: pageSize,
+        pageSizes: req.linz.model.list.paging.sizes || linz.get('page sizes'),
+        pagination: (req.linz.model.list.paging.active === true && total > pageSize),
+        permissions: req.linz.model.linz.formtools.permissions,
+        query: req.query,
+        records: req.linz.records.records,
+        sort: req.linz.model.list.sortingBy,
+        sortDirection: sortDirection,
+        to: to,
+        total: total,
         user: req.user,
-        query: req.query
     };
 
     async.parallel([

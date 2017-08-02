@@ -59,6 +59,8 @@ If neither an initialized instance of Express, Passport or Mongoose, nor an opti
   // overlay runtime options, these will override linz defaults
   this.options(opts.options || {});
 
+.. _options-object-reference:
+
 Options object
 --------------
 
@@ -70,9 +72,7 @@ An object can be used to customize Linz. For example::
       }
   });
 
-For a complete list of customizations you can make, view Linz's defaults_.
-
-.. _defaults: https://github.com/linzjs/linz/blob/master/lib/defaults.js
+You can read more about :ref:`defaults-reference`.
 
 Events
 ======
