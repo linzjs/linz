@@ -1,4 +1,8 @@
-var linz = require('../');
+'use strict';
+
+const linz = require('../');
+const setTemplateScripts = require('../lib/scripts');
+const setTemplateStyles = require('../lib/styles');
 
 /* GET /admin/config/:config/overview */
 var route = function (req, res, next) {
@@ -9,14 +13,23 @@ var route = function (req, res, next) {
             return next(err);
         }
 
-        res.render(linz.api.views.viewPath('configEdit.jade'), {
-            actionUrl: linz.api.url.getAdminLink(req.linz.config, 'save', req.linz.record._id),
-            cancelUrl: linz.api.url.getAdminLink(req.linz.config, 'list'),
-            form: editForm.render(),
-            record: req.linz.record,
-            scripts: res.locals.scripts,
-            styles: res.locals.styles,
-        });
+        Promise.all([
+            setTemplateScripts(req, res),
+            setTemplateStyles(req, res),
+        ])
+            .then(([scripts, styles]) => {
+
+                return res.render(linz.api.views.viewPath('configEdit.jade'), {
+                    actionUrl: linz.api.url.getAdminLink(req.linz.config, 'save', req.linz.record._id),
+                    cancelUrl: linz.api.url.getAdminLink(req.linz.config, 'list'),
+                    form: editForm.render(),
+                    record: req.linz.record,
+                    scripts,
+                    styles,
+                });
+
+            })
+            .catch(next);
 
     });
 

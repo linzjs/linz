@@ -1,6 +1,8 @@
-var formist = require('formist'),
-    linz = require('../'),
-    util = require('util');
+'use strict';
+
+const linz = require('../');
+const setTemplateScripts = require('../lib/scripts');
+const setTemplateStyles = require('../lib/styles');
 
 /* GET /admin/:model/:id/overview */
 var route = function (req, res, next) {
@@ -44,17 +46,26 @@ var route = function (req, res, next) {
         // wrap code in self-executable function
         conflictHandlersJS = '\n\t(function () {\n\t' + conflictHandlersJS + '\n\t})();';
 
-        res.render(linz.api.views.viewPath('recordEdit.jade'), {
-            cancelUrl: linz.api.url.getAdminLink(req.linz.model),
-            conflictHandlersJS: conflictHandlersJS,
-            form: editForm.render(),
-            model: req.linz.model,
-            record: req.linz.record,
-            actionUrl: linz.api.url.getAdminLink(req.linz.model, 'save', req.linz.record._id),
-            customAttributes: res.locals.customAttributes,
-            scripts: res.locals.scripts,
-            styles: res.locals.styles,
-        });
+        Promise.all([
+            setTemplateScripts(req, res),
+            setTemplateStyles(req, res),
+        ])
+            .then(([scripts, styles]) => {
+
+                return res.render(linz.api.views.viewPath('recordEdit.jade'), {
+                    cancelUrl: linz.api.url.getAdminLink(req.linz.model),
+                    conflictHandlersJS: conflictHandlersJS,
+                    form: editForm.render(),
+                    model: req.linz.model,
+                    record: req.linz.record,
+                    actionUrl: linz.api.url.getAdminLink(req.linz.model, 'save', req.linz.record._id),
+                    customAttributes: res.locals.customAttributes,
+                    scripts,
+                    styles,
+                });
+
+            })
+            .catch(next);
 
     });
 

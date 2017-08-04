@@ -1,5 +1,8 @@
-var path = require('path'),
-    async = require('async');
+'use strict';
+
+const async = require('async');
+const setTemplateScripts = require('../lib/scripts');
+const setTemplateStyles = require('../lib/styles');
 
 /* GET /admin/login */
 var route = {
@@ -34,12 +37,21 @@ var route = {
                 return next(err);
             }
 
-            // now render the final template, within the layout
-            return res.render(linz.api.views.viewPath('adminLogin.jade'), {
-                html: html,
-                scripts: res.locals.scripts,
-                styles: res.locals.styles,
-            });
+            return Promise.all([
+                setTemplateScripts(req, res),
+                setTemplateStyles(req, res),
+            ])
+                .then(([scripts, styles]) => {
+
+                    // Now render the final template, within the layout.
+                    return res.render(linz.api.views.viewPath('adminLogin.jade'), {
+                        html,
+                        scripts,
+                        styles,
+                    });
+
+                })
+                .catch(next);
 
         });
 

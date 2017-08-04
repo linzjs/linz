@@ -1,8 +1,12 @@
-var linz = require('../'),
-    async = require('async');
+'use strict';
+
+const async = require('async');
+const linz = require('../');
+const setTemplateScripts = require('../lib/scripts');
+const setTemplateStyles = require('../lib/styles');
 
 /* GET /admin/configs/list */
-var route = function (req, res) {
+var route = function (req, res, next) {
 
     // determine if we need to render the actions field
     async.some(req.linz.records, function (record, cb) {
@@ -16,14 +20,23 @@ var route = function (req, res) {
 
     }, function (renderActionsField) {
 
-        res.render(linz.api.views.viewPath('configList.jade'), {
-            configs: req.linz.configs,
-            list: req.linz.configList,
-            records: req.linz.records,
-            renderActionsField: renderActionsField,
-            scripts: res.locals.scripts,
-            styles: res.locals.styles,
-        });
+        Promise.all([
+            setTemplateScripts(req, res),
+            setTemplateStyles(req, res),
+        ])
+            .then(([scripts, styles]) => {
+
+                return res.render(linz.api.views.viewPath('configList.jade'), {
+                    configs: req.linz.configs,
+                    list: req.linz.configList,
+                    records: req.linz.records,
+                    renderActionsField: renderActionsField,
+                    scripts,
+                    styles,
+                });
+
+            })
+            .catch(next);
 
     });
 
