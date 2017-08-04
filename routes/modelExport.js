@@ -9,7 +9,11 @@ module.exports = {
     get: function (req, res, next) {
 
         Promise.all([
-            setTemplateScripts(req, res),
+            setTemplateScripts(req, res, [
+                {
+                    src: `${linz.get('admin path')}/public/js/views/model-export.js`,
+                },
+            ]),
             setTemplateStyles(req, res),
         ])
             .then(([scripts, styles]) => {

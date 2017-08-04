@@ -7,10 +7,3 @@ block content
 			p You don't have the permissions to view this page.
 			p If you feel this is an error, please contact the administrator of this website.
 			button.btn.btn-primary(type='submit') Back
-
-block script
-	script.
-		$('form .btn-primary').click(function (event) {
-			event.preventDefault();
-			window.history.back();
-		});
