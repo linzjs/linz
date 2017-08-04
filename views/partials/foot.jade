@@ -1,4 +1,9 @@
-if scripts && scripts.length
-	each script in scripts
-		if !script.inHead
-			script(async=script.async crossorigin=script.crossorigin defer=script.defer integrity=script.integrity src=script.src text=script.text type=script.type)
+block script
+	if scripts && scripts.length
+		each script in scripts
+			if !script.inHead
+				script(async=script.async crossorigin=script.crossorigin defer=script.defer integrity=script.integrity src=script.src text=script.text type=script.type)
+	script.
+		CKEDITOR.replaceClass = null; // Disable replacing by class
+		CKEDITOR.disableAutoInline = true;
+	script. linz.loadLibraries('#{linz.get('admin path')}');
