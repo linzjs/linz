@@ -21,7 +21,11 @@ var route = function (req, res, next) {
     }, function (renderActionsField) {
 
         Promise.all([
-            setTemplateScripts(req, res),
+            setTemplateScripts(req, res, [
+                {
+                    src: `${linz.get('admin path')}/public/config/list.js`,
+                },
+            ]),
             setTemplateStyles(req, res),
         ])
             .then(([scripts, styles]) => {

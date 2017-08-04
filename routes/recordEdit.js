@@ -47,7 +47,28 @@ var route = function (req, res, next) {
         conflictHandlersJS = '\n\t(function () {\n\t' + conflictHandlersJS + '\n\t})();';
 
         Promise.all([
-            setTemplateScripts(req, res),
+            setTemplateScripts(req, res, [
+                {
+                    src: '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js',
+                    integrity: 'sha256-0JaDbGZRXlzkFbV8Xi8ZhH/zZ6QQM0Y3dCkYZ7JYq34=',
+                    crossorigin: 'anonymous',
+                },
+                {
+                    src: `${linz.get('admin path')}/public/js/jquery.binddata.js`,
+                },
+                {
+                    src: `${linz.get('admin path')}/public/js/documentarray.js`,
+                },
+                {
+                    src: `${linz.get('admin path')}/public/js/deep-diff-0.2.0.min.js`,
+                },
+                {
+                    src: `${linz.get('admin path')}/public/js/json2.js`,
+                },
+                {
+                    src: `${linz.get('admin path')}/public/js/model/edit.js`,
+                },
+            ]),
             setTemplateStyles(req, res),
         ])
             .then(([scripts, styles]) => {

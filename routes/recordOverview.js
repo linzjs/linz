@@ -11,7 +11,11 @@ const setTemplateStyles = require('../lib/styles');
 var route = function (req, res, next) {
 
     Promise.all([
-        setTemplateScripts(req, res),
+        setTemplateScripts(req, res, [
+            {
+                src: `${linz.get('admin path')}/public/js/model/index.js`,
+            },
+        ]),
         setTemplateStyles(req, res),
     ])
         .then(([scripts, styles]) => {

@@ -15,7 +15,22 @@ var route = function (req, res, next) {
         }
 
         Promise.all([
-            setTemplateScripts(req, res),
+            setTemplateScripts(req, res, [
+                {
+                    src: '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js',
+                    integrity: 'sha256-0JaDbGZRXlzkFbV8Xi8ZhH/zZ6QQM0Y3dCkYZ7JYq34=',
+                    crossorigin: 'anonymous',
+                },
+                {
+                    src: `${linz.get('admin path')}/public/js/jquery.binddata.js`,
+                },
+                {
+                    src: `${linz.get('admin path')}/public/js/documentarray.js`,
+                },
+                {
+                    src: `${linz.get('admin path')}/public/js/model/edit.js`,
+                },
+            ]),
             setTemplateStyles(req, res),
         ])
             .then(([scripts, styles]) => {

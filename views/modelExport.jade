@@ -24,10 +24,9 @@ block content
             button.btn.btn-primary(type='submit', data-linz-control='export-save') Export
             button.btn.btn-default(type='button', data-dismiss='modal') Cancel
 
-    script(src='' + linz.get('admin path') + '/public/js/jquery-ui.min.js')
     script.
 
-        (function () {
+        $(document).ready(function () {
 
             var fields = !{JSON.stringify(modelExport.fields)},
                 exportCookieName = !{JSON.stringify(model.modelName)} + '_' + 'selectedExportFields',
@@ -35,13 +34,13 @@ block content
                 bSelectAll = true;
 
             drawExportList(savedFields);
-            
+
             var selectedIDs = [];
-            
+
             $('input[data-linz-control="checked-record"]:checked').each(function () {
                 selectedIDs.push($(this).val());
             });
-            
+
             // add selected IDs to hidden field
             $('[data-linz-export="ids"]', 'form.exportForm').val(selectedIDs);
 
@@ -193,4 +192,4 @@ block content
                 return "";
             }
 
-        })();
+        });
