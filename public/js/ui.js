@@ -173,8 +173,8 @@ if (!linz) {
             {
                 test: Modernizr.inputtypes.date,
                 nope: [
-                    path + '/public/js/bootstrap-datetimepicker.min.js',
-                    path + '/public/css/bootstrap-datetimepicker.min.css'
+                    '//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+                    '//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
                 ],
                 complete : function () {
                     loadDatepicker();
