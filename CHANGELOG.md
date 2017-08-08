@@ -7,7 +7,6 @@
 - Allow custom scripts and styles through the `scripts` and `styles` Linz options. These should be functions that take `req` and `res` objects and return a promise that resolves with an array of scripts and styles. The array should contain objects with the same properties as the HTML equivalents.
 - Now passing `form` and `user` to `transform` function.
 - Now passing `record` to `transpose` function.
-- Add the ability to set an `alwaysOn` property for filters. This should be a boolean and will remove the filter from the dropdown, hide the close button, and automatically show the filter.
 - Expose `linz.api.views.getScripts` and `linz.api.views.getStyles` api.
 
 ## v1.0.0-9.0.3 (28 June 2017)
