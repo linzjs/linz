@@ -3,20 +3,18 @@
 const async = require('async');
 const clone = require('clone');
 const linz = require('../');
-const setTemplateScripts = require('../lib/scripts');
-const setTemplateStyles = require('../lib/styles');
 
 
 /* GET /admin/:model/:id/overview */
 var route = function (req, res, next) {
 
     Promise.all([
-        setTemplateScripts(req, res, [
+        linz.api.views.getScripts(req, res, [
             {
                 src: `${linz.get('admin path')}/public/js/model/index.js`,
             },
         ]),
-        setTemplateStyles(req, res),
+        linz.api.views.getStyles(req, res),
     ])
         .then(([scripts, styles]) => {
 

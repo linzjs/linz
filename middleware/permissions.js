@@ -2,8 +2,6 @@
 
 const camelCase = require('camelcase');
 const linz = require('../');
-const setTemplateScripts = require('../lib/scripts');
-const setTemplateStyles = require('../lib/styles');
 
 // protect routes by requesting permissions for the action
 function permissions (permission, context) {
@@ -36,12 +34,12 @@ function permissions (permission, context) {
         linz.api.permissions.hasPermission(req.user, _context, perm, function (hasPermission) {
 
             Promise.all([
-                setTemplateScripts(req, res, [
+                linz.api.views.getScripts(req, res, [
                     {
                         src: `${linz.get('admin path')}/public/js/views/forbidden.js`,
                     },
                 ]),
-                setTemplateStyles(req, res),
+                linz.api.views.getStyles(req, res),
             ])
                 .then(([scripts, styles]) => {
 

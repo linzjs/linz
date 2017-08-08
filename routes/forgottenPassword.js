@@ -1,20 +1,18 @@
 'use strict';
 
 const linz = require('../');
-const setTemplateScripts = require('../lib/scripts');
-const setTemplateStyles = require('../lib/styles');
 
 module.exports = {
 
     get: function (req, res, next) {
 
         Promise.all([
-            setTemplateScripts(req, res, [
+            linz.api.views.getScripts(req, res, [
                 {
                     src: `${linz.get('admin path')}/public/js/views/forgotten-password.js`,
                 },
             ]),
-            setTemplateStyles(req, res),
+            linz.api.views.getStyles(req, res),
         ])
             .then(([scripts, styles]) => {
 
@@ -31,12 +29,12 @@ module.exports = {
     post: function (req, res, next) {
 
         Promise.all([
-            setTemplateScripts(req, res, [
+            linz.api.views.getScripts(req, res, [
                 {
                     src: `${linz.get('admin path')}/public/js/views/forgotten-password.js`,
                 },
             ]),
-            setTemplateStyles(req, res),
+            linz.api.views.getStyles(req, res),
         ])
             .then(([scripts, styles]) => {
 

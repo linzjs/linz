@@ -1,8 +1,6 @@
 'use strict';
 
 const async = require('async');
-const setTemplateScripts = require('../lib/scripts');
-const setTemplateStyles = require('../lib/styles');
 
 /* GET /admin/login */
 var route = {
@@ -38,8 +36,8 @@ var route = {
             }
 
             return Promise.all([
-                setTemplateScripts(req, res),
-                setTemplateStyles(req, res),
+                linz.api.views.getScripts(req, res),
+                linz.api.views.getStyles(req, res),
             ])
                 .then(([scripts, styles]) => {
 

@@ -2,15 +2,13 @@
 
 const clone = require('clone');
 const linz = require('../');
-const setTemplateScripts = require('../lib/scripts');
-const setTemplateStyles = require('../lib/styles');
 
 /* GET /admin/config/:config/overview */
 var route = function (req, res, next) {
 
     Promise.all([
-        setTemplateScripts(req, res),
-        setTemplateStyles(req, res),
+        linz.api.views.getScripts(req, res),
+        linz.api.views.getStyles(req, res),
     ])
         .then(([scripts, styles]) => {
 

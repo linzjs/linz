@@ -2,8 +2,6 @@
 
 const inflection = require('inflection');
 const linz = require('../');
-const setTemplateScripts = require('../lib/scripts');
-const setTemplateStyles = require('../lib/styles');
 
 /* GET /admin/model/:model/create */
 var route = function (req, res, next) {
@@ -15,7 +13,7 @@ var route = function (req, res, next) {
         }
 
         Promise.all([
-            setTemplateScripts(req, res, [
+            linz.api.views.getScripts(req, res, [
                 {
                     src: '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js',
                     integrity: 'sha256-0JaDbGZRXlzkFbV8Xi8ZhH/zZ6QQM0Y3dCkYZ7JYq34=',
@@ -31,7 +29,7 @@ var route = function (req, res, next) {
                     src: `${linz.get('admin path')}/public/js/model/edit.js`,
                 },
             ]),
-            setTemplateStyles(req, res),
+            linz.api.views.getStyles(req, res),
         ])
             .then(([scripts, styles]) => {
 

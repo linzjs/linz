@@ -1,15 +1,13 @@
 'use strict';
 
 const linz = require('../');
-const setTemplateScripts = require('../lib/scripts');
-const setTemplateStyles = require('../lib/styles');
 
 /* GET /logs/request/list */
 var route = function (req, res, next) {
 
     Promise.all([
-        setTemplateScripts(req, res),
-        setTemplateStyles(req, res),
+        linz.api.views.getScripts(req, res),
+        linz.api.views.getStyles(req, res),
     ])
         .then(([scripts, styles]) => {
 

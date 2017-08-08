@@ -1,16 +1,14 @@
 'use strict';
 
 const linz = require('../');
-const setTemplateScripts = require('../lib/scripts');
-const setTemplateStyles = require('../lib/styles');
 
 module.exports = function (err, req, res, next) {
 
     console.error(err.stack);
 
     Promise.all([
-        setTemplateScripts(req, res),
-        setTemplateStyles(req, res),
+        linz.api.views.getScripts(req, res),
+        linz.api.views.getStyles(req, res),
     ])
         .then(([scripts, styles]) => {
 

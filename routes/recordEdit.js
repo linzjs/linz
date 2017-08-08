@@ -1,8 +1,6 @@
 'use strict';
 
 const linz = require('../');
-const setTemplateScripts = require('../lib/scripts');
-const setTemplateStyles = require('../lib/styles');
 
 /* GET /admin/:model/:id/overview */
 var route = function (req, res, next) {
@@ -80,8 +78,8 @@ var route = function (req, res, next) {
         }
 
         Promise.all([
-            setTemplateScripts(req, res, defaultScripts),
-            setTemplateStyles(req, res),
+            linz.api.views.getScripts(req, res, defaultScripts),
+            linz.api.views.getStyles(req, res),
         ])
             .then(([scripts, styles]) => {
 
