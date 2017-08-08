@@ -126,11 +126,14 @@ list.filters
 
   filters: {
     dateModified: {
-      filter: linz.formtools.filters.dateRange
+      alwaysOn: true,
+      filter: linz.formtools.filters.dateRange,
     }
   }
 
-The following will allow your model to be easily filtered by a date range filter, on the ``dateModified`` property. For a complete list of the filters available see https://github.com/linzjs/linz/tree/master/lib/formtools/filters.
+The following will allow your model to be easily filtered by a date range filter, on the ``dateModified`` property. You can also set `alwaysOn: true` to have a permanently visible filter.
+
+For a complete list of the filters available see https://github.com/linzjs/linz/tree/master/lib/formtools/filters.
 
 list.paging
 ===========
