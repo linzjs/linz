@@ -59,10 +59,14 @@ var route = function (req, res, next) {
                 src: `${linz.get('admin path')}/public/js/documentarray.js`,
             },
             {
-                src: `${linz.get('admin path')}/public/js/deep-diff-0.2.0.min.js`,
+                integrity: 'sha256-/wPGlKXtfdj9ryVH2IQ78d1Zx2/4PXT/leOL4Jt1qGU=',
+                src: '//cdnjs.cloudflare.com/ajax/libs/deep-diff/0.2.0/deep-diff.min.js',
+                crossorigin: 'anonymous',
             },
             {
-                src: `${linz.get('admin path')}/public/js/json2.js`,
+                integrity: 'sha256-ytdI1WZJO3kDPOAKDA5t95ehNAppkvcx0oPRRAsONGo=',
+                src: '//cdnjs.cloudflare.com/ajax/libs/json2/20140204/json2.min.js',
+                crossorigin: 'anonymous',
             },
             {
                 src: `${linz.get('admin path')}/public/js/model/edit.js`,

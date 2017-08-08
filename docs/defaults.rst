@@ -75,7 +75,7 @@ This will result in a ``body`` tag with custom attributes on all Linz pages::
 scripts
 -------
 
-The ``scripts`` default allows you to customise the scripts that are applied to each page in Linz.
+The ``scripts`` default allows you to customise the external JavaScripts that are loaded on each page in Linz.
 
 To use ``scripts`` define a function with the following signature::
 
@@ -86,7 +86,7 @@ To use ``scripts`` define a function with the following signature::
    */
   scripts (req, res)
 
-The function should return an array of objects containing the same HTML tag attributes::
+The function should return an array of objects containing the same HTML attributes as the ``<script>`` tag::
 
   scripts (req, res) => {
 
@@ -101,11 +101,14 @@ The function should return an array of objects containing the same HTML tag attr
   }
 
 ``res.locals.scripts`` contains all the scripts used by Linz, be careful when removing/updating these as it could break functionality within Linz.
+You should use the existing array as the array that is resolved with the promise because it will replace ``res.locals.scripts``, not append to it.
+
+The script objects can contain an additional ``inHead`` boolean option to optionally load the script in the head tag.
 
 styles
 -------
 
-The ``styles`` default allows you to customise the styles that are applied to each page in Linz.
+The ``styles`` default allows you to customise the external CSS stylesheets that are loaded on each page in Linz.
 
 To use ``styles`` define a function with the following signature::
 
@@ -116,7 +119,7 @@ To use ``styles`` define a function with the following signature::
    */
   styles (req, res)
 
-The function should return an array of objects containing the same HTML tag attributes::
+The function should return an array of objects containing the same HTML attributes as the ``<link>`` tag::
 
   styles (req, res) => {
 
@@ -132,3 +135,4 @@ The function should return an array of objects containing the same HTML tag attr
   }
 
 ``res.locals.styles`` contains all the styles used by Linz, be careful when removing/updating these as it could break functionality within Linz.
+You should use the existing array as the array that is resolved with the promise because it will replace ``res.locals.styles``, not append to it.

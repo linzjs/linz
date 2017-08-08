@@ -578,13 +578,13 @@ Linz.prototype.bootstrapExpressLocals = function (cb) {
     if (this.get('css file')) {
         deprecate(() => {
             this.app.locals.adminCSSFile = this.get('css file');
-        }, 'adminCSSFile: Use the styles property instead')();
+        }, 'adminCSSFile: Use the styles default instead')();
     }
 
     if (this.get('js file')) {
         deprecate(() => {
             this.app.locals.adminJSFile = this.get('js file');
-        }, 'adminJSFile: Use the scripts property instead')();
+        }, 'adminJSFile: Use the scripts default instead')();
     }
 
     return cb(null);
