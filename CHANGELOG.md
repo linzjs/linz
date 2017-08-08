@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.0.0-9.1.0 (9 August 2017)
 
 - Add `navigationTransform` property to the Linz initialisation options. This is a function that accepts a navigation and data object parameter `(nav, { user })` and allows customisation of the main navigation menu with additional contexts not available at initialisation.
 - Add `customAttributes` property to the Linz initialisation options. This is a function that accepts a `req` object that has gone through all the Linz middleware. i.e. the user is available at this point.
@@ -8,6 +8,8 @@
 - Now passing `form` and `user` to `transform` function.
 - Now passing `record` to `transpose` function.
 - Expose `linz.api.views.getScripts` and `linz.api.views.getStyles` api.
+- Added ability to provide Linz with custom navigation via setting `linz.set('navigation', navigation);`.
+- Added ability to display icons (html) in custom navigations by adding an icon property `icon: '<i class="fa fa-home" aria-hidden="true"></i>'`.
 
 ## v1.0.0-9.0.3 (28 June 2017)
 
@@ -16,11 +18,6 @@
 ## v1.0.0-9.0.2 (28 June 2017)
 
 - Fixes an issue with the grid renderer not showing default record actions (edit and delete).
-
-## Unreleased
-
-- Added ability to provide Linz with custom navigation via setting `linz.set('navigation', navigation);`.
-- Added ability to display icons (html) in custom navigations by adding an icon property `icon: '<i class="fa fa-home" aria-hidden="true"></i>'`.
 
 ## v1.0.0-9.0.1 (14 June 2017)
 
