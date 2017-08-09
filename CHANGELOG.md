@@ -2,6 +2,12 @@
 
 ## v1.0.0-9.1.0 (9 August 2017)
 
+### BREAKING CHANGES
+
+- Deprecated `adminJSFile` and `adminCSSFile` defaults. Please use `scripts` and `styles` instead.
+
+### IMPROVEMENTS
+
 - Add `navigationTransform` property to the Linz initialisation options. This is a function that accepts a navigation and data object parameter `(nav, { user })` and allows customisation of the main navigation menu with additional contexts not available at initialisation.
 - Add `customAttributes` property to the Linz initialisation options. This is a function that accepts a `req` object that has gone through all the Linz middleware. i.e. the user is available at this point.
 - Allow custom scripts and styles through the `scripts` and `styles` Linz options. These should be functions that take `req` and `res` objects and return a promise that resolves with an array of scripts and styles. The array should contain objects with the same properties as the HTML equivalents.
