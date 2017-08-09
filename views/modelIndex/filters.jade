@@ -8,7 +8,7 @@
 			ul.dropdown-menu(role='menu')
 				for filterField, key in model.list.filters
 					li
-						a.control-addFilter(data-filter-field='' + key + '' data-filter-alwayson='' + filterField.alwaysOn + '')= filterField['label']
+						a.control-addFilter(data-filter-field='' + key + '' data-filter-alwayson='' + filterField.alwaysOn + '' data-filter-once='' + filterField.once + '')= filterField['label']
 						span.controlField!= filterField.formControls
 	form.filters(method='post', role='form')
 		input.page(type='hidden', name='page', value=''+ page +'')
