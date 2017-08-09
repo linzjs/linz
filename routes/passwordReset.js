@@ -1,15 +1,45 @@
-var linz = require('../');
+'use strict';
+
+const linz = require('../');
 
 module.exports = {
 
-    get: function (req, res) {
-        res.render(linz.api.views.viewPath('passwordReset.jade'), { record: req.linz.record });
+    get: function (req, res, next) {
+
+        Promise.all([
+            linz.api.views.getScripts(req, res),
+            linz.api.views.getStyles(req, res),
+        ])
+            .then(([scripts, styles]) => {
+
+                return res.render(linz.api.views.viewPath('passwordReset.jade'), {
+                    record: req.linz.record,
+                    scripts,
+                    styles,
+                });
+
+            })
+            .catch(next);
+
     },
 
-    post: function (req, res) {
-        res.render(linz.api.views.viewPath('passwordReset.jade'), {
-            success: true
-        });
+    post: function (req, res, next) {
+
+        Promise.all([
+            linz.api.views.getScripts(req, res),
+            linz.api.views.getStyles(req, res),
+        ])
+            .then(([scripts, styles]) => {
+
+                return res.render(linz.api.views.viewPath('passwordReset.jade'), {
+                    scripts,
+                    styles,
+                    success: true,
+                });
+
+            })
+            .catch(next);
+
     }
 
 }

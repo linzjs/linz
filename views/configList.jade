@@ -33,6 +33,3 @@ block content
 																span(class="glyphicon glyphicon-refresh")
 											each val in Object.keys(list.fields)
 												td!= record[val]
-
-block script
-	script(src='' + linz.get('admin path') + '/public/js/config/list.js')

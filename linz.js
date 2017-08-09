@@ -1,5 +1,7 @@
 "use strict";
 
+const { deprecate } = require('util');
+
 /**
  * Load required modules
  */
@@ -573,9 +575,17 @@ Linz.prototype.bootstrapExpressLocals = function (cb) {
 
     this.app.locals['env'] = process.env.NODE_ENV || 'development';
 
-    this.app.locals['adminCSSFile'] = this.get('css file');
+    if (this.get('css file')) {
+        deprecate(() => {
+            this.app.locals.adminCSSFile = this.get('css file');
+        }, 'adminCSSFile: Use the styles default instead')();
+    }
 
-    this.app.locals['adminJSFile'] = this.get('js file');
+    if (this.get('js file')) {
+        deprecate(() => {
+            this.app.locals.adminJSFile = this.get('js file');
+        }, 'adminJSFile: Use the scripts default instead')();
+    }
 
     return cb(null);
 

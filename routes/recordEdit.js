@@ -1,6 +1,6 @@
-var formist = require('formist'),
-    linz = require('../'),
-    util = require('util');
+'use strict';
+
+const linz = require('../');
 
 /* GET /admin/:model/:id/overview */
 var route = function (req, res, next) {
@@ -44,15 +44,59 @@ var route = function (req, res, next) {
         // wrap code in self-executable function
         conflictHandlersJS = '\n\t(function () {\n\t' + conflictHandlersJS + '\n\t})();';
 
-        res.render(linz.api.views.viewPath('recordEdit.jade'), {
-            cancelUrl: linz.api.url.getAdminLink(req.linz.model),
-            conflictHandlersJS: conflictHandlersJS,
-            form: editForm.render(),
-            model: req.linz.model,
-            record: req.linz.record,
-            actionUrl: linz.api.url.getAdminLink(req.linz.model, 'save', req.linz.record._id),
-            customAttributes: res.locals.customAttributes,
-        });
+        const defaultScripts = [
+            {
+                src: '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js',
+                integrity: 'sha256-0JaDbGZRXlzkFbV8Xi8ZhH/zZ6QQM0Y3dCkYZ7JYq34=',
+                crossorigin: 'anonymous',
+            },
+            {
+                src: `${linz.get('admin path')}/public/js/jquery.binddata.js`,
+            },
+            {
+                src: `${linz.get('admin path')}/public/js/documentarray.js`,
+            },
+            {
+                integrity: 'sha256-/wPGlKXtfdj9ryVH2IQ78d1Zx2/4PXT/leOL4Jt1qGU=',
+                src: '//cdnjs.cloudflare.com/ajax/libs/deep-diff/0.2.0/deep-diff.min.js',
+                crossorigin: 'anonymous',
+            },
+            {
+                integrity: 'sha256-ytdI1WZJO3kDPOAKDA5t95ehNAppkvcx0oPRRAsONGo=',
+                src: '//cdnjs.cloudflare.com/ajax/libs/json2/20140204/json2.min.js',
+                crossorigin: 'anonymous',
+            },
+            {
+                src: `${linz.get('admin path')}/public/js/model/edit.js`,
+            },
+        ];
+
+        if (req.linz.model.concurrencyControl) {
+            defaultScripts.push({
+                src: `${linz.get('admin path')}/public/js/model/check-record-changes.js`,
+            });
+        }
+
+        Promise.all([
+            linz.api.views.getScripts(req, res, defaultScripts),
+            linz.api.views.getStyles(req, res),
+        ])
+            .then(([scripts, styles]) => {
+
+                return res.render(linz.api.views.viewPath('recordEdit.jade'), {
+                    cancelUrl: linz.api.url.getAdminLink(req.linz.model),
+                    conflictHandlersJS: conflictHandlersJS,
+                    form: editForm.render(),
+                    model: req.linz.model,
+                    record: req.linz.record,
+                    actionUrl: linz.api.url.getAdminLink(req.linz.model, 'save', req.linz.record._id),
+                    customAttributes: res.locals.customAttributes,
+                    scripts,
+                    styles,
+                });
+
+            })
+            .catch(next);
 
     });
 

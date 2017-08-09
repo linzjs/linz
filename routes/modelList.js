@@ -1,6 +1,7 @@
-var path = require('path'),
-    async = require('async'),
-    linz = require('../');
+'use strict';
+
+const async = require('async');
+const linz = require('../');
 
 /* GET /admin/models/list */
 var route = function (req, res, next) {
@@ -59,10 +60,21 @@ var route = function (req, res, next) {
             return next(err);
         }
 
-        res.render(linz.api.views.viewPath('modelList.jade'), {
-            customAttributes: res.locals.customAttributes,
-            models: modelsList,
-        });
+        return Promise.all([
+            linz.api.views.getScripts(req, res),
+            linz.api.views.getStyles(req, res),
+        ])
+            .then(([scripts, styles]) => {
+
+                return res.render(linz.api.views.viewPath('modelList.jade'), {
+                    customAttributes: res.locals.customAttributes,
+                    models: modelsList,
+                    scripts,
+                    styles,
+                });
+
+            })
+            .catch(next);
 
     });
 

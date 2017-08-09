@@ -5,23 +5,7 @@ doctype html
 if model && model.modelName
 	- attributes['data-linz-model'] = model.modelName
 html(lang="en")&attributes(attributes)
-	head
-		title= pageTitle
-		meta(name='viewport', content='width=device-width, initial-scale=1.0')
-		link(href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700', rel='stylesheet', type='text/css')
-		if (env === 'development')
-			link(href='' + linz.get('admin path') + '/public/css/bootstrap.min.css', rel='stylesheet')
-			link(href='' + linz.get('admin path') + '/public/css/font-awesome.min.css', rel='stylesheet')
-		else
-			link(href='//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css', rel='stylesheet')
-			link(href='//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css', rel='stylesheet')
-		link(href='' + linz.get('admin path') + '/public/css/multiselect.min.css', rel='stylesheet')
-		link(href='' + linz.get('admin path') + '/public/css/multiselect.min.css', rel='stylesheet')
-		link(href='' + linz.get('admin path') + '/public/css/noty.css', rel='stylesheet')
-		link(href='' + linz.get('admin path') + '/public/css/linz.css?v2', rel='stylesheet')
-		if adminCSSFile !== undefined
-			link(href='' + adminCSSFile, rel='stylesheet')
-		script(src='' + linz.get('admin path') + '/public/js/utils.js')
+	include partials/head
 	- bodyAttributes = []
 	if customAttributes && customAttributes.length
 		each attribute in customAttributes
@@ -75,30 +59,6 @@ html(lang="en")&attributes(attributes)
 			.modal-dialog
 				.modal-content
 
-		if (env === 'development')
-			script(src='' + linz.get('admin path') + '/public/js/jquery.min.js')
-			script(src='' + linz.get('admin path') + '/public/js/bootstrap.min.js')
-		else
-			script(src='//code.jquery.com/jquery.js')
-			script(src='//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js')
-
-		script(src='' + linz.get('admin path') + '/public/js/modernizr.custom.min.js')
-		script(src='' + linz.get('admin path') + '/public/js/validator.min.js')
-		script(src='' + linz.get('admin path') + '/public/js/multiselect.min.js')
-		script(src='' + linz.get('admin path') + '/public/js/ui.js')
-		script(src='' + linz.get('admin path') + '/public/js/template.js')
-		script(src='' + linz.get('admin path') + '/public/js/moment.min.js')
-		script(src='' + linz.get('admin path') + '/public/ckeditor/ckeditor.js')
-		script(src='' + linz.get('admin path') + '/public/js/noty.min.js')
-		script.
-			CKEDITOR.replaceClass = null; // Disable replacing by class
-			CKEDITOR.disableAutoInline = true;
-
-		if adminJSFile !== undefined
-			script(src='' + adminJSFile)
-
-		script. linz.loadLibraries('#{linz.get('admin path')}');
-		block script
-
+		include partials/foot
 		if notifications
 			!= notifications

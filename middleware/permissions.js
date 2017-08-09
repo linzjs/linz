@@ -1,6 +1,7 @@
+'use strict';
 
-var linz = require('../'),
-    camelCase = require('camelcase');
+const camelCase = require('camelcase');
+const linz = require('../');
 
 // protect routes by requesting permissions for the action
 function permissions (permission, context) {
@@ -32,15 +33,31 @@ function permissions (permission, context) {
 
         linz.api.permissions.hasPermission(req.user, _context, perm, function (hasPermission) {
 
-            // explicitly, a permission must return false in order to be denied
-            // an undefined permission, or anything other than false will allow the permission
-            // falsy does not apply in this scenario
+            Promise.all([
+                linz.api.views.getScripts(req, res, [
+                    {
+                        src: `${linz.get('admin path')}/public/js/views/forbidden.js`,
+                    },
+                ]),
+                linz.api.views.getStyles(req, res),
+            ])
+                .then(([scripts, styles]) => {
 
-            if (hasPermission === false) {
-                return res.status(403).render(linz.api.views.viewPath('forbidden.jade'));
-            }
+                    // explicitly, a permission must return false in order to be denied
+                    // an undefined permission, or anything other than false will allow the permission
+                    // falsy does not apply in this scenario
 
-            return next();
+                    if (hasPermission === false) {
+                        return res.status(403).render(linz.api.views.viewPath('forbidden.jade'), {
+                            scripts,
+                            styles,
+                        });
+                    }
+
+                    return next();
+
+                })
+                .catch(next);
 
         });
 

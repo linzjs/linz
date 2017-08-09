@@ -1,16 +1,53 @@
-var linz = require('../');
+'use strict';
+
+const linz = require('../');
 
 module.exports = {
 
-    get: function (req, res) {
-        res.render(linz.api.views.viewPath('forgottenPassword.jade'));
+    get: function (req, res, next) {
+
+        Promise.all([
+            linz.api.views.getScripts(req, res, [
+                {
+                    src: `${linz.get('admin path')}/public/js/views/forgotten-password.js`,
+                },
+            ]),
+            linz.api.views.getStyles(req, res),
+        ])
+            .then(([scripts, styles]) => {
+
+                return res.render(linz.api.views.viewPath('forgottenPassword.jade'), {
+                    scripts,
+                    styles,
+                });
+
+            })
+            .catch(next);
+
     },
 
-    post: function (req, res) {
-        res.render(linz.api.views.viewPath('forgottenPassword.jade'), {
-            success: true,
-            email: req.body.email
-        });
+    post: function (req, res, next) {
+
+        Promise.all([
+            linz.api.views.getScripts(req, res, [
+                {
+                    src: `${linz.get('admin path')}/public/js/views/forgotten-password.js`,
+                },
+            ]),
+            linz.api.views.getStyles(req, res),
+        ])
+            .then(([scripts, styles]) => {
+
+                return res.render(linz.api.views.viewPath('forgottenPassword.jade'), {
+                    email: req.body.email,
+                    scripts,
+                    styles,
+                    success: true,
+                });
+
+            })
+            .catch(next);
+
     }
 
 }

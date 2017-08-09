@@ -26,17 +26,7 @@ block content
 								a.btn.btn-link(href='#{cancelUrl}') or cancel
 					mixin documentarray()
 
-block script
 	script
 		!= conflictHandlersJS
-	script(src='' + linz.get('admin path') + '/public/js/handlebars.js')
-	script(src='' + linz.get('admin path') + '/public/js/jquery.binddata.js')
-	script(src='' + linz.get('admin path') + '/public/js/documentarray.js')
-	script(src='' + linz.get('admin path') + '/public/js/deep-diff-0.2.0.min.js')
-	script(src='' + linz.get('admin path') + '/public/js/json2.js')
-	script(src='' + linz.get('admin path') + '/public/js/model/edit.js')
-	if model.concurrencyControl
-		script(src='' + linz.get('admin path') + '/public/js/model/check-record-changes.js')
 	mixin conflictDropdown()
 	mixin conflictDocumentArrayDropdown()
-	
