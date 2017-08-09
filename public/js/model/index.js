@@ -115,13 +115,21 @@
                 renderFilter($(this));
             }
 
-            $('[data-filter-field="' + alwaysOnFilter + '"]').css('visibility', 'hidden');
+            var once = $(this).attr('data-filter-once');
 
-            return $(this).remove();
+            if (once === 'true') {
+                $(this).remove();
+            }
+
+            return $('.fa-times[data-filter-field="' + alwaysOnFilter + '"]').css('visibility', 'hidden');
 
         });
 
     })();
+
+    $('a[data-filter-once="true"]').on('click', function click () {
+        return $(this).remove();
+    });
 
     $('.control-addFilter').click(function () {
         return renderFilter($(this));

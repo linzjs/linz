@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- Add the ability to set an `alwaysOn` property for filters. This should be a boolean and will remove the filter from the dropdown, hide the close button, and automatically show the filter.
+- Add the ability to set an `alwaysOn` property for filters. This should be a boolean and will hide the close button and automatically show the filter.
+- Add the ability to remove the filter from the dropdown and hide the close button using `once: true`.
 
 ## v1.0.0-9.1.0 (9 August 2017)
 
