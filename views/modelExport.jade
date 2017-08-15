@@ -1,7 +1,7 @@
 extends modal
 
 block content
-    form.exportForm(role='form', action=linz.api.url.getAdminLink(model, modelExport.action), method='post', target='_blank')
+    form.exportForm(role='form', action=linz.api.url.getAdminLink(model, modelExport.action), method='post', target='_blank', data-model-export-fields=modelExport.fields, data-model-name=model.modelName)
         div.modal-header
             button.close(type='button', data-dismiss='modal' aria-hidden='true') &times;
             h4#myModalLabel.modal-title!= modelExport.label
