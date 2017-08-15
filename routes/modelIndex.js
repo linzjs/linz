@@ -59,7 +59,7 @@ var route = function (req, res, next) {
                 pages: pages,
                 pageSize: pageSize,
                 pageSizes: req.linz.model.list.paging.sizes || linz.get('page sizes'),
-                pagination: (req.linz.model.list.paging.active === true && total > pageSize),
+                pagination: req.linz.model.list.paging.active === true,
                 permissions: req.linz.model.linz.formtools.permissions,
                 query: req.query,
                 records: req.linz.records.records,
