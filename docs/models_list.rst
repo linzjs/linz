@@ -79,6 +79,30 @@ If you provide a ``label``, it will override what is defined in the :ref:`models
 
 The fields will be rendered in the order they're provided.
 
+list.search
+===========
+
+``list.search`` is used to add search functionality to the filters.
+
+If you provide a `search.filters` array, the user can then search on the specific fields only.::
+
+  search: {
+    filters: [
+      { label: 'Title', value: ['title'] },
+      { label: 'Content', value: ['content', 'description'] },
+    ],
+  },
+
+By default, the first filter will be selected, so make sure the default is the first filter in the array.
+The `search.filters` array should contain objects with a ``label`` and ``value``, which is an array of fields to query against.
+
+
+If no filters are provided::
+
+  search: true,
+
+The search field will search on the ``title`` field.
+
 list.sortBy
 ===========
 
