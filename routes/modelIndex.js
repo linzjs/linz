@@ -14,6 +14,9 @@ var route = function (req, res, next) {
             {
                 src: `${linz.get('admin path')}/public/js/model/index.js`,
             },
+            {
+                src: `${linz.get('admin path')}/public/js/search.js`,
+            },
         ]),
         linz.api.views.getStyles(req, res),
     ])
