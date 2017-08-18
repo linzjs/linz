@@ -6,7 +6,7 @@
 					.input-group-btn
 						select(class='multiselect')
 							for filter in model.list.search.filters
-								option(value=filter.value selected=(form.searchfilter == filter.value))!= filter.label
+								option(value=filter.value, data-filter-type=filter.type, selected=(form.searchfilter == filter.value))!= filter.label
 					input(class='search form-control' type='text' name='search' value=form.searchcontent)
 			else
 				input(class='search form-control' type='text' name='search' value=form.searchcontent)
