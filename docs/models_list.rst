@@ -89,13 +89,14 @@ If you provide a `search.filters` array, the user can then search on the specifi
   search: {
     filters: [
       { label: 'Title', value: ['title'] },
-      { label: 'Content', value: ['content', 'description'] },
+      { label: 'Content', type: 'number', value: ['content', 'description'] },
     ],
   },
 
 By default, the first filter will be selected, so make sure the default is the first filter in the array.
-The `search.filters` array should contain objects with a ``label`` and ``value``, which is an array of fields to query against.
+The `search.filters` array should contain objects with at least a ``label`` and ``value``, which is an array of fields to query against.
 
+You can also provide a ``type`` attribute which will convert the input to the specified html type.
 
 If no filters are provided::
 
