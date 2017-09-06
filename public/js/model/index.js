@@ -99,41 +99,45 @@
 
     }
 
-    // Render alwaysOn filters.
+    $('.control-addFilter').click(function () {
+
+        if ($(this).parent().is('.disabled')) {
+            return;
+        }
+
+        return renderFilter($(this));
+
+    });
+
+    // Handle once filters.
     (function () {
 
-        var alwaysOnFilters = $('a[data-filter-alwayson="true"]');
-        var filterList = $.map($('.filter-list [data-filter-field]'), function (item) {
-            return $(item).attr('data-filter-field');
-        });
+        var onceFilters = $('a[data-filter-once="true"]');
 
-        alwaysOnFilters.each(function () {
-
-            var alwaysOnFilter = $(this).attr('data-filter-field');
-
-            if ($.inArray(alwaysOnFilter, filterList) < 0) {
-                renderFilter($(this));
-            }
-
-            var once = $(this).attr('data-filter-once');
-
-            if (once === 'true') {
-                $(this).remove();
-            }
-
-            return $('.fa-times[data-filter-field="' + alwaysOnFilter + '"]').css('visibility', 'hidden');
-
+        onceFilters.on('click', function () {
+            return $(this).parent().addClass('disabled');
         });
 
     })();
 
-    $('a[data-filter-once="true"]').on('click', function click () {
-        return $(this).remove();
-    });
+    // Render alwaysOn filters.
+    (function () {
 
-    $('.control-addFilter').click(function () {
-        return renderFilter($(this));
-    });
+        var alwaysOnFilters = $('a[data-filter-alwayson="true"]');
+
+        alwaysOnFilters.each(function () {
+
+            renderFilter($(this));
+
+            if ($(this).attr('data-filter-once') === 'true') {
+                $(this).remove();
+            }
+
+            return $('.filter-list [data-filter-field="' + $(this).attr('data-filter-field') + '"]').css('visibility', 'hidden');
+
+        });
+
+    })();
 
     assignRemoveButton();
 
@@ -341,7 +345,10 @@
 
             }
 
+            $('[data-filter-field="' + filteredField + '"]').parent().removeClass('disabled');
+
             $(this).parents('.form-group').remove();
+
         });
     }
 
