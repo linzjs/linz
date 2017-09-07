@@ -91,6 +91,7 @@ var route = function (req, res, next) {
                     record: req.linz.record,
                     actionUrl: linz.api.url.getAdminLink(req.linz.model, 'save', req.linz.record._id),
                     customAttributes: res.locals.customAttributes,
+                    pageTitle: `Editing '${req.linz.record.title}'`,
                     scripts,
                     styles,
                 });
