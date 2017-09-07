@@ -23,6 +23,7 @@ var route = function (req, res, next) {
                 formtools: req.linz.model.linz.formtools,
                 model: req.linz.model,
                 overview: req.linz.overview,
+                pageTitle: req.linz.record.title,
                 permissions: req.linz.model.linz.formtools.permissions,
                 record: clone(req.linz.record.toObject({ virtuals: true})),
                 scripts,
