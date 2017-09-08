@@ -1,26 +1,24 @@
 extends layout
 
 block header
-	include modelIndex/header
+    include modelIndex/header
 
 block content
-	.container.linz-container.index.model
-		.pane
-			.options
-				.row
-					.col-xs-12
-						include modelIndex/filters
-						include modelIndex/sorting
-						if model.grid.showSummary
-							include modelIndex/paging
-			if records.length > 0
-				.body
-					include modelIndex/records
+    .container.linz-container.index.model
+        .pane
+            .options
+                .row
+                    .col-xs-12
+                        include modelIndex/filters
+                        if model.list.showSummary
+                            include modelIndex/sorting
+                            include modelIndex/paging
+
+            if records.length > 0
+                block main-content
+                    != records.template
 		.modal.fade.modal-linz#groupActionModal(tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
 			.modal-dialog
 		.modal.fade.modal-linz#exportModal(tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
 			.modal-dialog
-		div#modelQuery.hidden!= modelQuery
-
-block script
-	script(src='' + linz.get('admin path') + '/public/js/model/index.js')
+        div#modelQuery.hidden!= modelQuery
