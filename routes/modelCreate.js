@@ -33,15 +33,18 @@ var route = function (req, res, next) {
         ])
             .then(([scripts, styles]) => {
 
+                const singular = inflection.humanize(req.linz.model.linz.formtools.model.label, true);
+
                 return res.render(linz.api.views.viewPath('modelCreate.jade'), {
                     actionUrl: linz.api.url.getAdminLink(req.linz.model, 'create'),
                     cancelUrl: linz.api.url.getAdminLink(req.linz.model),
                     form: editForm.render(),
                     label: {
-                        singular: inflection.humanize(req.linz.model.linz.formtools.model.label, true),
+                        singular,
                         plural: req.linz.model.linz.formtools.model.plural,
                     },
                     model: req.linz.model,
+                    pageTitle: `Create a new ${singular}`,
                     scripts,
                     styles,
                 });

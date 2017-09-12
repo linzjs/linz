@@ -57,6 +57,7 @@ var route = function (req, res, next) {
                 modelQuery: JSON.stringify(req.linz.model.formData),
                 page: page,
                 pages: pages,
+                pageTitle: req.linz.model.linz.formtools.model.plural,
                 pageSize: pageSize,
                 pageSizes: req.linz.model.list.paging.sizes || linz.get('page sizes'),
                 pagination: (req.linz.model.list.paging.active === true && total > pageSize),
