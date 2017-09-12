@@ -37,10 +37,9 @@
 
     });
 
-    $('.control-addFilter').click(function () {
+    function renderFilter (filter) {
 
-        var filter = $(this),
-            filterText = filter.html(),
+        var filterText = filter.html(),
             filterVal = filter.attr('data-filter-field'),
             filterFormControl = filter.siblings('.controlField').html(),
             aFilters;
@@ -52,7 +51,7 @@
             // update template with filter content
             content.querySelector('.filter-name').textContent = filterText;
             content.querySelector('.filter-control').innerHTML = content.querySelector('.filter-control').innerHTML + filterFormControl;
-            content.querySelector('.fa-times').setAttribute('data-filter-field', $(this).attr('data-filter-field'));
+            content.querySelector('.fa-times').setAttribute('data-filter-field', filter.attr('data-filter-field'));
             document.querySelector('.filter-list').appendChild(document.importNode(content, true));
 
         } else {
@@ -61,7 +60,7 @@
             var filterOption = $('#filter').clone();
             filterOption.find('.filter-name').html(filterText);
             filterOption.find('.filter-control').append(filterFormControl);
-            filterOption.find('.fa-times').attr('data-filter-field',$(this).attr('data-filter-field'));
+            filterOption.find('.fa-times').attr('data-filter-field', filter.attr('data-filter-field'));
             $('.filter-list').append(filterOption.html());
 
         }
@@ -72,7 +71,7 @@
         });
 
         // hide dropdown for 'Add filter'
-        $(this).parents('.dropdown').removeClass('open');
+        filter.parents('.dropdown').removeClass('open');
 
         var selectedFilters = $('.selectedFilters').val();
 
@@ -98,6 +97,42 @@
 
         return false;
 
+    }
+
+    // Render alwaysOn filters.
+    (function () {
+
+        var alwaysOnFilters = $('a[data-filter-alwayson="true"]');
+        var filterList = $.map($('.filter-list [data-filter-field]'), function (item) {
+            return $(item).attr('data-filter-field');
+        });
+
+        alwaysOnFilters.each(function () {
+
+            var alwaysOnFilter = $(this).attr('data-filter-field');
+
+            if ($.inArray(alwaysOnFilter, filterList) < 0) {
+                renderFilter($(this));
+            }
+
+            var once = $(this).attr('data-filter-once');
+
+            if (once === 'true') {
+                $(this).remove();
+            }
+
+            return $('.fa-times[data-filter-field="' + alwaysOnFilter + '"]').css('visibility', 'hidden');
+
+        });
+
+    })();
+
+    $('a[data-filter-once="true"]').on('click', function click () {
+        return $(this).remove();
+    });
+
+    $('.control-addFilter').click(function () {
+        return renderFilter($(this));
     });
 
     assignRemoveButton();

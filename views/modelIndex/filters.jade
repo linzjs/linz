@@ -1,4 +1,15 @@
 .model-filters
+	if model.list.search
+		div(class='form-group model-search')
+			if model.list.search.filters && model.list.search.filters.length
+				div.input-group
+					.input-group-btn
+						select(class='multiselect')
+							for filter in model.list.search.filters
+								option(value=filter.value, data-filter-type=filter.type, selected=(form.searchfilter == filter.value))!= filter.label
+					input(class='search form-control' type='text' name='search' value=form.searchcontent)
+			else
+				input(class='search form-control' type='text' name='search' value=form.searchcontent)
 	if Object.keys(model.list.filters).length
 		.dropdown.addFilterBtn
 			a(data-toggle='dropdown', role='button', class="btn btn-default")
@@ -8,13 +19,15 @@
 			ul.dropdown-menu(role='menu')
 				for filterField, key in model.list.filters
 					li
-						a.control-addFilter(data-filter-field='' + key + '')= filterField['label']
+						a.control-addFilter(data-filter-field='' + key + '' data-filter-alwayson='' + filterField.alwaysOn + '' data-filter-once='' + filterField.once + '')= filterField['label']
 						span.controlField!= filterField.formControls
 	form.filters(method='post', role='form')
 		input.page(type='hidden', name='page', value=''+ page +'')
 		input.pageSize(type='hidden', name='pageSize', value=''+ pageSize +'')
 		input.selectedFilters(type='hidden', name='selectedFilters', value='' + ((form.selectedFilters) ? form.selectedFilters : '') + '')
 		input.selectedSort(type='hidden', name='sort', value='' + form.sort + '')
+		input(type='hidden' name='searchfilter' value=form.searchfilter)
+		input(type='hidden' name='searchcontent' value=form.searchcontent)
 		if Object.keys(model.list.filters).length
 			.filter-list
 				if model.list.activeFilters

@@ -14,6 +14,9 @@ var route = function (req, res, next) {
             {
                 src: `${linz.get('admin path')}/public/js/model/index.js`,
             },
+            {
+                src: `${linz.get('admin path')}/public/js/search.js`,
+            },
         ]),
         linz.api.views.getStyles(req, res),
     ])
@@ -60,7 +63,7 @@ var route = function (req, res, next) {
                 pageTitle: req.linz.model.linz.formtools.model.plural,
                 pageSize: pageSize,
                 pageSizes: req.linz.model.list.paging.sizes || linz.get('page sizes'),
-                pagination: (req.linz.model.list.paging.active === true && total > pageSize),
+                pagination: req.linz.model.list.paging.active === true,
                 permissions: req.linz.model.linz.formtools.permissions,
                 query: req.query,
                 records: req.linz.records.records,

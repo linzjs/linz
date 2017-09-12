@@ -180,6 +180,44 @@ module.exports = function  (req, res, next) {
 
             },
 
+            // Add the search filters.
+            function (cb) {
+
+                const form = req.body;
+                const content = form.searchcontent && form.searchcontent.length ? form.searchcontent : null;
+                const fields = form.searchfilter && form.searchfilter.length ? form.searchfilter.split(',') : null;
+
+                if (!content) {
+                    return cb(null);
+                }
+
+                const options = {};
+
+                if (fields) {
+                    options.fields = fields;
+                }
+
+                linz.api.model.getSearchFilters(req.linz.model.modelName, content, options)
+                    .then((searchFilters) => {
+
+                        if (!filters || !Object.keys(filters).length) {
+
+                            filters = searchFilters;
+
+                            return cb(null);
+
+                        }
+
+                        searchFilters.$or.push(filters);
+                        filters = searchFilters;
+
+                        return cb(null);
+
+                    })
+                    .catch(cb);
+
+            },
+
             // create the query
             function (cb) {
 

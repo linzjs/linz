@@ -168,15 +168,16 @@ Models list DSL
 ``list`` should be an Object, containing the following top-level keys:
 
 - ``actions``
+- ``export``
 - ``fields``
+- ``filters``
+- ``groupActions``
+- ``paging``
+- ``recordActions``
+- ``search``
+- ``showSummary``
 - ``sortBy``
 - ``toolbarItems``
-- ``showSummary``
-- ``filters``
-- ``paging``
-- ``groupActions``
-- ``recordActions``
-- ``export``
 
 These allow you to describe how the model index should function. The list DSL is discussed in more detail in :ref:`models-list-reference`.
 
