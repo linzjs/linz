@@ -9,8 +9,10 @@ $(function ready () {
 
         $(this).find('.modal-content').load(url, function () {
 
+            var user = $('body').attr('data-linz-user');
+
             var fields = JSON.parse($('.exportForm').attr('data-model-export-fields')),
-                exportCookieName = $('.exportForm').attr('data-model-name') + '_' + 'selectedExportFields',
+                exportCookieName = user + '_' + $('.exportForm').attr('data-model-name') + '_' + 'selectedExportFields',
                 savedFields = mergeFields(getCookie(exportCookieName), fields),
                 bSelectAll = true;
 
