@@ -365,7 +365,18 @@ module.exports = {
             res.writeHead(200, { 'Content-Type': 'text/csv' });
 
             // pipe data to response stream
-            Model.find( filters, filterFieldNames.join(' ') ).populate( refFieldNames.join(' '), '-_id -__v -dateCreated -dateModified -createdBy -modifiedBy' ).stream({ transform: helpers.mongooseToCSV(fields, form) }).pipe(res);
+            req.linz.model.getQuery(req, filters, function getQuery (err, query) {
+
+                if (err) {
+                    return next(err);
+                }
+
+                query.select(filterFieldNames.join(' '))
+                    .populate(refFieldNames.join(' '), '-_id -__v -dateCreated -dateModified -createdBy -modifiedBy')
+                    .stream({ transform: helpers.mongooseToCSV(fields, form) })
+                    .pipe(res);
+
+            });
 
         });
 
