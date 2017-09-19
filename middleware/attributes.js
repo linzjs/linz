@@ -14,6 +14,10 @@ const customAttributes = (req, res, next) => {
     Promise.resolve(linz.get('customAttributes')(req, res))
         .then((customAttributes) => {
 
+            if (req.user) {
+                customAttributes.push({ name: 'data-linz-user', value: req.user._id.toString() });
+            }
+
             req.locals = req.locals || {};
 
             // Set both req and res due to the render api.
