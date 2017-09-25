@@ -191,7 +191,7 @@ if (!linz) {
             // remove all event listener
             $('[data-ui-datepicker]').parent().unbind();
             $('[data-ui-datepicker]').parent().datetimepicker({
-                pickTime: false,
+                useCurrent: false,
                 format: 'YYYY-MM-DD'
             });
 
