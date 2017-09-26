@@ -125,13 +125,21 @@
 
         var alwaysOnFilters = $('a[data-filter-alwayson="true"]');
 
-        alwaysOnFilters.each(function () {
-
-            renderFilter($(this));
+        alwaysOnFilters.each(function (index) {
 
             if ($(this).attr('data-filter-once') === 'true') {
+
+                if (!$('.filter-list [data-filter-field="' + $(this).attr('data-filter-field') + '"]').length) {
+                    renderFilter($(this));
+                }
+
                 $(this).remove();
+
+                return $('.filter-list [data-filter-field="' + $(this).attr('data-filter-field') + '"]').css('visibility', 'hidden');
+
             }
+
+            renderFilter($(this));
 
             return $('.filter-list [data-filter-field="' + $(this).attr('data-filter-field') + '"]').css('visibility', 'hidden');
 
