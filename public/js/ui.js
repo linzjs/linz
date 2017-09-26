@@ -186,7 +186,7 @@ if (!linz) {
 
     function loadDatepicker() {
 
-        if (!Modernizr.inputtypes.date) {
+        if (!Modernizr.inputtypes.date && $('[data-ui-datepicker]').length) {
 
             // remove all event listener
             $('[data-ui-datepicker]').parent().unbind();
