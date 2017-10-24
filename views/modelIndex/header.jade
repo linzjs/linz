@@ -60,7 +60,7 @@
 						- attributes = {}
 						if exp.action === 'export'
 							- attributes['data-target'] = '#exportModal'
-						a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, exp.action) data-linz-control="export")&attributes(attributes)= exp.label
+						a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, exp.action) data-linz-control="export" disabled=(exp.action))&attributes(attributes)= exp.label
 			else
 				.dropdown
 					button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
