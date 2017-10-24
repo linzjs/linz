@@ -12,7 +12,7 @@ var route = function (req, res, next) {
     Promise.all([
         linz.api.views.getScripts(req, res, [
             {
-                src: `${linz.get('admin path')}/public/js/model/index.js`,
+                src: `${linz.get('admin path')}/public/js/model/index.js?v1`,
             },
         ]),
         linz.api.views.getStyles(req, res),
