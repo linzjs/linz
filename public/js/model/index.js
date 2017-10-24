@@ -211,6 +211,9 @@
 
     });
 
+    // We know the page has loaded at this point, so we can re-enable the modals.
+    $('[data-linz-control="group-action"], [data-linz-control="record-action"]').removeAttr('disabled');
+
     // bind group action buttons
     $('[data-linz-control="group-action"]').click(function () {
 
