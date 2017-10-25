@@ -35,4 +35,4 @@ div.btn-group
                                 if action.modal.active
                                     - action.attributes['data-linz-control'] = 'record-action'
                                     - action.attributes['data-target'] = '#recordActionModal'
-                                a(role='menuitem' tabindex='-1' href=linz.api.url.getAdminLink(model, action.action, record._id) disabled=(action.modal.active))&attributes(action.attributes)= action.label
+                                a(role='menuitem' tabindex='-1' href=linz.api.url.getAdminLink(model, action.action, record._id) class=(action.modal.active && 'disabled'))&attributes(action.attributes)= action.label

@@ -121,7 +121,7 @@ if (!linz) {
         });
 
         // We know the page has loaded at this point, so we can re-enable the modals.
-        $('[data-linz-modal]').removeAttr('disabled');
+        $('[data-linz-modal]').removeClass('disabled');
 
         // add ability to open URL in a modal
         $('[data-linz-modal]').click(function (event) {

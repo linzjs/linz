@@ -21,7 +21,7 @@ block header
             .custom-actions
                 if formtools.overview.actions.length === 1
                     for action in formtools.overview.actions
-                        a.btn.btn-default(href=linz.api.url.getAdminLink(model, action.action, record._id) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback disabled=action.modal.active)= action.label
+                        a.btn.btn-default(href=linz.api.url.getAdminLink(model, action.action, record._id) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback class=(action.modal.active && 'disabled'))= action.label
                 else
                     .dropdown
                         button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
@@ -38,7 +38,7 @@ block header
                                         if action.isDisabled
                                             a(role='menuitem', tabindex='-1', href='', data-linz-disabled='true', data-linz-disabled-message=action.disabledMessage)= action.label
                                         else
-                                            a(role='menuitem', tabindex='-1', href=linz.api.url.getAdminLink(model, action.action, record._id) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback disabled=action.modal.active)= action.label
+                                            a(role='menuitem', tabindex='-1', href=linz.api.url.getAdminLink(model, action.action, record._id) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback class=(action.modal.active && 'disabled'))= action.label
         if permissions.canList !== false
             .actions
                 span.back
@@ -79,4 +79,4 @@ block content
                                     if action.isDisabled
                                         a.btn.btn-default(role='menuitem', tabindex='-1', href='', data-linz-disabled='true', data-linz-disabled-message=action.disabledMessage)= action.label
                                     else
-                                        a.btn.btn-default(href=linz.api.url.getAdminLink(model, action.action, record._id) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback disabled=action.modal.active)= action.label
+                                        a.btn.btn-default(href=linz.api.url.getAdminLink(model, action.action, record._id) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback class=(action.modal.active && 'disabled'))= action.label
