@@ -174,23 +174,7 @@ module.exports = function  (req, res, next) {
                         // Add to the selected filters list.
                         formData.selectedFilters.push(key);
 
-                        // Create the default value.
-                        // The boolean filter is not an array, the rest are.
-                        if (linz.formtools.filters.boolean.renderer === filter.filter.renderer) {
-
-                            formData[key] = filter.default;
-
-                        } else {
-
-                            // All other filters will be an array.
-                            if (!formData[key]) {
-                                formData[key] = [];
-                            }
-
-                            formData[key].push(filter.default);
-
-                        }
-
+                        formData[key] = filter.default;
 
                     }
 
