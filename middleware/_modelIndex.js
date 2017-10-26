@@ -135,6 +135,58 @@ module.exports = function  (req, res, next) {
 
             },
 
+            // Add in alwaysOn filters that have default values, that aren't already present.
+            function (cb) {
+
+                const filters = req.linz.model.list.filters;
+                const formData = session.list.formData;
+
+                // Make sure we have some filters.
+                if (!filters) {
+                    return cb(null);
+                }
+
+                // Find the alwaysOn filters, that have a default.
+                const alwaysOnWithDefault = Object.keys(filters).filter((key) => filters[key].alwaysOn === true && Object.keys(filters[key]).includes('default'));
+
+                if (!alwaysOnWithDefault) {
+                    return cb(null);
+                }
+
+                // If it already exists, turn it into an array for easy manipulation.
+                if (formData.selectedFilters && formData.selectedFilters.length) {
+                    formData.selectedFilters = formData.selectedFilters.split(',');
+                }
+
+                // If it doesn't exist create a default array.
+                if (!formData.selectedFilters || !formData.selectedFilters.length) {
+                    formData.selectedFilters = [];
+                }
+
+                // Make sure the alwaysOnWithDefault filters have entries in session.list.formData.selectedFilters.
+
+                alwaysOnWithDefault.forEach((key) => {
+
+                    const filter = filters[key];
+
+                    if (!formData.selectedFilters.includes(key)) {
+
+                        // Add to the selected filters list.
+                        formData.selectedFilters.push(key);
+
+                        // Create the default value.
+                        formData[key] = filter.default;
+
+                    }
+
+                });
+
+                formData.selectedFilters = formData.selectedFilters.join(',');
+
+                return cb(null);
+
+            },
+
             // render the active filters
             function (cb) {
 
