@@ -136,7 +136,7 @@ The above will allow your model to be filtered by a date range filter, on the ``
 Each filter, keyed by the field name, can have the following keys:
 
 - ``alwaysOn`` will ensure that the filter is always rendered in the list view.
-- ``default`` allows you to provide a default value for the filter. Useful when using ``alwaysOn``.
+- ``default`` allows you to provide a default value for the filter. It only takes affect when using ``alwaysOn``.
 - ``filter`` this is optional, but allows you to specify a filter and should point to a Linz filter, or your own custom one.
 - ``once`` will ensure that a user can only add that filter once (works well with the ``boolean`` filter).
 
