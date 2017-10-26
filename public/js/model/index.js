@@ -129,7 +129,8 @@
     // Render alwaysOn filters.
     (function () {
 
-        var alwaysOnFilters = $('a[data-filter-alwayson="true"]');
+        var alwaysOnFilters = $('a[data-filter-alwayson="true"]'),
+            disabled = [];
 
         alwaysOnFilters.each(function (index) {
 
@@ -149,7 +150,7 @@
                 renderFilter($(this));
             }
 
-            return $('.filter-list [data-filter-field="' + $(this).attr('data-filter-field') + '"]').css('visibility', 'hidden');
+            return $('.filter-list [data-filter-field="' + $(this).attr('data-filter-field') + '"]').slice(0,1).css('visibility', 'hidden');
 
         });
 
