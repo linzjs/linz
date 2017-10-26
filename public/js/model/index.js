@@ -101,7 +101,7 @@
 
     function doesFilterExist (name) {
 
-        return $('.filter-list').children().find('input,select[name^=' + name + ']').length > 0;
+        return $('.filter-list').children().find('input[name^=' + name + ']', 'select[name^=' + name + ']').length > 0;
 
     }
 
