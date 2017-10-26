@@ -376,7 +376,7 @@ module.exports = function  (req, res, next) {
 
                 async.each(Object.keys(mongooseRecords), function (index, recordDone) {
 
-                    mongooseRecords[index].canEdit(function (err, result, message) {
+                    mongooseRecords[index].canEdit(req, function (err, result, message) {
 
                         if (err) {
                             return recordDone(err);
@@ -406,7 +406,7 @@ module.exports = function  (req, res, next) {
 
                 async.each(Object.keys(mongooseRecords), function (index, recordDone) {
 
-                    mongooseRecords[index].canDelete(function (err, result, message) {
+                    mongooseRecords[index].canDelete(req, function (err, result, message) {
 
                         if (err) {
                             return recordDone(err);
