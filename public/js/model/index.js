@@ -99,6 +99,12 @@
 
     }
 
+    function doesFilterExist (name) {
+
+        return $('.filter-list').children().find('input[name="' + name + '[]"]').length > 0;
+
+    }
+
     $('.control-addFilter').click(function () {
 
         if ($(this).parent().is('.disabled')) {
@@ -139,7 +145,9 @@
 
             }
 
-            renderFilter($(this));
+            if(!doesFilterExist($(this).attr('data-filter-field'))) {
+                renderFilter($(this));
+            }
 
             return $('.filter-list [data-filter-field="' + $(this).attr('data-filter-field') + '"]').css('visibility', 'hidden');
 
