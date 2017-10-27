@@ -252,7 +252,7 @@ canDelete method
 
 You can create a Mongoose method called ``canDelete`` for a model, with the following signature::
 
-  function canDelete (callback)
+  function canDelete (req, callback)
 
 If found, Linz will execute this function before rendering the Model index page. This provides an opportunity to customise the delete record action. Because it is a Mongoose method, inside the function ``this`` is scoped to the record itself.
 
@@ -263,7 +263,7 @@ canEdit method
 
 You can create a Mongoose method called ``canEdit`` for a model, with the following signature::
 
-  function canEdit (callback)
+  function canEdit (req, callback)
 
 If found, Linz will execute this function before rendering the Model index page. This provides an opportunity to customise the edit record action. Because it is a Mongoose method, inside the function ``this`` is scoped to the record itself.
 
