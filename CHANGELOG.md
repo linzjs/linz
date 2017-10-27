@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### BREAKING CHANGES
+
+- All `canDelete` and `canEdit` functions now pass through the request object and call the callback `canDelete(req, callback)`. This allows you to disable records on the index view based on the current logged in user.
+
+### IMPROVEMENTS
+
 - Add the ability to set an `alwaysOn` property for filters. This should be a boolean and will hide the close button and automatically show the filter.
 - Add the ability to remove the filter from the dropdown and hide the close button using `once: true`.
 

@@ -11,7 +11,7 @@ var route = function (req, res, next) {
     Promise.all([
         linz.api.views.getScripts(req, res, [
             {
-                src: `${linz.get('admin path')}/public/js/model/index.js`,
+                src: `${linz.get('admin path')}/public/js/model/index.js?v2`,
             },
         ]),
         linz.api.views.getStyles(req, res),
@@ -48,7 +48,7 @@ var route = function (req, res, next) {
                         return cb(null);
                     }
 
-                    req.linz.record.canEdit(function (err, result, message) {
+                    req.linz.record.canEdit(req, function (err, result, message) {
 
                         if (err) {
                             return cb(err);
@@ -70,7 +70,7 @@ var route = function (req, res, next) {
                         return cb(null);
                     }
 
-                    req.linz.record.canDelete(function (err, result, message) {
+                    req.linz.record.canDelete(req, function (err, result, message) {
 
                         if (err) {
                             return cb(err);

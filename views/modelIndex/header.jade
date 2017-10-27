@@ -12,7 +12,7 @@
 		.custom-actions
 			if model.list.actions.length === 1
 				for action in model.list.actions
-					a.btn.btn-default(href=linz.api.url.getAdminLink(model, action.action) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback)= action.label				
+					a.btn.btn-default(href=linz.api.url.getAdminLink(model, action.action) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback class=(action.modal.active && 'disabled'))= action.label
 			else
 				.dropdown
 					button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
@@ -26,12 +26,12 @@
 								li(role='presentation', class='divider')
 							else
 								li(role='presentation')
-									a(role='menuitem', tabindex='-1', href=linz.api.url.getAdminLink(model, action.action) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback)= action.label
+									a(role='menuitem', tabindex='-1', href=linz.api.url.getAdminLink(model, action.action) target=action.target data-linz-modal=action.modal.active data-linz-modal-callback=action.modal.callback class=(action.modal.active && 'disabled'))= action.label
 	if model.list.groupActions && model.list.groupActions.length
 		.group-actions.hidden
 			if model.list.groupActions.length === 1
 				for groupAction in model.list.groupActions
-					a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, groupAction.action) data-linz-control=((groupAction.useModal) ? 'group-action' : false) data-target=((groupAction.useModal) ? '#groupActionModal' : false) )= groupAction.label
+					a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, groupAction.action) data-linz-control=((groupAction.useModal) ? 'group-action' : false) data-target=((groupAction.useModal) ? '#groupActionModal' : false) class=(groupAction.useModal && 'disabled'))= groupAction.label
 			else
 				.dropdown
 					button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
@@ -51,7 +51,7 @@
 			for item in model.list.toolbarItems
 				.toolbarItem
 					!= item.html
-	
+
 	if model.list.export && model.list.export.length && permissions.canExport !== false
 		.export
 			if model.list.export.length === 1
@@ -60,7 +60,7 @@
 						- attributes = {}
 						if exp.action === 'export'
 							- attributes['data-target'] = '#exportModal'
-						a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, exp.action) data-linz-control="export")&attributes(attributes)= exp.label
+						a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, exp.action) data-linz-control="export" class=(exp.action && 'disabled'))&attributes(attributes)= exp.label
 			else
 				.dropdown
 					button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
