@@ -273,8 +273,13 @@
             useModal = (queryObj.attr('data-target') === "#exportModal");
 
         if (useModal) {
-            $('#exportModal').modal().find('.modal-content').load(url, function () {});
+
+            var modal = $('#exportModal');
+            modal.attr('data-linz-export-url', url);
+            modal.modal();
+
             return false;
+
         }
 
         // retrieve the ids
