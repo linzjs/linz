@@ -122,15 +122,38 @@ list.filters
 
 ``list.filters`` can be used to include filters which will alter the data included in the dataset for a particular model. Filters can contain a custom user interface, but Linz comes with a standard set of filters.
 
-``list.filters`` should be an Object, keyed by each field in your model. Each Object must contain a filter, which should be an object adhering to the Linz model filter API. For example::
+``list.filters`` should be an object, keyed by each field in your model. Each object must contain a filter, which should be an object adhering to the Linz model filter DSL. For example::
 
   filters: {
     dateModified: {
-      filter: linz.formtools.filters.dateRange
+      alwaysOn: true,
+      filter: linz.formtools.filters.dateRange,
     }
   }
 
-The following will allow your model to be easily filtered by a date range filter, on the ``dateModified`` property. For a complete list of the filters available see https://github.com/linzjs/linz/tree/master/lib/formtools/filters.
+The above will allow your model to be filtered by a date range filter, on the ``dateModified`` property.
+
+Each filter, keyed by the field name, can have the following keys:
+
+- ``alwaysOn`` will ensure that the filter is always rendered in the list view.
+- ``default`` allows you to provide a default value for the filter. It only takes affect when using ``alwaysOn``.
+- ``filter`` this is optional, but allows you to specify a filter and should point to a Linz filter, or your own custom one.
+- ``once`` will ensure that a user can only add that filter once (works well with the ``boolean`` filter).
+
+.. note::
+  Be aware of the ``default`` values. Because of Linz's internal query structure most filters will need to provide the ``default`` value as an array, but there are some exceptions.
+
+Below is an example of the ``default`` data type for each filter:
+
+- ``dateRange``: ``{ dateFrom: [ '2017-10-15' ], dateTo: [ '2017-10-28' ] }``
+- ``date``: ``['2017-10-01']``
+- ``boolean``: ``true``
+- ``default``, ``fulltext``, ``list``: ``['string']``
+- ``number``: ``[4]``
+
+.. seealso::
+
+  View the `complete list of Linz filters <https://github.com/linzjs/linz/tree/master/lib/formtools/filters>`_.
 
 list.paging
 ===========
