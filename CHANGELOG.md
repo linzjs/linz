@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.0.0-11.0.0 (27 October 2017)
 
 ### BREAKING CHANGES
 
@@ -9,9 +9,18 @@
 ### IMPROVEMENTS
 
 - Add the ability to set an `alwaysOn` property for filters. This should be a boolean and will hide the close button and automatically show the filter.
+- Add the ability to provide a `default` value for `alwaysOn` filters.
 - Add the ability to remove the filter from the dropdown and hide the close button using `once: true`.
+- Fixed the multi-select filter, when using numbers as the value.
+- Integrated the static `getQuery` into the model export process.
+- Pagination is now always present.
+- Fixed buttons that show content in a modal, on slower connections.
+- Fixed typo in password placeholder text.
+- Updated the model export, field selection cookie, to be user specific.
+- Fixed issues with datePicker code on the client-side.
+- Fixed embedded document overview cell renderer.
 
-## v1.0.0-9.1.0 (9 August 2017)
+## v1.0.0-10.0.0 (9 August 2017)
 
 ### BREAKING CHANGES
 
