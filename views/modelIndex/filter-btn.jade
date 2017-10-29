@@ -1,0 +1,9 @@
+a(data-toggle='dropdown', role='button', class="btn btn-default")
+	i.fa.fa-filter
+	| Add filter&nbsp;
+	span.caret
+ul.dropdown-menu(role='menu')
+	for filterField, key in model.list.filters
+		li
+			a.control-addFilter(data-filter-field='' + key + '' data-filter-alwayson=(filterField.alwaysOn ? 'true' : 'false') data-filter-default=(filterField.default && '' + filterField.default + '') data-filter-once=(filterField.once ? 'true' : 'false'))= filterField['label']
+			span.controlField!= filterField.formControls

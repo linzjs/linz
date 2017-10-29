@@ -2,7 +2,15 @@
 
 ## Unreleased
 
+### BREAKING CHANGES
+
+- All `filters` must now return HTML from the `renderer` function, wrapped in `<template>` tags.
+
+### IMPROVEMENTS
+
 - Add `data-linz-view` to Model create and list, and record edit and overview pages. This gives CSS hooks to target CSS to certain views.
+- Added a new search button on the model list that always lives next to the _Add filter_ button. This replaces the _Filter now_ button that used to only be exposed when there were filters.
+- The _Add filter_ and _Search_ buttons are now disabled once the form has been submitted.
 
 ## v1.0.0-11.0.0 (27 October 2017)
 

@@ -1,6 +1,7 @@
 (function () {
 
-    var filtersAreDirty = false;
+    var filtersAreDirty = false,
+        originalSelectedFilters = selectedFilters();
 
     /* FILTERS */
 
@@ -28,6 +29,28 @@
 
     });
 
+    $('form.filters').on('submit', function (event) {
+
+        var isValid = $('.filters')[0].checkValidity();
+
+        if (!isValid) {
+            return false;
+        }
+
+        // Only search if something has changed.
+        if (originalSelectedFilters === selectedFilters() && $('.filters-list').children().length === 0) {
+            return false;
+        }
+
+        // Disable the submit button.
+        $('.filters').find(':submit').attr('disabled', true);
+        $('.filters').find('.btn[data-toggle="dropdown"]').attr('disabled', true);
+
+        // Add the spinner.
+        $(this).find(':submit').append(' <i class="fa fa-spinner fa-spin"></i>');
+
+    });
+
     $('form.filters button[type="submit"]').click(function (event) {
 
         // reset the pagination if required
@@ -41,7 +64,7 @@
 
         var filterText = filter.html(),
             filterVal = filter.attr('data-filter-field'),
-            filterFormControl = filter.siblings('.controlField').html(),
+            filterFormControl = filter.siblings('.controlField').children().html(),
             aFilters;
 
         if (linz.isTemplateSupported()) {
@@ -362,7 +385,6 @@
                 $('.selectedFilters').val(selectedFilters);
 
                 if (selectedFilters.length <= 0) {
-                    toggleFilterBox();
                     // since there are no filters, let's post the form to clear all filters except the sorting
                     // submit the form and reset the pagination
                     triggerSubmit();
@@ -388,33 +410,15 @@
     // trigger a click of the 'filter' button
     function triggerSubmit () {
 
-        // is there a filter submit button?
-        // model indexes without filters don't have them
-        if ($('.filters').find(':submit').length) {
-
-            // click the button
-            $('.filters').find(':submit').click();
-
-            // add spinning icon to Filter dropdown to indicate page is loading
-            var icon = $('.addFilterBtn').find('.fa-filter');
-            icon.removeClass('fa-filter');
-            icon.addClass('fa-spinner fa-spin');
-
-            return;
-
-        }
-
         // click the button
         $('.filters').submit();
 
     }
 
-    // add spinning icon when submit button is click
-    $('.filters').find(':submit').click(function () {
-        // check html5 form validation
-        if ($('.filters')[0].checkValidity()) {
-            $(this).append(' <i class="fa fa-spinner fa-spin"></i>');
-        }
-    });
+    function selectedFilters () {
+
+        return $('input[name="selectedFilters"]').val();
+
+    }
 
 })();
