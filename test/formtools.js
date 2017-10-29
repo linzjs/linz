@@ -455,7 +455,7 @@ describe('formtools', function () {
                         lastName: {
                             filter: {
                                 renderer: function customFilterRenderer (fieldName, callback) {
-                                    callback(null, '<input type="text" name="test1"><input type="text" name="test2">');
+                                    callback(null, '<template><input type="text" name="test1"><input type="text" name="test2"></template>');
                                 },
                                 filter: function customFilterFilter (fieldName, form, callback) {
                                     callback(null, { firstName: [form.test1, form.test2], lastName: 'doyle' });
@@ -1220,7 +1220,7 @@ describe('formtools', function () {
                         it('should render text input field', function (done) {
                             var fieldName = 'firstName';
                             linz.formtools.filters.default.renderer(fieldName, function (err, result) {
-                                result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" required>');
+                                result.should.equal('<template><input type="text" name="' + fieldName + '[]" class="form-control" required></template>');
                                 done();
                             });
 
@@ -1288,7 +1288,7 @@ describe('formtools', function () {
                         it('should render date input field', function (done) {
                             var fieldName = 'dateCreated';
                             linz.formtools.filters.date.renderer(fieldName, function (err, result) {
-                                result.should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" data-ui-datepicker="true" required>');
+                                result.should.equal('<template><input type="date" name="' + fieldName + '[]" class="form-control" data-ui-datepicker="true" required></template>');
                                 done();
                             });
 
@@ -1370,7 +1370,7 @@ describe('formtools', function () {
                         it('should render 2 date input fields', function (done) {
                             var fieldName = 'dateModified';
                             linz.formtools.filters.dateRange.renderer(fieldName, function (err, result) {
-                                result.should.equal('<span><input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" data-ui-datepicker="true" required></span><span><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" data-ui-datepicker="true" required></span>');
+                                result.should.equal('<template><span><input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" data-ui-datepicker="true" required></span><span><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" data-ui-datepicker="true" required></span></template>');
                                 done();
                             });
 
@@ -1463,7 +1463,7 @@ describe('formtools', function () {
                         it('should render checkbox input field', function (done) {
                             var fieldName = 'dateModified';
                             linz.formtools.filters.boolean.renderer(fieldName, function (err, result) {
-                                result.should.equal('<label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="true" required> Yes</label><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="false" required> No</label>');
+                                result.should.equal('<template><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="true" required> Yes</label><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="false" required> No</label></template>');
                                 done();
                             });
                         });
@@ -1500,7 +1500,7 @@ describe('formtools', function () {
                         it('should render text input field', function (done) {
                             var fieldName = 'firstName';
                             linz.formtools.filters.fulltext.renderer(fieldName, function (err, result) {
-                                result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" required>');
+                                result.should.equal('<template><input type="text" name="' + fieldName + '[]" class="form-control" required></template>');
                                 done();
                             });
 
@@ -1567,7 +1567,7 @@ describe('formtools', function () {
                         it('should render a select field', function (done) {
                             var fieldName = 'groups';
                             overridesListOpts.filters.groups.filter.renderer(fieldName, function (err, result) {
-                                result.should.equal('<select name="' + fieldName + '[]" class="form-control multiselect"><option value="one">option 1</option><option value="two">option 2</option></select>');
+                                result.should.equal('<template><select name="' + fieldName + '[]" class="form-control multiselect"><option value="one">option 1</option><option value="two">option 2</option></select></template>');
                                 done();
                             });
                         });
@@ -1576,7 +1576,7 @@ describe('formtools', function () {
                             var fieldName = 'groups',
                                 listFilter = linz.formtools.filters.list(list, true);
                             listFilter.renderer(fieldName, function (err, result) {
-                                result.should.equal('<select name="' + fieldName + '[]" class="form-control multiselect" multiple><option value="one">option 1</option><option value="two">option 2</option></select>');
+                                result.should.equal('<template><select name="' + fieldName + '[]" class="form-control multiselect" multiple><option value="one">option 1</option><option value="two">option 2</option></select></template>');
                                 done();
                             });
                         });
@@ -1585,7 +1585,7 @@ describe('formtools', function () {
                             var fieldName = 'groups',
                                 listFilter = linz.formtools.filters.list(['one', 'two'], true);
                             listFilter.renderer(fieldName, function (err, result) {
-                                result.should.equal('<select name="' + fieldName + '[]" class="form-control multiselect" multiple><option value="one">one</option><option value="two">two</option></select>');
+                                result.should.equal('<template><select name="' + fieldName + '[]" class="form-control multiselect" multiple><option value="one">one</option><option value="two">two</option></select></template>');
                                 done();
                             });
                         });
@@ -1623,7 +1623,7 @@ describe('formtools', function () {
                         it('should render text input field', function (done) {
                             var fieldName = 'code';
                             linz.formtools.filters.number.renderer(fieldName, function (err, result) {
-                                result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" required pattern="[0-9]*" placeholder="Only digits are allowed.">');
+                                result.should.equal('<template><input type="text" name="' + fieldName + '[]" class="form-control" required pattern="[0-9]*" placeholder="Only digits are allowed."></template>');
                                 done();
                             });
 
@@ -1677,7 +1677,7 @@ describe('formtools', function () {
 
                    it('should render custom filter', function (done) {
                         overridesListOpts.filters.lastName.filter.renderer('lastName', function(err, result) {
-                            result.should.equal('<input type="text" name="test1"><input type="text" name="test2">');
+                            result.should.equal('<template><input type="text" name="test1"><input type="text" name="test2"></template>');
                             done();
                         });
                    });
