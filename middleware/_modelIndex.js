@@ -354,7 +354,7 @@ module.exports = function  (req, res, next) {
                     req.linz.model.list.sortingBy = req.linz.model.list.sortBy[0];
 
                     // set default form sort
-                    session.list.formData.sort = req.linz.model.list.sortingBy.field;
+                    session.list.formData.sort = `-${req.linz.model.list.sortingBy.field}`;
 
                 } else {
 

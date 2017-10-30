@@ -15,6 +15,7 @@
 - The _Add filter_ and _Search_ buttons are now disabled once the form has been submitted.
 - The new `list.search` defaults to `['title']` and will always be on unless you set `list.search` to `false`.
 - A models title field, is always in the standard list query.
+- A model is now sorted by `dateModifed` in descending order by default.
 
 ## v1.0.0-11.0.0 (27 October 2017)
 
