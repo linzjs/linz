@@ -18,7 +18,6 @@ let ApiModelSchema,
 
 describe('Linz has a model api', function () {
 
-
     // Wait for the database
     before(function (done) {
 
@@ -91,6 +90,13 @@ describe('Linz has a model api', function () {
                 }
             });
 
+            ApiModel = linz.mongoose.model('apiModel', ApiModelSchema);
+
+            // Set manually as we're not loading via file.
+            linz.set('models', {
+                apiModel: ApiModel
+            });
+
             done();
 
         });
@@ -102,6 +108,53 @@ describe('Linz has a model api', function () {
         it('that should retrieve a model', function () {
 
             expect(linz.api.model.get('apiModel')).to.equal(ApiModel);
+
+        });
+
+    });
+
+    describe('which has a model method', function () {
+
+        it('that should retrieve the model options for a model', function () {
+
+            linz.api.model.model('apiModel', function (err, opts) {
+
+                expect(!err).to.be.true;
+                expect(opts).to.eql({
+                    description: '',
+                    hide: false,
+                    label: '',
+                    plural: '',
+                    title: 'username'
+                });
+
+            });
+
+        });
+
+    });
+
+    describe('which has a titleField method', function () {
+
+        it('that should retrieve the title field for a model', function () {
+
+            linz.api.model.titleField('apiModel', 'title', function (err, field) {
+
+                expect(!err).to.be.true;
+                expect(field).to.equal('username');
+
+            });
+
+        });
+
+        it('that should ignore fields that aren\'t title', function () {
+
+            linz.api.model.titleField('apiModel', 'email', function (err, field) {
+
+                expect(!err).to.be.true;
+                expect(field).to.equal('email');
+
+            });
 
         });
 

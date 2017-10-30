@@ -244,17 +244,25 @@ module.exports = function  (req, res, next) {
                     filters.$and = [];
                 }
 
-                const $or = req.linz.model.list.search.map((field) => {
+                async.map(req.linz.model.list.search, (field, fieldCallback) => {
 
-                    const queryFor = linz.api.query.fieldRegexp(field, session.list.formData.search);
+                    linz.api.model.titleField(req.params.model, field, (err, titleField) => {
 
-                    return linz.api.query.field(req.params.model, field, queryFor);
+                        if (err) {
+                            return fieldCallback(err);
+                        }
+
+                        fieldCallback(null, linz.api.query.fieldRegexp(titleField, session.list.formData.search));
+
+                    });
+
+                }, (err, $or) => {
+
+                    filters.$and.push({ $or });
+
+                    return cb(null);
 
                 });
-
-                filters.$and.push({ $or });
-
-                return cb(null);
 
             },
 
