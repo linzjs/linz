@@ -1,8 +1,6 @@
 (function () {
 
-    var filtersAreDirty = false,
-        originalSelectedFilters = selectedFilters(),
-        originalSearchString = searchString();
+    var filtersAreDirty = false;
 
     /* FILTERS */
 
@@ -35,11 +33,6 @@
         var isValid = $('.filters')[0].checkValidity();
 
         if (!isValid) {
-            return false;
-        }
-
-        // Only search if something has changed.
-        if (originalSelectedFilters === selectedFilters() && originalSearchString === searchString() && $('.filters-list').children().length === 0) {
             return false;
         }
 
@@ -413,18 +406,6 @@
 
         // click the button
         $('.filters').submit();
-
-    }
-
-    function selectedFilters () {
-
-        return $('input[name="selectedFilters"]').val();
-
-    }
-
-    function searchString () {
-
-        return $('input[name="search"]').val();
 
     }
 
