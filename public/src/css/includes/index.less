@@ -119,7 +119,6 @@
 
     .addFilterBtn {
 
-      margin-bottom: 5px;
       display: inline-block;
 
       a {
@@ -131,14 +130,15 @@
       }
 
     }
-    &[data-linz-has-search] .addFilterBtn {
+
+    &[data-linz-has-search="true"] .addFilterBtn {
       display: table-cell;
     }
-
 
     .filters {
 
       margin: 10px 0 20px 0px;
+      padding-bottom: 5px;
       border-bottom: 1px solid #E7EAEC;
 
       .filter-control {
