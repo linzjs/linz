@@ -322,25 +322,27 @@ module.exports = function  (req, res, next) {
 
                 let fields = Object.keys(req.linz.model.list.fields);
 
-                // Add the default fields we'll look for in the title virtual.
-                if (req.linz.model.schema.tree.label) {
-                    fields.push('label');
-                }
+                // Work in the title field
+                linz.api.model.titleField(req.params.model, 'title', (err, titleField) => {
 
-                if (req.linz.model.schema.tree.name) {
-                    fields.push('name');
-                }
+                    if (err) {
+                        return cb(err);
+                    }
 
-                const select = fields.join(' ');
+                    fields.push(titleField);
 
-                query.select(select);
+                    const select = fields.join(' ');
 
-                // If they've provided the `listQuery` static, use it to allow customisation of the fields we'll retrieve.
-                if (!req.linz.model.listQuery) {
-                    return cb();
-                }
+                    query.select(select);
 
-                req.linz.model.listQuery(query, cb);
+                    // If they've provided the `listQuery` static, use it to allow customisation of the fields we'll retrieve.
+                    if (!req.linz.model.listQuery) {
+                        return cb();
+                    }
+
+                    req.linz.model.listQuery(query, cb);
+
+                });
 
             },
 
