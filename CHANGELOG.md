@@ -5,6 +5,8 @@
 ### BREAKING CHANGES
 
 - All `filters` must now return HTML from the `renderer` function, wrapped in `<template>` tags.
+- All models must either have a `title` field, or supply `model.title` with the value of the schema field that should be used as the title.
+- The `title` virtual, when creating, will no longer use `label`, `name` or `this.toString()` to return a label. It will only ever use `toLabel` method if provided, or the value of the title property.
 
 ### IMPROVEMENTS
 

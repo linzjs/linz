@@ -42,6 +42,9 @@ describe('Linz has a query api', function () {
                 },
                 sortBy: ['username', 'email'],
             },
+            model: {
+                title: 'username'
+            },
             form: {
                 username: {
                     fieldset: 'Fieldset'

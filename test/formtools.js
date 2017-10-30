@@ -42,12 +42,33 @@ describe('formtools', function () {
             PostSchema = new mongoose.Schema({ label: String });
         });
 
-		it('it adds the title virtual', function () {
+        it('should throw when not supplied a title field, or model.title property', function () {
 
-			PostSchema.plugin(formtools.plugins.document);
+            (function () {
+
+                (new mongoose.Schema({ username: String })).plugin(formtools.plugins.document);
+
+            }).should.throw(/You must either have a title field, or the model\.title key/);
+
+		});
+
+		it('it adds the title virtual when not supplied as field', function () {
+
+			PostSchema.plugin(formtools.plugins.document, { model: { title: 'label' } });
 
 			PostSchema.virtuals.should.have.property('title');
 			PostSchema.paths.should.have.property('label');
+
+		});
+
+        it('it does not add the title virtual when supplied as field', function () {
+
+            var TestPostSchema = new mongoose.Schema({ title: String });
+
+			TestPostSchema.plugin(formtools.plugins.document);
+
+			TestPostSchema.virtuals.should.not.have.property('title');
+			TestPostSchema.paths.should.not.have.property('label');
 
 		});
 
@@ -72,45 +93,29 @@ describe('formtools', function () {
 
 		});
 
-		it('virtual title returns label property second', function () {
+        it('that will favour the toLabel method over title virtual', function () {
 
 			// create the schema
-			var LabelTestSchema = new mongoose.Schema({ label: String, name: String });
+			var TestToLabelSchema = new mongoose.Schema({ name: String, age: Number });
+
+            TestToLabelSchema.methods.toLabel = function () {
+                return `${this.name} (${this.age})`;
+            }
 
 			// add the plugin
-			LabelTestSchema.plugin(formtools.plugins.document);
+			TestToLabelSchema.plugin(formtools.plugins.document, { model: { title: 'name' } });
 
 			// create the model and a new instance of the model
-			var LabelTest = mongoose.model('LabelTest', LabelTestSchema),
-				labeltest = new LabelTest();
+			var Test = mongoose.model('TestToLabelSchema', TestToLabelSchema),
+				test = new Test();
 
-			// set the label property
-			labeltest.label = 'Title value';
-
-			// assert
-			LabelTestSchema.virtuals.should.have.property('title');
-			labeltest.title.should.equal('Title value');
-
-		});
-
-		it('virtual title returns name property second', function () {
-
-			// create the schema
-			var NameTestSchema = new mongoose.Schema({ label: String, name: String });
-
-			// add the plugin
-			NameTestSchema.plugin(formtools.plugins.document);
-
-			// create the model and a new instance of the model
-			var NameTest = mongoose.model('NameTest', NameTestSchema),
-				nametest = new NameTest();
-
-			// set the label property
-			nametest.name = 'Title value';
+			// set some properties
+            test.name = 'John';
+            test.age = 25;
 
 			// assert
-			NameTestSchema.virtuals.should.have.property('title');
-			nametest.title.should.equal('Title value');
+			TestToLabelSchema.virtuals.should.have.property('title');
+			test.title.should.equal('John (25)');
 
 		});
 
@@ -133,7 +138,7 @@ describe('formtools', function () {
 
                 function (cb) {
 
-                    PostSchema = new mongoose.Schema({ label: String });
+                    PostSchema = new mongoose.Schema({ label: String, title: String });
                     PostSchema.plugin(formtools.plugins.document);
 
                     postModel = mongoose.model('postModel', PostSchema);
@@ -155,6 +160,7 @@ describe('formtools', function () {
                             hide: true,
                             label: 'Comment',
                             plural: 'Comments',
+                            title: 'label',
                             description: 'Responses to blog posts'
                         }
                     });
@@ -176,7 +182,8 @@ describe('formtools', function () {
                     LocationSchema.plugin(formtools.plugins.document, {
                         model: {
                             hide: true,
-                            label: 'Location'
+                            label: 'Location',
+                            title: 'label',
                         }
                     });
 
@@ -299,7 +306,8 @@ describe('formtools', function () {
 
             CategoriesSchema = new mongoose.Schema({
                 label: String,
-                alias: String
+                alias: String,
+                title: String,
             });
 
             CategoriesSchema.plugin(formtools.plugins.document, {});
@@ -336,6 +344,9 @@ describe('formtools', function () {
 			});
 
 			PostSchema.plugin(formtools.plugins.document, {
+                model: {
+                    title: 'label'
+                },
 				form: {
 					firstName: {
 						label: 'First Name',
@@ -576,6 +587,9 @@ describe('formtools', function () {
                             }
                         }
                     }
+                },
+                model: {
+                    title: 'username'
                 },
                 overview: {
                     canEdit: false,
@@ -1121,7 +1135,8 @@ describe('formtools', function () {
                             default: true
                         },
                         description: String,
-                        groups: String
+                        groups: String,
+                        title: String,
                     });
 
                     try {
