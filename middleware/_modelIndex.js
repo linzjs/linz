@@ -244,14 +244,15 @@ module.exports = function  (req, res, next) {
                     filters.$and = [];
                 }
 
-                req.linz.model.list.search.forEach((field) => {
+                const $or = req.linz.model.list.search.map((field) => {
 
                     const queryFor = linz.api.query.fieldRegexp(field, session.list.formData.search);
 
-                    filters.$and.push(linz.api.query.field(req.params.model, field, queryFor));
+                    return linz.api.query.field(req.params.model, field, queryFor);
 
                 });
 
+                filters.$and.push({ $or });
 
                 return cb(null);
 
