@@ -724,7 +724,7 @@ describe('formtools', function () {
                 describe('with fields defaults', function () {
 
                     it('should have a title', function () {
-                        listOpts.fields.title.should.be.an.instanceOf(Object).and.have.property('label', 'Label');
+                        listOpts.fields.title.should.be.an.instanceOf(Object).and.have.property('label', 'Titles');
                     });
 
                     it('should have a overview link renderer for title', function () {
