@@ -1255,7 +1255,7 @@ describe('formtools', function () {
                         it('should create filter using regex matching multiple keywords search', function () {
                            var fieldName = 'firstName';
                            linz.formtools.filters.default.filter(fieldName, { 'firstName': ['john william'] }, function (err, result) {
-                               result.should.have.property(fieldName, { $regex: /john william/ig});
+                               result.should.have.property(fieldName, { $regex: /john|william/ig});
                            });
                         });
 
@@ -1269,7 +1269,7 @@ describe('formtools', function () {
                         it('should trim leading and trailing spaces on search keywords and any additional one between words', function () {
                            var fieldName = 'firstName';
                            linz.formtools.filters.default.filter(fieldName, { 'firstName': ['   john    william   '] }, function (err, result) {
-                               result.should.have.property(fieldName, { $regex: /john william/ig});
+                               result.should.have.property(fieldName, { $regex: /john|william/ig});
                            });
                         });
 
