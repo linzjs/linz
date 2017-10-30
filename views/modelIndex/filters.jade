@@ -1,8 +1,16 @@
-.model-filters
+.model-filters(data-linz-has-search='' + model.list.search + '')
 	form#filters.filters(method='post', role='form')
-		.dropdown.addFilterBtn
-			include filter-btn
-		button.btn.btn-default(type='submit') Search
+		if model.list.search
+			div.input-group
+				.dropdown.addFilterBtn.input-group-btn
+					include filter-btn
+				input.search.form-control(type='text', name='search', value=form.search, placeholder='Keywords')
+				.input-group-btn
+					include search-btn
+		else
+			.dropdown.addFilterBtn
+				include filter-btn
+			include search-btn
 		input.page(type='hidden', name='page', value=''+ page +'')
 		input.pageSize(type='hidden', name='pageSize', value=''+ pageSize +'')
 		input.selectedFilters(type='hidden', name='selectedFilters', value='' + ((form.selectedFilters) ? form.selectedFilters : '') + '')

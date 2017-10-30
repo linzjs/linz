@@ -2,7 +2,8 @@ var linz = require('../'),
     async = require('async'),
     formtoolsAPI = require('../lib/api/formtools'),
     clone = require('clone'),
-    dedupe = require('dedupe');
+    dedupe = require('dedupe'),
+    escapeStringRegexp = require('escape-string-regexp');
 
 module.exports = function  (req, res, next) {
 
@@ -228,6 +229,31 @@ module.exports = function  (req, res, next) {
                     return cb(null);
 
                 });
+
+            },
+
+            // add the seach filters
+            function (cb) {
+
+                if (!session.list.formData.search || !session.list.formData.search.length || !req.linz.model.list.search || !Array.isArray(req.linz.model.list.search)) {
+                    return cb(null);
+                }
+
+                // Default the `$and` key.
+                if (!filters.$and) {
+                    filters.$and = [];
+                }
+
+                req.linz.model.list.search.forEach((field) => {
+
+                    const queryFor = linz.api.query.fieldRegexp(field, session.list.formData.search);
+
+                    filters.$and.push(linz.api.query.field(req.params.model, field, queryFor));
+
+                });
+
+
+                return cb(null);
 
             },
 

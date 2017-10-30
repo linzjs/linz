@@ -1,7 +1,8 @@
 (function () {
 
     var filtersAreDirty = false,
-        originalSelectedFilters = selectedFilters();
+        originalSelectedFilters = selectedFilters(),
+        originalSearchString = searchString();
 
     /* FILTERS */
 
@@ -38,7 +39,7 @@
         }
 
         // Only search if something has changed.
-        if (originalSelectedFilters === selectedFilters() && $('.filters-list').children().length === 0) {
+        if (originalSelectedFilters === selectedFilters() && originalSearchString === searchString() && $('.filters-list').children().length === 0) {
             return false;
         }
 
@@ -418,6 +419,12 @@
     function selectedFilters () {
 
         return $('input[name="selectedFilters"]').val();
+
+    }
+
+    function searchString () {
+
+        return $('input[name="search"]').val();
 
     }
 
