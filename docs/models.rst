@@ -6,14 +6,17 @@ Models
 
 One of the primary reasons to use Linz is to ease model development and scaffold highly customizable interfaces for managing these models. Linz provides a simple DSL you can use to describe your model. Using the content of your DSL, Linz will scaffold an index, overview, edit handlers and provide a basic CRUD HTTP API for your model.
 
-All Linz models are bootstrapped with two mandatory properties:
+All Linz models are bootstrapped with two properties (created by Linz):
 
 - ``dateCreated`` with a label of *Date created*.
 - ``dateModified`` with a label of *Date modified*.
 
-The label used for each record centers around the title field. If your model has a title field, you don't have to do anything. If you model doesn't have a title field, you need to supply a field in your schema that will be used for the value of the title whenever displayed in Linz. The title is the default way to reference a record iwthin Linz.
+.. note::
+  Linz will display your models in a list. The label used for each record is derived from the title field, or a virtual title field if one does not exist in your schema.
 
-You create Models in the ``model`` directory, one file per model. The file should have the following basic structure:
+  If your model has a title field, you don't have to do anything. If your model doesn't have a title field, you can tell Linz about another field in the schema that you would like used to derive a value and label for each record. The title is the default way to reference a record within Linz.
+
+You create Models in the ``model`` directory; one file per model. The file should have the following basic structure:
 
 **person.js**::
 
@@ -134,7 +137,7 @@ Models model DSL
 
 ``model`` should be an object with three keys:
 
-- ``title`` is required, unless you have a ``title`` field in your schema. The value you supply should be the name of a field in your schema. This field will be used to derive the *title* for the record, and label for the field.
+- ``title`` is required, unless you have a ``title`` field in your schema. If not, you should reference another field in your schema. This field will be used to derive the *title* for the record, and label for the field.
 - ``label`` should be a singular noun describing the model.
 - ``description`` should be a short sentence describing the noun.
 
