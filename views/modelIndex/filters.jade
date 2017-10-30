@@ -2,8 +2,9 @@
 	form#filters.filters(method='post', role='form')
 		if model.list.search
 			div.input-group
-				.dropdown.addFilterBtn.input-group-btn
-					include filter-btn
+				if Object.keys(model.list.filters).length
+					.dropdown.addFilterBtn.input-group-btn
+						include filter-btn
 				input.search.form-control(type='text', name='search', value=form.search, placeholder='Keywords')
 				.input-group-btn
 					include search-btn
