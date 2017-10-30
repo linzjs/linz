@@ -52,6 +52,16 @@ describe('formtools', function () {
 
 		});
 
+        it('should throw when supplied a title field that doesn\'t exist', function () {
+
+            (function () {
+
+                (new mongoose.Schema({ username: String })).plugin(formtools.plugins.document, { model: { title: 'missing' } });
+
+            }).should.throw(/You must reference a title field that exists in the schema/);
+
+		});
+
 		it('it adds the title virtual when not supplied as field', function () {
 
 			PostSchema.plugin(formtools.plugins.document, { model: { title: 'label' } });
@@ -345,7 +355,7 @@ describe('formtools', function () {
 
 			PostSchema.plugin(formtools.plugins.document, {
                 model: {
-                    title: 'label'
+                    title: 'firstName'
                 },
 				form: {
 					firstName: {
@@ -724,7 +734,7 @@ describe('formtools', function () {
                 describe('with fields defaults', function () {
 
                     it('should have a title', function () {
-                        listOpts.fields.title.should.be.an.instanceOf(Object).and.have.property('label', 'Titles');
+                        listOpts.fields.title.should.be.an.instanceOf(Object).and.have.property('label', 'Title');
                     });
 
                     it('should have a overview link renderer for title', function () {
