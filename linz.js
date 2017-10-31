@@ -196,7 +196,7 @@ Linz.prototype.configure = function() {
 
         debugGeneral('Connecting to the database');
 
-        _this.mongoose.connect(_this.get('mongo'));
+        _this.mongoose.connect(_this.get('mongo'), _this.get('mongoOptions'));
         _this.mongoose.connection.once('connected', function () {
             debugGeneral('Database connected');
         });
