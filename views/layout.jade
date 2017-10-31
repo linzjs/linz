@@ -4,6 +4,8 @@ doctype html
 - attributes = []
 if model && model.modelName
 	- attributes['data-linz-model'] = model.modelName
+if view
+	- attributes['data-linz-view'] = view
 html(lang="en")&attributes(attributes)
 	include partials/head
 	- bodyAttributes = []

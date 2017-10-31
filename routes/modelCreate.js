@@ -47,6 +47,7 @@ var route = function (req, res, next) {
                     pageTitle: `Create a new ${singular}`,
                     scripts,
                     styles,
+                    view: 'model-create',
                 });
 
             })

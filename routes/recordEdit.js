@@ -94,6 +94,7 @@ var route = function (req, res, next) {
                     pageTitle: `Editing '${req.linz.record.title}'`,
                     scripts,
                     styles,
+                    view: 'record-edit',
                 });
 
             })

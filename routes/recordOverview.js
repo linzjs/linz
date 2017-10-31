@@ -29,6 +29,7 @@ var route = function (req, res, next) {
                 scripts,
                 styles,
                 user: req.user,
+                view: 'record-overview',
             };
 
             if (Array.isArray(locals.overview.body)) {

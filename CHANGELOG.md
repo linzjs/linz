@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+- Add `data-linz-view` to Model create and list, and record edit and overview pages. This gives CSS hooks to target CSS to certain views.
+
 ## v1.0.0-11.0.0 (27 October 2017)
 
 ### BREAKING CHANGES

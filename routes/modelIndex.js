@@ -71,6 +71,7 @@ var route = function (req, res, next) {
                 scripts,
                 styles,
                 user: req.user,
+                view: 'model-list',
             };
 
             async.parallel([
