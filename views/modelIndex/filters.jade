@@ -8,7 +8,7 @@
 				include search
 				.input-group-btn
 					include search-btn
-		else
+		else if Object.keys(model.list.filters).length
 			.dropdown.addFilterBtn
 				include filter-btn
 			include search-btn
