@@ -2,7 +2,8 @@ var linz = require('../'),
     async = require('async'),
     formtoolsAPI = require('../lib/api/formtools'),
     clone = require('clone'),
-    dedupe = require('dedupe');
+    dedupe = require('dedupe'),
+    escapeStringRegexp = require('escape-string-regexp');
 
 module.exports = function  (req, res, next) {
 
@@ -231,6 +232,40 @@ module.exports = function  (req, res, next) {
 
             },
 
+            // add the seach filters
+            function (cb) {
+
+                if (!session.list.formData.search || !session.list.formData.search.length || !req.linz.model.list.search || !Array.isArray(req.linz.model.list.search)) {
+                    return cb(null);
+                }
+
+                // Default the `$and` key.
+                if (!filters.$and) {
+                    filters.$and = [];
+                }
+
+                async.map(req.linz.model.list.search, (field, fieldCallback) => {
+
+                    linz.api.model.titleField(req.params.model, field, (err, titleField) => {
+
+                        if (err) {
+                            return fieldCallback(err);
+                        }
+
+                        fieldCallback(null, linz.api.query.fieldRegexp(titleField, session.list.formData.search));
+
+                    });
+
+                }, (err, $or) => {
+
+                    filters.$and.push({ $or });
+
+                    return cb(null);
+
+                });
+
+            },
+
             // create the query
             function (cb) {
 
@@ -287,25 +322,27 @@ module.exports = function  (req, res, next) {
 
                 let fields = Object.keys(req.linz.model.list.fields);
 
-                // Add the default fields we'll look for in the title virtual.
-                if (req.linz.model.schema.tree.label) {
-                    fields.push('label');
-                }
+                // Work in the title field
+                linz.api.model.titleField(req.params.model, 'title', (err, titleField) => {
 
-                if (req.linz.model.schema.tree.name) {
-                    fields.push('name');
-                }
+                    if (err) {
+                        return cb(err);
+                    }
 
-                const select = fields.join(' ');
+                    fields.push(titleField);
 
-                query.select(select);
+                    const select = fields.join(' ');
 
-                // If they've provided the `listQuery` static, use it to allow customisation of the fields we'll retrieve.
-                if (!req.linz.model.listQuery) {
-                    return cb();
-                }
+                    query.select(select);
 
-                req.linz.model.listQuery(query, cb);
+                    // If they've provided the `listQuery` static, use it to allow customisation of the fields we'll retrieve.
+                    if (!req.linz.model.listQuery) {
+                        return cb();
+                    }
+
+                    req.linz.model.listQuery(query, cb);
+
+                });
 
             },
 
@@ -317,7 +354,7 @@ module.exports = function  (req, res, next) {
                     req.linz.model.list.sortingBy = req.linz.model.list.sortBy[0];
 
                     // set default form sort
-                    session.list.formData.sort = req.linz.model.list.sortingBy.field;
+                    session.list.formData.sort = `-${req.linz.model.list.sortingBy.field}`;
 
                 } else {
 

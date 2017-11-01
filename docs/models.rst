@@ -6,12 +6,17 @@ Models
 
 One of the primary reasons to use Linz is to ease model development and scaffold highly customizable interfaces for managing these models. Linz provides a simple DSL you can use to describe your model. Using the content of your DSL, Linz will scaffold an index, overview, edit handlers and provide a basic CRUD HTTP API for your model.
 
-All Linz models are bootstrapped with two mandatory properties:
+All Linz models are bootstrapped with two properties (created by Linz):
 
 - ``dateCreated`` with a label of *Date created*.
 - ``dateModified`` with a label of *Date modified*.
 
-You create Models in the ``model`` directory, one file per model. The file should have the following basic structure:
+.. note::
+  Linz will display your models in a list. The label used for each record is derived from the title field, or a virtual title field if one does not exist in your schema.
+
+  If your model has a title field, you don't have to do anything. If your model doesn't have a title field, you can tell Linz about another field in the schema that you would like used to derive a value and label for each record. The title is the default way to reference a record within Linz.
+
+You create Models in the ``model`` directory; one file per model. The file should have the following basic structure:
 
 **person.js**::
 
@@ -27,7 +32,8 @@ You create Models in the ``model`` directory, one file per model. The file shoul
   personSchema.plugin(linz.formtools.plugins.document, {
     model: {
       label: 'Person',
-      description: 'A person.'
+      description: 'A person.',
+      title: 'name'
     },
     labels: {
       name: 'Name',
@@ -91,7 +97,7 @@ Model DSL
 
 Linz uses a Model DSL, which is an object that can be used to describe your model. Linz will use this information to scaffold user interfaces for you. The Model DSL contains six main parts:
 
-- ``model`` contains basic information such as the ``label`` and ``description`` of the model.
+- ``model`` contains basic information such as the ``title`` field, ``label`` and ``description`` of the model.
 - ``labels`` contains human friendly versions of your model's properties, keyed by the property name.
 - ``list`` contains information used to scaffold the list displaying model records.
 - ``form`` contains information used to scaffold the edit handler for a model record.
@@ -129,7 +135,11 @@ You supply the DSL to Linz in the form of an object, to the ``linz.formtools.plu
 Models model DSL
 ----------------
 
-``model`` should be an Object with two keys ``label`` and ``description``. The ``label`` should be a singular noun describing the model, and the ``description`` a short sentence describing the noun.
+``model`` should be an object with three keys:
+
+- ``title`` is required, unless you have a ``title`` field in your schema. If not, you should reference another field in your schema. This field will be used to derive the *title* for the record, and label for the field.
+- ``label`` should be a singular noun describing the model.
+- ``description`` should be a short sentence describing the noun.
 
 The ``label`` is used in many places and is automatically pluralized based on the usage context. The ``description`` is only used on the Models index within Linz.
 
@@ -137,7 +147,8 @@ For example::
 
   model: {
     label: 'Person',
-    description: 'A person.'
+    description: 'A person.',
+    title: 'name'
   }
 
 .. _models-label-dsl-summary-reference:
@@ -147,7 +158,7 @@ Models label DSL
 
 ``labels`` is used to provide a label and description for the model.
 
-``labels`` should be an Object, keyed by field names and strings of the human friendly versions of your field names.
+``labels`` should be an object, keyed by field names and strings of the human friendly versions of your field names.
 
 For example::
 
@@ -156,7 +167,7 @@ For example::
     email: 'Email'
   }
 
-You can customize the labels for the default ``dateModified`` and ``dateCreated`` using this object.
+You can customize the labels for the default ``dateModified`` and ``dateCreated`` using this object. You can also supply the key ``title`` with a value that should be used for the label of the record's title.
 
 .. _models-list-dsl-summary-reference:
 

@@ -141,6 +141,7 @@ Each filter, keyed by the field name, can have the following keys:
 - ``once`` will ensure that a user can only add that filter once (works well with the ``boolean`` filter).
 
 .. note::
+
   Be aware of the ``default`` values. Because of Linz's internal query structure most filters will need to provide the ``default`` value as an array, but there are some exceptions.
 
 Below is an example of the ``default`` data type for each filter:

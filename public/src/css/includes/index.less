@@ -6,6 +6,10 @@
 
 .model-actions, .options {
 
+  .form-control {
+    height: 42px;
+  }
+
   .btn {
 
     padding-top: 10px;
@@ -119,7 +123,7 @@
 
     .addFilterBtn {
 
-      margin-bottom: 5px;
+      display: inline-block;
 
       a {
         width: 100%;
@@ -131,11 +135,13 @@
 
     }
 
+    &[data-linz-has-search="true"] .addFilterBtn {
+      display: table-cell;
+    }
+
     .filters {
 
-      display: none;
-      margin: 10px 0 20px 25px;
-      border-bottom: 1px solid #E7EAEC;
+      margin: 10px 0 20px 0px;
 
       .filter-control {
 
@@ -165,6 +171,21 @@
         padding: 0 12px 0 18px;
 
       }
+
+    }
+
+  }
+
+  .filter-list {
+
+    margin-bottom: 40px;
+
+    .form-group {
+
+      margin-left: 25px;
+      margin-top: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #E7EAEC;
 
     }
 
@@ -334,6 +355,10 @@
 @media (min-width: @screen-sm-min) {
 
   .model-actions, .options {
+
+    .form-control {
+      height: 34px;
+    }
 
     .btn {
 
