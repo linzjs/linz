@@ -38,7 +38,7 @@ html(lang="en")&attributes(attributes)
 							li
 								mixin submenu(node)
 					else
-						if (node.href === request.path)
+						if (request && request.path && node.href === request.path)
 							li(class='active')
 								a(href=node.href)
 									span.icon!= node.icon

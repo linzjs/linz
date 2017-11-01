@@ -76,7 +76,7 @@ Example
       body: '<div class="container linz-container index"><div class="col-xs-12"><p>Body.</p></div></div>'
     };
 
-    linz.api.views.render(locals, (err, html) => {
+    linz.api.views.render(locals, req, res, (err, html) => {
 
       if (err) {
         return next(err);

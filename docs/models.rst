@@ -256,7 +256,7 @@ If found, Linz will execute this function with a Mongoose query before executing
 
 For example, if you'd like to return more fields from MongoDB than those listed in ``list.fields`` you can do it here::
 
-  model.static.listQuery = listQuery (query, callback) => callback(null, query.select('anotherField anotherOne'));
+  model.static.listQuery = (query, callback) => callback(null, query.select('anotherField anotherOne'));
 
 canDelete method
 ----------------
