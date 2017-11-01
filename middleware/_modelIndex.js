@@ -305,7 +305,7 @@ module.exports = function  (req, res, next) {
                     return cb();
                 }
 
-                req.linz.model.listQuery(query, cb);
+                req.linz.model.listQuery(req, query, cb);
 
             },
 
