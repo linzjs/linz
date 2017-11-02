@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+- You can now use `req.flash('linz-notification', linz.api.views.notification({ text: 'Hi' }))` to have Linz show a notification for you on redirect.
+
 ## v1.0.0-12.0.0 (1 November 2017)
 
 ### BREAKING CHANGES
