@@ -2,21 +2,9 @@
 
 var expect = require('chai').expect,
     linz = require('../linz'),
-    mongoose;
+    mongoose = linz.mongoose;
 
-// init linz
-linz.init({
-    options: {
-        'mongo': 'mongodb://localhost:27777/mongoose-formtools-test',
-        'user model': 'user',
-        'load models': false,
-        'load configs': false
-    }
-});
-
-mongoose = linz.mongoose;
-
-describe('Linz has an api', function () {
+describe('Linz has a url api', function () {
 
     let UserSchema;
 
@@ -26,6 +14,10 @@ describe('Linz has an api', function () {
         // Just in case the database connection takes a while
         this.timeout(5000);
 
+        // Setup the schema
+        UserSchema = new mongoose.Schema({ label: String });
+        mongoose.model('user', UserSchema);
+
         // If we have a connection, we're good to go.
         if (mongoose.connection.readyState === 1) {
             return done();
@@ -34,9 +26,6 @@ describe('Linz has an api', function () {
         // If not, let's wait.
         mongoose.connection.once('connected', done);
 
-        // Setup the schema
-        UserSchema = new mongoose.Schema({ label: String });
-        mongoose.model('user', UserSchema);
 
     });
 

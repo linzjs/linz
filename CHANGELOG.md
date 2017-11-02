@@ -1,8 +1,21 @@
 # CHANGELOG
 
-## Unreleased
+## v1.0.0-12.0.0 (1 November 2017)
+
+### BREAKING CHANGES
+
+- All `filters` must now return HTML from the `renderer` function, wrapped in `<template>` tags.
+- All models must either have a `title` field, or supply `model.title` with the value of the schema field that should be used as the title.
+- The `title` virtual, when creating, will no longer use `label`, `name` or `this.toString()` to return a label. It will only ever use `toLabel` method if provided, or the value of the title property.
+
+### IMPROVEMENTS
 
 - Add `data-linz-view` to Model create and list, and record edit and overview pages. This gives CSS hooks to target CSS to certain views.
+- Added a new search button on the model list that always lives next to the _Add filter_ button. This replaces the _Filter now_ button that used to only be exposed when there were filters.
+- The _Add filter_ and _Search_ buttons are now disabled once the form has been submitted.
+- The new `list.search` defaults to `['title']` and will always be on unless you set `list.search` to `false`.
+- A models title field, is always in the standard list query.
+- A model is now sorted by `dateModifed` in descending order by default.
 
 ## v1.0.0-11.0.0 (27 October 2017)
 

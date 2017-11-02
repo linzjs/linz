@@ -1,16 +1,17 @@
-.model-filters
-	if Object.keys(model.list.filters).length
-		.dropdown.addFilterBtn
-			a(data-toggle='dropdown', role='button', class="btn btn-default")
-				i.fa.fa-filter
-				| Filter&nbsp;
-				span.caret
-			ul.dropdown-menu(role='menu')
-				for filterField, key in model.list.filters
-					li
-						a.control-addFilter(data-filter-field='' + key + '' data-filter-alwayson=(filterField.alwaysOn ? 'true' : 'false') data-filter-default=(filterField.default && '' + filterField.default + '') data-filter-once=(filterField.once ? 'true' : 'false'))= filterField['label']
-						span.controlField!= filterField.formControls
-	form.filters(method='post', role='form')
+.model-filters(data-linz-has-search='' + ((model.list.search) ? 'true' : 'false') + '')
+	form#filters.filters(method='post', role='form')
+		if model.list.search
+			div.input-group
+				if Object.keys(model.list.filters).length
+					.dropdown.addFilterBtn.input-group-btn
+						include filter-btn
+				include search
+				.input-group-btn
+					include search-btn
+		else if Object.keys(model.list.filters).length
+			.dropdown.addFilterBtn
+				include filter-btn
+			include search-btn
 		input.page(type='hidden', name='page', value=''+ page +'')
 		input.pageSize(type='hidden', name='pageSize', value=''+ pageSize +'')
 		input.selectedFilters(type='hidden', name='selectedFilters', value='' + ((form.selectedFilters) ? form.selectedFilters : '') + '')
@@ -21,7 +22,5 @@
 					for activeFilter, fieldName in model.list.activeFilters
 						for filterControl in activeFilter.controls
 							include filter
-			.form-group
-				button.btn.btn-default(type="submit") Filter now
 			template(id="filter")
 				include filter

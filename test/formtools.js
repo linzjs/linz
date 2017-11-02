@@ -42,12 +42,43 @@ describe('formtools', function () {
             PostSchema = new mongoose.Schema({ label: String });
         });
 
-		it('it adds the title virtual', function () {
+        it('should throw when not supplied a title field, or model.title property', function () {
 
-			PostSchema.plugin(formtools.plugins.document);
+            (function () {
+
+                (new mongoose.Schema({ username: String })).plugin(formtools.plugins.document);
+
+            }).should.throw(/You must either have a title field, or the model\.title key/);
+
+		});
+
+        it('should throw when supplied a title field that doesn\'t exist', function () {
+
+            (function () {
+
+                (new mongoose.Schema({ username: String })).plugin(formtools.plugins.document, { model: { title: 'missing' } });
+
+            }).should.throw(/You must reference a title field that exists in the schema/);
+
+		});
+
+		it('it adds the title virtual when not supplied as field', function () {
+
+			PostSchema.plugin(formtools.plugins.document, { model: { title: 'label' } });
 
 			PostSchema.virtuals.should.have.property('title');
 			PostSchema.paths.should.have.property('label');
+
+		});
+
+        it('it does not add the title virtual when supplied as field', function () {
+
+            var TestPostSchema = new mongoose.Schema({ title: String });
+
+			TestPostSchema.plugin(formtools.plugins.document);
+
+			TestPostSchema.virtuals.should.not.have.property('title');
+			TestPostSchema.paths.should.not.have.property('label');
 
 		});
 
@@ -72,45 +103,29 @@ describe('formtools', function () {
 
 		});
 
-		it('virtual title returns label property second', function () {
+        it('that will favour the toLabel method over title virtual', function () {
 
 			// create the schema
-			var LabelTestSchema = new mongoose.Schema({ label: String, name: String });
+			var TestToLabelSchema = new mongoose.Schema({ name: String, age: Number });
+
+            TestToLabelSchema.methods.toLabel = function () {
+                return `${this.name} (${this.age})`;
+            }
 
 			// add the plugin
-			LabelTestSchema.plugin(formtools.plugins.document);
+			TestToLabelSchema.plugin(formtools.plugins.document, { model: { title: 'name' } });
 
 			// create the model and a new instance of the model
-			var LabelTest = mongoose.model('LabelTest', LabelTestSchema),
-				labeltest = new LabelTest();
+			var Test = mongoose.model('TestToLabelSchema', TestToLabelSchema),
+				test = new Test();
 
-			// set the label property
-			labeltest.label = 'Title value';
-
-			// assert
-			LabelTestSchema.virtuals.should.have.property('title');
-			labeltest.title.should.equal('Title value');
-
-		});
-
-		it('virtual title returns name property second', function () {
-
-			// create the schema
-			var NameTestSchema = new mongoose.Schema({ label: String, name: String });
-
-			// add the plugin
-			NameTestSchema.plugin(formtools.plugins.document);
-
-			// create the model and a new instance of the model
-			var NameTest = mongoose.model('NameTest', NameTestSchema),
-				nametest = new NameTest();
-
-			// set the label property
-			nametest.name = 'Title value';
+			// set some properties
+            test.name = 'John';
+            test.age = 25;
 
 			// assert
-			NameTestSchema.virtuals.should.have.property('title');
-			nametest.title.should.equal('Title value');
+			TestToLabelSchema.virtuals.should.have.property('title');
+			test.title.should.equal('John (25)');
 
 		});
 
@@ -133,7 +148,7 @@ describe('formtools', function () {
 
                 function (cb) {
 
-                    PostSchema = new mongoose.Schema({ label: String });
+                    PostSchema = new mongoose.Schema({ label: String, title: String });
                     PostSchema.plugin(formtools.plugins.document);
 
                     postModel = mongoose.model('postModel', PostSchema);
@@ -155,6 +170,7 @@ describe('formtools', function () {
                             hide: true,
                             label: 'Comment',
                             plural: 'Comments',
+                            title: 'label',
                             description: 'Responses to blog posts'
                         }
                     });
@@ -176,7 +192,8 @@ describe('formtools', function () {
                     LocationSchema.plugin(formtools.plugins.document, {
                         model: {
                             hide: true,
-                            label: 'Location'
+                            label: 'Location',
+                            title: 'label',
                         }
                     });
 
@@ -299,7 +316,8 @@ describe('formtools', function () {
 
             CategoriesSchema = new mongoose.Schema({
                 label: String,
-                alias: String
+                alias: String,
+                title: String,
             });
 
             CategoriesSchema.plugin(formtools.plugins.document, {});
@@ -336,6 +354,9 @@ describe('formtools', function () {
 			});
 
 			PostSchema.plugin(formtools.plugins.document, {
+                model: {
+                    title: 'firstName'
+                },
 				form: {
 					firstName: {
 						label: 'First Name',
@@ -455,7 +476,7 @@ describe('formtools', function () {
                         lastName: {
                             filter: {
                                 renderer: function customFilterRenderer (fieldName, callback) {
-                                    callback(null, '<input type="text" name="test1"><input type="text" name="test2">');
+                                    callback(null, '<template><input type="text" name="test1"><input type="text" name="test2"></template>');
                                 },
                                 filter: function customFilterFilter (fieldName, form, callback) {
                                     callback(null, { firstName: [form.test1, form.test2], lastName: 'doyle' });
@@ -576,6 +597,9 @@ describe('formtools', function () {
                             }
                         }
                     }
+                },
+                model: {
+                    title: 'username'
                 },
                 overview: {
                     canEdit: false,
@@ -710,7 +734,7 @@ describe('formtools', function () {
                 describe('with fields defaults', function () {
 
                     it('should have a title', function () {
-                        listOpts.fields.title.should.be.an.instanceOf(Object).and.have.property('label', 'Label');
+                        listOpts.fields.title.should.be.an.instanceOf(Object).and.have.property('label', 'Title');
                     });
 
                     it('should have a overview link renderer for title', function () {
@@ -1121,7 +1145,8 @@ describe('formtools', function () {
                             default: true
                         },
                         description: String,
-                        groups: String
+                        groups: String,
+                        title: String,
                     });
 
                     try {
@@ -1220,7 +1245,7 @@ describe('formtools', function () {
                         it('should render text input field', function (done) {
                             var fieldName = 'firstName';
                             linz.formtools.filters.default.renderer(fieldName, function (err, result) {
-                                result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" required>');
+                                result.should.equal('<template><input type="text" name="' + fieldName + '[]" class="form-control" required></template>');
                                 done();
                             });
 
@@ -1255,7 +1280,7 @@ describe('formtools', function () {
                         it('should create filter using regex matching multiple keywords search', function () {
                            var fieldName = 'firstName';
                            linz.formtools.filters.default.filter(fieldName, { 'firstName': ['john william'] }, function (err, result) {
-                               result.should.have.property(fieldName, { $regex: /john william/ig});
+                               result.should.have.property(fieldName, { $regex: /john|william/ig});
                            });
                         });
 
@@ -1269,7 +1294,7 @@ describe('formtools', function () {
                         it('should trim leading and trailing spaces on search keywords and any additional one between words', function () {
                            var fieldName = 'firstName';
                            linz.formtools.filters.default.filter(fieldName, { 'firstName': ['   john    william   '] }, function (err, result) {
-                               result.should.have.property(fieldName, { $regex: /john william/ig});
+                               result.should.have.property(fieldName, { $regex: /john|william/ig});
                            });
                         });
 
@@ -1288,7 +1313,7 @@ describe('formtools', function () {
                         it('should render date input field', function (done) {
                             var fieldName = 'dateCreated';
                             linz.formtools.filters.date.renderer(fieldName, function (err, result) {
-                                result.should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" data-ui-datepicker="true" required>');
+                                result.should.equal('<template><input type="date" name="' + fieldName + '[]" class="form-control" data-ui-datepicker="true" required></template>');
                                 done();
                             });
 
@@ -1370,7 +1395,7 @@ describe('formtools', function () {
                         it('should render 2 date input fields', function (done) {
                             var fieldName = 'dateModified';
                             linz.formtools.filters.dateRange.renderer(fieldName, function (err, result) {
-                                result.should.equal('<span><input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" data-ui-datepicker="true" required></span><span><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" data-ui-datepicker="true" required></span>');
+                                result.should.equal('<template><span><input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" data-ui-datepicker="true" required></span><span><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" data-ui-datepicker="true" required></span></template>');
                                 done();
                             });
 
@@ -1463,7 +1488,7 @@ describe('formtools', function () {
                         it('should render checkbox input field', function (done) {
                             var fieldName = 'dateModified';
                             linz.formtools.filters.boolean.renderer(fieldName, function (err, result) {
-                                result.should.equal('<label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="true" required> Yes</label><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="false" required> No</label>');
+                                result.should.equal('<template><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="true" required> Yes</label><label class="checkbox-inline"><input type="radio" name="' + fieldName + '" value="false" required> No</label></template>');
                                 done();
                             });
                         });
@@ -1500,7 +1525,7 @@ describe('formtools', function () {
                         it('should render text input field', function (done) {
                             var fieldName = 'firstName';
                             linz.formtools.filters.fulltext.renderer(fieldName, function (err, result) {
-                                result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" required>');
+                                result.should.equal('<template><input type="text" name="' + fieldName + '[]" class="form-control" required></template>');
                                 done();
                             });
 
@@ -1567,7 +1592,7 @@ describe('formtools', function () {
                         it('should render a select field', function (done) {
                             var fieldName = 'groups';
                             overridesListOpts.filters.groups.filter.renderer(fieldName, function (err, result) {
-                                result.should.equal('<select name="' + fieldName + '[]" class="form-control multiselect"><option value="one">option 1</option><option value="two">option 2</option></select>');
+                                result.should.equal('<template><select name="' + fieldName + '[]" class="form-control multiselect"><option value="one">option 1</option><option value="two">option 2</option></select></template>');
                                 done();
                             });
                         });
@@ -1576,7 +1601,7 @@ describe('formtools', function () {
                             var fieldName = 'groups',
                                 listFilter = linz.formtools.filters.list(list, true);
                             listFilter.renderer(fieldName, function (err, result) {
-                                result.should.equal('<select name="' + fieldName + '[]" class="form-control multiselect" multiple><option value="one">option 1</option><option value="two">option 2</option></select>');
+                                result.should.equal('<template><select name="' + fieldName + '[]" class="form-control multiselect" multiple><option value="one">option 1</option><option value="two">option 2</option></select></template>');
                                 done();
                             });
                         });
@@ -1585,7 +1610,7 @@ describe('formtools', function () {
                             var fieldName = 'groups',
                                 listFilter = linz.formtools.filters.list(['one', 'two'], true);
                             listFilter.renderer(fieldName, function (err, result) {
-                                result.should.equal('<select name="' + fieldName + '[]" class="form-control multiselect" multiple><option value="one">one</option><option value="two">two</option></select>');
+                                result.should.equal('<template><select name="' + fieldName + '[]" class="form-control multiselect" multiple><option value="one">one</option><option value="two">two</option></select></template>');
                                 done();
                             });
                         });
@@ -1623,7 +1648,7 @@ describe('formtools', function () {
                         it('should render text input field', function (done) {
                             var fieldName = 'code';
                             linz.formtools.filters.number.renderer(fieldName, function (err, result) {
-                                result.should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" required pattern="[0-9]*" placeholder="Only digits are allowed.">');
+                                result.should.equal('<template><input type="text" name="' + fieldName + '[]" class="form-control" required pattern="[0-9]*" placeholder="Only digits are allowed."></template>');
                                 done();
                             });
 
@@ -1677,7 +1702,7 @@ describe('formtools', function () {
 
                    it('should render custom filter', function (done) {
                         overridesListOpts.filters.lastName.filter.renderer('lastName', function(err, result) {
-                            result.should.equal('<input type="text" name="test1"><input type="text" name="test2">');
+                            result.should.equal('<template><input type="text" name="test1"><input type="text" name="test2"></template>');
                             done();
                         });
                    });

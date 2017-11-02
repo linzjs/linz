@@ -136,3 +136,16 @@ The function should return an array of objects containing the same HTML attribut
 
 ``res.locals.styles`` contains all the styles used by Linz, be careful when removing/updating these as it could break functionality within Linz.
 You should use the existing array as the array that is resolved with the promise because it will replace ``res.locals.styles``, not append to it.
+
+mongoOptions
+------------
+
+Mongoose's default connection logic is deprecated as of 4.11.0. ``mongoOptions`` contains the minimum default connection logic required for a connection:
+
+  'mongoOptions': {
+    useMongoClient: true
+  }
+
+See `Mongoose connections`_. for more details and configurations.
+
+.. _Mongoose connections: http://mongoosejs.com/docs/guide.html

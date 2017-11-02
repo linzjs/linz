@@ -196,7 +196,7 @@ Linz.prototype.configure = function() {
 
         debugGeneral('Connecting to the database');
 
-        _this.mongoose.connect(_this.get('mongo'));
+        _this.mongoose.connect(_this.get('mongo'), _this.get('mongoOptions'));
         _this.mongoose.connection.once('connected', function () {
             debugGeneral('Database connected');
         });
@@ -512,9 +512,11 @@ Linz.prototype.bootstrapExpress = function (cb) {
     // Setup `/public` middleware first as we don't need session handle to resolve this routes
 
     if ((process.env.NODE_ENV || 'development') === 'development') {
+
         this.app.use(this.get('admin path') + '/public', lessMiddleware(__dirname + '/public', {
+            force: true,
             preprocess: {
-                path: function (pathname, req) {
+                path: function (pathname, reqs) {
                     return pathname.replace(/\/css/, '/src/css');
                 }
             }
