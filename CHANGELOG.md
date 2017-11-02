@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## Unreleased
+
+### BREAKING CHANGES
+
+- `linz.api.views.render` now requires `data, req, res`. `callback` is optional.
+- The `listQuery` static is now passed `req, query, callback` (additional parameter is `req`).
+
+### IMPROVEMENTS
+
+- Now that the `listQuery` static is passed `req`, you have more information (such as `req.user`) which can be used to alter the query that Linz will execute.
+- Fixes a long term (development only) issue `TypeError: filteredNavigation.forEach is not a function`.
+
 ## v1.0.0-12.0.0 (1 November 2017)
 
 ### BREAKING CHANGES
