@@ -342,7 +342,7 @@ module.exports = function  (req, res, next) {
 
                     req.linz.model.listQuery(req, query, cb);
 
-    
+                });
 
             },
 
