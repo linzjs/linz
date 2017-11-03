@@ -19,15 +19,22 @@ The methods exposed via the ``linz.api.views`` namespace have functionality cent
 
 You can use these methods to render your own content, within a Linz template.
 
-views.getScripts(req, res, scripts)
--------------------------------
+views.getScripts(req, res, scripts = [])
+----------------------------------------
 
 Get the scripts that Linz uses for a particular route.
 
-views.getStyles(req, res, scripts)
--------------------------------
+views.getStyles(req, res, scripts = [])
+---------------------------------------
 
 Get the styles that Linz uses for a particular route.
+
+views.notification(noty)
+------------------------
+
+Takes an object, and applies noty defaults to it, making it easy to create noty objects for notifications. You can ready more about `Noty options`_.
+
+.. _Noty options: https://ned.im/noty/#/options
 
 views.render(options, callback)
 -------------------------------
