@@ -41,6 +41,26 @@ var route = function (req, res, next) {
 
             async.series([
 
+                function (cb) {
+
+                    if (!req.linz.notifications.length) {
+                        return cb();
+                    }
+
+                    linz.api.views.renderPartial('notifications', { notifications: req.linz.notifications }, (err, notificationHtml) => {
+
+                        if (err) {
+                            return cb(err);
+                        }
+
+                        locals.notifications = notificationHtml;
+
+                        return cb();
+
+                    });
+
+                },
+
                 // check if doc can be edited
                 function (cb) {
 

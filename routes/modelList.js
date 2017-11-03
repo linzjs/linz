@@ -6,7 +6,8 @@ const linz = require('../');
 /* GET /admin/models/list */
 var route = function (req, res, next) {
 
-    var models = linz.get('models');
+    var models = linz.get('models'),
+        data = {};
 
     async.seq(
 
@@ -52,6 +53,26 @@ var route = function (req, res, next) {
 
             }, callback);
 
+        },
+
+        function (_models, callback) {
+
+            if (!req.linz.notifications.length) {
+                return callback(null, _models);
+            }
+
+            linz.api.views.renderPartial('notifications', { notifications: req.linz.notifications }, (err, notificationHtml) => {
+
+                if (err) {
+                    return callback(err);
+                }
+
+                data.notifications = notificationHtml;
+
+                return callback(null, _models);
+
+            });
+
         }
 
     )(Object.keys(models), function (err, modelsList) {
@@ -66,13 +87,13 @@ var route = function (req, res, next) {
         ])
             .then(([scripts, styles]) => {
 
-                return res.render(linz.api.views.viewPath('modelList.jade'), {
+                return res.render(linz.api.views.viewPath('modelList.jade'), Object.assign(data, {
                     customAttributes: res.locals.customAttributes,
                     models: modelsList,
                     pageTitle: 'Models',
                     scripts,
                     styles,
-                });
+                }));
 
             })
             .catch(next);
