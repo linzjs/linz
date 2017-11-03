@@ -18,3 +18,9 @@ deploy:
   on:
     tags: true
     repo: linzjs/linz
+notifications:
+  email:
+    on_failure: never
+    on_success: never
+  slack:
+    secure: GxIYZXaKRqfqQZ+XWj9LXHMuNfqMUsY9gcA6pm8uWhmjSkiLMWg6B6w0qLfqtCGXxCLYQDQYfJ+7mERGScr+2gDVOUWZ0DVS5DNSar4kGhQUYPskJ4MCZIFwh3ISmQYCFrl3w/rlz77OfchvkfOmOmIAIycwlhe/396Oyz2vsPo=

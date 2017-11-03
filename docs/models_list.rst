@@ -48,6 +48,8 @@ The evaluated string ``/{linz-admin-path}/model/{model-name}/action/{action.acti
 
 The actions will be rendered in the order they're provided.
 
+If using a modal, make sure the HTML returned from the route starts with ``<div class="modal-dialog"><div class="modal-content"></div></div>``.
+
 list.fields
 ============
 

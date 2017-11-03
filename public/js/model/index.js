@@ -237,7 +237,7 @@
         var queryObj = $(this),
             url = queryObj.attr('href');
 
-        $('#groupActionModal').modal().find('.modal-content').load(url, function () {});
+        $('#groupActionModal').modal().load(url);
 
        return false;
     });
@@ -248,7 +248,7 @@
         var queryObj = $(this),
             url = queryObj.attr('href');
 
-        $('#recordActionModal').modal().find('.modal-content').load(url, function () {});
+        $('#recordActionModal').modal().load(url);
 
        return false;
 
