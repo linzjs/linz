@@ -123,7 +123,7 @@ if (!linz) {
         // We know the page has loaded at this point, so we can re-enable the modals.
         $('[data-linz-modal]').removeClass('disabled');
 
-        // add ability to open URL in a modal
+        // Add ability to open model action in a modal.
         $('[data-linz-modal]').click(function (event) {
 
             event.preventDefault();
@@ -137,7 +137,7 @@ if (!linz) {
             var url = button[0].nodeName === 'BUTTON' ? button.attr('data-href') : button.attr('href');
 
             // open modal and load URL
-            $('#linzModal').modal().find('.modal-content').load(url);
+            $('#linzModal').modal().load(url);
 
             // remove modal shown event
             $('#linzModal').off('shown.bs.modal');

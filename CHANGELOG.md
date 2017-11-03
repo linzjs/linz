@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## Unreleased
+
+### BREAKING CHANGES
+
+- `linz.api.views.render` now requires `data, req, res`. `callback` is optional.
+- The `listQuery` static is now passed `req, query, callback` (additional parameter is `req`).
+- Removed `.modal-dialog .modal-content` from the modal divs in `layout.jade`. They should now be included in the HTML returned from any record/overview actions that specify the use of a modal.
+
+### IMPROVEMENTS
+
+- Now that the `listQuery` static is passed `req`, you have more information (such as `req.user`) which can be used to alter the query that Linz will execute.
+- Fixes a long term (development only) issue `TypeError: filteredNavigation.forEach is not a function`.
+- `utils.js` has been move back into the head. Client-side scripts can now make use of `linz.loadScript` and `linz.addLoadEvent` once again.
+- Added a new default `mongoose options` which can be used to control the options passed to Mongoose when making a connection. Provides support for Mongoose `4.11.x` in which the default connection logic has been removed.
+- By allowing the results of record/overview actions to return the `.modal-dialog` div, you have more flexibility on the size of the modal (i.e. `<div class="modal-dialog modal-lg">` renders a large modal).
+
 ## v1.0.0-12.0.0 (1 November 2017)
 
 ### BREAKING CHANGES
