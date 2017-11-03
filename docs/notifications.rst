@@ -10,7 +10,7 @@ It works well when paired with model, group, overview and record actions that pe
 
 When using Linz notifications in this manner, you must make use of `connect-flash`_ like so::
 
-  // perform task.
+  // Perform task.
 
   // Create the notification.
   req.flash('linz-notification', linz.api.view.notification({ text: 'Notification message', type: 'success' }));
