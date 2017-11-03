@@ -12,46 +12,70 @@ var route = function (req, res, next) {
             return next(err);
         }
 
-        Promise.all([
-            linz.api.views.getScripts(req, res, [
-                {
-                    src: '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js',
-                    integrity: 'sha256-0JaDbGZRXlzkFbV8Xi8ZhH/zZ6QQM0Y3dCkYZ7JYq34=',
-                    crossorigin: 'anonymous',
-                },
-                {
-                    src: `${linz.get('admin path')}/public/js/jquery.binddata.js`,
-                },
-                {
-                    src: `${linz.get('admin path')}/public/js/documentarray.js`,
-                },
-                {
-                    src: `${linz.get('admin path')}/public/js/model/edit.js`,
-                },
-            ]),
-            linz.api.views.getStyles(req, res),
-        ])
-            .then(([scripts, styles]) => {
+        const data = {};
 
-                const singular = inflection.humanize(req.linz.model.linz.formtools.model.label, true);
+        (function (cb) {
 
-                return res.render(linz.api.views.viewPath('modelCreate.jade'), {
-                    actionUrl: linz.api.url.getAdminLink(req.linz.model, 'create'),
-                    cancelUrl: linz.api.url.getAdminLink(req.linz.model),
-                    form: editForm.render(),
-                    label: {
-                        singular,
-                        plural: req.linz.model.linz.formtools.model.plural,
+            if (!req.linz.notifications.length) {
+                return cb();
+            }
+
+            linz.api.views.renderPartial('notifications', { notifications: req.linz.notifications }, (err, notificationHtml) => {
+
+                if (err) {
+                    return cb(err);
+                }
+
+                data.notifications = notificationHtml;
+
+                return cb();
+
+            });
+
+        })(function () {
+
+            Promise.all([
+                linz.api.views.getScripts(req, res, [
+                    {
+                        src: '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js',
+                        integrity: 'sha256-0JaDbGZRXlzkFbV8Xi8ZhH/zZ6QQM0Y3dCkYZ7JYq34=',
+                        crossorigin: 'anonymous',
                     },
-                    model: req.linz.model,
-                    pageTitle: `Create a new ${singular}`,
-                    scripts,
-                    styles,
-                    view: 'model-create',
-                });
+                    {
+                        src: `${linz.get('admin path')}/public/js/jquery.binddata.js`,
+                    },
+                    {
+                        src: `${linz.get('admin path')}/public/js/documentarray.js`,
+                    },
+                    {
+                        src: `${linz.get('admin path')}/public/js/model/edit.js`,
+                    },
+                ]),
+                linz.api.views.getStyles(req, res),
+            ])
+                .then(([scripts, styles]) => {
 
-            })
-            .catch(next);
+                    const singular = inflection.humanize(req.linz.model.linz.formtools.model.label, true);
+
+                    return res.render(linz.api.views.viewPath('modelCreate.jade'), Object.assign(data, {
+                        actionUrl: linz.api.url.getAdminLink(req.linz.model, 'create'),
+                        cancelUrl: linz.api.url.getAdminLink(req.linz.model),
+                        form: editForm.render(),
+                        label: {
+                            singular,
+                            plural: req.linz.model.linz.formtools.model.plural,
+                        },
+                        model: req.linz.model,
+                        pageTitle: `Create a new ${singular}`,
+                        scripts,
+                        styles,
+                        view: 'model-create',
+                    }));
+
+                })
+                .catch(next);
+
+        });
 
     });
 
