@@ -5,6 +5,9 @@ const linz = require('../');
 /* GET /admin/:model/:id/overview */
 var route = function (req, res, next) {
 
+    // This needs some work.
+    // I'm sure it could be rewritten to be much nicer.
+
     linz.formtools.form.generateFormFromModel(req.linz.model.schema, req.linz.model.linz.formtools.form, req.linz.record, 'edit', function (err, editForm) {
 
         if (err) {
@@ -77,28 +80,52 @@ var route = function (req, res, next) {
             });
         }
 
-        Promise.all([
-            linz.api.views.getScripts(req, res, defaultScripts),
-            linz.api.views.getStyles(req, res),
-        ])
-            .then(([scripts, styles]) => {
+        const data = {};
 
-                return res.render(linz.api.views.viewPath('recordEdit.jade'), {
-                    cancelUrl: linz.api.url.getAdminLink(req.linz.model),
-                    conflictHandlersJS: conflictHandlersJS,
-                    form: editForm.render(),
-                    model: req.linz.model,
-                    record: req.linz.record,
-                    actionUrl: linz.api.url.getAdminLink(req.linz.model, 'save', req.linz.record._id),
-                    customAttributes: res.locals.customAttributes,
-                    pageTitle: `Editing '${req.linz.record.title}'`,
-                    scripts,
-                    styles,
-                    view: 'record-edit',
-                });
+        (function (cb) {
 
-            })
-            .catch(next);
+            if (!req.linz.notifications.length) {
+                return cb();
+            }
+
+            linz.api.views.renderPartial('notifications', { notifications: req.linz.notifications }, (err, notificationHtml) => {
+
+                if (err) {
+                    return cb(err);
+                }
+
+                data.notifications = notificationHtml;
+
+                return cb();
+
+            });
+
+        })(function () {
+
+            Promise.all([
+                linz.api.views.getScripts(req, res, defaultScripts),
+                linz.api.views.getStyles(req, res),
+            ])
+                .then(([scripts, styles]) => {
+
+                    return res.render(linz.api.views.viewPath('recordEdit.jade'), Object.assign(data, {
+                        cancelUrl: linz.api.url.getAdminLink(req.linz.model),
+                        conflictHandlersJS: conflictHandlersJS,
+                        form: editForm.render(),
+                        model: req.linz.model,
+                        record: req.linz.record,
+                        actionUrl: linz.api.url.getAdminLink(req.linz.model, 'save', req.linz.record._id),
+                        customAttributes: res.locals.customAttributes,
+                        pageTitle: `Editing '${req.linz.record.title}'`,
+                        scripts,
+                        styles,
+                        view: 'record-edit',
+                    }));
+
+                })
+                .catch(next);
+
+        });
 
     });
 
