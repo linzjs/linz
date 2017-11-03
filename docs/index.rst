@@ -33,6 +33,14 @@ Linz is quite new and under rapid development. It is used quite successfully in 
    models_list
    models_form
 
+.. _features:
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Features
+
+   notifications
+
 .. _advanced-docs:
 
 .. toctree::

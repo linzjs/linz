@@ -29,6 +29,8 @@ views.getStyles(req, res, scripts = [])
 
 Get the styles that Linz uses for a particular route.
 
+.. _api-reference-views-notification:
+
 views.notification(noty)
 ------------------------
 
