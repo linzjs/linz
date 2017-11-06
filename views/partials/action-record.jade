@@ -16,6 +16,20 @@ div.btn-group
             a.btn.btn-default(href=linz.api.url.getAdminLink(model, 'delete', record._id), data-linz-control="delete")
                 span(class="glyphicon glyphicon-trash")
 
+    for action in model.list.primaryRecordActions
+        if (record.recordActions && record.recordActions[action.label] && record.recordActions[action.label].disabled)
+            a.btn.btn-default(href='', data-linz-control="primary", data-linz-disabled='true', data-linz-disabled-message=record.recordActions[action.label].message)
+                if !action.icon
+                    != action.label
+                if action.icon
+                    span(class='glyphicon glyphicon-' + action.icon)
+        else
+            a.btn.btn-default(href=linz.api.url.getAdminLink(model, action.action, record._id), data-linz-control="primary")
+                if !action.icon
+                    != action.label
+                if action.icon
+                    span(class='glyphicon glyphicon-' + action.icon)
+
     if model.list.recordActions.length
         div.btn-group
             button.btn.btn-default.dropdown-toggle(type="button", data-toggle="dropdown")

@@ -199,13 +199,13 @@ You're responsible for mounting a ``GET`` route in Express to respond to it.
 list.recordActions
 ==================
 
-``list.recordActions`` can be used to customise record specific actions. These are actions that act upon a specific model record. They appear in a drop-down list for each record in a model list.
+``list.recordActions`` can be used to customise record specific actions. These are actions that act upon a specific model record. The actions appear as buttons for each record in a model list. The buttons can either appear in a drop-down list, or next to the edit and delete buttons for the record.
 
 ``list.recordActions`` should be an Array of Objects. Each object describes an action that a user can make, specific to the record, and the object takes on the same form as those described in `list.actions`_.
 
-``list.recordActions`` can also accept a function, as the value to a ``disabled`` property. If provided, the function will be excuted with the following signature ``disabled (record, callback)``.
+``list.recordActions`` can have an optional key ``type`` and when set to ``primary``, the action will be renderered next to the edit and delete buttons for the record (i.e. not within the dropdown). You can also supply a key ``icon``, which if supplied, will be used rather than a label for the button. The value for ``icon`` should correspond with name of a Bootstrap glyphicon.
 
-The callback has the following signature ``callback (error, isDisabled, message)``. ``isDisabled`` should be a boolean. ``true`` to disable the record action, ``false`` to enable it and you can provide a message if the action is to be disabled.
+``list.recordActions`` can also accept a function, as the value to a ``disabled`` property. If provided, the function will be excuted with the following signature ``disabled (record, callback)``. The callback has the following signature ``callback (error, isDisabled, message)``. ``isDisabled`` should be a boolean. ``true`` to disable the record action, ``false`` to enable it and you can provide a message if the action is to be disabled.
 
 You're responsible for mounting a ``GET`` route in Express to respond to it.
 
