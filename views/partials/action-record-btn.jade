@@ -1,8 +1,0 @@
-if (record.recordActions && record.recordActions[action.label] && record.recordActions[action.label].disabled)
-	a(href='', data-linz-disabled='true', data-linz-disabled-message=record.recordActions[action.label].message)= action.label
-else
-	- action.attributes = action.attributes || {}
-	if action.modal.active
-		- action.attributes['data-linz-control'] = 'record-action'
-		- action.attributes['data-target'] = '#recordActionModal'
-	a(role='menuitem' tabindex='-1' href=linz.api.url.getAdminLink(model, action.action, record._id) class=(action.modal.active && 'disabled'))&attributes(action.attributes)= action.label
