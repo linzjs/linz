@@ -117,6 +117,11 @@ var route = function (req, res, next) {
                 req.linz.model.linz.formtools.overview.actions = parseModalProperties(actions);
                 req.linz.model.linz.formtools.overview.footerActions = parseModalProperties(footerActions);
 
+                // Determine if we have any primary record actions.
+                req.linz.model.linz.formtools.overview.primaryActions = req.linz.model.linz.formtools.overview.actions.filter(action => action.type === 'primary');
+
+                req.linz.model.linz.formtools.overview.actions = req.linz.model.linz.formtools.overview.actions.filter(action => action.type !== 'primary');
+
                 res.render(linz.api.views.viewPath('recordOverview.jade'), locals);
 
             });
