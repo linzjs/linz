@@ -283,10 +283,39 @@ module.exports = function  (req, res, next) {
 
             },
 
+            // minimise the fields we're selecting
+            function (cb) {
+
+                let fields = Object.keys(req.linz.model.list.fields);
+
+                // Work in the title field
+                linz.api.model.titleField(req.params.model, 'title', (err, titleField) => {
+
+                    if (err) {
+                        return cb(err);
+                    }
+
+                    fields.push(titleField);
+
+                    const select = fields.join(' ');
+
+                    query.select(select);
+
+                    // If they've provided the `listQuery` static, use it to allow customisation of the fields we'll retrieve.
+                    if (!req.linz.model.listQuery) {
+                        return cb();
+                    }
+
+                    req.linz.model.listQuery(req, query, cb);
+
+                });
+
+            },
+
             // get page total
             function (cb) {
 
-                req.linz.model.getCount(req, filters, function (err, countQuery) {
+                req.linz.model.getCount(req, query, function (err, countQuery) {
 
                     if (err) {
                         return cb(err);
@@ -312,35 +341,6 @@ module.exports = function  (req, res, next) {
 
                     });
 
-
-                });
-
-            },
-
-            // minimise the fields we're selecting
-            function (cb) {
-
-                let fields = Object.keys(req.linz.model.list.fields);
-
-                // Work in the title field
-                linz.api.model.titleField(req.params.model, 'title', (err, titleField) => {
-
-                    if (err) {
-                        return cb(err);
-                    }
-
-                    fields.push(titleField);
-
-                    const select = fields.join(' ');
-
-                    query.select(select);
-
-                    // If they've provided the `listQuery` static, use it to allow customisation of the fields we'll retrieve.
-                    if (!req.linz.model.listQuery) {
-                        return cb();
-                    }
-
-                    req.linz.model.listQuery(req, query, cb);
 
                 });
 
