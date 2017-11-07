@@ -45,6 +45,12 @@ var route = function (req, res, next) {
             req.linz.model.list.actions = parseModalProperties(actions);
             req.linz.model.list.recordActions = parseModalProperties(recordActions);
 
+            // Create a list of primary recordActions.
+            req.linz.model.list.primaryRecordActions = req.linz.model.list.recordActions.filter(action => action.type === 'primary');
+
+            // Remove the primary record actions, from the standard ones.
+            req.linz.model.list.recordActions = req.linz.model.list.recordActions.filter(action => action.type !== 'primary');
+
             const data = {
                 customAttributes: res.locals.customAttributes,
                 form: req.linz.model.formData || {},

@@ -1,10 +1,13 @@
 # CHANGELOG
 
-## Unrelease
+## Unreleased
 
 ### IMPROVEMENTS
 
 - Fixed a problem with model lists, showing the wrong number of records. This could occur when a `listQuery` static was employed and have an impact on the number of results being returned.
+- Improves usage of the `.reponsive-table` class. Still not perfect, but definitely useable.
+- You can now add `type='primary'` to a record action to have it rendered inline (i.e. not within the dropdown) with the edit and delete buttons on a model list.
+- You can now add `type=primary` to an overview action to have it rendered inline (i.e. not within the actions dropdown).
 
 ## v1.0.0-13.0.0 (3 November 2017)
 

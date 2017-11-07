@@ -15,21 +15,25 @@
     padding-top: 10px;
     padding-bottom: 10px;
 
-    i.fa {
+    i.fa, .glyphicon {
 
       margin-right: 5px;
 
     }
 
+    .glyphicon {
+      display: inline-block;
+    }
+
   }
 
-}
+}s
 
 .model-actions {
 
   margin-top: 10px;
 
-  .actions {
+  .actions, .primary-actions {
 
     display: block;
     margin-bottom: 5px;
@@ -43,6 +47,10 @@
         display: block;
       }
 
+    }
+
+    .btn {
+      display: block;
     }
 
     span:last-child {
@@ -382,7 +390,7 @@
         margin-right: 5px;
       }
 
-      span:last-child {
+      & > span:last-child {
         margin-right: 0;
       }
 
