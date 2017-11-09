@@ -7,12 +7,12 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[*.{js,json,eslintrc}]
+[*.{js,json,eslintrc,html}]
 indent_style = space
 indent_size = 4
 
-[*.{jade,html}]
-indent_style = space
+[*.jade]
+indent_style = tab
 indent_size = 4
 
 [Makefile]

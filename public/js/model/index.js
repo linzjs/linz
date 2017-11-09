@@ -61,26 +61,13 @@
             filterFormControl = filter.siblings('.controlField').children().html(),
             aFilters;
 
-        if (linz.isTemplateSupported()) {
+        var content = document.querySelector('#filter').content.cloneNode(true);
 
-            var content = document.querySelector('#filter').content.cloneNode(true);
-
-            // update template with filter content
-            content.querySelector('.filter-name').textContent = filterText;
-            content.querySelector('.filter-control').innerHTML = content.querySelector('.filter-control').innerHTML + filterFormControl;
-            content.querySelector('.fa-times').setAttribute('data-filter-field', filter.attr('data-filter-field'));
-            document.querySelector('.filter-list').appendChild(document.importNode(content, true));
-
-        } else {
-
-            // fallback support for browsers that don't support html5 template tag
-            var filterOption = $('#filter').clone();
-            filterOption.find('.filter-name').html(filterText);
-            filterOption.find('.filter-control').append(filterFormControl);
-            filterOption.find('.fa-times').attr('data-filter-field', filter.attr('data-filter-field'));
-            $('.filter-list').append(filterOption.html());
-
-        }
+        // update template with filter content
+        content.querySelector('.filter-name').textContent = filterText;
+        content.querySelector('.filter-control').innerHTML = content.querySelector('.filter-control').innerHTML + filterFormControl;
+        content.querySelector('.fa-times').setAttribute('data-filter-field', filter.attr('data-filter-field'));
+        document.querySelector('.filter-list').appendChild(document.importNode(content, true));
 
         // determine if a multiselect was added to the dom, if so, apply the plugin
         $('.multiselect', $('.filter-list').children().last()).multiselect({
