@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v1.0.0-13.0.2 (9 November 2017)
+
+### IMPROVEMENTS
+
+- Fixes issues on the model list in IE, due to use of the template tag.
+
 ## v1.0.0-13.0.1 (7 November 2017)
 
 ### IMPROVEMENTS
