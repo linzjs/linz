@@ -15,7 +15,7 @@ var route = function (req, res, next) {
                 src: `${linz.get('admin path')}/public/js/model/index.js?v3`,
             },
             {
-                src: `${linz.get('admin path')}/public/js/template.pollyfill.js`,
+                src: `${linz.get('admin path')}/public/js/template.polyfill.js`,
             },
         ]),
         linz.api.views.getStyles(req, res),
