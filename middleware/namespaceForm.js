@@ -1,6 +1,6 @@
 'use strict';
 
-const linz = require('linz');
+const linz = require('../');
 const async = require('async');
 
 // This namespace will by used by Linz.
