@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+
+### IMPROVEMENTS
+
+- Fixes `#169`, an issue in which the actions column wouldn't render when permissions weren't explicitly set.
+
 ## v1.0.0-13.0.2 (9 November 2017)
 
 ### IMPROVEMENTS
