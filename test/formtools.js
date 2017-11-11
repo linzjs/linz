@@ -680,14 +680,14 @@ describe('formtools', function () {
                 },
 
                 function (cb) {
-                    PostModel.getOverview({}, undefined, function (err, result) {
+                    PostModel.getOverview({}, function (err, result) {
                         overviewOpts = result;
                         cb(null);
                     });
                 },
 
                 function (cb) {
-                    OverridesPostModel.getOverview({}, undefined, function (err, result) {
+                    OverridesPostModel.getOverview({}, function (err, result) {
                         overridesOverviewOpts = result;
                         cb(null);
                     });
