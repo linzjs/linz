@@ -652,7 +652,7 @@ describe('formtools', function () {
                 },
 
                 function (cb) {
-                    PostModel.getForm(undefined, function (err, result) {
+                    PostModel.getForm({}, function (err, result) {
                         formOpts = result;
                         cb(null);
                     });
@@ -673,7 +673,7 @@ describe('formtools', function () {
                 },
 
                 function (cb) {
-                    OverridesPostModel.getForm(undefined, function (err, result) {
+                    OverridesPostModel.getForm({}, function (err, result) {
                         overridesFormOpts = result;
                         cb(null);
                     });

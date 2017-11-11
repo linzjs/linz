@@ -203,7 +203,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
         getForm: function getForm(filters, cb) {
 
-            req.linz.model.getForm(req.user, function (err, form) {
+            req.linz.model.getForm(req, function (err, form) {
                 return cb(err, filters, form);
             });
 
@@ -265,7 +265,7 @@ module.exports = {
             req.linz.export.fields = {};
 
             // retrieve the form to provide a list of fields to choose from
-            req.linz.model.getForm(req.user, function (formErr, form){
+            req.linz.model.getForm(req, function (formErr, form){
 
                 if (formErr) {
                     return next(formErr);

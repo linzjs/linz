@@ -1,5 +1,4 @@
-var formist = require('formist'),
-	linz = require('../'),
+var linz = require('../'),
     model = require('../lib/formtools/model'),
     async = require('async'),
     utils = require('../lib/utils'),
@@ -12,7 +11,7 @@ var route = function (req, res, next) {
 
         function (done) {
 
-            req.linz.model.getForm(req.user, function (err, form) {
+            req.linz.model.getForm(req, function (err, form) {
 
                 // retrieve form information, for use in next function
                 req.linz.model.form = form;

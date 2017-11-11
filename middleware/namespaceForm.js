@@ -11,7 +11,7 @@ module.exports = function linzNamespaceForm (req, res, next) {
 
         function(cb) {
 
-            linz.api.model.form(req.user, req.linz.model.modelName, function(err, form) {
+            linz.api.model.form(req, req.linz.model.modelName, function(err, form) {
 
                 if (err) {
                     return cb(err);
@@ -47,7 +47,7 @@ module.exports = function linzNamespaceForm (req, res, next) {
                 };
 
                 // Retrieve the form.
-                field.schema.statics.getForm(req.user, function(err, embeddedForm) {
+                field.schema.statics.getForm(req, function(err, embeddedForm) {
 
                     if (embeddedForm) {
                         field.linz.formtools.form = embeddedForm;
