@@ -2,9 +2,14 @@
 
 ## Unreleased
 
+### BREAKING CHANGES
+
+- When rendering the overview, Linz will no longer infer the cell renderer type from the Form DSL type data. If Linz isn't rendering the overview cell with the correct cell renderer, you should supply the renderer (i.e. `{ label: 'x', renderer: linz.formtools.cellRenderers.text }`).
+
 ### IMPROVEMENTS
 
 - Fixes `#169`, an issue in which the actions column wouldn't render when permissions weren't explicitly set.
+- Improved the Express param for model. It no longer process list, overview or form DSL. These are now only processed when required. Improving the efficiency of any route that used `:model`.
 
 ## v1.0.0-13.0.2 (9 November 2017)
 
