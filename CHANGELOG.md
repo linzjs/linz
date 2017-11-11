@@ -5,11 +5,13 @@
 ### BREAKING CHANGES
 
 - When rendering the overview, Linz will no longer infer the cell renderer type from the Form DSL type data. If Linz isn't rendering the overview cell with the correct cell renderer, you should supply the renderer (i.e. `{ label: 'x', renderer: linz.formtools.cellRenderers.text }`).
+- When supplying a function for the Model overview DSL, you no longer get passed `user`, but instead `req` (which obvious has user at `req.user`).
 
 ### IMPROVEMENTS
 
 - Fixes `#169`, an issue in which the actions column wouldn't render when permissions weren't explicitly set.
 - Improved the Express param for model. It no longer process list, overview or form DSL. These are now only processed when required. Improving the efficiency of any route that used `:model`.
+- When supplying functions for Model overview DSL, you now get `req` rather than just `user`. This provides much more flexibility in what you return, as now it can be based on the record being rendered, not just the user making the request.
 
 ## v1.0.0-13.0.2 (9 November 2017)
 
