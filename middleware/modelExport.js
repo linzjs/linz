@@ -124,7 +124,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
                 function (callback) {
 
-                    Model.getList(req.user, function (err, list) {
+                    Model.getList(req, function (err, list) {
 
                         if (err) {
                             return cb(err);
@@ -211,7 +211,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
         getList: function getList (filters, form, cb) {
 
-            req.linz.model.getList(req.user, function (err, list) {
+            req.linz.model.getList(req, function (err, list) {
                 return cb(err, filters, form, list);
             });
 
@@ -251,7 +251,7 @@ module.exports = {
 
     get: function (req, res, next) {
 
-        req.linz.model.getList(req.user, function (err, list) {
+        req.linz.model.getList(req, function (err, list) {
 
             if (err) {
                 return next(err);

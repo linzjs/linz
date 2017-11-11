@@ -638,14 +638,14 @@ describe('formtools', function () {
                 },
 
                 function (cb) {
-                    PostModel.getList(undefined, function (err, result) {
+                    PostModel.getList({}, function (err, result) {
                         listOpts = result;
                         cb(null);
                     });
                 },
 
                 function (cb) {
-                    OverridesPostModel.getList(undefined, function (err, result) {
+                    OverridesPostModel.getList({}, function (err, result) {
                         overridesListOpts = result;
                         cb(null);
                     });

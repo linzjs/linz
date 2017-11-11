@@ -123,7 +123,7 @@ module.exports = function  (req, res, next) {
                     return cb(null);
                 }
 
-                formtoolsAPI.list.renderFilters(req.user, req.params.model, function (err, result) {
+                formtoolsAPI.list.renderFilters(req, req.params.model, function (err, result) {
 
                     if (err) {
                         return cb(err);
@@ -197,7 +197,7 @@ module.exports = function  (req, res, next) {
                     return cb(null);
                 }
 
-                formtoolsAPI.list.getActiveFilters(req.user, session.list.formData.selectedFilters.split(','), session.list.formData, req.params.model, function (err, result) {
+                formtoolsAPI.list.getActiveFilters(req, session.list.formData.selectedFilters.split(','), session.list.formData, req.params.model, function (err, result) {
 
                     if (err) {
                         return cb(err);
@@ -218,7 +218,7 @@ module.exports = function  (req, res, next) {
                     return cb(null);
                 }
 
-                formtoolsAPI.list.renderSearchFilters(req.user, session.list.formData.selectedFilters.split(','), session.list.formData, req.params.model, function (err, result) {
+                formtoolsAPI.list.renderSearchFilters(req, session.list.formData.selectedFilters.split(','), session.list.formData, req.params.model, function (err, result) {
 
                     if (err) {
                         return cb(err);
