@@ -135,7 +135,7 @@ You supply the DSL to Linz in the form of an object, to the ``linz.formtools.plu
 Models model DSL
 ----------------
 
-``model`` should be an object with three keys:
+The ``model`` keys value should be an object with three keys:
 
 - ``title`` is required, unless you have a ``title`` field in your schema. If not, you should reference another field in your schema. This field will be used to derive the *title* for the record, and label for the field.
 - ``label`` should be a singular noun describing the model.
@@ -156,9 +156,9 @@ For example::
 Models label DSL
 ----------------
 
-``labels`` is used to provide a label and description for the model.
+The label DSL is used to provide a label and description for the model.
 
-``labels`` should be an object, keyed by field names and strings of the human friendly versions of your field names.
+The ``labels`` keys value should be an object, keyed by field names and strings of the human friendly versions of your field names.
 
 For example::
 
@@ -174,9 +174,9 @@ You can customize the labels for the default ``dateModified`` and ``dateCreated`
 Models list DSL
 ---------------
 
-``list`` is used to customize the model index that is generated for each model.
+The list DSL is used to customize the model index that is generated for each model.
 
-``list`` should be an Object, containing the following top-level keys:
+The ``list`` keys value should be an Object, containing the following top-level keys:
 
 - ``actions``
 - ``fields``
@@ -191,14 +191,31 @@ Models list DSL
 
 These allow you to describe how the model index should function. The list DSL is discussed in more detail in :ref:`models-list-reference`.
 
+Models list DSL function
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``list`` keys value can also be a function. It should be a function with the following signature::
+
+  function listDSL (req, callback) {
+
+For example::
+
+  {
+    list: (req, callback) => callback(null, {
+      fields: {...}
+    })
+  }
+
+The function receives a HTTP request object, which provides lots of flexibility to alter the DSL object returned based on the user making the request, and the model record itself.
+
 .. _models-form-dsl-summary-reference:
 
 Models form DSL
 ---------------
 
-``form`` is used to customize the model record create and edit pages.
+The form DSL is used to customize the model record create and edit pages.
 
-``form`` should be an Object, keyed by field names of the model, in the order you'd like each field's edit control rendered. For example::
+The ``form`` keys value should be an Object, keyed by field names of the model, in the order you'd like each field's edit control rendered. For example::
 
   form: {
     name: {
@@ -232,6 +249,23 @@ Each field object can contain the following keys:
 - ``relationship``
 
 These allow you to describe how the create and edit forms should function. The form DSL is discussed in more detail in :ref:`models-form-reference`.
+
+Models form DSL function
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``form`` keys value can also be a function. It should be a function with the following signature::
+
+  function formDSL (req, callback) {
+
+For example::
+
+  {
+    form: (req, callback) => callback(null, {
+      name: {...}
+    })
+  }
+
+The function receives a HTTP request object, which provides lots of flexibility to alter the DSL object returned based on the user making the request, and the model record itself.
 
 Model permissions
 -----------------
