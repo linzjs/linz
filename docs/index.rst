@@ -40,6 +40,7 @@ Linz is quite new and under rapid development. It is used quite successfully in 
    :caption: Features
 
    notifications
+   request_namespace
 
 .. _advanced-docs:
 

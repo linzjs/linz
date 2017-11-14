@@ -39,7 +39,7 @@ module.exports = function (router) {
 
 			function (cb) {
 
-				linz.api.configs.form(req.user, configName, function (err, form) {
+				linz.api.configs.form(req, configName, function (err, form) {
 
 					if (err) {
 						return cb(err);
@@ -55,7 +55,7 @@ module.exports = function (router) {
 
 			function (cb) {
 
-				linz.api.configs.overview(req.user, configName, function (err, overview) {
+				linz.api.configs.overview(req, configName, function (err, overview) {
 
 					if (err) {
 						return cb(err);

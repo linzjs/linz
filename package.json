@@ -1,6 +1,6 @@
 {
   "name": "linz",
-  "version": "1.0.0-13.0.2",
+  "version": "1.0.0-14.0.0",
   "description": "Node.js web application framework",
   "main": "linz.js",
   "scripts": {

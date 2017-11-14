@@ -638,21 +638,21 @@ describe('formtools', function () {
                 },
 
                 function (cb) {
-                    PostModel.getList(undefined, function (err, result) {
+                    PostModel.getList({}, function (err, result) {
                         listOpts = result;
                         cb(null);
                     });
                 },
 
                 function (cb) {
-                    OverridesPostModel.getList(undefined, function (err, result) {
+                    OverridesPostModel.getList({}, function (err, result) {
                         overridesListOpts = result;
                         cb(null);
                     });
                 },
 
                 function (cb) {
-                    PostModel.getForm(undefined, function (err, result) {
+                    PostModel.getForm({}, function (err, result) {
                         formOpts = result;
                         cb(null);
                     });
@@ -673,21 +673,21 @@ describe('formtools', function () {
                 },
 
                 function (cb) {
-                    OverridesPostModel.getForm(undefined, function (err, result) {
+                    OverridesPostModel.getForm({}, function (err, result) {
                         overridesFormOpts = result;
                         cb(null);
                     });
                 },
 
                 function (cb) {
-                    PostModel.getOverview(undefined, function (err, result) {
+                    PostModel.getOverview({}, function (err, result) {
                         overviewOpts = result;
                         cb(null);
                     });
                 },
 
                 function (cb) {
-                    OverridesPostModel.getOverview(undefined, function (err, result) {
+                    OverridesPostModel.getOverview({}, function (err, result) {
                         overridesOverviewOpts = result;
                         cb(null);
                     });
