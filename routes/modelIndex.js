@@ -58,6 +58,7 @@ var route = function (req, res, next) {
                 customAttributes: res.locals.customAttributes,
                 form: req.linz.model.formData || {},
                 from: pageSize*page-pageSize,
+                help: req.linz.model.list.help,
                 label: {
                     singular: inflection.humanize(req.linz.model.linz.formtools.model.label, true),
                     plural: req.linz.model.linz.formtools.model.plural,

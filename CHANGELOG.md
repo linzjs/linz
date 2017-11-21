@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added the ability to set some help text which will appear in a Bootstrap popover, on a model list view.
 - Fix a race condition where `req.linz.model.linz.formtools.form` would be undefined.
 - Fix Linz not being able to find labels for embedded documents.
 
