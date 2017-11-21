@@ -1,6 +1,7 @@
 .model-title
 	h1
 		a(href='' + linz.api.url.getAdminLink(model))= label.plural
+	include header-help
 .model-actions
 	if permissions.canCreate !== false
 		.actions

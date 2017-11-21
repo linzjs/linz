@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added the ability to set some help text which will appear in a Bootstrap popover, on a model list view.
 - Fixed a race condition where `req.linz.model.linz.formtools.form` would be undefined.
 - Fixed Linz not being able to find labels for embedded documents.
 - Fixed ckeditor for non `/admin` admin paths.
