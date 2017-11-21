@@ -140,7 +140,7 @@
         $('#documentsModal .modal-footer .btn-cancel').html('Cancel');
 
         // initialize multiselect
-        $('.multiselect').multiselect({
+        $('#documentsModal .multiselect').multiselect({
             buttonContainer: '<div class="btn-group btn-group-multiselect" />'
         });
 
