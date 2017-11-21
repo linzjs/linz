@@ -149,7 +149,7 @@ list.groupActions
 
 ``list.groupActions`` can be used to define certain actions that are only available once a subset of data has been chosen.
 
-Each record displayed on a model index has a checkbox, checking two or more records creates a group. If ``groupActions`` have been defined for that model, those actions will become chooseable by the user.
+Each record displayed on a model index has a checkbox, checking two or more records creates a group. If ``groupActions`` have been defined for that model, those actions will become choosable by the user.
 
 ``list.groupActions`` should be an Array of Objects. Each object describes an action that a user can make, and the object takes on the same form as those described in `list.actions`_.
 
