@@ -11,15 +11,16 @@ The Models list DSL is used to customise the model index that is generated for e
 ``list`` should be an object, containing the following top-level keys:
 
 - ``actions``
+- ``export``
 - ``fields``
+- ``filters``
+- ``groupActions``
+- ``help``
+- ``paging``
+- ``recordActions``
+- ``showSummary``
 - ``sortBy``
 - ``toolbarItems``
-- ``showSummary``
-- ``filters``
-- ``paging``
-- ``groupActions``
-- ``recordActions``
-- ``export``
 
 These allow you to describe how the model index should function.
 
@@ -49,6 +50,29 @@ The evaluated string ``/{linz-admin-path}/model/{model-name}/action/{action.acti
 The actions will be rendered in the order they're provided.
 
 If using a modal, make sure the HTML returned from the route starts with ``<div class="modal-dialog"><div class="modal-content"></div></div>``.
+
+list.export
+===========
+
+``list.export`` is used to denote that a particular model is exportable. Linz takes care of the exporting for you, unless you want to provide a custom action to handle it yourself.
+
+When a user clicks on an export, they'll be provided a pop-up modal asking them to choose and order the fields they'd like to export.
+
+``list.export`` should be an Array of Objects. Each object describes an export option, for example::
+
+  export: [
+    {
+      label: 'Choose fields to export',
+      exclusions: 'dateModified,dateCreated'
+    }
+  ]
+
+Each object should contain the following keys:
+
+- ``label`` which is the name of the export.
+- ``exclusions`` which is a list of fields that can't be exported.
+
+If you'd like to provide your own export route, you can. Replace the ``exclusions`` key with an ``action`` key that works the same as `list.actions`_. Rather than a modal, a request to that route will be made. You're responsible for mounting a ``GET`` route in Express to respond to it.
 
 list.fields
 ============
@@ -80,44 +104,6 @@ If you like, you can pass an object rather than the boolean. This also allows yo
 If you provide a ``label``, it will override what is defined in the :ref:`models-label-dsl-summary-reference`.
 
 The fields will be rendered in the order they're provided.
-
-list.sortBy
-===========
-
-``list.sortBy`` is used to customise the sort field(s) which the data in the model index will be retrieved with.
-
-``list.sortBy`` should be Array of field names, for example::
-
-  sortBy: ['name', 'username']
-
-This Array will be used to populate a drop-down list on the model index. The user can choose an option from the drop-down to sort the list with.
-
-list.toolbarItems
-=================
-
-``list.toolbarItems`` can be used to provide completely customised content on the toolbar of a model index. The toolbar on the model index sits directly to the right of the Model label, and includes action buttons and drop-downs.
-
-``list.toolbarItems`` should be an Array of Objects. Each object should provide a ``render`` key with the value of a Function. The function will be executed to retrieve HTML to be placed within the toolbar. The function will be provided the request `req`, the response object `res` and callback function which should be executed with the HTML. The callback function has the signature ``callback(err, html)`` For example::
-
-  toolbarItems: [
-    {
-      renderer: function (req, res, cb) {
-
-        let locals = {};
-        return cb(null, templates.render('toolbarItems', locals));
-
-      }
-    }
-  ]
-
-list.showSummary
-================
-
-``list.showSummary`` can be used to include or exclude the paging controls from a model index.
-
-``list.showSummary`` expects a boolean. Truthy/falsy values will also be interpreted, for example::
-
-  showSummary: true
 
 list.filters
 ============
@@ -158,6 +144,27 @@ Below is an example of the ``default`` data type for each filter:
 
   View the `complete list of Linz filters <https://github.com/linzjs/linz/tree/master/lib/formtools/filters>`_.
 
+list.groupActions
+=================
+
+``list.groupActions`` can be used to define certain actions that are only available once a subset of data has been chosen.
+
+Each record displayed on a model index has a checkbox, checking two or more records creates a group. If ``groupActions`` have been defined for that model, those actions will become chooseable by the user.
+
+``list.groupActions`` should be an Array of Objects. Each object describes an action that a user can make, and the object takes on the same form as those described in `list.actions`_.
+
+You're responsible for mounting a ``GET`` route in Express to respond to it.
+
+list.help
+=========
+
+The ``list.help`` key can be used to provide information for a particular model. The information will appear in a `Bootstrap popover`_.
+
+The ``list.help`` key accepts either ``false``, or a `Bootstrap popovers options object`_.
+
+.. _Bootstrap popover: https://getbootstrap.com/docs/3.3/javascript/#popovers
+.. _Bootstrap popovers options object: https://getbootstrap.com/docs/3.3/javascript/#popovers-options
+
 list.paging
 ===========
 
@@ -185,17 +192,6 @@ If you don't provide a paging object it defaults to::
     sizes: [20, 500, 100, 200]
   }
 
-list.groupActions
-=================
-
-``list.groupActions`` can be used to define certain actions that are only available once a subset of data has been chosen.
-
-Each record displayed on a model index has a checkbox, checking two or more records creates a group. If ``groupActions`` have been defined for that model, those actions will become chooseable by the user.
-
-``list.groupActions`` should be an Array of Objects. Each object describes an action that a user can make, and the object takes on the same form as those described in `list.actions`_.
-
-You're responsible for mounting a ``GET`` route in Express to respond to it.
-
 list.recordActions
 ==================
 
@@ -209,25 +205,41 @@ list.recordActions
 
 You're responsible for mounting a ``GET`` route in Express to respond to it.
 
-list.export
+
+list.showSummary
+================
+
+``list.showSummary`` can be used to include or exclude the paging controls from a model index.
+
+``list.showSummary`` expects a boolean. Truthy/falsy values will also be interpreted, for example::
+
+  showSummary: true
+
+list.sortBy
 ===========
 
-``list.export`` is used to denote that a particular model is exportable. Linz takes care of the exporting for you, unless you want to provide a custom action to handle it yourself.
+``list.sortBy`` is used to customise the sort field(s) which the data in the model index will be retrieved with.
 
-When a user clicks on an export, they'll be provided a pop-up modal asking them to choose and order the fields they'd like to export.
+``list.sortBy`` should be Array of field names, for example::
 
-``list.export`` should be an Array of Objects. Each object describes an export option, for example::
+  sortBy: ['name', 'username']
 
-  export: [
+This Array will be used to populate a drop-down list on the model index. The user can choose an option from the drop-down to sort the list with.
+
+list.toolbarItems
+=================
+
+``list.toolbarItems`` can be used to provide completely customised content on the toolbar of a model index. The toolbar on the model index sits directly to the right of the Model label, and includes action buttons and drop-downs.
+
+``list.toolbarItems`` should be an Array of Objects. Each object should provide a ``render`` key with the value of a Function. The function will be executed to retrieve HTML to be placed within the toolbar. The function will be provided the request `req`, the response object `res` and callback function which should be executed with the HTML. The callback function has the signature ``callback(err, html)`` For example::
+
+  toolbarItems: [
     {
-      label: 'Choose fields to export',
-      exclusions: 'dateModified,dateCreated'
+      renderer: function (req, res, cb) {
+
+        let locals = {};
+        return cb(null, templates.render('toolbarItems', locals));
+
+      }
     }
   ]
-
-Each object should contain the following keys:
-
-- ``label`` which is the name of the export.
-- ``exclusions`` which is a list of fields that can't be exported.
-
-If you'd like to provide your own export route, you can. Replace the ``exclusions`` key with an ``action`` key that works the same as `list.actions`_. Rather than a modal, a request to that route will be made. You're responsible for mounting a ``GET`` route in Express to respond to it.

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+- Added the ability to set some help text which will appear in a Bootstrap popover, on a model list view.
+
 ## v1.0.0-14.0.0 (14 November 2017)
 
 ### BREAKING CHANGES
