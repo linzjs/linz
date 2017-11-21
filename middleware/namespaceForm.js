@@ -7,7 +7,7 @@ const async = require('async');
 module.exports = function linzNamespaceForm (req, res, next) {
 
     // Setup the shared formtools data for this particular request.
-    async.parallel([
+    async.series([
 
         function(cb) {
 

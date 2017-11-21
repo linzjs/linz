@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+
+- Fix a race condition where `req.linz.model.linz.formtools.form` would be undefined.
+- Fix Linz not being able to find labels for embedded documents.
+
 ## v1.0.0-14.0.0 (14 November 2017)
 
 ### BREAKING CHANGES
