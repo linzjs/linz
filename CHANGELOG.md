@@ -5,6 +5,7 @@
 - Added the ability to set some help text which will appear in a Bootstrap popover, on a model list view.
 - Fix a race condition where `req.linz.model.linz.formtools.form` would be undefined.
 - Fix Linz not being able to find labels for embedded documents.
+- Update the default for the `linz.formtools.widgets.documents` widget create button to be `Create`, and made it configurable by passing in `buttonLabel: 'New label'` to the widget.
 
 ## v1.0.0-14.0.0 (14 November 2017)
 
