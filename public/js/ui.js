@@ -4,6 +4,8 @@ if (!linz) {
 
 (function  () {
 
+    var adminPath;
+
     $(document).ready(function () {
 
         // javascript events for the navigation
@@ -55,8 +57,8 @@ if (!linz) {
         $('.ckeditor').each(function () {
 
             var editorConfig = {
-                customConfig: $(this).attr('data-linz-ckeditor-config') || '/admin/public/js/ckeditor-config-linz-default.js',
-                contentsCss: $(this).attr('data-linz-ckeditor-style') ? $(this).attr('data-linz-ckeditor-style').split(',') : '/admin/public/css/ckeditor-linz-default.css'
+                customConfig: $(this).attr('data-linz-ckeditor-config') || adminPath + '/public/js/ckeditor-config-linz-default.js',
+                contentsCss: $(this).attr('data-linz-ckeditor-style') ? $(this).attr('data-linz-ckeditor-style').split(',') : adminPath + '/public/css/ckeditor-linz-default.css'
             };
 
             // check if there are any widgets to include
@@ -90,7 +92,7 @@ if (!linz) {
         $('.ckeditor-inline').each(function () {
 
             var editorConfig = {
-                customConfig: $(this).attr('data-linz-ckeditor-config') || '/admin/public/js/ckeditor-config-linz-default.js'
+                customConfig: $(this).attr('data-linz-ckeditor-config') || adminPath + '/public/js/ckeditor-config-linz-default.js'
             };
 
             // check if there are any widgets to include
@@ -170,6 +172,8 @@ if (!linz) {
     });
 
     function loadLibraries(path) {
+
+        adminPath = path;
 
         // resource loader for fallback support
         Modernizr.load([
