@@ -7,6 +7,7 @@
 - Fixed Linz not being able to find labels for embedded documents.
 - Fixed ckeditor for non `/admin` admin paths.
 - Fixed scoping of the multiselect within a documentarray.
+- Update the default for the `linz.formtools.widgets.documents` widget create button to be `Create`, and made it configurable by passing in `buttonLabel: 'New label'` to the widget.
 
 ## v1.0.0-14.0.0 (14 November 2017)
 

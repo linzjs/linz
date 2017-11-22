@@ -3,7 +3,7 @@
 	<template data-linz-template="document-{{name}}">{{{form}}}</template>
 
 	{{#if canCreate}}
-		<a class="btn btn-default" data-toggle="modal" data-document-action="create">Create another</a>
+		<a class="btn btn-default" data-toggle="modal" data-document-action="create">{{buttonLabel}}</a>
 	{{/if}}
 
 	<input type="hidden" name="{{name}}" value="{{json}}" data-linz-conflict-handler="documentArrayConflictHandler" />
