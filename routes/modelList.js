@@ -57,17 +57,15 @@ var route = function (req, res, next) {
 
         function (_models, callback) {
 
-            if (!req.linz.notifications.length) {
-                return callback(null, _models);
-            }
-
-            linz.api.views.renderPartial('notifications', { notifications: req.linz.notifications }, (err, notificationHtml) => {
+            linz.api.views.renderNotifications(req, (err, notificationHtml) => {
 
                 if (err) {
                     return callback(err);
                 }
 
-                data.notifications = notificationHtml;
+                if (notificationHtml) {
+                    data.notifications = notificationHtml;
+                }
 
                 return callback(null, _models);
 
