@@ -16,17 +16,15 @@ var route = function (req, res, next) {
 
         (function (cb) {
 
-            if (!req.linz.notifications.length) {
-                return cb();
-            }
-
-            linz.api.views.renderPartial('notifications', { notifications: req.linz.notifications }, (err, notificationHtml) => {
+            linz.api.views.renderNotifications(req, (err, notificationHtml) => {
 
                 if (err) {
                     return cb(err);
                 }
 
-                data.notifications = notificationHtml;
+                if (notificationHtml) {
+                    data.notifications = notificationHtml;
+                }
 
                 return cb();
 

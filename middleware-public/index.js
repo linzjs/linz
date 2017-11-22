@@ -1,10 +1,25 @@
+'use strict';
 
-// expose the middlware
-exports.responseTime = require('./response-time');
-exports.logError = require('./log-error');
-exports.error = require('./error');
-exports.exclusions = require('./exclusions');
-exports.originalUrl = require('./original-url');
-exports.authenticate = require('./authenticate');
-exports.logout = require('./logout');
-exports.login = require('./login');
+const authenticate = require('./authenticate');
+const error = require('./error');
+const exclusions = require('./exclusions');
+const logError = require('./log-error');
+const login = require('./login');
+const logout = require('./logout');
+const namespace = require('./namespace');
+const notifications = require('./notifications');
+const originalUrl = require('./original-url');
+const responseTime = require('./response-time');
+
+module.exports = {
+    authenticate,
+    error,
+    exclusions,
+    logError,
+    login,
+    logout,
+    namespace,
+    notifications,
+    originalUrl,
+    responseTime,
+};
