@@ -6,11 +6,14 @@ module.exports = function () {
 
 		req.linz.model.getObject(req.params.id, function (err, doc) {
 
-			if (!err) {
-				req.linz.record = doc;
-			}
+            // Skip to a 404 page.
+            if (err || !doc) {
+                return next(err);
+            }
 
-			next();
+			req.linz.record = doc;
+
+			return next();
 
 		});
 
