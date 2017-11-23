@@ -169,37 +169,53 @@ if (!linz) {
 
         });
 
+        loadDatepicker();
+
     });
 
-    function loadLibraries(path) {
-
+    function setPath(path) {
         adminPath = path;
+    }
 
-        // resource loader for fallback support
-        Modernizr.load([
-            {
-                test: Modernizr.inputtypes.date,
-                nope: [
-                    '//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
-                    '//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-                ],
-                complete : function () {
-                    loadDatepicker();
-                }
-            }
-        ]);
-
+    function eventPreventDefault (e) {
+        e.preventDefault();
     }
 
     function loadDatepicker() {
 
-        if (!Modernizr.inputtypes.date && $('[data-ui-datepicker]').length) {
+        if ($('[data-ui-datepicker]').length) {
 
-            // remove all event listener
-            $('[data-ui-datepicker]').parent().unbind();
-            $('[data-ui-datepicker]').parent().datetimepicker({
-                useCurrent: false,
-                format: 'YYYY-MM-DD'
+            // Set the timezone offset in a hidden input element.
+            var timezoneInput = document.createElement('input');
+            timezoneInput.setAttribute('type', 'hidden');
+            timezoneInput.setAttribute('name', 'linzTimezoneOffset');
+            timezoneInput.setAttribute('value', moment().format('Z'));
+            
+            $('[data-ui-datepicker]').parents('form').prepend(timezoneInput);
+
+            $('[data-ui-datepicker]').each(function () {
+
+                // Support format and useCurrent customissations via the widget.
+                var format = $(this).attr('data-linz-date-format') || 'YYYY-MM-DD'; 
+                var useCurrent = $(this).attr('data-linz-date-use-current') === 'true';
+                var dateValue = $(this).attr('data-linz-date-value');
+
+                // Update the UTC string to the format required.
+                $(this).val(moment(dateValue).format(format));
+
+                // Remove all event listeners.
+                $(this).unbind();
+
+                // Setup the datetimepicker plugin.
+                $(this).datetimepicker({
+                    format: format,
+                    useCurrent: useCurrent,
+                });
+
+                // Prevent manually editing the date field.
+                $(this).bind('paste', eventPreventDefault);
+                $(this).on('keydown', eventPreventDefault);
+
             });
 
         }
@@ -254,7 +270,7 @@ if (!linz) {
         });
     }
 
-    linz.loadLibraries = loadLibraries;
+    linz.setPath = setPath;
     linz.loadDatepicker = loadDatepicker;
     linz.isTemplateSupported = isTemplateSupported;
     linz.addDeleteConfirmation = addDeleteConfirmation;

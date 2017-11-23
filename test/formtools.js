@@ -488,11 +488,11 @@ describe('formtools', function () {
                         },
                         dateCreated: {
                             label: 'Date created',
-                            filter: linz.formtools.filters.date
+                            filter: linz.formtools.filters.date()
                         },
                         dateModified: {
                             label: 'Date modified',
-                            filter: linz.formtools.filters.dateRange
+                            filter: linz.formtools.filters.dateRange()
                         },
                         bActive: {
                             label: 'Is Active?',
@@ -1312,29 +1312,55 @@ describe('formtools', function () {
 
                         it('should render date input field', function (done) {
                             var fieldName = 'dateCreated';
-                            linz.formtools.filters.date.renderer(fieldName, function (err, result) {
-                                result.should.equal('<template><input type="date" name="' + fieldName + '[]" class="form-control" data-ui-datepicker="true" required></template>');
+                            linz.formtools.filters.date().renderer(fieldName, function (err, result) {
+                                result.should.equal('<template><input type="text" name="' + fieldName + '[]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" required></template>');
                                 done();
                             });
 
                         });
 
                         it('should render date input field with form value', function (done) {
+
                             var fieldName = 'dateCreated';
-                            linz.formtools.filters.date.bind(fieldName, { dateCreated: ['2014-05-16'] }, function (err, result) {
+                            var dateString = '2014-05-16';
+                            var isoString = moment(dateString, 'YYYY-MM-DD').toISOString();
+
+                            linz.formtools.filters.date().bind(fieldName, { dateCreated: [dateString] }, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
-                                result[0].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-16" data-ui-datepicker="true" required>');
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + isoString + '" required>');
+                                done();
+                            });
+
+                        });
+
+                        it('should render date input field with a custom date format', function (done) {
+
+                            var fieldName = 'dateCreated';
+                            var dateString = '16.05.2014';
+                            var dateFormat = 'DD.MM.YYYY';
+                            var isoString = moment(dateString, dateFormat).toISOString();
+
+                            linz.formtools.filters.date(dateFormat).bind(fieldName, { dateCreated: [dateString] }, function (err, result) {
+                                result.should.be.instanceof(Array).and.have.lengthOf(1);
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" data-ui-datepicker="true" data-linz-date-format="DD.MM.YYYY" data-linz-date-value="' + isoString + '" required>');
                                 done();
                             });
 
                         });
 
                         it('should render multiple date input fields with form values if there are multiple filters on the same field', function (done) {
+                            
                             var fieldName = 'dateCreated';
-                            linz.formtools.filters.date.bind(fieldName, { dateCreated: ['2014-05-16', '2014-05-17'] }, function (err, result) {
+                            var dateFormat = 'YYYY-MM-DD';
+                            var dateFromString = '2014-05-16';
+                            var dateToString = '2014-05-17';
+                            var dateFromIsoString = moment(dateFromString, dateFormat).toISOString();
+                            var dateToIsoString = moment(dateToString, dateFormat).toISOString();
+
+                            linz.formtools.filters.date().bind(fieldName, { dateCreated: [dateFromString, dateToString] }, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(2);
-                                result[0].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-16" data-ui-datepicker="true" required>');
-                                result[1].should.equal('<input type="date" name="' + fieldName + '[]" class="form-control" value="2014-05-17" data-ui-datepicker="true" required>');
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + dateFromIsoString + '" required>');
+                                result[1].should.equal('<input type="text" name="' + fieldName + '[]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + dateToIsoString + '" required>');
                                 done();
                             });
                         });
@@ -1343,9 +1369,9 @@ describe('formtools', function () {
 
                             var fieldName = 'dateCreated',
                                 filterDates = ['2014-05-16'];
-                            linz.formtools.filters.date.filter(fieldName, { 'dateCreated': filterDates }, function (err, result) {
+                            linz.formtools.filters.date().filter(fieldName, { 'dateCreated': filterDates }, function (err, result) {
                                 result.should.have.property(fieldName, {
-                                    $gte: moment(filterDates[0], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates[0], 'YYYY-MM-DD').endOf('day').toDate()
+                                    $gte: moment(filterDates[0], 'YYYY-MM-DD').startOf('day').toISOString(), $lte: moment(filterDates[0], 'YYYY-MM-DD').endOf('day').toISOString()
                                 });
                             });
 
@@ -1356,11 +1382,11 @@ describe('formtools', function () {
                             var fieldName = 'dateCreated',
                                 filterDates = ['2014-05-16', '2014-05-18', '2014-05-20'];
 
-                            linz.formtools.filters.date.filter(fieldName, { 'dateCreated': filterDates }, function (err, result) {
+                            linz.formtools.filters.date().filter(fieldName, { 'dateCreated': filterDates }, function (err, result) {
                                result.should.have.property(fieldName, [
-                                        { $gte: moment(filterDates[0], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates[0], 'YYYY-MM-DD').endOf('day').toDate() },
-                                        { $gte: moment(filterDates[1], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates[1], 'YYYY-MM-DD').endOf('day').toDate() },
-                                        { $gte: moment(filterDates[2], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates[2], 'YYYY-MM-DD').endOf('day').toDate() }
+                                        { $gte: moment(filterDates[0], 'YYYY-MM-DD').startOf('day').toISOString(), $lte: moment(filterDates[0], 'YYYY-MM-DD').endOf('day').toISOString() },
+                                        { $gte: moment(filterDates[1], 'YYYY-MM-DD').startOf('day').toISOString(), $lte: moment(filterDates[1], 'YYYY-MM-DD').endOf('day').toISOString() },
+                                        { $gte: moment(filterDates[2], 'YYYY-MM-DD').startOf('day').toISOString(), $lte: moment(filterDates[2], 'YYYY-MM-DD').endOf('day').toISOString() }
 
                                 ]);
                             });
@@ -1371,7 +1397,7 @@ describe('formtools', function () {
 
                             var fieldName = 'dateCreated',
                                 filterDates = [];
-                            linz.formtools.filters.date.filter(fieldName, { 'dateCreated': filterDates }, function (err) {
+                            linz.formtools.filters.date().filter(fieldName, { 'dateCreated': filterDates }, function (err) {
                                 err.message.should.equal('Date field is empty');
                             });
 
@@ -1382,8 +1408,20 @@ describe('formtools', function () {
                             var fieldName = 'dateCreated',
                                 filterDates = ['2014-05-16', '2014-05-18', 'test date'];
 
-                            linz.formtools.filters.date.filter(fieldName, { 'dateCreated': filterDates }, function (err) {
+                            linz.formtools.filters.date().filter(fieldName, { 'dateCreated': filterDates }, function (err) {
                                 err.message.should.equal('One of the dates is invalid');
+                            });
+
+                        });
+
+                        it('should support a custom date format', function () {
+                            
+                            var fieldName = 'dateCreated',
+                                filterDates = ['16.05.2014'];
+                            linz.formtools.filters.date('DD.MM.YYYY').filter(fieldName, { 'dateCreated': filterDates }, function (err, result) {
+                                result.should.have.property(fieldName, {
+                                    $gte: moment(filterDates[0], 'DD.MM.YYYY').startOf('day').toISOString(), $lte: moment(filterDates[0], 'DD.MM.YYYY').endOf('day').toISOString()
+                                });
                             });
 
                         });
@@ -1394,8 +1432,8 @@ describe('formtools', function () {
 
                         it('should render 2 date input fields', function (done) {
                             var fieldName = 'dateModified';
-                            linz.formtools.filters.dateRange.renderer(fieldName, function (err, result) {
-                                result.should.equal('<template><span><input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" data-ui-datepicker="true" required></span><span><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" data-ui-datepicker="true" required></span></template>');
+                            linz.formtools.filters.dateRange().renderer(fieldName, function (err, result) {
+                                result.should.equal('<template><input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" required><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" required></template>');
                                 done();
                             });
 
@@ -1403,22 +1441,39 @@ describe('formtools', function () {
 
                         it('should render date range input fields with form values', function () {
                             var fieldName = 'dateCreated',
-                                filterDates = { dateCreated: { dateFrom: ['2014-05-16'], dateTo: ['2014-05-17'] } };
+                                filterDates = { dateCreated: { dateFrom: [moment('2014-05-16', 'YYYY-MM-DD').zone('+0:00').toISOString()], dateTo: [moment('2014-05-17', 'YYYY-MM-DD').endOf('day').zone('+0:00').toISOString()] } };
 
-                            linz.formtools.filters.dateRange.bind(fieldName, filterDates, function (err, result) {
+                            linz.formtools.filters.dateRange().bind(fieldName, filterDates, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
-                                result[0].should.equal('<span><input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[0] + '" data-ui-datepicker="true" required></span><span><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[0] + '" data-ui-datepicker="true" required></span>');
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + filterDates.dateCreated.dateFrom[0] + '" required><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + filterDates.dateCreated.dateTo[0] + '" required>');
                             });
                         });
 
-                        it('should render multiple date range input fields with form values for multiple filters on the same field', function () {
-                            var fieldName = 'dateCreated',
-                                filterDates = { dateCreated: { dateFrom: ['2014-05-16', '2014-05-18'], dateTo: ['2014-05-17', '2014-05-19'] } };
+                        it('should render date range input fields with a custom date format', function () {
 
-                            linz.formtools.filters.dateRange.bind(fieldName, filterDates, function (err, result) {
+                            var fieldName = 'dateCreated';
+                            var dateFormat = 'DD.MM.YYYY';
+                            var filterDates = { dateCreated: { dateFrom: ['16.05.2014'], dateTo: ['15.05.2014'] } };
+                            var utcDates = { dateCreated: { dateFrom: [moment('16.05.2014', dateFormat).startOf('day').toISOString()], dateTo: [moment('15.05.2014', dateFormat).endOf('day').toISOString()] } };
+
+                            linz.formtools.filters.dateRange(dateFormat).bind(fieldName, filterDates, function (err, result) {
+                                result.should.be.instanceof(Array).and.have.lengthOf(1);
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="DD.MM.YYYY" data-linz-date-value="' + utcDates.dateCreated.dateFrom[0] + '" required><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="DD.MM.YYYY" data-linz-date-value="2014-05-15T23:59:59.999Z" required>');
+                            });
+
+                        });
+
+                        it('should render multiple date range input fields with form values for multiple filters on the same field', function () {
+
+                            var fieldName = 'dateCreated';
+                            var dateFormat = 'YYYY-MM-DD';
+                            var filterDates = { dateCreated: { dateFrom: ['2014-05-16', '2014-05-18'], dateTo: ['2014-05-17', '2014-05-19'] } };
+                            var utcDates = { dateCreated: { dateFrom: [moment('2014-05-16', dateFormat).startOf('day').toISOString(), moment('2014-05-18', dateFormat).startOf('day').toISOString()], dateTo: [moment('2014-05-17', dateFormat).endOf('day').toISOString(), moment('2014-05-19', dateFormat).endOf('day').toISOString()] } };
+
+                            linz.formtools.filters.dateRange().bind(fieldName, filterDates, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(2);
-                                result[0].should.equal('<span><input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[0] + '" data-ui-datepicker="true" required></span><span><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[0] + '" data-ui-datepicker="true" required></span>');
-                                result[1].should.equal('<span><input type="date" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateFrom[1] + '" data-ui-datepicker="true" required></span><span><input type="date" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" value="' + filterDates.dateCreated.dateTo[1] + '" data-ui-datepicker="true" required></span>');
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + utcDates.dateCreated.dateFrom[0] + '" required><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="2014-05-17T23:59:59.999Z" required>');
+                                result[1].should.equal('<input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + utcDates.dateCreated.dateFrom[1] + '" required><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="2014-05-19T23:59:59.999Z" required>');
                             });
                         });
 
@@ -1426,8 +1481,8 @@ describe('formtools', function () {
                             var fieldName = 'dateCreated',
                                 filterDates = { dateCreated: { dateFrom: ['2014-05-16'], dateTo: ['2014-05-17'] } };
 
-                            linz.formtools.filters.dateRange.filter(fieldName, filterDates, function (err, result) {
-                               result.should.have.property(fieldName, { $gte: moment(filterDates.dateCreated.dateFrom[0], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates.dateCreated.dateTo[0], 'YYYY-MM-DD').endOf('day').toDate() });
+                            linz.formtools.filters.dateRange().filter(fieldName, filterDates, function (err, result) {
+                               result.should.have.property(fieldName, { $gte: moment(filterDates.dateCreated.dateFrom[0], 'YYYY-MM-DD').startOf('day').toISOString(), $lte: moment(filterDates.dateCreated.dateTo[0], 'YYYY-MM-DD').endOf('day').toISOString() });
                             });
                         });
 
@@ -1436,12 +1491,12 @@ describe('formtools', function () {
                             var fieldName = 'dateCreated',
                                 filterDates = { dateCreated: { dateFrom: ['2014-05-16', '2014-05-18', '2014-05-20'], dateTo: ['2014-05-16', '2014-05-18', '2014-05-20'] } };
 
-                            linz.formtools.filters.dateRange.filter(fieldName, filterDates, function (err, result) {
+                            linz.formtools.filters.dateRange().filter(fieldName, filterDates, function (err, result) {
 
                                result.should.have.property(fieldName, [
-                                        { $gte: moment(filterDates.dateCreated.dateFrom[0], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates.dateCreated.dateTo[0], 'YYYY-MM-DD').endOf('day').toDate() },
-                                        { $gte: moment(filterDates.dateCreated.dateFrom[1], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates.dateCreated.dateTo[1], 'YYYY-MM-DD').endOf('day').toDate() },
-                                        { $gte: moment(filterDates.dateCreated.dateFrom[2], 'YYYY-MM-DD').startOf('day').toDate(), $lte: moment(filterDates.dateCreated.dateTo[2], 'YYYY-MM-DD').endOf('day').toDate() }
+                                        { $gte: moment(filterDates.dateCreated.dateFrom[0], 'YYYY-MM-DD').startOf('day').toISOString(), $lte: moment(filterDates.dateCreated.dateTo[0], 'YYYY-MM-DD').endOf('day').toISOString() },
+                                        { $gte: moment(filterDates.dateCreated.dateFrom[1], 'YYYY-MM-DD').startOf('day').toISOString(), $lte: moment(filterDates.dateCreated.dateTo[1], 'YYYY-MM-DD').endOf('day').toISOString() },
+                                        { $gte: moment(filterDates.dateCreated.dateFrom[2], 'YYYY-MM-DD').startOf('day').toISOString(), $lte: moment(filterDates.dateCreated.dateTo[2], 'YYYY-MM-DD').endOf('day').toISOString() }
                                 ]);
 
                             });
@@ -1453,7 +1508,7 @@ describe('formtools', function () {
                             var fieldName = 'dateCreated',
                                 filterDates = { dateCreated: { dateFrom: ['2014-05-16'] } };
 
-                            linz.formtools.filters.dateRange.filter(fieldName, filterDates, function (err) {
+                            linz.formtools.filters.dateRange().filter(fieldName, filterDates, function (err) {
                                 err.message.should.equal('One of the date fields is empty');
                             });
 
@@ -1464,7 +1519,7 @@ describe('formtools', function () {
                             var fieldName = 'dateCreated',
                                 filterDates = { dateCreated: { dateFrom: ['2014-05-16'], dateTo: [] } };
 
-                            linz.formtools.filters.dateRange.filter(fieldName, filterDates, function (err) {
+                            linz.formtools.filters.dateRange().filter(fieldName, filterDates, function (err) {
                                 err.message.should.equal('One of the date fields is empty');
                             });
 
@@ -1475,10 +1530,21 @@ describe('formtools', function () {
                             var fieldName = 'dateCreated',
                                 filterDates = { dateCreated: { dateFrom: ['2014-05-16', '2014-05-20'], dateTo: ['2014-05-17', 'test date'] } };
 
-                            linz.formtools.filters.dateRange.filter(fieldName, filterDates, function (err) {
+                            linz.formtools.filters.dateRange().filter(fieldName, filterDates, function (err) {
                                 err.message.should.equal('One of the dates is invalid');
                             });
 
+                        });
+
+                        it('should show work with a custom date format', function () {
+
+                            var fieldName = 'dateCreated',
+                            filterDates = { dateCreated: { dateFrom: ['16.05.2014'], dateTo: ['17.05.2014'] } };
+
+                            linz.formtools.filters.dateRange('DD.MM.YYYY').filter(fieldName, filterDates, function (err, result) {
+                            result.should.have.property(fieldName, { $gte: moment(filterDates.dateCreated.dateFrom[0], 'DD.MM.YYYY').startOf('day').toISOString(), $lte: moment(filterDates.dateCreated.dateTo[0], 'DD.MM.YYYY').endOf('day').toISOString() });
+                            });
+                            
                         });
 
                     });

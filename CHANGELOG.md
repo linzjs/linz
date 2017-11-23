@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## BREAKING CHANGES
+
+- The `linz.formtools.widgets.date` and `linz.formtools.widgets.dateRange` are functions which must be executed. Previously you could simply reference them. However, you can pass in a date format which will be used to customise the display of the date in the UI.
+
+### IMPROVEMENTS
+
 - Added the ability to set some help text which will appear in a Bootstrap popover, on a model list view.
 - Fixed a race condition where `req.linz.model.linz.formtools.form` would be undefined.
 - Fixed Linz not being able to find labels for embedded documents.
@@ -11,6 +17,9 @@
 - Reworked some Linz internals to allow code using `linz.api.views.render` to take advantage of Linz's Notifications API. Also moved the render notifications functionality into the `linz.api.views` namespace and updated all code that rendered notifications to use this API function.
 - Moved Linz's `namespace` middleware into `middleware-public` so that it can be accessed in other applications using `linz.middleware.namespace`.
 - Moved Linz's `notifications` middleware into `middleware-public` so that it can be accessed in other applications using `linz.middleware.notifications`.
+- Everything that uses `linz.formtools.widgets.date` now uses the Bootstrap DateTime Picker UI client-side.
+- Everything that uses `linz.formtools.filters.date` or `linz.formtools.filters.dateRange` now uses the Bootstrap DateTime Picker UI client-side.
+- Widgets can supply a `transform` function, on the returned widget function, which will be executed when saving data. This provides the ability for a widget to transform values in the form, before saving to the database.
 
 ## v1.0.0-14.0.0 (14 November 2017)
 
