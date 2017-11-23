@@ -1433,7 +1433,7 @@ describe('formtools', function () {
                         it('should render 2 date input fields', function (done) {
                             var fieldName = 'dateModified';
                             linz.formtools.filters.dateRange().renderer(fieldName, function (err, result) {
-                                result.should.equal('<template><span><input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" required></span><span><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" required></span></template>');
+                                result.should.equal('<template><input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" required><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" required></template>');
                                 done();
                             });
 
@@ -1445,7 +1445,7 @@ describe('formtools', function () {
 
                             linz.formtools.filters.dateRange().bind(fieldName, filterDates, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
-                                result[0].should.equal('<span><input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + filterDates.dateCreated.dateFrom[0] + '" required></span><span><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + filterDates.dateCreated.dateTo[0] + '" required></span>');
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + filterDates.dateCreated.dateFrom[0] + '" required><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + filterDates.dateCreated.dateTo[0] + '" required>');
                             });
                         });
 
@@ -1458,7 +1458,7 @@ describe('formtools', function () {
 
                             linz.formtools.filters.dateRange(dateFormat).bind(fieldName, filterDates, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(1);
-                                result[0].should.equal('<span><input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" data-ui-datepicker="true" data-linz-date-format="DD.MM.YYYY" data-linz-date-value="' + utcDates.dateCreated.dateFrom[0] + '" required></span><span><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" data-ui-datepicker="true" data-linz-date-format="DD.MM.YYYY" data-linz-date-value="2014-05-15T23:59:59.999Z" required></span>');
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="DD.MM.YYYY" data-linz-date-value="' + utcDates.dateCreated.dateFrom[0] + '" required><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="DD.MM.YYYY" data-linz-date-value="2014-05-15T23:59:59.999Z" required>');
                             });
 
                         });
@@ -1472,8 +1472,8 @@ describe('formtools', function () {
 
                             linz.formtools.filters.dateRange().bind(fieldName, filterDates, function (err, result) {
                                 result.should.be.instanceof(Array).and.have.lengthOf(2);
-                                result[0].should.equal('<span><input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + utcDates.dateCreated.dateFrom[0] + '" required></span><span><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="2014-05-17T23:59:59.999Z" required></span>');
-                                result[1].should.equal('<span><input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" style="width:50%;" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + utcDates.dateCreated.dateFrom[1] + '" required></span><span><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" style="width:50%;" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="2014-05-19T23:59:59.999Z" required></span>');
+                                result[0].should.equal('<input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + utcDates.dateCreated.dateFrom[0] + '" required><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="2014-05-17T23:59:59.999Z" required>');
+                                result[1].should.equal('<input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + utcDates.dateCreated.dateFrom[1] + '" required><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="2014-05-19T23:59:59.999Z" required>');
                             });
                         });
 
