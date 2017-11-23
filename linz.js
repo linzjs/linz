@@ -473,9 +473,6 @@ Linz.prototype.defaultConfiguration = function (cb) {
     // assign the logging routes
     if (this.get('request logging') === true) routesManager.setupLoggingRoutes();
 
-    // Assign the error routes.
-    routesManager.setupErrorRoutes();
-
     // store the cwd
     this.set('cwd', process.cwd());
 
