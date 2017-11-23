@@ -1,0 +1,13 @@
+extends layout-preauth
+
+if html
+	!= html
+else
+	block content
+		h1 Page not found!
+		p!= description
+
+		if backUrl
+			a.btn.btn-default(href=backUrl)
+				span.glyphicon.glyphicon-arrow-left
+				|  Back

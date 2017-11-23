@@ -18,6 +18,11 @@ var route = function (req, res, next) {
                     return next(err);
                 }
 
+                // Skip to a 404 page.
+                if (!record) {
+                    return next();
+                }
+
                 // clean the body
                 model.clean(req.body, req.linz.model);
 

@@ -5,6 +5,11 @@ const linz = require('../');
 /* GET /admin/:model/:id/overview */
 var route = function (req, res, next) {
 
+    // Skip to a 404 page.
+    if (!req.linz.record) {
+        return next();
+    }
+
     // This needs some work.
     // I'm sure it could be rewritten to be much nicer.
 

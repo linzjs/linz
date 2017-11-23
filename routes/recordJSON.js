@@ -9,6 +9,11 @@ var route = function (req, res, next) {
             return next(err);
         }
 
+        // Skip to a 404 page.
+        if (!doc) {
+            return next();
+        }
+
         res.json(doc);
 
     });

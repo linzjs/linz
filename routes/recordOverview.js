@@ -8,6 +8,11 @@ const linz = require('../');
 /* GET /admin/:model/:id/overview */
 var route = function (req, res, next) {
 
+    // Skip to a 404 page.
+    if (!req.linz.record) {
+        return next();
+    }
+
     Promise.all([
         linz.api.views.getScripts(req, res, [
             {
