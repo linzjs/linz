@@ -1,6 +1,6 @@
 'use strict';
 
-const linz = require('linz');
+const linz = require('../');
 
 /**
  * Render a 404 not found page.
