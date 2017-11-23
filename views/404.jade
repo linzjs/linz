@@ -1,9 +1,9 @@
 extends layout-preauth
 
-if html
-	!= html
-else
-	block content
+block content
+	if customContent
+		!= customContent
+	else
 		h1 Page not found!
 		p!= description
 

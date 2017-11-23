@@ -13,12 +13,12 @@ const renderNotFoundPage = (req, res, next) => {
 
     // Allow passing your own html.
     linz.get('404')(req)
-        .then((html) => {
+        .then((customContent) => {
 
             // Redirect back to the referrer or homepage.
             return linz.api.views.render({
+                customContent,
                 description: 'Oops, we can\'t find what you\'re looking for.',
-                html,
                 template: '404',
                 backUrl: req.get('Referrer') || '/',
             }, req, res);
