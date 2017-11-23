@@ -42,6 +42,18 @@ var route = function (req, res, next) {
 
                         }
 
+                        // Support widget transform functions, if they exist.
+                        // These allow widgets to manipulate a value in a form, ready for saving to the database.
+                        if (req.linz.model.linz.formtools.form[field].widget
+                            && req.linz.model.linz.formtools.form[field].widget
+                            && req.linz.model.linz.formtools.form[field].widget.transform
+                            && typeof req.linz.model.linz.formtools.form[field].widget.transform === 'function') {
+
+                            // Pass through name, field, value and form.
+                            req.body[field] = req.linz.model.linz.formtools.form[field].widget.transform(field, req.linz.model.schema.paths[field], req.body[field], req.body);
+
+                        }
+
                         // go through the transform function if one exists
                         record[field] = (req.linz.model.linz.formtools.form[field].transform) ? req.linz.model.linz.formtools.form[field].transform(req.body[field], 'beforeSave', req.body, req.user) : req.body[field];
 
