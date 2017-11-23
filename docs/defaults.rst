@@ -161,6 +161,6 @@ To use ``404`` define a function with the following signature::
    * @param {Object} req A HTTP request object.
    * @return {Promise} Resolves with the html.
    */
-  404 (req)
+  404 (req) => Promise.resolve(html)
 
 The function should return a html string.
