@@ -149,3 +149,18 @@ Mongoose's default connection logic is deprecated as of 4.11.0. ``mongoOptions``
 See `Mongoose connections`_. for more details and configurations.
 
 .. _Mongoose connections: http://mongoosejs.com/docs/guide.html
+
+404
+---
+
+The `404` default allows you to pass in your own 404 html.
+
+To use ``404`` define a function with the following signature::
+
+  /**
+   * @param {Object} req A HTTP request object.
+   * @return {Promise} Resolves with the html.
+   */
+  404 (req)
+
+The function should return a html string.
