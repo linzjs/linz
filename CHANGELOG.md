@@ -11,6 +11,7 @@
 - Reworked some Linz internals to allow code using `linz.api.views.render` to take advantage of Linz's Notifications API. Also moved the render notifications functionality into the `linz.api.views` namespace and updated all code that rendered notifications to use this API function.
 - Moved Linz's `namespace` middleware into `middleware-public` so that it can be accessed in other applications using `linz.middleware.namespace`.
 - Moved Linz's `notifications` middleware into `middleware-public` so that it can be accessed in other applications using `linz.middleware.notifications`.
+- Add a 404 page for all Linz record routes. You can customise this page by setting the linz option `404` to a function that returns a Promise. This function will be passed the `req` object.
 
 ## v1.0.0-14.0.0 (14 November 2017)
 
