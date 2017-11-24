@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.0.0-15.0.0 (24 November 2017)
 
 ## BREAKING CHANGES
 
