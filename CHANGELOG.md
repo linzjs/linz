@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+
+### Improvements
+
+- Added a new `linz.api.session.getTimezone(req)` function that allows you to get the timezone offset of the current user.
+
 ## v1.0.0-15.0.0 (24 November 2017)
 
 ## BREAKING CHANGES
