@@ -1,5 +1,7 @@
 /* eslint-env mocha */
 
+const { queryPlugin } = require('../plugins/model');
+
 var linz = require('../linz'),
     moment = require('moment');
 
@@ -30,6 +32,8 @@ User.singular = 'User';
 var mongoose = linz.mongoose,
 	formtools = linz.formtools,
     async = require('async');
+
+linz.mongoose.plugin(queryPlugin);
 
 describe('formtools', function () {
 
@@ -1957,8 +1961,8 @@ describe('formtools', function () {
 
                     });
 
-                    it('should execute the query in mongoose find() with no error', function (done) {
-                        return OverridesPostModel.findDocuments({ filter: result });
+                    it('should execute the query in mongoose find() with no error', function () {
+                        OverridesPostModel.findDocuments({ filter: result }).exec();
                     });
 
                 });
