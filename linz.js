@@ -1,6 +1,7 @@
 "use strict";
 
 const { deprecate } = require('util');
+const { queryPlugin } = require('./plugins/model');
 
 /**
  * Load required modules
@@ -176,6 +177,19 @@ Linz.prototype.init = function (opts = {}) {
 };
 
 /**
+ * Register some Linz plugins.
+ * @param {Object} mongooseInstance The Linz mongoose instance.
+ * @param {Function} callback Callback function.
+ */
+Linz.prototype.registerPlugins = (mongooseInstance, callback) => {
+
+    mongooseInstance.plugin(queryPlugin);
+
+    return callback();
+
+};
+
+/**
 * Initialize the application
 *
 * @api private
@@ -239,6 +253,10 @@ Linz.prototype.configure = function() {
 
             }, 100);
 
+        },
+
+        function (cb) {
+            return _this.registerPlugins(_this.mongoose, cb);
         },
 
         function (cb) {
