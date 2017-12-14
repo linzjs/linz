@@ -12,7 +12,11 @@ var route = function (req, res, next) {
 
         function (done) {
 
-            req.linz.model.findById(req.params.id).exec(function (err, record) {
+            req.linz.model.findOneDocument({
+                filter: { _id: req.params.id },
+                lean: false,
+                projection: '*',
+            }).exec(function (err, record) {
 
                 if (err) {
                     return next(err);

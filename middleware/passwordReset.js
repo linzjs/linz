@@ -12,7 +12,11 @@ module.exports = {
 
         var User = linz.api.model.get(linz.get('user model'));
 
-        User.findById(req.params.id, function (err, doc) {
+        User.findOneDocument({
+            filter: { _id: req.params.id },
+            lean: false,
+            projection: '*',
+        }).exec(function (err, doc) {
 
             if (err) {
                 return next(err);

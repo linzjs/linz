@@ -158,7 +158,10 @@ module.exports = function (req, res, next) {
 
 		function (cb) {
 
-			Model.findById(req.params.id, exclusionFields, { lean: 1 }, function (err, doc) {
+            Model.findOneDocument({
+                filter: { _id: req.params.id },
+                projection: exclusionFields,
+            }).exec(function (err, doc) {
 
 				if (err) {
 					return cb(err);

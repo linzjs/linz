@@ -92,7 +92,10 @@ module.exports = function (req) {
 
     var getVersionById = (id, projection, bRenderFields, cb) => {
 
-        Model.VersionedModel.findById(id, projection, { lean: 1 }, (err, record) => {
+        Model.VersionedModel.findOneDocument({
+            filter: { _id: id },
+            projection,
+        }).exec((err, record) => {
 
             if (err) {
                 return cb(err);

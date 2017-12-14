@@ -13,9 +13,16 @@ module.exports = {
         async.series({
 
             latest: function (cb) {
-                Model.findById(req.params.id, cb);
+
+                Model.findOneDocument({
+                    filter: { _id: req.params.id },
+                    lean: false,
+                    projection: '*',
+                }).exec(cb);
+
             },
             previous: function (cb) {
+
                 var exclusions = { '_id': 0, '__v': 0, 'refId': 0, 'refVersion': 0, 'dateModified': 0, 'dateCreated': 0, 'createdBy': 0, 'modifiedBy': 0 };
 
                 if (Model.versions.ignorePaths && Model.versions.ignorePaths.length) {
@@ -24,7 +31,11 @@ module.exports = {
                     });
                 }
 
-                Model.VersionedModel.findById(req.params.revisionAId, exclusions, { lean: 1 }, cb);
+                Model.VersionedModel.findOneDocument({
+                    filter: { _id: req.params.revisionAId },
+                    projection: exclusions,
+                }).exec(cb);
+
             }
 
         }, function (err, result) {
