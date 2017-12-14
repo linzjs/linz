@@ -40,10 +40,9 @@ const getOptions = (options) => {
 /**
  * Extend the build in mongoose queries.
  * @param {Object} schema The mongoose schema.
- * @param {Object} options The plugin options.
  * @return {Void} Sets up the methods.
  */
-const queryPlugin = (schema, options) => {
+const queryPlugin = (schema) => {
 
     /**
      * Find documents from a model.
