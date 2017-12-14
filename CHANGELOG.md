@@ -1,8 +1,15 @@
 # CHANGELOG
 
+## Unreleased
+
+### Improvements
+
+- Added a new static function `findOneDocument` to all models. This works just like the mongoose `findOne` function except it merges all options into a single `options` object parameter.
+- Added a new static function `findDocuments` to all models. This works just like the mongoose `find` function except it merges all options into a single `options` object parameter.
+
 ## v1.0.0-15.0.0 (24 November 2017)
 
-## BREAKING CHANGES
+### BREAKING CHANGES
 
 - The `linz.formtools.widgets.date` and `linz.formtools.widgets.dateRange` are functions which must be executed. Previously you could simply reference them. However, you can pass in a date format which will be used to customise the display of the date in the UI.
 

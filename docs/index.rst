@@ -19,10 +19,11 @@ Linz is quite new and under rapid development. It is used quite successfully in 
    :caption: Developer documentation
 
    getting_started
+   api
    defaults
    models
    permissions
-   api
+   plugins
 
 .. _model-docs:
 
