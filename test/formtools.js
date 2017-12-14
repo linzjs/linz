@@ -1349,7 +1349,7 @@ describe('formtools', function () {
                         });
 
                         it('should render multiple date input fields with form values if there are multiple filters on the same field', function (done) {
-                            
+
                             var fieldName = 'dateCreated';
                             var dateFormat = 'YYYY-MM-DD';
                             var dateFromString = '2014-05-16';
@@ -1415,7 +1415,7 @@ describe('formtools', function () {
                         });
 
                         it('should support a custom date format', function () {
-                            
+
                             var fieldName = 'dateCreated',
                                 filterDates = ['16.05.2014'];
                             linz.formtools.filters.date('DD.MM.YYYY').filter(fieldName, { 'dateCreated': filterDates }, function (err, result) {
@@ -1544,7 +1544,7 @@ describe('formtools', function () {
                             linz.formtools.filters.dateRange('DD.MM.YYYY').filter(fieldName, filterDates, function (err, result) {
                             result.should.have.property(fieldName, { $gte: moment(filterDates.dateCreated.dateFrom[0], 'DD.MM.YYYY').startOf('day').toISOString(), $lte: moment(filterDates.dateCreated.dateTo[0], 'DD.MM.YYYY').endOf('day').toISOString() });
                             });
-                            
+
                         });
 
                     });
@@ -1958,10 +1958,7 @@ describe('formtools', function () {
                     });
 
                     it('should execute the query in mongoose find() with no error', function (done) {
-                        OverridesPostModel.find(result, function (err) {
-                            (err === null).should.be.true;
-                            done();
-                        });
+                        return OverridesPostModel.findDocuments({ filter: result });
                     });
 
                 });
