@@ -5,13 +5,13 @@ const linz = require('../');
 /* GET /admin/config/:config/overview */
 var route = function (req, res, next) {
 
-    linz.formtools.form.generateFormFromModel(req.linz.config.schema, req.linz.config.linz.formtools.form, req.linz.record, 'edit', function (err, editForm) {
-
-        if (err) {
-            return next(err);
-        }
-
-        Promise.all([
+    linz.api.model.generateForm({
+        form: req.linz.model.linz.formtools.form,
+        record: req.linz.record,
+        schema: req.linz.model.schema,
+        type: 'edit',
+    })
+        .then(editForm => Promise.all([
             linz.api.views.getScripts(req, res, [
                 {
                     src: '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js',
@@ -29,22 +29,16 @@ var route = function (req, res, next) {
                 },
             ]),
             linz.api.views.getStyles(req, res),
-        ])
-            .then(([scripts, styles]) => {
-
-                return res.render(linz.api.views.viewPath('configEdit.jade'), {
-                    actionUrl: linz.api.url.getAdminLink(req.linz.config, 'save', req.linz.record._id),
-                    cancelUrl: linz.api.url.getAdminLink(req.linz.config, 'list'),
-                    form: editForm.render(),
-                    record: req.linz.record,
-                    scripts,
-                    styles,
-                });
-
-            })
-            .catch(next);
-
-    });
+        ]))
+        .then(([scripts, styles]) => res.render(linz.api.views.viewPath('configEdit.jade'), {
+            actionUrl: linz.api.url.getAdminLink(req.linz.config, 'save', req.linz.record._id),
+            cancelUrl: linz.api.url.getAdminLink(req.linz.config, 'list'),
+            form: editForm.render(),
+            record: req.linz.record,
+            scripts,
+            styles,
+        }))
+        .catch(next);
 
 };
 
