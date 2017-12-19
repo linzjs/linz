@@ -3,7 +3,7 @@ form.form-horizontal.model(role='form', action='#{actionUrl}', method='post', da
 		.col-sm-12
 			button.btn.btn-primary(type='submit') Save
 			a.btn.btn-link(href='#{cancelUrl}') or cancel
-	input(type="hidden", name="versionNo", value=record.__v)
+	input(type="hidden", name="versionNo", value=record && record.__v)
 	!= form
 	.form-group.control-bar
 		.col-sm-offset-2.col-sm-10
