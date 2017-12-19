@@ -5,10 +5,8 @@ const linz = require('../');
 /* GET /admin/config/:config/overview */
 var route = function (req, res, next) {
 
-    linz.api.model.generateForm({
-        form: req.linz.model.linz.formtools.form,
+    linz.api.model.generateForm(req.linz.model, {
         record: req.linz.record,
-        schema: req.linz.model.schema,
         type: 'edit',
     })
         .then(editForm => Promise.all([

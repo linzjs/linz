@@ -44,10 +44,8 @@ const route = (req, res, next) => {
     // This needs some work.
     // I'm sure it could be rewritten to be much nicer.
 
-    linz.api.model.generateForm({
-        form: req.linz.model.linz.formtools.form,
+    linz.api.model.generateForm(req.linz.model, {
         record: req.linz.record,
-        schema: req.linz.model.schema,
         type: 'edit',
     })
         .then(editForm => new Promise((resolve, reject) => {

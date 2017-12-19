@@ -8,10 +8,8 @@ var route = function (req, res, next) {
 
     const data = {};
 
-    linz.api.model.generateForm({
-        form: req.linz.model.linz.formtools.form,
+    linz.api.model.generateForm(req.linz.model, {
         record: {},
-        schema: req.linz.model.schema,
         type: 'create',
     })
         .then(editForm => new Promise((resolve, reject) => {
