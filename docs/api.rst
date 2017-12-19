@@ -31,6 +31,7 @@ options: object
 ========== ====== ===========
 Property   Type   Description
 ========== ====== ===========
+``form``   Object Provide a custom form dsl for the model.
 ``record`` Object Provide a record to prepopulate the form.
 ``req``    Object Provide a req object to customise the form.
 ``type``   String The form type. Can be `edit` or `create` (The default).
@@ -48,6 +49,8 @@ The mongoose model.
 
 options: object
 +++++++++++++++
+
+In addition to the `generateForm` options, you can also pass in the following options:
 
 ============= ====== ===========
 Property      Type   Description
