@@ -6,6 +6,8 @@ const linz = require('../');
 /* GET /admin/model/:model/create */
 var route = function (req, res, next) {
 
+    const data = {};
+
     linz.api.model.generateForm({
         form: req.linz.model.linz.formtools.form,
         record: {},
@@ -30,6 +32,7 @@ var route = function (req, res, next) {
 
         }))
         .then(editForm => Promise.all([
+            editForm,
             linz.api.views.getScripts(req, res, [
                 {
                     src: '//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.10/handlebars.min.js',
@@ -48,7 +51,7 @@ var route = function (req, res, next) {
             ]),
             linz.api.views.getStyles(req, res),
         ]))
-        .then(([scripts, styles]) => {
+        .then(([editForm, scripts, styles]) => {
 
             const singular = inflection.humanize(req.linz.model.linz.formtools.model.label, true);
 
