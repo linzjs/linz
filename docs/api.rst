@@ -12,6 +12,50 @@ At present, we're working on a long term effort to expose all of Linz's function
 
 You can access the Linz APIs via ``linz.api``.
 
+model
+=====
+
+model.generateForm(model, options)
+----------------------------------
+
+Generate a form in the conext of a Linz model. This is useful if you want to customise the form and is used by Linz internally.
+
+model: object
++++++++++++++++
+
+The mongoose model.
+
+options: object
++++++++++++++++
+
+========== ====== ===========
+Property   Type   Description
+========== ====== ===========
+``record`` Object Provide a record to prepopulate the form.
+``req``    Object Provide a req object to customise the form.
+``type``   String The form type. Can be `edit` or `create` (The default).
+========== ====== ===========
+
+model.generateFormString(model, options)
+----------------------------------------
+
+Generate form HTML in the conext of a Linz model.
+
+model: object
++++++++++++++++
+
+The mongoose model.
+
+options: object
++++++++++++++++
+
+============= ====== ===========
+Property      Type   Description
+============= ====== ===========
+``actionUrl`` String  The form post url.
+``cancelUrl`` String  The url to return to upon cancelling the form.
+============= ====== ===========
+
 Views
 =====
 
