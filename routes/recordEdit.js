@@ -3,7 +3,7 @@
 const linz = require('../');
 
 /* GET /admin/:model/:id/overview */
-var route = function (req, res, next) {
+const route = (req, res, next) => {
 
     // Skip to a 404 page.
     if (!req.linz.record) {
@@ -39,6 +39,7 @@ var route = function (req, res, next) {
 
     let conflictHandlersJS = '\n\t';
     const registeredConflictHandlers = {};
+    const data = {};
 
     // This needs some work.
     // I'm sure it could be rewritten to be much nicer.
@@ -87,8 +88,6 @@ var route = function (req, res, next) {
                 });
             }
 
-            const data = {};
-
             linz.api.views.renderNotifications(req, (err, notificationHtml) => {
 
                 if (err) {
@@ -105,10 +104,11 @@ var route = function (req, res, next) {
 
         }))
         .then(editForm => Promise.all([
+            editForm,
             linz.api.views.getScripts(req, res, defaultScripts),
             linz.api.views.getStyles(req, res),
         ]))
-        .then(([scripts, styles]) => res.render(linz.api.views.viewPath('recordEdit.jade'), Object.assign(data, {
+        .then(([editForm, scripts, styles]) => res.render(linz.api.views.viewPath('recordEdit.jade'), Object.assign(data, {
             cancelUrl: linz.api.url.getAdminLink(req.linz.model),
             conflictHandlersJS: conflictHandlersJS,
             form: editForm.render(),
