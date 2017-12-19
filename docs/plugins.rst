@@ -16,6 +16,7 @@ The query plugin extends the mongoose ``find`` and ``findOne`` static methods th
 ``findDocuments`` accepts all mongoose query options within a single options object. Note the defaults in the example.
 
   .. code-block:: javascript
+  
     Model.findDocuments({
         filter: {},
         lean: true,
@@ -26,6 +27,7 @@ The query plugin extends the mongoose ``find`` and ``findOne`` static methods th
 ``findOneDocument`` accepts all mongoose query options within a single options object. Note the defaults in the example.
 
   .. code-block:: javascript
+  
     Model.findOneDocument({
         filter: {},
         lean: true,
