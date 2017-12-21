@@ -1,3 +1,3 @@
 'use strict';
 
-document.cookie = 'linzClientTimezone=' + new Date().getTimezoneOffset() + ';path=/';
+document.cookie = 'linzClientTimezone=' + moment().utcOffset() + ';path=/';
