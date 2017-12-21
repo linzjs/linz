@@ -63,7 +63,9 @@ When a user clicks on an export, they'll be provided a pop-up modal asking them 
   export: [
     {
       label: 'Choose fields to export',
-      exclusions: 'dateModified,dateCreated'
+      exclusions: 'dateModified,dateCreated',
+      dateFormat: linz.get('date format'),
+      useLocalTime: false,
     }
   ]
 
@@ -71,6 +73,8 @@ Each object should contain the following keys:
 
 - ``label`` which is the name of the export.
 - ``exclusions`` which is a list of fields that can't be exported.
+- ``dateFormat`` which allows you to format the exported dates using moment date formats. (Defaults to false)
+- ``useLocalTime`` which allows you to export date fields in the browsers timezone offset.
 
 If you'd like to provide your own export route, you can. Replace the ``exclusions`` key with an ``action`` key that works the same as `list.actions`_. Rather than a modal, a request to that route will be made. You're responsible for mounting a ``GET`` route in Express to respond to it.
 
