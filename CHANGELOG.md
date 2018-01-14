@@ -1,8 +1,14 @@
 # CHANGELOG
 
+## Unreleased
+
+### Improvements
+
+- Added support for a `content` property when supplying `scripts` and `styles` defaults. Supplying `content` for a script will ensure the content is placed within two script tags (i.e. `<script>{{{content}}}</script>`). Supplying `content` for a style will ensure the content is placed within two style tags (as opposed to using a link tag) (i.e. `<style>{{{content}}}</style>`).
+
 ## v1.0.0-15.0.0 (24 November 2017)
 
-## BREAKING CHANGES
+### BREAKING CHANGES
 
 - The `linz.formtools.widgets.date` and `linz.formtools.widgets.dateRange` are functions which must be executed. Previously you could simply reference them. However, you can pass in a date format which will be used to customise the display of the date in the UI.
 
