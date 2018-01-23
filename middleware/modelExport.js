@@ -282,6 +282,10 @@ module.exports = {
                         return;
                     }
 
+                    if (!form[pathname]) {
+                        throw new Error(`Could not find ${pathname} field in the labels array.`);
+                    }
+
                     // get a list of fields by the label ready for sorting
                     fieldLabels[form[pathname].label] = pathname;
 

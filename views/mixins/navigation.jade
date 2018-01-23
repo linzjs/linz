@@ -5,21 +5,20 @@ mixin dropdown(node)
 		ul.dropdown-menu
 			each childNode,childIndex in node.children
 				li
-					a(href=childNode.href)
-						span.icon!= childNode.icon
-						span.name= childNode.name
+					mixin basic(childNode)
 
 mixin submenu(node)
-	a(href=node.href)= node.name
+	a(href=node.href target=childNode.target)= node.name
 	ul
 		each childNode,childIndex in node.children
 			if (request && request.path && childNode.href === request.path)
 				li(class='active')
-					a(href=childNode.href)
-						span.icon!= childNode.icon
-						span.name= childNode.name
+					mixin basic(childNode)
 			else
 				li
-					a(href=childNode.href)
-						span.icon!= childNode.icon
-						span.name= childNode.name
+					mixin basic(childNode)
+
+mixin basic(node)
+	a(href=node.href target=node.target)
+		span.icon!= node.icon
+		span.name= node.name
