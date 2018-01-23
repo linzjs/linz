@@ -40,14 +40,10 @@ html(lang="en")&attributes(attributes)
 					else
 						if (request && request.path && node.href === request.path)
 							li(class='active')
-								a(href=node.href)
-									span.icon!= node.icon
-									span.name= node.name
+								mixin basic(node)
 						else
 							li
-								a(href=node.href)
-									span.icon!= node.icon
-									span.name= node.name
+								mixin basic(node)
 		.wrap
 			block page
 				header

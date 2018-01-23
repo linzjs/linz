@@ -4,8 +4,11 @@
 
 ### Improvements
 
+- Added support for a `content` property when supplying `scripts` and `styles` defaults. Supplying `content` for a script will ensure the content is placed within two script tags (i.e. `<script>{{{content}}}</script>`). Supplying `content` for a style will ensure the content is placed within two style tags (as opposed to using a link tag) (i.e. `<style>{{{content}}}</style>`).
+- Added the `linz.formtools.cellRenderers.email` renderer to render an email in an `a` with the `mailto:` protocol.
 - Added a new static function `findOneDocument` to all models. This works just like the mongoose `findOne` function except it merges all options into a single `options` object parameter.
 - Added a new static function `findDocuments` to all models. This works just like the mongoose `find` function except it merges all options into a single `options` object parameter.
+- Added the `linz.formtools.cellRenderers.tel` renderer to render a telephone number in an `a` with the `tel:` protocol.
 
 ## v1.0.0-15.0.0 (24 November 2017)
 
