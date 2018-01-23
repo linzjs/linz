@@ -25,6 +25,7 @@
     "debug": "0.7.4",
     "dedupe": "2.1.0",
     "deep-diff": "0.2.0",
+    "deepmerge": "2.0.1",
     "diff": "1.0.8",
     "escape-string-regexp": "1.0.5",
     "express": "4.0.x",
