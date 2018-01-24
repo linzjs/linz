@@ -11,10 +11,10 @@ var route = function (req, res, next) {
 
         // if any of these records can edit or reset, we should show the field
         if (record.permissions.canEdit !== false || record.permissions.canReset !== false) {
-            return cb(true);
+            return cb(null, true);
         }
 
-        return cb(false);
+        return cb(null, false);
 
     }, function (renderActionsField) {
 

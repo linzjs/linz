@@ -32,7 +32,7 @@ var route = function (req, res, next) {
                     // explicitly, a permission must return false in order to be denied
                     // an undefined permission, or anything other than false will allow the permission
                     // falsy does not apply in this scenario
-                    return cb(result !== false);
+                    return cb(null, result !== false);
 
                 });
 
