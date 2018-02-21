@@ -16,7 +16,11 @@ var route = function (req, res, next) {
 
         return cb(null, false);
 
-    }, function (renderActionsField) {
+    }, function (err, renderActionsField) {
+
+        if (err) {
+            return next(err);
+        }
 
         Promise.all([
             linz.api.views.getScripts(req, res, [
