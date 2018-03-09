@@ -6,6 +6,8 @@ var linz = require('../'),
 /* GET /admin/:model/:id/overview */
 var route = function (req, res, next) {
 
+    const { form } = req.linz.model;
+
     // clean the body
     model.clean(req.body, req.linz.model);
 
@@ -47,7 +49,7 @@ var route = function (req, res, next) {
 
     });
 
-    var m = new req.linz.model(newModel);
+    var m = new req.linz.model(req.body);
 
     m.save(req, function (err, doc) {
 
