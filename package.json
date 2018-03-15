@@ -14,7 +14,7 @@
   "author": "Scott Mebberson",
   "readmeFilename": "README.md",
   "dependencies": {
-    "async": "1.5.2",
+    "async": "2.6.0",
     "body-parser": "1.0.x",
     "bunyan": "1.8.10",
     "camelcase": "2.0.1",

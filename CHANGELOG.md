@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Bugs
+
+- Added missing `namespaceForm` middleware to certain routes.
+- Better handling of errors in `modelSave` middleware.
+- Rewrote `modelSave` route removing usage of Async.
+
 ### Improvements
 
 - Added support for a `content` property when supplying `scripts` and `styles` defaults. Supplying `content` for a script will ensure the content is placed within two script tags (i.e. `<script>{{{content}}}</script>`). Supplying `content` for a style will ensure the content is placed within two style tags (as opposed to using a link tag) (i.e. `<style>{{{content}}}</style>`).
