@@ -35,7 +35,7 @@
     "jade": "~1.1.5",
     "less-middleware": "1.0.3",
     "moment": "2.6.x",
-    "mongoose": "3.8.13",
+    "mongoose": "3.8.40",
     "mongoose-version": "git://github.com/flashmedia/mongoose-version.git",
     "passport": "0.2.x",
     "passport-local": "1.0.0",
