@@ -135,7 +135,7 @@ describe('concurrency control', () => {
 
                 TestModel = linz.mongoose.model('TestModel', TestSchema);
 
-                TestModel.getConcurrencyControlOptions(function (err, settings) {
+                TestModel.getConcurrencyControlOptions((err, settings) => {
                     ccSettings = settings;
                     return done(err);
                 });

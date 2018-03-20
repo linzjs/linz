@@ -5,7 +5,7 @@ const linz = require('../linz');
 let UserSchema;
 
 // Wait for the database
-beforeAll(function (done) {
+beforeAll((done) => {
 
     // Just in case the database connection takes a while.
     jest.setTimeout(10000);
@@ -50,14 +50,14 @@ describe('versions', () => {
         });
 
         test('should throw error if options is not provided', () => {
-            expect(function () {
+            expect(() => {
                 TestSchema.plugin(linz.versions.plugin);
             }).toThrow('options is required');
 
         });
 
         test('should throw error if options.collection is not provided', () => {
-            expect(function () {
+            expect(() => {
                 TestSchema.plugin(linz.versions.plugin, {});
             }).toThrow('collection name is required');
         });
@@ -71,7 +71,7 @@ describe('versions', () => {
             let versionsSetting;
             let TestSchema;
 
-            beforeAll(function (done) {
+            beforeAll((done) => {
 
                 TestSchema = new linz.mongoose.Schema({ label: String });
 
@@ -81,7 +81,7 @@ describe('versions', () => {
 
                 let TestModelDefaults = linz.mongoose.model('TestModelDefaults', TestSchema);
 
-                TestModelDefaults.getVersionsSettings(function (err, settings) {
+                TestModelDefaults.getVersionsSettings((err, settings) => {
 
                     versionsSetting = settings;
 
@@ -121,25 +121,17 @@ describe('versions', () => {
             let referenceNameRenderer;
             let versionsRenderer;
 
-            beforeAll(function (done) {
+            beforeAll((done) => {
 
                 TestSchema1 = new linz.mongoose.Schema({ label: String });
 
-                dateRenderer = function (cb) {
-                    return cb(null, 'date');
-                };
+                dateRenderer = (cb) => cb(null, 'date');
 
-                referenceRenderer = function (cb) {
-                    return cb(null, 'reference');
-                };
+                referenceRenderer = (cb) => cb(null, 'reference');
 
-                referenceNameRenderer = function (cb) {
-                    return cb(null, 'referenceName');
-                };
+                referenceNameRenderer = (cb) => cb(null, 'referenceName');
 
-                versionsRenderer = function (cb) {
-                    return cb(null, 'body');
-                };
+                versionsRenderer = (cb) => cb(null, 'body');
 
                 TestSchema1.plugin(linz.versions.plugin, {
                     collection: 'testschema1_versions',
@@ -156,7 +148,7 @@ describe('versions', () => {
 
                 let TestModelOverwrites = linz.mongoose.model('TestModelOverwrites', TestSchema1);
 
-                TestModelOverwrites.getVersionsSettings(function (err, settings) {
+                TestModelOverwrites.getVersionsSettings((err, settings) => {
 
                     versionsSetting = settings;
 

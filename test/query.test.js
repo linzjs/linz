@@ -6,7 +6,7 @@ let QuerySchema;
 let QueryModel;
 
 // Wait for the database
-beforeAll(function (done) {
+beforeAll((done) => {
 
     // Just in case the database connection takes a while.
     jest.setTimeout(10000);
@@ -21,7 +21,7 @@ beforeAll(function (done) {
         }
     });
 
-    linz.once('initialised', function () {
+    linz.once('initialised', () => {
 
         // Setup a test schema.
         QuerySchema = new linz.mongoose.Schema({
@@ -68,9 +68,7 @@ beforeAll(function (done) {
                 canEdit: false,
                 canDelete: false,
                 viewAll: false,
-                body: function bodyRenderer (record, callback) {
-                    return callback('body content');
-                }
+                body: (record, callback) => callback('body content'),
             },
             permissions: {
                 canCreate: false,
@@ -106,7 +104,7 @@ describe('Linz has a query api', () => {
 
         test('that will throw unless provided a model', () => {
 
-            expect(function () {
+            expect(() => {
                 linz.api.query.field();
             }).toThrow('You must pass the modelName argument');
 
@@ -114,7 +112,7 @@ describe('Linz has a query api', () => {
 
         test('that will throw unless provided a field', () => {
 
-            expect(function () {
+            expect(() => {
                 linz.api.query.field('model');
             }).toThrow('You must pass the field argument');
 
@@ -122,7 +120,7 @@ describe('Linz has a query api', () => {
 
         test('that will throw unless provided a queryFor parameter', () => {
 
-            expect(function () {
+            expect(() => {
                 linz.api.query.field('queryModel', 'username');
             }).toThrow('You must pass the queryFor argument');
 
@@ -130,7 +128,7 @@ describe('Linz has a query api', () => {
 
         test('that will throw unless provided a valid model', () => {
 
-            expect(function () {
+            expect(() => {
                 linz.api.query.field('queryModell', 'username', queryFor);
             }).toThrow('The queryModell model could not be found');
 
@@ -138,7 +136,7 @@ describe('Linz has a query api', () => {
 
         test('that will throw unless provided a valid field', () => {
 
-            expect(function () {
+            expect(() => {
                 linz.api.query.field('queryModel', 'usernamee', queryFor);
             }).toThrow('The usernamee field could not be found in queryModel');
 
