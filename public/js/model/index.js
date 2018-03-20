@@ -1,4 +1,18 @@
-(function () {
+function addLoadEvent (func) {
+
+    if (window.attachEvent) {
+        return window.attachEvent('onload', func);
+    }
+
+    if (window.addEventListener) {
+        return window.addEventListener('load', func, false);
+    }
+
+    return document.addEventListener('load', func, false);
+
+}
+
+addLoadEvent(function () {
 
     var filtersAreDirty = false;
 
@@ -396,4 +410,4 @@
 
     }
 
-})();
+});
