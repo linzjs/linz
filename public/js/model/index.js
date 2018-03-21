@@ -1,4 +1,4 @@
-(function () {
+linz.addLoadEvent(function () {
 
     var filtersAreDirty = false;
 
@@ -157,6 +157,12 @@
             return $('.filter-list [data-filter-field="' + $(this).attr('data-filter-field') + '"]').slice(0,1).css('visibility', 'hidden');
 
         });
+
+        var filterBtn = $('.addFilterBtn');
+
+        if (!filterBtn.find('.control-addFilter').length) {
+            filterBtn.remove();
+        }
 
     })();
 
@@ -396,4 +402,4 @@
 
     }
 
-})();
+});

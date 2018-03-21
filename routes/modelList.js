@@ -36,11 +36,7 @@ var route = function (req, res, next) {
 
                 });
 
-            }, function (results) {
-
-                return callback(null, results);
-
-            });
+            }, callback);
 
         },
 

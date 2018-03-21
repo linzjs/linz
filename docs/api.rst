@@ -12,6 +12,16 @@ At present, we're working on a long term effort to expose all of Linz's function
 
 You can access the Linz APIs via ``linz.api``.
 
+Session
+=======
+
+The methods exposed via the ``linz.api.session`` namespace have functionality centered around working with the user session.
+
+session.getTimezone(req)
+------------------------
+
+Get the timezone offset of the current user.
+
 Views
 =====
 

@@ -12,10 +12,10 @@ var route = function (req, res, next) {
     Promise.all([
         linz.api.views.getScripts(req, res, [
             {
-                src: `${linz.get('admin path')}/public/js/model/index.js?v3`,
+                src: `${linz.get('admin path')}/public/js/template.polyfill.js`,
             },
             {
-                src: `${linz.get('admin path')}/public/js/template.polyfill.js`,
+                src: `${linz.get('admin path')}/public/js/model/index.js?v5`,
             },
         ]),
         linz.api.views.getStyles(req, res),
