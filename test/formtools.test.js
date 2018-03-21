@@ -1496,7 +1496,7 @@ describe('formtools', () => {
 
                         it('should render date range input fields with form values', () => {
                             var fieldName = 'dateCreated',
-                                filterDates = { dateCreated: { dateFrom: [moment('2014-05-16', 'YYYY-MM-DD').zone('+0:00').toISOString()], dateTo: [moment('2014-05-17', 'YYYY-MM-DD').endOf('day').zone('+0:00').toISOString()] } };
+                                filterDates = { dateCreated: { dateFrom: [moment('2014-05-16', 'YYYY-MM-DD').startOf('day').toISOString()], dateTo: [moment('2014-05-17', 'YYYY-MM-DD').endOf('day').toISOString()] } };
 
                             linz.formtools.filters.dateRange().bind(fieldName, filterDates, (err, result) => {
                                 expect(result).toBeInstanceOf(Array);
@@ -1518,7 +1518,7 @@ describe('formtools', () => {
                                 expect(result).toBeInstanceOf(Array);
                                 expect(result).toHaveLength(1);
                                 expect(result[0]).toBe(
-                                    '<input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="DD.MM.YYYY" data-linz-date-value="' + utcDates.dateCreated.dateFrom[0] + '" required><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="DD.MM.YYYY" data-linz-date-value="2014-05-15T23:59:59.999Z" required>'
+                                    '<input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="DD.MM.YYYY" data-linz-date-value="' + utcDates.dateCreated.dateFrom[0] + '" required><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="DD.MM.YYYY" data-linz-date-value="' + utcDates.dateCreated.dateTo[0] + '" required>'
                                 );
                             });
 
@@ -1535,10 +1535,10 @@ describe('formtools', () => {
                                 expect(result).toBeInstanceOf(Array);
                                 expect(result).toHaveLength(2);
                                 expect(result[0]).toBe(
-                                    '<input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + utcDates.dateCreated.dateFrom[0] + '" required><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="2014-05-17T23:59:59.999Z" required>'
+                                    '<input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + utcDates.dateCreated.dateFrom[0] + '" required><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + utcDates.dateCreated.dateTo[0] + '" required>'
                                 );
                                 expect(result[1]).toBe(
-                                    '<input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + utcDates.dateCreated.dateFrom[1] + '" required><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="2014-05-19T23:59:59.999Z" required>'
+                                    '<input type="text" name="' + fieldName + '[dateFrom][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + utcDates.dateCreated.dateFrom[1] + '" required><input type="text" name="' + fieldName + '[dateTo][]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' + utcDates.dateCreated.dateTo[1] + '" required>'
                                 );
                             });
                         });
