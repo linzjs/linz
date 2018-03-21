@@ -1,4 +1,4 @@
-(function () {
+linz.addLoadEvent(function () {
 
     var filtersAreDirty = false;
 
@@ -402,4 +402,4 @@
 
     }
 
-})();
+});
