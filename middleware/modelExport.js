@@ -2,6 +2,9 @@ var linz = require('../'),
     async = require('async'),
     moment = require('moment');
 
+let useLocalTime = false;
+let dateFormat = false;
+
 var modelExportHelpers = function modelExportHelpers (req, res) {
 
     var getRecordData = function getRecordData (fields, record) {
@@ -14,6 +17,23 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
         });
 
         return linz.utils.json2CSV(orderedRecord);
+
+    };
+
+    /**
+     * Format a date object using the list dsl settings.
+     * @param {Date} val A date object.
+     * @return {String} A date string.
+     */
+    const formatDate = (val) => {
+
+        if (!(val instanceof Date)) {
+            return val;
+        }
+
+        return moment(val)
+            .utcOffset((useLocalTime && linz.api.session.getTimezone(req)) || 0)
+            .format((typeof dateFormat === 'string') && dateFormat);
 
     };
 
@@ -68,6 +88,10 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
         if (typeof val === 'boolean' || 'true,false,yes,no'.indexOf(val) >= 0 ) {
             return (linz.utils.asBoolean(val) ? 'Yes' : 'No');
+        }
+
+        if (val instanceof Date) {
+            val = formatDate(val);
         }
 
         return val;
@@ -336,6 +360,9 @@ module.exports = {
             if (err) {
                 return next(err);
             }
+
+            useLocalTime = exportObj && exportObj.useLocalTime;
+            dateFormat = exportObj && exportObj.dateFormat;
 
             var fields = req.body.selectedFields.split(','),
                 refFieldNames = [],

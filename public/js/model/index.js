@@ -158,6 +158,12 @@ linz.addLoadEvent(function () {
 
         });
 
+        var filterBtn = $('.addFilterBtn');
+
+        if (!filterBtn.find('.control-addFilter').length) {
+            filterBtn.remove();
+        }
+
     })();
 
     assignRemoveButton();
