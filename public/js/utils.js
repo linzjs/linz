@@ -6,24 +6,18 @@ if (!linz) {
 
     var loadedScripts = [];
 
-    function addLoadEvent(func) {
+    // Append instead of replace the onload process.
+    function addLoadEvent (func) {
 
-        var oldonload = window.onload;
-
-        if (typeof window.onload != 'function') {
-
-            window.onload = func;
-
-        } else {
-
-            window.onload = function() {
-              if (oldonload) {
-                oldonload();
-              }
-              func();
-            }
-
+        if (window.attachEvent) {
+            return window.attachEvent('onload', func);
         }
+
+        if (window.addEventListener) {
+            return window.addEventListener('load', func, false);
+        }
+
+        return document.addEventListener('load', func, false);
 
     }
 
