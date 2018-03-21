@@ -429,9 +429,7 @@ Linz.prototype.initConfigs = function (cb) {
 
             });
 
-        }, function (err) {
-            return cb(err);
-        });
+        }, cb);
 
     });
 
@@ -735,13 +733,13 @@ Linz.prototype.buildNavigation = function (cb) {
 
         })()
 
-    ], function () {
+    ], function (err) {
 
         // set this data on linz
         _this.set('navigation', nav);
 
         // return the callback
-        return cb(null);
+        return cb(err);
 
     });
 

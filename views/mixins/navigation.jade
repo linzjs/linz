@@ -8,7 +8,7 @@ mixin dropdown(node)
 					mixin basic(childNode)
 
 mixin submenu(node)
-	a(href=node.href target=childNode.target)= node.name
+	a(href=node.href target=node.target)= node.name
 	ul
 		each childNode,childIndex in node.children
 			if (request && request.path && childNode.href === request.path)

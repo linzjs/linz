@@ -6,7 +6,8 @@ module.exports = function () {
         req.linz.model.getForm(req, function(err, form) {
 
             req.linz.model.form = form;
-            next();
+
+            return next(err);
 
         });
 
