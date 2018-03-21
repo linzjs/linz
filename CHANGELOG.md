@@ -13,6 +13,7 @@
 - Added support for a `content` property when supplying `scripts` and `styles` defaults. Supplying `content` for a script will ensure the content is placed within two script tags (i.e. `<script>{{{content}}}</script>`). Supplying `content` for a style will ensure the content is placed within two style tags (as opposed to using a link tag) (i.e. `<style>{{{content}}}</style>`).
 - Added the `linz.formtools.cellRenderers.email` renderer to render an email in an `a` with the `mailto:` protocol.
 - Added the `linz.formtools.cellRenderers.tel` renderer to render a telephone number in an `a` with the `tel:` protocol.
+- Cleaned up the print preview styles.
 - Fixed the `linz.addLoadEvent` method so the onload process doesn't get overridden.
 - Added a new `linz.api.session.getTimezone(req)` function that allows you to get the timezone offset of the current user.
 - Added the ability to transform date fields in the Linz export through `useLocalTime` which converts the time to the local browser time.

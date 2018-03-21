@@ -1,3 +1,7 @@
+# Lockfiles
+package-lock.json
+yarn.lock
+
 lib-cov
 *.seed
 *.log
