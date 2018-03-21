@@ -5,7 +5,7 @@
   "main": "linz.js",
   "scripts": {
     "pretest": "./test/scripts/pretest.sh",
-    "test": "./node_modules/.bin/mocha"
+    "test": "./node_modules/.bin/jest"
   },
   "repository": {
     "type": "git",
@@ -35,8 +35,8 @@
     "jade": "~1.1.5",
     "less-middleware": "1.0.3",
     "moment": "2.6.x",
-    "mongoose": "3.8.13",
-    "mongoose-version": "git://github.com/flashmedia/mongoose-version.git",
+    "mongoose": "4.13.12",
+    "mongoose-version": "github:flashmedia/mongoose-version",
     "passport": "0.2.x",
     "passport-local": "1.0.0",
     "printf": "0.2.x",
@@ -44,8 +44,6 @@
     "winston": "~0.7.2"
   },
   "devDependencies": {
-    "chai": "3.5.0",
-    "mocha": "3.2.0",
-    "should": "11.2.1"
+    "jest": "22.4.2"
   }
 }
