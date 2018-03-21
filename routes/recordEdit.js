@@ -62,7 +62,7 @@ var route = function (req, res, next) {
                 src: `${linz.get('admin path')}/public/js/jquery.binddata.js`,
             },
             {
-                src: `${linz.get('admin path')}/public/js/documentarray.js`,
+                src: `${linz.get('admin path')}/public/js/documentarray.js?v1`,
             },
             {
                 integrity: 'sha256-/wPGlKXtfdj9ryVH2IQ78d1Zx2/4PXT/leOL4Jt1qGU=',

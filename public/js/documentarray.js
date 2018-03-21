@@ -3,12 +3,11 @@
     function DocumentArray() {
 
         this.editingArray = undefined;
-        this.editingObject = undefined,
-        this.editingIndex = undefined,
-        this.formHtml = {},
-        this.editingFor = undefined,
-        this.listTemplate = undefined,
-        this.mode = undefined;
+        this.editingObject = undefined;
+        this.editingIndex = undefined;
+        this.formHtml = {};
+        this.editingFor = undefined;
+        this.listTemplate = undefined;
 
     }
 
@@ -64,15 +63,17 @@
             // now bind the documents, handle the edit button
             $('[data-document-field-for="' + documentArrayInstance + '"]').find('a[data-document-action="edit"]').click(function () {
 
-                $('#documentsModal .btn-save').unbind('click');
-                $('#documentsModal .btn-cancel').unbind('click');
+                $('#documentsModal .edit-actions .btn-save').unbind('click');
+                $('#documentsModal .edit-actions .btn-cancel').unbind('click');
+                $('#documentsModal .delete-actions .btn-save').unbind('click');
+                $('#documentsModal .delete-actions .btn-cancel').unbind('click');
                 $('#documentsModal button.close').unbind('click');
 
-                $('#documentsModal .btn-save').click(function () {  da.saveAction(); });
-                $('#documentsModal .btn-cancel').click(function () { da.closeAction(); });
+                $('#documentsModal .edit-actions .btn-save').click(function () {  da.saveAction(); });
+                $('#documentsModal .edit-actions .btn-cancel').click(function () { da.closeAction(); });
+                $('#documentsModal .delete-actions .btn-save').click(function () {  da.deleteAction(); });
+                $('#documentsModal .delete-actions .btn-cancel').click(function () { da.closeAction(); });
                 $('#documentsModal button.close').click(function () { da.closeAction(); });
-
-                da.mode = 'editing';
 
                 da.editingFor = documentArrayInstance;
 
@@ -94,15 +95,17 @@
             // now bind the documents, handle the delete button
             $('[data-document-field-for="' + documentArrayInstance + '"]').find('a[data-document-action="remove"]').click(function () {
 
-                $('#documentsModal .btn-save').unbind('click');
-                $('#documentsModal .btn-cancel').unbind('click');
+                $('#documentsModal .edit-actions .btn-save').unbind('click');
+                $('#documentsModal .edit-actions .btn-cancel').unbind('click');
+                $('#documentsModal .delete-actions .btn-save').unbind('click');
+                $('#documentsModal .delete-actions .btn-cancel').unbind('click');
                 $('#documentsModal button.close').unbind('click');
 
-                $('#documentsModal .btn-save').click(function () {  da.saveAction(); });
-                $('#documentsModal .btn-cancel').click(function () { da.closeAction(); });
+                $('#documentsModal .edit-actions .btn-save').click(function () {  da.saveAction(); });
+                $('#documentsModal .edit-actions .btn-cancel').click(function () { da.closeAction(); });
+                $('#documentsModal .delete-actions .btn-save').click(function () {  da.deleteAction(); });
+                $('#documentsModal .delete-actions .btn-cancel').click(function () { da.closeAction(); });
                 $('#documentsModal button.close').click(function () { da.closeAction(); });
-
-                da.mode = 'removing';
 
                 da.editingFor = documentArrayInstance;
 
@@ -135,14 +138,14 @@
         // apply the label to the modal
         $('#documentsModal .modal-title').html(this.retrieveLabel(editingFor));
 
-        // update the form buttons to SAVE/CANCEL
-        $('#documentsModal .modal-footer .btn-save').html('Save');
-        $('#documentsModal .modal-footer .btn-cancel').html('Cancel');
-
         // initialize multiselect
         $('#documentsModal .multiselect').multiselect({
             buttonContainer: '<div class="btn-group btn-group-multiselect" />'
         });
+
+        // Switch the footer buttons considering the context.
+        $('#documentsModal .modal-footer .edit-actions').show();
+        $('#documentsModal .modal-footer .delete-actions').hide();
 
         // add an edit class to the model
         $('#documentsModal .modal-dialog').addClass('edit');
@@ -161,9 +164,9 @@
         // apply the label to the modal
         $('#documentsModal .modal-title').html(this.retrieveLabel(editingFor));
 
-        // update the form buttons to YES/NO
-        $('#documentsModal .modal-footer .btn-save').html('Yes');
-        $('#documentsModal .modal-footer .btn-cancel').html('No');
+        // Switch the footer buttons considering the context.
+        $('#documentsModal .modal-footer .edit-actions').hide();
+        $('#documentsModal .modal-footer .delete-actions').show();
 
         $('#documentsModal .modal-dialog').removeClass('edit');
 
@@ -212,11 +215,21 @@
 
     DocumentArray.prototype.saveAction = function () {
 
-        if (this.mode === 'editing') {
+        var validator = $('#documentsModal .modal-body form').data('bootstrapValidator');
+
+        // Validate the form.
+        validator.validate();
+
+        // // Check that everything is valid before saving.
+        if (validator.isValid()) {
             this.saveDocument();
-        } else {
-            this.deleteDocument();
         }
+
+    };
+
+    DocumentArray.prototype.deleteAction = function () {
+
+        this.deleteDocument();
 
     };
 
@@ -234,7 +247,6 @@
         this.editingIndex = undefined;
         this.editingArray = undefined;
         this.editingObject = undefined;
-        this.mode = undefined;
 
     };
 
@@ -267,8 +279,6 @@
 
     $.fn.documentarray = function(option, parameter, extraOptions) {
 
-
-
         return this.each(function(index, el) {
 
             var data = $(this).data('documentarray'),
@@ -288,6 +298,21 @@
             if (!isModalWired) {
 
                 $('#documentsModal').on('shown.bs.modal', function (e) {
+
+                    // Enable form validation.
+                    var validator = $('#documentsModal .modal-body form').data('bootstrapValidator');
+
+                    // The validator might alread exist, if so, remove it so we can start fresh.
+                    if (validator) {
+
+                        validator.destroy();
+                        $('#documentsModal .modal-body form').data('bootstrapValidator', null);
+
+                    }
+
+                    // Freshly start the validator every time the modal is shown.
+                    $('#documentsModal .modal-body form').bootstrapValidator();
+
                     $('#documentsModal').animate({ scrollTop: 0 }, 'fast');
                 });
 
@@ -320,18 +345,21 @@
                     var parentElem = $(event.target).closest('.documents-container');
 
                     // unbind click events before we can bind new ones
-                    $('#documentsModal .btn-save').unbind('click');
-                    $('#documentsModal .btn-cancel').unbind('click');
+                    $('#documentsModal .edit-actions .btn-save').unbind('click');
+                    $('#documentsModal .edit-actions .btn-cancel').unbind('click');
+                    $('#documentsModal .delete-actions .btn-save').unbind('click');
+                    $('#documentsModal .delete-actions .btn-cancel').unbind('click');
                     $('#documentsModal button.close').unbind('click');
 
-                    $('#documentsModal .btn-save').click(function () {  data.saveAction(); });
-                    $('#documentsModal .btn-cancel').click(function () { data.closeAction(); });
+                    $('#documentsModal .edit-actions .btn-save').click(function () {  data.saveAction(); });
+                    $('#documentsModal .edit-actions .btn-cancel').click(function () { data.closeAction(); });
+                    $('#documentsModal .delete-actions .btn-save').click(function () {  data.deleteAction(); });
+                    $('#documentsModal .delete-actions .btn-cancel').click(function () { data.closeAction(); });
                     $('#documentsModal button.close').click(function () { data.closeAction(); });
 
                     // clear out persitence fields
                     data.editingObject = {};
                     data.editingInstance = undefined;
-                    data.mode = 'editing';
 
                     // which field are we editing for?
                     data.editingFor = $(parentElem).attr('data-document-field-for');

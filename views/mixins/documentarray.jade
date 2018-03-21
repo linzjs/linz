@@ -15,7 +15,11 @@ mixin documentarray()
 					button.close(type="button") &times;
 					h4.modal-title Modal title
 				.modal-body
-					form.form-horizontal
+					form.form-horizontal(role='form', data-linz-embedded-validation='true')
 				.modal-footer
-					button.btn.btn-primary.btn-save(type="button") Save
-					button.btn.btn-default.btn-cancel(type="button") Cancel
+					div.edit-actions
+						button.btn.btn-primary.btn-save(type="button") Save
+						button.btn.btn-default.btn-cancel(type="button") Cancel
+					div.delete-actions
+						button.btn.btn-primary.btn-save(type="button") Yes
+						button.btn.btn-default.btn-cancel(type="button") No
