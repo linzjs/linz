@@ -16,6 +16,8 @@
 - Added a new `linz.api.session.getTimezone(req)` function that allows you to get the timezone offset of the current user.
 - Added the ability to transform date fields in the Linz export through `useLocalTime` which converts the time to the local browser time.
 - Added a `dateFormat` option which adds the ability to export the date in a different format (Uses moment datetime formats).
+- Upgraded to Mongoose `v4.13.12`.
+- Migrated unit tests from Mocha to Jest.
 
 ## v1.0.0-15.0.0 (24 November 2017)
 
