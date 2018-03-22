@@ -3,6 +3,10 @@
   "version": "1.0.0-15.1.0",
   "description": "Node.js web application framework",
   "main": "linz.js",
+  "jest": {
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
+  },
   "scripts": {
     "pretest": "./test/scripts/pretest.sh",
     "report-coverage": "codecov",
