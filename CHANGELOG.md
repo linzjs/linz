@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.0.0-15.1.0 (22 March 2018)
 
 ### Bugs
 
