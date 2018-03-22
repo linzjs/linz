@@ -5,6 +5,7 @@
   "main": "linz.js",
   "scripts": {
     "pretest": "./test/scripts/pretest.sh",
+    "report-coverage": "codecov",
     "test": "./node_modules/.bin/jest"
   },
   "repository": {
@@ -44,6 +45,7 @@
     "winston": "~0.7.2"
   },
   "devDependencies": {
+    "codecov": "3.0.0",
     "jest": "22.4.2"
   }
 }
