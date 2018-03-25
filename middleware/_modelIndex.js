@@ -351,10 +351,12 @@ module.exports = function  (req, res, next) {
 
                 if (!session.list.formData.sort && req.linz.model.list.sortBy.length) {
 
+                    const defaultOrder = req.linz.model.schema.paths[req.linz.model.list.sortingBy.field].instance === 'Date' ? '-' : '';
+
                     req.linz.model.list.sortingBy = req.linz.model.list.sortBy[0];
 
                     // set default form sort
-                    session.list.formData.sort = `-${req.linz.model.list.sortingBy.field}`;
+                    session.list.formData.sort = `${defaultOrder}${req.linz.model.list.sortingBy.field}`;
 
                 } else {
 
