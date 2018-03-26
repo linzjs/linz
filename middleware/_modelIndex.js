@@ -349,21 +349,25 @@ module.exports = function  (req, res, next) {
             // find the docs
             function (cb) {
 
-                if (!session.list.formData.sort && req.linz.model.list.sortBy.length) {
+                const getDefaultOrder = field => field.defaultOrder.toLowerCase() === 'desc' ? '-' : '';
 
-                    const defaultOrder = req.linz.model.schema.paths[req.linz.model.list.sortingBy.field].instance === 'Date' ? '-' : '';
+                if (!session.list.formData.sort && req.linz.model.list.sortBy.length) {
 
                     req.linz.model.list.sortingBy = req.linz.model.list.sortBy[0];
 
                     // set default form sort
-                    session.list.formData.sort = `${defaultOrder}${req.linz.model.list.sortingBy.field}`;
+                    session.list.formData.sort = `${getDefaultOrder(req.linz.model.list.sortingBy)}${req.linz.model.list.sortingBy.field}`;
 
                 } else {
 
                     req.linz.model.list.sortBy.forEach(function (sort) {
+
+                        sort.field = `${getDefaultOrder(sort.defaultOrder)}${sort.field}`;
+
                         if (sort.field === session.list.formData.sort || '-' + sort.field === session.list.formData.sort) {
                             req.linz.model.list.sortingBy = sort;
                         }
+
                     });
 
                 }
