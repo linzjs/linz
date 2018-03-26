@@ -8,10 +8,11 @@
 				for sortField in model.list.sortBy
 					li
 						a(data-sort-field='' + sortField.field + '')
-							if '-' + sortField.field === form.sort
-								!= sortField.label + ' <em>(ascending)</em>'
-							else if sortField.field === form.sort
-								!= sortField.label + ' <em>(descending)</em>'
+							if '-' + sortField.field === form.sort || sortField.field === form.sort
+								if sortDirection === sortField.defaultOrder
+									!= sortField.label + ' <em>(' + ((sortDirection === 'asc') ? 'descending' : 'ascending') + ')</em>'
+								else
+									!= sortField.label
 							else
 								!= sortField.label
 		.direction= ((sortDirection === 'asc') ? 'ascending' : 'descending')

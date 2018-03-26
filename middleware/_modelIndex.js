@@ -362,8 +362,6 @@ module.exports = function  (req, res, next) {
 
                     req.linz.model.list.sortBy.forEach(function (sort) {
 
-                        sort.field = `${getDefaultOrder(sort.defaultOrder)}${sort.field}`;
-
                         if (sort.field === session.list.formData.sort || '-' + sort.field === session.list.formData.sort) {
                             req.linz.model.list.sortingBy = sort;
                         }
