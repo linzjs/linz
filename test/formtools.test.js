@@ -1121,14 +1121,17 @@ describe('formtools', () => {
 
                         expect(overridesListOpts.sortBy).toEqual([
                             {
+                                defaultOrder: 'asc',
                                 label: 'First Name',
                                 field: 'firstName'
                             },
                             {
+                                defaultOrder: 'asc',
                                 label: 'lastName',
                                 field: 'lastName'
                             },
                             {
+                                defaultOrder: 'asc',
                                 label: 'Date modified',
                                 field: 'dateModified'
                             }

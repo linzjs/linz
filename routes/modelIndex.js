@@ -27,7 +27,8 @@ var route = function (req, res, next) {
                 page = Number(req.linz.records.page),
                 pages = Number(req.linz.records.pages),
                 to = pageSize*page,
-                sortDirection = '';
+                sortDirection = '',
+                form = req.linz.model.formData || {};
 
             if (to > total) {
                 to = total;
@@ -54,9 +55,38 @@ var route = function (req, res, next) {
             // Remove the primary record actions, from the standard ones.
             req.linz.model.list.recordActions = req.linz.model.list.recordActions.filter(action => action.type !== 'primary');
 
+            // Work through the sorting options.
+            const sortingOptions = [];
+
+            req.linz.model.list.sortBy.forEach(function (sortBy) {
+
+                const sort = form.sort.replace('/^-/', '');
+
+                // Don't display ascending, if it's already sorting ascending on this field.
+                if (sort.toLowerCase() != sortBy.field.toLowerCase()) {
+
+                    sortingOptions.push({
+                        label: `${sortBy.label} <em>(ascending)</em>`,
+                        value: `${sortBy.field}`,
+                    });
+
+                }
+
+                // Don't display descending, if it's already sorting descending on this field.
+                if (form.sort.toLowerCase() !== `-${sortBy.field}`.toLowerCase()) {
+
+                    sortingOptions.push({
+                        label: `${sortBy.label} <em>(descending)</em>`,
+                        value: `-${sortBy.field}`,
+                    });
+
+                }
+
+            });
+
             const data = {
                 customAttributes: res.locals.customAttributes,
-                form: req.linz.model.formData || {},
+                form,
                 from: pageSize*page-pageSize,
                 help: req.linz.model.list.help,
                 label: {
@@ -65,19 +95,20 @@ var route = function (req, res, next) {
                 },
                 model: req.linz.model,
                 modelQuery: JSON.stringify(req.linz.model.formData),
-                page: page,
-                pages: pages,
+                page,
+                pages,
                 pageTitle: req.linz.model.linz.formtools.model.plural,
-                pageSize: pageSize,
+                pageSize,
                 pageSizes: req.linz.model.list.paging.sizes || linz.get('page sizes'),
                 pagination: req.linz.model.list.paging.active === true,
                 permissions: req.linz.model.linz.formtools.permissions,
                 query: req.query,
                 records: req.linz.records.records,
                 sort: req.linz.model.list.sortingBy,
-                sortDirection: sortDirection,
-                to: to,
-                total: total,
+                sortDirection,
+                sortingOptions,
+                to,
+                total,
                 scripts,
                 styles,
                 user: req.user,

@@ -224,11 +224,21 @@ list.sortBy
 
 ``list.sortBy`` is used to customise the sort field(s) which the data in the model index will be retrieved with.
 
-``list.sortBy`` should be Array of field names, for example::
+``list.sortBy`` should be Array of field names or objects. If using an object, the field property is required for example::
 
-  sortBy: ['name', 'username']
+  sortBy: [
+    'name',
+    'username',
+    {
+      defaultOrder: 'asc',
+      field: 'dateModified',
+      label: 'Date modified',
+    },
+  ]
 
 This Array will be used to populate a drop-down list on the model index. The user can choose an option from the drop-down to sort the list with.
+
+The ``defaultOrder`` property is used to set the default ordering of the sort. You may want to change it to ``desc`` when you want the latest records first.
 
 list.toolbarItems
 =================
