@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Unreleased
+
+## Improvements
+
+- You can now supply a `defaultOrder` for `sortBy` property of the List DSL.
+- Ascending/descending options are directly listed in the sorting dropdown for each field in the `sortBy` array.
+
 ## v1.0.0-15.1.0 (22 March 2018)
 
 ### Bugs
