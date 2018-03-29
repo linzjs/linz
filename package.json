@@ -5,7 +5,7 @@
   "main": "linz.js",
   "scripts": {
     "pretest": "./test/scripts/pretest.sh",
-    "test": "./node_modules/.bin/jest --forceExit"
+    "test": "./node_modules/.bin/jest"
   },
   "repository": {
     "type": "git",
