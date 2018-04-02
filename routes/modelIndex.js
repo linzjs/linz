@@ -60,10 +60,11 @@ var route = function (req, res, next) {
 
             req.linz.model.list.sortBy.forEach(function (sortBy) {
 
-                const sort = form.sort.replace('/^-/', '');
+                const sort = form.sort || '';
+                const sortFieldName = sort.replace('/^-/', '');
 
                 // Don't display ascending, if it's already sorting ascending on this field.
-                if (sort.toLowerCase() != sortBy.field.toLowerCase()) {
+                if (sortFieldName.toLowerCase() != sortBy.field.toLowerCase()) {
 
                     sortingOptions.push({
                         label: `${sortBy.label} <em>(ascending)</em>`,
@@ -73,7 +74,7 @@ var route = function (req, res, next) {
                 }
 
                 // Don't display descending, if it's already sorting descending on this field.
-                if (form.sort.toLowerCase() !== `-${sortBy.field}`.toLowerCase()) {
+                if (sort.toLowerCase() !== `-${sortBy.field}`.toLowerCase()) {
 
                     sortingOptions.push({
                         label: `${sortBy.label} <em>(descending)</em>`,
