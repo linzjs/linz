@@ -6,6 +6,7 @@
 
 - You can now supply a `defaultOrder` for `sortBy` property of the List DSL.
 - Ascending/descending options are directly listed in the sorting dropdown for each field in the `sortBy` array.
+- When the model index can't find any records for the current query, the model index now shows the words "No records found", and removes sorting and paging controls.
 
 ## v1.0.0-15.1.0 (22 March 2018)
 
