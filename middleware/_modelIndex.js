@@ -349,19 +349,23 @@ module.exports = function  (req, res, next) {
             // find the docs
             function (cb) {
 
+                const getDefaultOrder = field => field.defaultOrder.toLowerCase() === 'desc' ? '-' : '';
+
                 if (!session.list.formData.sort && req.linz.model.list.sortBy.length) {
 
                     req.linz.model.list.sortingBy = req.linz.model.list.sortBy[0];
 
                     // set default form sort
-                    session.list.formData.sort = `-${req.linz.model.list.sortingBy.field}`;
+                    session.list.formData.sort = `${getDefaultOrder(req.linz.model.list.sortingBy)}${req.linz.model.list.sortingBy.field}`;
 
                 } else {
 
                     req.linz.model.list.sortBy.forEach(function (sort) {
+
                         if (sort.field === session.list.formData.sort || '-' + sort.field === session.list.formData.sort) {
                             req.linz.model.list.sortingBy = sort;
                         }
+
                     });
 
                 }

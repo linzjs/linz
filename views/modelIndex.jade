@@ -10,9 +10,12 @@ block content
                 .row
                     .col-xs-12
                         include modelIndex/filters
-                        if model.list.showSummary
-                            include modelIndex/sorting
-                            include modelIndex/paging
+                        if records.length > 0
+                            if model.list.showSummary
+                                include modelIndex/sorting
+                                include modelIndex/paging
+                        else
+                            include modelIndex/no-records
 
             if records.length > 0
                 block main-content
