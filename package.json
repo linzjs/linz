@@ -3,8 +3,13 @@
   "version": "1.0.0-15.1.0",
   "description": "Node.js web application framework",
   "main": "linz.js",
+  "jest": {
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
+  },
   "scripts": {
     "pretest": "./test/scripts/pretest.sh",
+    "report-coverage": "codecov",
     "test": "./node_modules/.bin/jest"
   },
   "repository": {
@@ -44,6 +49,7 @@
     "winston": "~0.7.2"
   },
   "devDependencies": {
+    "codecov": "3.0.0",
     "jest": "22.4.2"
   }
 }
