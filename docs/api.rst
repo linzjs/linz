@@ -59,6 +59,16 @@ Property      Type   Description
 ``cancelUrl`` String  The url to return to upon cancelling the form.
 ============= ====== ===========
 
+Session
+=======
+
+The methods exposed via the ``linz.api.session`` namespace have functionality centered around working with the user session.
+
+session.getTimezone(req)
+------------------------
+
+Get the timezone offset of the current user.
+
 Views
 =====
 

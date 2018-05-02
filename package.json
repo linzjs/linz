@@ -1,11 +1,16 @@
 {
   "name": "linz",
-  "version": "1.0.0-15.0.0",
+  "version": "1.0.0-15.2.0",
   "description": "Node.js web application framework",
   "main": "linz.js",
+  "jest": {
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
+  },
   "scripts": {
     "pretest": "./test/scripts/pretest.sh",
-    "test": "./node_modules/.bin/mocha"
+    "report-coverage": "codecov",
+    "test": "./node_modules/.bin/jest"
   },
   "repository": {
     "type": "git",
@@ -16,7 +21,7 @@
   "dependencies": {
     "async": "2.6.0",
     "body-parser": "1.0.x",
-    "bunyan": "0.22.x",
+    "bunyan": "1.8.10",
     "camelcase": "2.0.1",
     "chalk": "~0.4.0",
     "clone": "1.0.2",
@@ -31,13 +36,13 @@
     "express": "4.0.x",
     "express-session": "1.0.x",
     "formist": "0.1.10",
-    "handlebars": "2.0.0-alpha.4",
+    "handlebars": "4.0.11",
     "inflection": "1.3.8",
     "jade": "~1.1.5",
     "less-middleware": "1.0.3",
-    "moment": "2.6.x",
-    "mongoose": "3.8.13",
-    "mongoose-version": "git://github.com/flashmedia/mongoose-version.git",
+    "moment": "2.20.1",
+    "mongoose": "4.13.12",
+    "mongoose-version": "github:flashmedia/mongoose-version",
     "passport": "0.2.x",
     "passport-local": "1.0.0",
     "printf": "0.2.x",
@@ -45,8 +50,7 @@
     "winston": "~0.7.2"
   },
   "devDependencies": {
-    "chai": "3.5.0",
-    "mocha": "3.2.0",
-    "should": "11.2.1"
+    "codecov": "3.0.0",
+    "jest": "22.4.2"
   }
 }

@@ -63,7 +63,9 @@ When a user clicks on an export, they'll be provided a pop-up modal asking them 
   export: [
     {
       label: 'Choose fields to export',
-      exclusions: 'dateModified,dateCreated'
+      exclusions: 'dateModified,dateCreated',
+      dateFormat: linz.get('date format'),
+      useLocalTime: false,
     }
   ]
 
@@ -71,6 +73,8 @@ Each object should contain the following keys:
 
 - ``label`` which is the name of the export.
 - ``exclusions`` which is a list of fields that can't be exported.
+- ``dateFormat`` which allows you to format the exported dates using moment date formats. (Defaults to false)
+- ``useLocalTime`` which allows you to export date fields in the browsers timezone offset.
 
 If you'd like to provide your own export route, you can. Replace the ``exclusions`` key with an ``action`` key that works the same as `list.actions`_. Rather than a modal, a request to that route will be made. You're responsible for mounting a ``GET`` route in Express to respond to it.
 
@@ -220,11 +224,21 @@ list.sortBy
 
 ``list.sortBy`` is used to customise the sort field(s) which the data in the model index will be retrieved with.
 
-``list.sortBy`` should be Array of field names, for example::
+``list.sortBy`` should be Array of field names or objects. If using an object, the field property is required for example::
 
-  sortBy: ['name', 'username']
+  sortBy: [
+    'name',
+    'username',
+    {
+      defaultOrder: 'asc',
+      field: 'dateModified',
+      label: 'Date modified',
+    },
+  ]
 
 This Array will be used to populate a drop-down list on the model index. The user can choose an option from the drop-down to sort the list with.
+
+The ``defaultOrder`` property is used to set the default ordering of the sort. You may want to change it to ``desc`` when you want the latest records first.
 
 list.toolbarItems
 =================

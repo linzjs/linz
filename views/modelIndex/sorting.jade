@@ -5,15 +5,10 @@
 			.field(data-toggle='dropdown')= sort.label
 				span.caret
 			ul.dropdown-menu(role='menu')
-				for sortField in model.list.sortBy
+				for sortingOption in sortingOptions
 					li
-						a(data-sort-field='' + sortField.field + '')
-							if '-' + sortField.field === form.sort
-								!= sortField.label + ' <em>(ascending)</em>'
-							else if sortField.field === form.sort
-								!= sortField.label + ' <em>(descending)</em>'
-							else
-								!= sortField.label
+						a(data-sort-field='' + sortingOption.value + '')
+							!= sortingOption.label
 		.direction= ((sortDirection === 'asc') ? 'ascending' : 'descending')
 	else
 		div #{total} records.
