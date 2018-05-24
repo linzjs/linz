@@ -412,7 +412,11 @@ Linz.prototype.initConfigs = function (cb) {
                 // overwrite _id field with custom id name
                 newConfig['_id'] = configName;
 
-                collection.insert(newConfig, {w:1}, function(err, result) {
+                // Use update instead of insert to prevent duplicate key errors.
+                collection.update(newConfig, {
+                    upsert: true,
+                    w:1,
+                }, function(err, result) {
 
                     if (err) {
                         throw new Error('Unable to write config file %s to database. ' + err.message, configName);
