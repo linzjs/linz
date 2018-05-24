@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Fixed a rare case where an empty database with configs would cause an `exception: _id index cannot be non-unique` error.
+- Fixed a rare case where an empty database with configs would cause an `Unable to write config file %s to database. E11000 duplicate key error` error.
 
 ## v1.0.0-15.2.0 (27 April 2018)
 
