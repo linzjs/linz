@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+- Fixed a rare case where an empty database with configs would cause an `exception: _id index cannot be non-unique` error.
+
 ## v1.0.0-15.2.0 (27 April 2018)
 
 ## Improvements
