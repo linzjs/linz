@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+- Fixed an issue where Linz would try to `.toString()` null values while exporting.
+
 ## v1.0.0-15.2.0 (27 April 2018)
 
 ## Improvements
