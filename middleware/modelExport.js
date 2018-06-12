@@ -72,7 +72,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
                         if (key === '_id' || key === 'id' || key === 'dateModified' || key === 'dateCreated' || obj[key] === '' || obj[key] === undefined) {
                             return;
                         }
-                        return arr.push(key + ': ' + obj[key].toString());
+                        return arr.push(key + ': ' + (obj[key] || '').toString());
                     });
 
                     return strArr.push(arr.join(', '));
