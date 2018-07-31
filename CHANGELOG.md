@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+- Added support for customising the login and logout paths. `login path` and `logout path` defaults must be set when `admin path` has been customised.
+
 ## v1.0.0-15.2.0 (27 April 2018)
 
 ## Improvements
