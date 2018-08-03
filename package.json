@@ -16,6 +16,16 @@
     "type": "git",
     "url": "https://github.com/linzjs/linz.git"
   },
+  "files": [
+    "lib",
+    "middleware",
+    "middleware-public",
+    "params",
+    "public",
+    "routes",
+    "views",
+    "linz.js"
+  ],
   "author": "Scott Mebberson",
   "readmeFilename": "README.md",
   "dependencies": {
