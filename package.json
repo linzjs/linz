@@ -14,7 +14,7 @@
     "dev": "npm-run-all --sequential build docker clean",
     "docker": "./devops/docker.sh",
     "report-coverage": "codecov",
-    "test": "jest --maxWorkers 4"
+    "test": "jest --forceExit"
   },
   "repository": {
     "type": "git",
