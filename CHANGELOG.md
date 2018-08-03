@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v1.0.0-15.2.1 (3 August 2018)
+
+- Re-release of v1.0.0-15.2.0 to include updated changelog.
+
 ## v1.0.0-15.2.0 (27 April 2018)
 
 ## Improvements
