@@ -8,9 +8,6 @@ let UserSchema;
 
 beforeAll((done) => {
 
-    // Just in case the database connection takes a while.
-    jest.setTimeout(10000);
-
     // Init Linz.
     linz.init({
         options: {
@@ -47,7 +44,7 @@ beforeAll((done) => {
 
     });
 
-});
+}, 10000);
 
 afterAll((done) => linz.mongoose.connection.close(done));
 

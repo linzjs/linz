@@ -1,16 +1,13 @@
-sudo: required
 language: node_js
 node_js:
 - '8'
 - '6'
 env:
 - NODE_ENV=development
-services:
-- docker
 before_script:
-- npm install
+- yarn
 script:
-- npm test
+- yarn test
 after_success: npm run report-coverage
 deploy:
   provider: npm
