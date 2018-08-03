@@ -14,7 +14,7 @@
     "dev": "npm-run-all --sequential build docker clean",
     "docker": "./devops/docker.sh",
     "report-coverage": "codecov",
-    "jest": "jest"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
