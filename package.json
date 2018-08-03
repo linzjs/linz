@@ -2,15 +2,19 @@
   "name": "linz",
   "version": "1.0.0-15.2.1",
   "description": "Node.js web application framework",
+  "license": "MIT",
   "main": "linz.js",
   "jest": {
     "coverageDirectory": "./coverage/",
     "collectCoverage": true
   },
   "scripts": {
-    "pretest": "./test/scripts/pretest.sh",
+    "build": "./devops/build.sh",
+    "clean": "./devops/clean.sh",
+    "dev": "npm-run-all --sequential build docker clean",
+    "docker": "./devops/docker.sh",
     "report-coverage": "codecov",
-    "test": "./node_modules/.bin/jest"
+    "jest": "jest"
   },
   "repository": {
     "type": "git",
@@ -60,6 +64,7 @@
   },
   "devDependencies": {
     "codecov": "3.0.0",
-    "jest": "22.4.2"
+    "jest": "22.4.2",
+    "npm-run-all": "4.1.3"
   }
 }
