@@ -14,7 +14,7 @@ Linz is in early stages of development. It's being used within a few production 
 
 The following is required to being developing Linz:
 
-- Docker
+- Docker.
 
 Run `yarn dev` or `npm run dev` and once the container has started, you will be able to visit the dev environment at `localhost:8888`.
 
