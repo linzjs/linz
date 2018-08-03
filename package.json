@@ -13,6 +13,7 @@
     "clean": "./devops/clean.sh",
     "dev": "npm-run-all --sequential build docker clean",
     "docker": "./devops/docker.sh",
+    "jest": "jest",
     "report-coverage": "./devops/report-coverage.sh",
     "test": "npm-run-all -s jest report-coverage"
   },
