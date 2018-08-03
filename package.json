@@ -13,8 +13,8 @@
     "clean": "./devops/clean.sh",
     "dev": "npm-run-all --sequential build docker clean",
     "docker": "./devops/docker.sh",
-    "report-coverage": "codecov",
-    "test": "jest --forceExit"
+    "report-coverage": "./devops/report-coverage.sh",
+    "test": "npm-run-all -s jest report-coverage"
   },
   "repository": {
     "type": "git",
@@ -62,7 +62,6 @@
     "stylus": "~0.40.3"
   },
   "devDependencies": {
-    "codecov": "3.0.0",
     "connect-redis": "3.3.3",
     "ioredis": "3.2.2",
     "jest": "22.4.2",
