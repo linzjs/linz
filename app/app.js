@@ -4,6 +4,8 @@ const { EventEmitter } = require('events');
 const express = require('express');
 const http = require('http');
 const linz = require('./linz');
+const middleware = require('./lib/loader')('./middleware');
+const session = require('./lib/session');
 
 const port = 8888;
 
@@ -19,14 +21,16 @@ class App extends EventEmitter {
         super();
 
         const app = express();
-        app.get('/', (req, res) => res.status(200).send('Welcome to Linz!'));
+        app.get('/', middleware.import, (req, res) => res.redirect('/admin/login'));
 
         app.use(linz.middleware.error);
 
         this.app = app;
 
         linz.init({
-            options: {
+            'express': app,
+            'session middleware': session,
+            'options': {
                 'mongo': 'mongodb://mongo:27017/lmt',
                 'user model': 'mtUser'
             }

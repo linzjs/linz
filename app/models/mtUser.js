@@ -1,6 +1,8 @@
-var linz = require('../linz');
+'use strict';
 
-var mtUserSchema = new linz.mongoose.Schema({
+const linz = require('../linz');
+
+const mtUserSchema = new linz.mongoose.Schema({
     name:  String,
     email: String,
     username: String,
@@ -8,10 +10,6 @@ var mtUserSchema = new linz.mongoose.Schema({
     bAdmin: {
         type: Boolean,
         default: false
-    },
-    org: {
-        ref: 'mtOrg',
-        type: linz.mongoose.Schema.Types.ObjectId,
     },
 });
 
@@ -62,7 +60,6 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
     overview: {
         summary: {
             fields: {
-                org: { renderer: customRenderer },
                 name: {
                     renderer: linz.formtools.cellRenderers.defaultRenderer
                 },
@@ -91,4 +88,4 @@ mtUserSchema.methods.verifyPassword = function (candidatePassword, callback) {
     return callback(null, this.password === candidatePassword);
 }
 
-var mtUser = module.exports = linz.mongoose.model('mtUser', mtUserSchema);
+module.exports = linz.mongoose.model('mtUser', mtUserSchema);
