@@ -8,9 +8,9 @@ env:
 services:
 - docker
 before_script:
-- npm install
+- yarn --ignore-engines --ignore-optional
 script:
-- npm test
+- yarn test
 after_success: npm run report-coverage
 deploy:
   provider: npm
