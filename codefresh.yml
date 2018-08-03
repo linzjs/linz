@@ -5,7 +5,7 @@ steps:
   BuildingDockerImage:
     title: Building Docker image
     type: build
-    image_name: idearium/ideariumlib
+    image_name: linzjs/linz
     working_directory: ./
     dockerfile: Dockerfile
 
@@ -21,7 +21,6 @@ steps:
           CI_BUILD_ID: ${{CF_BUILD_ID}}
           CI_BUILD_URL: ${{CF_BUILD_URL}}
           CODECOV_TOKEN: ${{CODECOV_TOKEN}}
-          NODE_ENV: ${{NODE_ENV}}
           VCS_BRANCH_NAME: ${{CF_BRANCH}}
           VCS_COMMIT_ID: ${{CF_REVISION}}
           VCS_SLUG: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
