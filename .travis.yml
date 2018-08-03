@@ -8,7 +8,7 @@ env:
 services:
 - docker
 before_script:
-- yarn --ignore-engines --ignore-optional
+- yarn
 script:
 - yarn test
 after_success: npm run report-coverage

@@ -11,7 +11,7 @@ RUN apk add --no-cache bash curl openssl && \
 COPY /package.json /yarn.lock /app/
 WORKDIR /app
 # Remove the flags once the packages have been updated and the errors no longer occur.
-RUN yarn --ignore-engines --ignore-optional
+RUN yarn
 
 COPY / /app
 # Copy back the example app directory to /app
