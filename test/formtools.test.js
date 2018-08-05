@@ -11,7 +11,7 @@ beforeAll((done) => {
     // Init Linz.
     linz.init({
         options: {
-            'mongo': 'mongodb://localhost:27777/formtools-test',
+            'mongo': 'mongodb://mongodb:27017/formtools-test',
             'user model': 'user',
             'load models': false,
             'load configs': false

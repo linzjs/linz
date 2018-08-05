@@ -31,7 +31,7 @@ class App extends EventEmitter {
             'express': app,
             'session middleware': session,
             'options': {
-                'mongo': 'mongodb://mongo:27017/lmt',
+                'mongo': 'mongodb://mongodb:27017/lmt',
                 'user model': 'mtUser'
             }
         });

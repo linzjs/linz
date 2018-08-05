@@ -4,10 +4,6 @@
   "description": "Node.js web application framework",
   "license": "MIT",
   "main": "linz.js",
-  "jest": {
-    "coverageDirectory": "./coverage/",
-    "collectCoverage": true
-  },
   "scripts": {
     "build": "./devops/build.sh",
     "clean": "./devops/clean.sh",
@@ -65,7 +61,7 @@
   "devDependencies": {
     "connect-redis": "3.3.3",
     "ioredis": "3.2.2",
-    "jest": "22.4.2",
+    "jest": "23.4.2",
     "npm-run-all": "4.1.3"
   }
 }

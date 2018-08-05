@@ -10,7 +10,7 @@ beforeAll((done) => {
     // Init Linz.
     linz.init({
         options: {
-            'mongo': 'mongodb://localhost:27777/versions-test',
+            'mongo': 'mongodb://mongodb:27017/versions-test',
             'user model': 'user',
             'load models': false,
             'load configs': false

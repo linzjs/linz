@@ -11,7 +11,7 @@ beforeAll((done) => {
     // Init Linz.
     linz.init({
         options: {
-            'mongo': 'mongodb://localhost:27777/api-model-test',
+            'mongo': 'mongodb://mongodb:27017/api-model-test',
             'user model': 'user',
             'load models': false,
             'load configs': false

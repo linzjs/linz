@@ -1,4 +1,4 @@
-FROM node:6-alpine
+FROM node:8-alpine
 
 # Setup dockerize.
 # Keep bash and curl to run the codecov bash script.
@@ -17,4 +17,4 @@ COPY / /app
 # Copy back the example app directory to /app
 COPY /app /app
 
-CMD dockerize -wait tcp://mongo:27017 -wait tcp://redis:6379 -timeout 20s yarn start
+CMD dockerize -wait tcp://mongodb:27017 -wait tcp://redis:6379 -timeout 20s yarn start
