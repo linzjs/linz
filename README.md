@@ -18,6 +18,8 @@ The following is required to being developing Linz:
 
 Run `yarn dev` or `npm run dev` and once the container has started, you will be able to visit the dev environment at `localhost:8888`.
 
+To re-run the import script and reset the default records, simply visit `localhost:8888` again.
+
 ## Documentation
 
 We're in the middle of a major effort to update the documentation. You can read the documentation here https://linzjs.readthedocs.io/en/latest/ and for the latest bleeding edge version of the documentation, visit https://linzjs.readthedocs.io/en/doc-updates/
