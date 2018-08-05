@@ -16,7 +16,7 @@ steps:
     composition_candidates:
       lib:
         image: '${{BuildingDockerImage}}'
-        command: dockerize -wait tcp://mongo:27017 -timeout 20s yarn test
+        command: dockerize -wait tcp://mongodb:27017 -timeout 20s yarn test-app
         environment:
           CI_BUILD_ID: ${{CF_BUILD_ID}}
           CI_BUILD_URL: ${{CF_BUILD_URL}}

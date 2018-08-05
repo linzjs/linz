@@ -9,9 +9,11 @@
     "clean": "./devops/clean.sh",
     "dev": "npm-run-all --sequential build docker clean",
     "docker": "./devops/docker.sh",
-    "jest": "jest",
+    "jest": "jest --detectOpenHandles --forceExit",
     "report-coverage": "./devops/report-coverage.sh",
-    "test": "npm-run-all -s jest report-coverage"
+    "test": "npm-run-all --sequential build test-start clean",
+    "test-app": "npm-run-all -s jest report-coverage",
+    "test-start": "./devops/test.sh"
   },
   "repository": {
     "type": "git",
