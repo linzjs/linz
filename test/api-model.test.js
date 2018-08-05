@@ -8,13 +8,10 @@ let ApiModel;
 // Wait for the database
 beforeAll((done) => {
 
-    // Just in case the database connection takes a while.
-    jest.setTimeout(10000);
-
     // Init Linz.
     linz.init({
         options: {
-            'mongo': 'mongodb://localhost:27777/api-model-test',
+            'mongo': 'mongodb://mongodb:27017/api-model-test',
             'user model': 'user',
             'load models': false,
             'load configs': false
@@ -94,7 +91,7 @@ beforeAll((done) => {
 
     });
 
-});
+}, 10000);
 
 afterAll((done) => linz.mongoose.connection.close(done));
 
