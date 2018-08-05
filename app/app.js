@@ -21,9 +21,6 @@ class App extends EventEmitter {
         super();
 
         const app = express();
-        app.get('/', middleware.import, (req, res) => res.redirect('/admin/login'));
-
-        app.use(linz.middleware.error);
 
         this.app = app;
 
@@ -32,11 +29,19 @@ class App extends EventEmitter {
             'session middleware': session,
             'options': {
                 'mongo': 'mongodb://mongodb:27017/lmt',
-                'user model': 'mtUser'
+                'user model': 'mtUser',
             }
         });
 
-        linz.on('initialised', () => this.emit('ready'));
+        linz.on('initialised', () => {
+
+            linz.app.get('/', middleware.import, (req, res) => res.redirect(linz.get('login path')));
+
+            linz.app.use(linz.middleware.error);
+
+            this.emit('ready');
+
+        });
 
     }
 
