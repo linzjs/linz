@@ -2,20 +2,33 @@
   "name": "linz",
   "version": "1.0.0-15.2.1",
   "description": "Node.js web application framework",
+  "license": "MIT",
   "main": "linz.js",
-  "jest": {
-    "coverageDirectory": "./coverage/",
-    "collectCoverage": true
-  },
   "scripts": {
-    "pretest": "./test/scripts/pretest.sh",
-    "report-coverage": "codecov",
-    "test": "./node_modules/.bin/jest"
+    "build": "./devops/build.sh",
+    "clean": "./devops/clean.sh",
+    "dev": "npm-run-all --sequential build docker clean",
+    "docker": "./devops/docker.sh",
+    "jest": "jest --detectOpenHandles --forceExit",
+    "report-coverage": "./devops/report-coverage.sh",
+    "test": "npm-run-all --sequential build test-start clean",
+    "test-app": "npm-run-all -s jest report-coverage",
+    "test-start": "./devops/test.sh"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/linzjs/linz.git"
   },
+  "files": [
+    "lib",
+    "middleware",
+    "middleware-public",
+    "params",
+    "public",
+    "routes",
+    "views",
+    "linz.js"
+  ],
   "author": "Scott Mebberson",
   "readmeFilename": "README.md",
   "dependencies": {
@@ -45,11 +58,12 @@
     "passport": "0.2.x",
     "passport-local": "1.0.0",
     "printf": "0.2.x",
-    "stylus": "~0.40.3",
-    "winston": "~0.7.2"
+    "stylus": "~0.40.3"
   },
   "devDependencies": {
-    "codecov": "3.0.0",
-    "jest": "22.4.2"
+    "connect-redis": "3.3.3",
+    "ioredis": "3.2.2",
+    "jest": "23.4.2",
+    "npm-run-all": "4.1.3"
   }
 }

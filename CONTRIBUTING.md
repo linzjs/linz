@@ -1,10 +1,20 @@
-
 # Contributing to Linz
 
-Linz has a [complete development environment contained within another GitHub repository](https://github.com/linzjs/linz-development).
+Linz has a complete development environment, within this repository. The following is required to begin developing Linz:
 
-We do this so that the Linz code can be kept as light as possible.
+- Docker.
+- Bash.
+- Node.js.
+- Yarn or NPM.
 
-The development environment contains all dependencies for test frameworks, documentation preview servers, etc.
+Once you've cloned this repository to your host, run `yarn dev` or `npm run dev` and once the container has started, you will be able to visit the dev environment at `localhost:8888`.
 
-You can read more [here](https://github.com/linzjs/linz-development) and [here](https://linzjs.readthedocs.io/).
+Use `test` as the username, and `password` as the password when logging in.
+
+To re-run the import script and reset the default records, simply visit `http://localhost:8888` again.
+
+## Testing
+
+To run the tests locally, execute `yarn test`. This will start up a Docker container and run the tests within it.
+
+Tests are automatically run on each push to Git too.
