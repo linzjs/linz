@@ -45,7 +45,7 @@ test('overrides defaults', (done) => {
             'load models': false,
             'login path': '/logintest',
             'logout path': '/logouttest',
-            'mongo': 'mongodb://localhost:27777/defaults-test',
+            'mongo': 'mongodb://mongodb:27017/defaults-test',
             'user model': 'user',
         },
     });
