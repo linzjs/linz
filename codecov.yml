@@ -8,3 +8,7 @@ coverage:
         branches: null
         flags: null
         paths: null
+ignore:
+  - app
+  - devops
+  - docs
