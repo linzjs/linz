@@ -9,7 +9,6 @@ const logout = require('./logout');
 const namespace = require('./namespace');
 const notifications = require('./notifications');
 const originalUrl = require('./original-url');
-const responseTime = require('./response-time');
 
 module.exports = {
     authenticate,
@@ -21,5 +20,4 @@ module.exports = {
     namespace,
     notifications,
     originalUrl,
-    responseTime,
 };
