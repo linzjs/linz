@@ -2,7 +2,14 @@
 
 ## Unreleased
 
+- Added support for customising the login and logout paths. `login path` and `logout path` defaults must be set when `admin path` has been customised.
+- Merged in the Linz minitwitter basic repo to simplify testing.
 - Fixed a rare case where an empty database with configs would cause an `Unable to write config file %s to database. E11000 duplicate key error` error.
+- Removed response-time middleware that was causing issues with the builds.
+
+## v1.0.0-15.2.1 (3 August 2018)
+
+- Re-release of v1.0.0-15.2.0 to include updated changelog.
 
 ## v1.0.0-15.2.0 (27 April 2018)
 

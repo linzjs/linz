@@ -1,7 +1,3 @@
-# Lockfiles
-package-lock.json
-yarn.lock
-
 # Code coverage
 *.lcov
 dist
