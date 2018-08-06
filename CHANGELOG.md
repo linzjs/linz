@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added support for customising the login and logout paths. `login path` and `logout path` defaults must be set when `admin path` has been customised.
 - Merged in the Linz minitwitter basic repo to simplify testing.
 - Removed response-time middleware that was causing issues with the builds.
 
