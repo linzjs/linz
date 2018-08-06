@@ -12,17 +12,7 @@ Linz is in early stages of development. It's being used within a few production 
 
 ## Development
 
-The following is required to being developing Linz:
-
-- Docker.
-
-Run `yarn dev` or `npm run dev` and once the container has started, you will be able to visit the dev environment at `localhost:8888`.
-
-To re-run the import script and reset the default records, simply visit `localhost:8888` again.
-
-## Testing
-
-To run the tests locally, run `yarn test`. This will start up a Docker container and run the tests.
+You can read more about developing Linz in [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Documentation
 
