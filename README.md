@@ -10,6 +10,10 @@ Linz is not a CMS, but is capable of CMS like functionality. Linz is a good choi
 
 Linz is in early stages of development. It's being used within a few production sites, but we're working on documentation and properly launching this as an open source project. You can [view progress here](https://github.com/linzjs/linz/issues/98).
 
+## Development
+
+You can read more about developing Linz in [CONTRIBUTING.md](./CONTRIBUTING.md).
+
 ## Documentation
 
 We're in the middle of a major effort to update the documentation. You can read the documentation here https://linzjs.readthedocs.io/en/latest/ and for the latest bleeding edge version of the documentation, visit https://linzjs.readthedocs.io/en/doc-updates/

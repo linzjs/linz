@@ -8,7 +8,7 @@ module.exports = function ensureAuthenticated () {
 			return next();
 		}
 
-		res.redirect(linz.get('admin path') + '/login');
+		res.redirect(linz.get('login path'));
 
 	};
 
