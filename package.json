@@ -58,6 +58,7 @@
     "passport": "0.2.x",
     "passport-local": "1.0.0",
     "printf": "0.2.x",
+    "sentence-case": "2.1.1",
     "stylus": "~0.40.3"
   },
   "devDependencies": {

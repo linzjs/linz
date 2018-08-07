@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased (7 August 2018)
+
+- Linz will now default labels for all schema fields, using sentence case.
+
 ## v1.0.0-16.0.0 (6 August 2018)
 
 ## Breaking changes

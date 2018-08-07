@@ -38,11 +38,7 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
         },
     },
     labels: {
-            name: 'Name',
-            email: 'Email',
             bAdmin: 'Has admin access?',
-            username: 'Username',
-            password: 'Password'
     },
     list: {
         fields: {
