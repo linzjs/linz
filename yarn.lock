@@ -2528,6 +2528,10 @@ loose-envify@^1.0.0:
   dependencies:
     js-tokens "^3.0.0"
 
+lower-case@^1.1.1:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/lower-case/-/lower-case-1.1.4.tgz#9a2cabd1b9e8e0ae993a4bf7d5875c39c42e8eac"
+
 lru-cache@^4.0.1:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-4.1.2.tgz#45234b2e6e2f2b33da125624c4664929a0224c3f"
@@ -2879,6 +2883,12 @@ negotiator@~0.3.0:
 nice-try@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.4.tgz#d93962f6c52f2c1558c0fbda6d512819f1efe1c4"
+
+no-case@^2.2.0:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/no-case/-/no-case-2.3.2.tgz#60b813396be39b3f1288a4c1ed5d1e7d28b464ac"
+  dependencies:
+    lower-case "^1.1.1"
 
 node-int64@^0.4.0:
   version "0.4.0"
@@ -3652,6 +3662,13 @@ send@0.2.0:
     mime "~1.2.9"
     range-parser "~1.0.0"
 
+sentence-case@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/sentence-case/-/sentence-case-2.1.1.tgz#1f6e2dda39c168bf92d13f86d4a918933f667ed4"
+  dependencies:
+    no-case "^2.2.0"
+    upper-case-first "^1.1.2"
+
 serve-static@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/serve-static/-/serve-static-1.0.1.tgz#10dcbfd44b3e0291a131fc9ab4ab25a9f5a78a42"
@@ -4178,6 +4195,16 @@ unset-value@^1.0.0:
   dependencies:
     has-value "^0.3.1"
     isobject "^3.0.0"
+
+upper-case-first@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/upper-case-first/-/upper-case-first-1.1.2.tgz#5d79bedcff14419518fd2edb0a0507c9b6859115"
+  dependencies:
+    upper-case "^1.1.1"
+
+upper-case@^1.1.1:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/upper-case/-/upper-case-1.1.3.tgz#f6b4501c2ec4cdd26ba78be7222961de77621598"
 
 urix@^0.1.0:
   version "0.1.0"
