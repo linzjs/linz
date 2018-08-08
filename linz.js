@@ -787,3 +787,9 @@ Linz.prototype.logger = function (options) {
     return this.loggers[options.name];
 
 };
+
+/**
+ * Initialise the models.
+ * @returns {Void} Intialises the models, setting up some linz properties.
+ */
+Linz.prototype.initModels = () => helpersModels.initModels();
