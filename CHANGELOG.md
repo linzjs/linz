@@ -1,8 +1,9 @@
 # CHANGELOG
 
-## Unreleased
+## v1.0.0-16.1.0 (9 August 2018)
 
 - Updated the reference renderer to link to the record overview.
+- Added a new `Linz.initModels` method to allow initialising manually set models via `Linz.set('models', {})`.
 
 ## v1.0.0-16.0.1 (7 August 2018)
 
