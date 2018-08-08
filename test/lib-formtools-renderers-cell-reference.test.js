@@ -71,13 +71,16 @@ beforeAll((done) => {
             user: linz.mongoose.model('user', userSchema),
         });
 
+        // Because we aren't loading the models from file, we have to initialise it ourselves.
         linz.initModels();
 
         return done();
 
     });
 
-}, 10000)
+}, 10000);
+
+afterAll(() => linz.mongoose.disconnect());
 
 test('renders a link to the ref record overview', async () => {
 
@@ -97,22 +100,24 @@ test('renders a link to the ref record overview', async () => {
         username: 'test',
     });
 
-    await Promise.all([
-        organisation.save(),
-        user.save(),
-    ]);
-
     const request = supertest.agent(linz.app);
 
-    // Login first.
-    await request.post('/admin/login')
-        .send({
+    return Promise.all([
+        organisation.save(),
+        user.save(),
+    ])
+        // Login first.
+        .then(() => request.post('/admin/login').send({
             password: 'password',
             username: 'test',
+        }))
+        // Supertest seems to use non native promises which stop Jest tests from completing.
+        // Wrapping it in a Promise.resolve fixes that.
+        .then(() => Promise.resolve(request.get('/admin/model/user/list')))
+        .then((response) => {
+
+            expect(response.text).toMatch(`/admin/model/organisation/${organisation._id}/overview`);
+
         });
-
-    const response = await request.get('/admin/model/user/list');
-
-    expect(response.text).toMatch(`/admin/model/organisation/${organisation._id}/overview`);
 
 });
