@@ -1,7 +1,7 @@
 # linz
 
 [![npm](https://img.shields.io/npm/v/linz.svg)](https://www.npmjs.com/package/linz)
-[![Build Status](https://travis-ci.org/linzjs/linz.svg?branch=master)](https://travis-ci.org/linzjs/linz)
+[![Codefresh build status]( https://g.codefresh.io/api/badges/pipeline/smebberson/linzjs%2Flinz%2Flinz?branch=master&key=eyJhbGciOiJIUzI1NiJ9.NThkNDU1M2RjY2E5MjUwMTAwNjU4NWEx.cELdG9jRzbNw34nHAzDF6K5_Mu6JrDBGe1p9OsOFt3c&type=cf-1)]( https://g.codefresh.io/repositories/linzjs/linz/builds?filter=trigger:build;branch:master;service:5b63ef365904b8831271a661~linz)
 [![codecov](https://codecov.io/gh/linzjs/linz/branch/master/graph/badge.svg)](https://codecov.io/gh/linzjs/linz)
 
 An administration interface framework for Node.js.

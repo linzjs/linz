@@ -293,7 +293,8 @@ Linz.prototype.loadModels = function (cb) {
     if (!this.get('load models')) {
 
         this.set('models', {});
-        return cb(null);
+
+        return cb();
 
     }
 
@@ -304,14 +305,16 @@ Linz.prototype.loadModels = function (cb) {
 
     var modelsPath = this.get('models path');
 
-    // load in the models (non-standard callback as loadModels handles all errors)
-    helpersModels.loadModels(modelsPath, function (models) {
+    helpersModels.loadModels(modelsPath)
+        .then((models) => {
 
-        _this.set('models', models || {});
+            _this.set('models', models || {});
 
-        return cb(null);
+            return helpersModels.initModels();
 
-    });
+        })
+        .then(() => cb())
+        .catch(cb);
 
 };
 
@@ -787,3 +790,9 @@ Linz.prototype.logger = function (options) {
     return this.loggers[options.name];
 
 };
+
+/**
+ * Initialise the models.
+ * @returns {Void} Intialises the models, setting up some linz properties.
+ */
+Linz.prototype.initModels = () => helpersModels.initModels();

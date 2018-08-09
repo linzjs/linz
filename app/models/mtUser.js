@@ -11,6 +11,10 @@ const mtUserSchema = new linz.mongoose.Schema({
         type: Boolean,
         default: false
     },
+    org: {
+        ref: 'mtOrg',
+        type: linz.mongoose.Schema.Types.ObjectId,
+    },
 });
 
 const customRenderer = (value, record, fieldName, model, callback) => callback(null, 'test');
@@ -23,6 +27,9 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
             helpText: 'The users full name.',
         },
         email: {
+            fieldset: 'Details',
+        },
+        org: {
             fieldset: 'Details',
         },
         username: {
@@ -46,6 +53,7 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
             username: true,
             email: true,
             bAdmin: true,
+            org: { renderer: linz.formtools.cellRenderers.defaultRenderer },
         },
     },
     model: {
