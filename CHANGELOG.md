@@ -1,5 +1,31 @@
 # CHANGELOG
 
+## v1.0.0-16.1.0 (9 August 2018)
+
+- Updated the reference renderer to link to the record overview.
+- Added a new `Linz.initModels` method to allow initialising manually set models via `Linz.set('models', {})`.
+
+## v1.0.0-16.0.1 (7 August 2018)
+
+- Linz will now default labels for all schema fields, using sentence case.
+
+## v1.0.0-16.0.0 (6 August 2018)
+
+## Breaking changes
+
+- Removed response-time middleware that was causing issues with the builds.
+
+### Improvements
+
+- Added support for customising the login and logout paths. `login path` and `logout path` defaults must be set when `admin path` has been customised.
+- Merged in the Linz minitwitter basic repo to simplify testing.
+- Fixed a rare case where an empty database with configs would cause an `Unable to write config file %s to database. E11000 duplicate key error` error.
+- Fixed an issue where Linz would try to `.toString()` null values while exporting.
+
+## v1.0.0-15.2.1 (3 August 2018)
+
+- Re-release of v1.0.0-15.2.0 to include updated changelog.
+
 ## v1.0.0-15.2.0 (27 April 2018)
 
 ## Improvements

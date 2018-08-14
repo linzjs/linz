@@ -1,13 +1,13 @@
 Fixes # .
 
-### Setup
+## Setup
 
 - [ ] A list of steps to get started with testing.
 
-### Testing
+## Testing
 
 - [ ] All the steps required to complete testing the PR.
 
-### Notes
+## Notes
 
 - Any additional notes you think will be useful.

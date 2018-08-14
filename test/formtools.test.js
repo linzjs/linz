@@ -8,13 +8,10 @@ let UserSchema;
 
 beforeAll((done) => {
 
-    // Just in case the database connection takes a while.
-    jest.setTimeout(10000);
-
     // Init Linz.
     linz.init({
         options: {
-            'mongo': 'mongodb://localhost:27777/formtools-test',
+            'mongo': 'mongodb://mongodb:27017/formtools-test',
             'user model': 'user',
             'load models': false,
             'load configs': false
@@ -47,7 +44,7 @@ beforeAll((done) => {
 
     });
 
-});
+}, 10000);
 
 afterAll((done) => linz.mongoose.connection.close(done));
 
@@ -312,6 +309,7 @@ describe('formtools', () => {
         let OverridesPostSchema;
         let OverridesPostModel;
         let labelsOpts;
+        let overridesLabelsOpts;
         let listOpts;
         let overridesListOpts;
         let formOpts;
@@ -456,12 +454,7 @@ describe('formtools', () => {
 
             OverridesPostSchema.plugin(linz.formtools.plugins.document, {
                 labels: {
-                    firstName: 'First Name',
-                    username: 'Username',
-                    password: 'Password',
-                    email: 'Email',
                     bActive: 'Is active',
-                    groups: 'Groups',
                     sendWelcomeEmail: 'Welcome email'
                 },
                 list: {
@@ -656,6 +649,13 @@ describe('formtools', () => {
                 },
 
                 (cb) => {
+                    OverridesPostModel.getLabels((err, result) => {
+                        overridesLabelsOpts = result;
+                        cb(null);
+                    });
+                },
+
+                (cb) => {
                     PostModel.getList({}, (err, result) => {
                         listOpts = result;
                         cb(null);
@@ -722,10 +722,10 @@ describe('formtools', () => {
 
         describe('labels', () => {
 
-            it('should complete any missing labels with thier field names', () => {
+            it('should complete any missing labels with a sentence case version', () => {
 
                 expect(labelsOpts).toHaveProperty('secondCategory');
-                expect(labelsOpts.secondCategory).toBe('secondCategory');
+                expect(labelsOpts.secondCategory).toBe('Second category');
 
             });
 
@@ -740,6 +740,27 @@ describe('formtools', () => {
 
                 expect(labelsOpts).toHaveProperty('dateCreated');
                 expect(labelsOpts.dateCreated).toBe('Date created');
+
+            });
+
+            it('should default to sentence case for multiple words', () => {
+
+                expect(labelsOpts).toHaveProperty('firstName');
+                expect(labelsOpts.firstName).toBe('First name');
+
+            });
+
+            it('should default to sentence case for one word', () => {
+
+                expect(labelsOpts).toHaveProperty('username');
+                expect(labelsOpts.username).toBe('Username');
+
+            });
+
+            it('should allow overrides', () => {
+
+                expect(overridesLabelsOpts).toHaveProperty('bActive');
+                expect(overridesLabelsOpts.bActive).toBe('Is active');
 
             });
 
@@ -1122,12 +1143,12 @@ describe('formtools', () => {
                         expect(overridesListOpts.sortBy).toEqual([
                             {
                                 defaultOrder: 'asc',
-                                label: 'First Name',
+                                label: 'First name',
                                 field: 'firstName'
                             },
                             {
                                 defaultOrder: 'asc',
-                                label: 'lastName',
+                                label: 'Last name',
                                 field: 'lastName'
                             },
                             {
@@ -1253,10 +1274,6 @@ describe('formtools', () => {
 
                     it('should convert a key name with string value in the filters to an object', () => {
                         expect(overridesListOpts.filters.firstName).toHaveProperty('label', 'First name');
-                    });
-
-                    it('should default to key name if a label is not provided in the filters object', () => {
-                        expect(overridesListOpts.filters.lastName).toHaveProperty('label', 'lastName');
                     });
 
                     it('should set default filter if none provided', () => {
@@ -2092,10 +2109,6 @@ describe('formtools', () => {
 
                     it('should set the label, if provided', () => {
                         expect(formOpts.firstName.label).toBe('First Name');
-                    });
-
-                    it('should default label to field name, if none provided', () => {
-                        expect(formOpts.lastName.label).toBe('lastName');
                     });
 
                     it('should set visible, if provided', () => {
