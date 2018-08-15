@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 
-if [ ! "$(docker ps -q -f name=mongodb)" ]; then
+if [ "$(docker ps -aq -f name=mongodb)" ]; then
 
-    if [ "$(docker ps -aq -f status=exited -f name=mongodb)" ]; then
-        docker rm mongodb
-    fi
+    echo "MongoDB container exists, starting ..."
 
-    docker run --name mongodb -d mongo:3.6
+    docker start mongodb
+
+else
+
+    echo "Creating MongoDB container ..."
+
+    docker run --name mongodb --network linz -d mongo:3.6
 
 fi

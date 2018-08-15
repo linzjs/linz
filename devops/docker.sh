@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 # Setup the infrastructure.
-for script in "infrastructure-mongo.sh" "infrastructure-redis.sh"; do
+for script in "infrastructure-network.sh" "infrastructure-mongo.sh" "infrastructure-redis.sh"; do
     source "$PWD/devops/${script}"
 done
 
 # Link the infrastructure and run the image.
-# Stop the containers even if the tests fail.8888
-docker run -it --name linz --link mongodb:mongodb --link redis:redis --rm -p 8888:8888 linz
+# Stop the containers even if the tests fail.
+docker run -it --name linz --network linz --rm -p 8888:8888 linz
 
 # Store the exit status of the tests.
 exitWith=$?

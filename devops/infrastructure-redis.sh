@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 
-if [ ! "$(docker ps -q -f name=redis)" ]; then
+if [ "$(docker ps -aq -f name=redis)" ]; then
 
-    if [ "$(docker ps -aq -f status=exited -f name=redis)" ]; then
-        docker rm redis
-    fi
+    echo "Redis container exists, starting ..."
 
-    docker run --name redis -d redis:4.0-alpine
+    docker start redis
+
+else
+
+    echo "Creating Redis container ..."
+
+    docker run --name redis --network linz -d redis:4.0-alpine
 
 fi
