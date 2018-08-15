@@ -28,6 +28,7 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
         },
         email: {
             fieldset: 'Details',
+            widget: linz.formtools.widgets.email(),
         },
         org: {
             fieldset: 'Details',
