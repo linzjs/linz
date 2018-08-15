@@ -36,48 +36,61 @@ class App extends EventEmitter {
         linz.on('initialised', () => {
 
             linz.app.get('/', middleware.import, (req, res) => res.redirect(linz.get('login path')));
-            linz.app.get('/custom-form', (req, res, next) => {
+            linz.app.get(`${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`, (req, res, next) => {
 
-                linz.api.model.generateFormString(linz.api.model.get('mtUser'), {
-                    actionUrl: 'custom-form-success',
-                    cancelUrl: 'custom-form-failed',
-                    form: {
-                        name: {
-                            fieldset: 'Original',
-                        },
-                        email: {
-                            fieldset: 'Original',
-                        },
-                        username: {
-                            fieldset: 'Original',
-                        },
-                        birthday: {
-                            label: 'Birthday',
-                            fieldset: 'Details',
-                            widget: linz.formtools.widgets.date(),
-                        },
-                        street: {
-                            label: 'Street',
-                            fieldset: 'Details',
-                        },
-                        city: {
-                            label: 'City/Suburb',
-                            fieldset: 'Details',
-                        },
-                        postcode: {
-                            label: 'Postcode/Zip',
-                            fieldset: 'Details',
-                        },
-                    },
-                    req,
-                    type: 'create',
-                })
+                const User = linz.api.model.get('mtUser');
+                const { id } = req.params;
+
+                User.findById(id)
+                    .then((record) => {
+
+                        if (!record) {
+                            return Promise.reject(new Error('User record not found'));
+                        }
+
+                        return linz.api.model.generateFormString(linz.api.model.get('mtUser'), {
+                            actionUrl: `${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`,
+                            cancelUrl: `${linz.get('admin path')}/model/mtUser/list`,
+                            form: {
+                                name: {
+                                    fieldset: 'Original',
+                                },
+                                email: {
+                                    fieldset: 'Original',
+                                },
+                                username: {
+                                    fieldset: 'Original',
+                                },
+                                birthday: {
+                                    label: 'Birthday',
+                                    fieldset: 'Details',
+                                    widget: linz.formtools.widgets.date(),
+                                },
+                                street: {
+                                    label: 'Street',
+                                    fieldset: 'Details',
+                                },
+                                city: {
+                                    label: 'City/Suburb',
+                                    fieldset: 'Details',
+                                },
+                                postcode: {
+                                    label: 'Postcode/Zip',
+                                    fieldset: 'Details',
+                                },
+                            },
+                            record,
+                            req,
+                            type: 'edit',
+                        });
+
+                    })
                     .then(body => linz.api.views.render({ body }, req, res))
                     .catch(next);
 
             });
-            linz.app.post('/custom-form-success', (req, res) => res.json({ page: req.body }));
-            linz.app.get('/custom-form-failed', (req, res) => res.sendStatus(400));
+
+            linz.app.post(`${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`, (req, res) => res.json({ page: req.body }));
 
             linz.app.use(linz.middleware.error);
 

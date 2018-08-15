@@ -56,6 +56,13 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
             bAdmin: true,
             org: { renderer: linz.formtools.cellRenderers.defaultRenderer },
         },
+        recordActions: [
+            {
+                action: 'edit-custom',
+                disabled: false,
+                label: 'Customised edit form',
+            },
+        ],
     },
     model: {
         description: 'Manage users.',
