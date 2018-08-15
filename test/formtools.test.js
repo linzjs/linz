@@ -376,6 +376,15 @@ describe('formtools', () => {
                     title: 'firstName'
                 },
                 form: {
+                    bActive: {
+                        visible: true,
+                    },
+                    username: {
+                        visible: true,
+                    },
+                    comments: {
+                        visible: true,
+                    },
                     firstName: {
                         label: 'First Name',
                         placeholder: 'Enter your first name',
