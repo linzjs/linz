@@ -38,9 +38,16 @@ afterAll(() => linz.mongoose.disconnect());
 
 test('generates a form object', async () => {
 
-    expect.assertions(6);
+    expect.assertions(9);
 
-    const form = await linz.api.model.generateForm(linz.api.model.get('user'));
+    const form = await linz.api.model.generateForm(linz.api.model.get('user'), {
+        form: {
+            name: true,
+            test: {
+                label: 'Custom test',
+            },
+        },
+    });
 
     expect(form.options).toBeDefined();
     expect(form.attributes).toBeDefined();
@@ -48,15 +55,26 @@ test('generates a form object', async () => {
     expect(form.renderTag).toBeDefined();
     expect(form.constructor.name).toBe('Form');
     expect(form.elements[0].attributes.name).toBe('name');
+    expect(form.elements[0].options.label.label).toBe('Name');
+    expect(form.elements[1].attributes.name).toBe('test');
+    expect(form.elements[1].options.label.label).toBe('Custom test');
 
 });
 
 test('generates form HTML', async () => {
 
-    expect.assertions(1);
+    expect.assertions(2);
 
-    const formString = await linz.api.model.generateFormString(linz.api.model.get('user'));
+    const formString = await linz.api.model.generateFormString(linz.api.model.get('user'), {
+        form: {
+            name: true,
+            test: {
+                label: 'Test',
+            },
+        },
+    });
 
-    expect(formString).toBe('<form role="form" action="#" method="post" data-linz-validation="true" class="form-horizontal model"><div class="form-group control-bar control-bar-top"><div class="col-sm-12"><button type="submit" class="btn btn-primary">Save</button><a href="/" class="btn btn-link">or cancel</a></div></div><input type="hidden" name="versionNo"/><div class="form-group"><label class="col-sm-2 control-label">Name</label><div class="col-sm-10"><input type="text" class="form-control" name="name" data-linz-conflict-handler="textConflictHandler" /></div></div><div class="form-group control-bar"><div class="col-sm-offset-2 col-sm-10"><button type="submit" class="btn btn-primary">Save</button><a href="/" class="btn btn-link">or cancel</a></div></div></form>');
+    expect(formString).toMatch(/name=\"name\"/);
+    expect(formString).toMatch(/name=\"test\"/);
 
 });
