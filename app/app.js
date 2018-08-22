@@ -40,6 +40,7 @@ class App extends EventEmitter {
 
                 const User = linz.api.model.get('mtUser');
                 const { id } = req.params;
+                const docSchema = require('./schemas/docSchema');
 
                 User.findById(id)
                     .then((record) => {
@@ -77,6 +78,10 @@ class App extends EventEmitter {
                                 postcode: {
                                     label: 'Postcode/Zip',
                                     fieldset: 'Details',
+                                },
+                                docs: {
+                                    fieldset: 'Details',
+                                    type: [docSchema],
                                 },
                             },
                             record,
