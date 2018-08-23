@@ -1,10 +1,13 @@
 'use strict';
 
 const linz = require('../linz');
+const emailSchema = require('../schemas/emailSchema');
+const docSchema = require('../schemas/docSchema');
 
 const mtUserSchema = new linz.mongoose.Schema({
     name:  String,
     email: String,
+    alternativeEmails: [emailSchema],
     username: String,
     password: String,
     bAdmin: {
@@ -17,8 +20,6 @@ const mtUserSchema = new linz.mongoose.Schema({
     },
 });
 
-const customRenderer = (value, record, fieldName, model, callback) => callback(null, 'test');
-
 // add the formtools plugin
 mtUserSchema.plugin(linz.formtools.plugins.document, {
     form: {
@@ -28,7 +29,9 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
         },
         email: {
             fieldset: 'Details',
-            widget: linz.formtools.widgets.email(),
+        },
+        alternativeEmails: {
+            fieldset: 'Details',
         },
         org: {
             fieldset: 'Details',
@@ -44,9 +47,13 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
             fieldset: 'Access',
             helpText: 'This controls if the user has access to admin.',
         },
+        docs: {
+            fieldset: 'Details',
+            type: [docSchema],
+        },
     },
     labels: {
-            bAdmin: 'Has admin access?',
+        bAdmin: 'Has admin access?',
     },
     list: {
         fields: {

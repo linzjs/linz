@@ -59,29 +59,26 @@ class App extends EventEmitter {
                                 email: {
                                     fieldset: 'Original',
                                 },
+                                alternativeEmails: {
+                                    fieldset: 'Original'
+                                },
                                 username: {
                                     fieldset: 'Original',
                                 },
                                 birthday: {
                                     label: 'Birthday',
                                     fieldset: 'Details',
-                                    widget: linz.formtools.widgets.date(),
+                                    type: 'date',
                                 },
                                 street: {
                                     label: 'Street',
                                     fieldset: 'Details',
                                 },
                                 city: {
-                                    label: 'City/Suburb',
+                                    label: 'Docs',
                                     fieldset: 'Details',
-                                },
-                                postcode: {
-                                    label: 'Postcode/Zip',
-                                    fieldset: 'Details',
-                                },
-                                docs: {
-                                    fieldset: 'Details',
-                                    type: [docSchema],
+                                    type: 'documentarray',
+                                    schema: docSchema,
                                 },
                             },
                             record,
