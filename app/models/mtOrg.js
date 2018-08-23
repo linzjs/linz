@@ -21,7 +21,6 @@ mtOrgSchema.plugin(linz.formtools.plugins.document, {
     },
     overview: { name: true },
     permissions: {
-        canCreate: false,
         canDelete: false
     },
 });
