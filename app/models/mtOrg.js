@@ -20,9 +20,6 @@ mtOrgSchema.plugin(linz.formtools.plugins.document, {
         title: 'name',
     },
     overview: { name: true },
-    permissions: {
-        canDelete: false
-    },
 });
 
 module.exports = linz.mongoose.model('mtOrg', mtOrgSchema);

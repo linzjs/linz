@@ -88,15 +88,6 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
             },
         },
     },
-    // Default empty object, which Linz can accept.
-    permissions: function (user, callback) {
-
-      return callback(null, {
-            canCreate: false,
-            canDelete: false
-        });
-
-    },
 });
 
 mtUserSchema.virtual('hasAdminAccess').get(function () {
