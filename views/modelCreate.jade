@@ -1,4 +1,3 @@
-include mixins/documentarray
 extends layout
 
 block header
@@ -9,14 +8,4 @@ block content
 		.pane
 			.body
 				div
-					form.form-horizontal.model(role='form',action='#{actionUrl}',method='post', data-linz-validation='true')
-						.form-group.control-bar.control-bar-top
-							.col-sm-12
-								button.btn.btn-primary(type='submit') Save
-								a.btn.btn-link(href='#{cancelUrl}') or cancel
-						!= form
-						.form-group.control-bar
-							.col-sm-offset-2.col-sm-10
-								button.btn.btn-primary(type='submit') Save
-								a.btn.btn-link(href='#{cancelUrl}') or cancel
-					mixin documentarray()
+					include partials/form

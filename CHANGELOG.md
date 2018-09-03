@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+
+- Added the ability to create a custom form based on the model schema via `linz.api.model.generateForm()` and `linz.api.model.generateFormString()`.
+- Add the ability to edit `public` and `views` files without restarting the node process.
+
 ## v1.0.0-16.1.0 (9 August 2018)
 
 - Updated the reference renderer to link to the record overview.
