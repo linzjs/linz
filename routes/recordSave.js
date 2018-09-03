@@ -1,11 +1,8 @@
 'use strict';
 
-const formist = require('formist');
 const linz = require('../');
-const model = require('../lib/formtools/model');
+const modelHelpers = require('../lib/formtools/model');
 const async = require('async');
-const utils = require('../lib/utils');
-const formUtils = require('../lib/formtools/utils');
 
 /* GET /admin/:model/:id/overview */
 const route = (req, res, next) => {
@@ -14,58 +11,33 @@ const route = (req, res, next) => {
 
         function (done) {
 
-            req.linz.model.findById(req.params.id).exec(function (err, record) {
+            const { model } = req.linz;
+            const { form } = req.linz.model;
 
-                if (err) {
-                    return next(err);
-                }
+            const data = modelHelpers.clean(req.body, req.linz.model);
 
-                // Skip to a 404 page.
-                if (!record) {
-                    return next();
-                }
+            linz.api.formtools.parseForm(model, data, form, { formType: 'edit' })
+                .then((record) => {
 
-                // clean the body
-                const data = model.clean(req.body, req.linz.model);
+                    req.linz.model.findById(req.params.id).exec((err, doc) => {
 
-                // loop over each key in the body
-                // update each field passed to us (as long as its from the schema)
-                Object.keys(req.linz.model.schema.paths).forEach(function (field) {
-
-                    if (field !== '_id' && data && data[field] !== undefined && req.linz.model.linz.formtools.form) {
-
-                        // merge edit object back into form object (overrides)
-                        utils.merge(req.linz.model.linz.formtools.form[field], req.linz.model.linz.formtools.form[field]['edit'] || {});
-
-                        if (formUtils.schemaType(req.linz.model.schema.paths[field]) === 'documentarray') {
-
-                            // turn the json into an object
-                            data[field] = JSON.parse(data[field]);
-
+                        if (err) {
+                            return next(err);
                         }
 
-                        // Support widget transform functions, if they exist.
-                        // These allow widgets to manipulate a value in a form, ready for saving to the database.
-                        if (req.linz.model.linz.formtools.form[field].widget
-                            && req.linz.model.linz.formtools.form[field].widget
-                            && req.linz.model.linz.formtools.form[field].widget.transform
-                            && typeof req.linz.model.linz.formtools.form[field].widget.transform === 'function') {
-
-                            // Pass through name, field, value and form.
-                            data[field] = req.linz.model.linz.formtools.form[field].widget.transform(field, req.linz.model.schema.paths[field], data[field], data);
-
+                        // Skip to a 404 page.
+                        if (!doc) {
+                            return next();
                         }
 
-                        // go through the transform function if one exists
-                        record[field] = (req.linz.model.linz.formtools.form[field].transform) ? req.linz.model.linz.formtools.form[field].transform(data[field], 'beforeSave', data, req.user) : data[field];
+                        doc.set(record);
 
-                    }
+                        doc.save(req, done);
 
-                });
+                    });
 
-                record.save(req, done);
-
-            });
+                })
+                .catch(done);
 
         }
 
