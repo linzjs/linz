@@ -73,12 +73,44 @@ class App extends EventEmitter {
 
         linz.on('initialised', () => {
 
+            const docSchema = require('./schemas/docSchema');
+
+            const customFormDsl = {
+                name: {
+                    fieldset: 'Original',
+                },
+                email: {
+                    fieldset: 'Original',
+                },
+                alternativeEmails: {
+                    fieldset: 'Original',
+                    type: 'documentarray',
+                },
+                username: {
+                    fieldset: 'Original',
+                },
+                birthday: {
+                    label: 'Birthday',
+                    fieldset: 'Details',
+                    type: 'date',
+                },
+                street: {
+                    label: 'Street',
+                    fieldset: 'Details',
+                },
+                docs: {
+                    label: 'Docs',
+                    fieldset: 'Details',
+                    type: 'documentarray',
+                    schema: docSchema,
+                },
+            };
+
             linz.app.get('/', middleware.import, (req, res) => res.redirect(linz.get('login path')));
             linz.app.get(`${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`, (req, res, next) => {
 
                 const User = linz.api.model.get('mtUser');
                 const { id } = req.params;
-                const docSchema = require('./schemas/docSchema');
 
                 User.findById(id)
                     .then((record) => {
@@ -88,37 +120,9 @@ class App extends EventEmitter {
                         }
 
                         return linz.api.model.generateFormString(linz.api.model.get('mtUser'), {
-                            actionUrl: `${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`,
+                            actionUrl: `${linz.get('admin path')}/model/mtUser/${id}/action/edit-custom`,
                             cancelUrl: `${linz.get('admin path')}/model/mtUser/list`,
-                            form: {
-                                name: {
-                                    fieldset: 'Original',
-                                },
-                                email: {
-                                    fieldset: 'Original',
-                                },
-                                alternativeEmails: {
-                                    fieldset: 'Original'
-                                },
-                                username: {
-                                    fieldset: 'Original',
-                                },
-                                birthday: {
-                                    label: 'Birthday',
-                                    fieldset: 'Details',
-                                    type: 'date',
-                                },
-                                street: {
-                                    label: 'Street',
-                                    fieldset: 'Details',
-                                },
-                                city: {
-                                    label: 'Docs',
-                                    fieldset: 'Details',
-                                    type: 'documentarray',
-                                    schema: docSchema,
-                                },
-                            },
+                            form: customFormDsl,
                             record,
                             req,
                             type: 'edit',
@@ -130,7 +134,13 @@ class App extends EventEmitter {
 
             });
 
-            linz.app.post(`${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`, (req, res) => res.json({ page: req.body }));
+            linz.app.post(`${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`, (req, res, next) => {
+
+                linz.api.formtools.parseForm(linz.api.model.get('mtUser'), req, customFormDsl)
+                    .then(record => res.json({ page: record }))
+                    .catch(next);
+
+            });
 
             linz.app.use(linz.middleware.error);
 
