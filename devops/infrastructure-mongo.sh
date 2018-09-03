@@ -10,6 +10,6 @@ else
 
     echo "Creating MongoDB container ..."
 
-    docker run --name mongodb --network linz -d mongo:3.6
+    docker run --name mongodb --network linz -v $PWD/devops/data/db:/data/db -d mongo:3.6 mongod --smallfiles --nojournal
 
 fi
