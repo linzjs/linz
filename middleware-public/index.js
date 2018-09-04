@@ -6,7 +6,6 @@ const exclusions = require('./exclusions');
 const logError = require('./log-error');
 const login = require('./login');
 const logout = require('./logout');
-const namespace = require('./namespace');
 const notifications = require('./notifications');
 const originalUrl = require('./original-url');
 
@@ -17,7 +16,6 @@ module.exports = {
     logError,
     login,
     logout,
-    namespace,
     notifications,
     originalUrl,
 };

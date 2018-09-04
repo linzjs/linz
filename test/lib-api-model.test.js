@@ -40,7 +40,9 @@ test('generates a form object', async () => {
 
     expect.assertions(9);
 
-    const form = await linz.api.model.generateForm(linz.api.model.get('user'), {
+    const userModel = linz.api.model.get('user');
+
+    const form = await linz.api.model.generateForm(userModel, {
         form: {
             name: true,
             test: {
