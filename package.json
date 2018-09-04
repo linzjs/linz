@@ -22,7 +22,6 @@
   "files": [
     "lib",
     "middleware",
-    "middleware-public",
     "params",
     "public",
     "routes",

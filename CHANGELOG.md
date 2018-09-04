@@ -8,6 +8,7 @@
 - Added persistent storage to the local development environment.
 - Added new formtool apis `namespaceForm`, `namespaceList`, `namespaceOverview`, `parseForm`.
 - Added new middleware apis `setLinzNamespace`, `setModelForm`, `setRecord`.
+- Moved all public middleware to the `linz.api.middleware` namespace.
 
 ## v1.0.0-16.1.0 (9 August 2018)
 
