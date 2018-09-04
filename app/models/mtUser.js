@@ -5,19 +5,20 @@ const emailSchema = require('../schemas/emailSchema');
 const docSchema = require('../schemas/docSchema');
 
 const mtUserSchema = new linz.mongoose.Schema({
-    name:  String,
-    email: String,
     alternativeEmails: [emailSchema],
-    username: String,
-    password: String,
+    age: Number,
     bAdmin: {
+        default: false,
         type: Boolean,
-        default: false
     },
+    email: String,
+    name:  String,
     org: {
         ref: 'mtOrg',
         type: linz.mongoose.Schema.Types.ObjectId,
     },
+    password: String,
+    username: String,
 });
 
 // add the formtools plugin
@@ -36,6 +37,9 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
         org: {
             fieldset: 'Details',
         },
+        age: {
+            fieldset: 'Details',
+        },
         username: {
             fieldset: 'Access',
         },
@@ -46,10 +50,6 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
         bAdmin: {
             fieldset: 'Access',
             helpText: 'This controls if the user has access to admin.',
-        },
-        docs: {
-            fieldset: 'Details',
-            type: [docSchema],
         },
     },
     labels: {

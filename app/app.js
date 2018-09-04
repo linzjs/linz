@@ -89,6 +89,10 @@ class App extends EventEmitter {
                 username: {
                     fieldset: 'Original',
                 },
+                age: {
+                    fieldset: 'Original',
+                    type: 'number',
+                },
                 birthday: {
                     label: 'Birthday',
                     fieldset: 'Details',
