@@ -85,6 +85,15 @@ class App extends EventEmitter {
                 alternativeEmails: {
                     fieldset: 'Original',
                     type: 'documentarray',
+                    widget: linz.formtools.widgets.documents({
+                        setLabel: function setLabel(doc) {
+
+                            doc.label = doc.email + ' (' + doc.type + ')';
+
+                            return doc;
+
+                        },
+                    }),
                 },
                 username: {
                     fieldset: 'Original',
@@ -107,6 +116,15 @@ class App extends EventEmitter {
                     fieldset: 'Details',
                     type: 'documentarray',
                     schema: docSchema,
+                    widget: linz.formtools.widgets.documents({
+                        setLabel: function setLabel(doc) {
+
+                            doc.label = doc.name;
+
+                            return doc;
+
+                        },
+                    }),
                 },
             };
 
