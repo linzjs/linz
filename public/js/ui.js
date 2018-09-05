@@ -190,13 +190,18 @@ if (!linz) {
             timezoneInput.setAttribute('type', 'hidden');
             timezoneInput.setAttribute('name', 'linzTimezoneOffset');
             timezoneInput.setAttribute('value', moment().format('Z'));
-            
+
             $('[data-ui-datepicker]').parents('form').prepend(timezoneInput);
 
             $('[data-ui-datepicker]').each(function () {
 
+                // Stop processing if the date picker has already been setup.
+                if ($(this).data('DateTimePicker')) {
+                    return;
+                }
+
                 // Support format and useCurrent customissations via the widget.
-                var format = $(this).attr('data-linz-date-format') || 'YYYY-MM-DD'; 
+                var format = $(this).attr('data-linz-date-format') || 'YYYY-MM-DD';
                 var useCurrent = $(this).attr('data-linz-date-use-current') === 'true';
                 var dateValue = $(this).attr('data-linz-date-value');
 

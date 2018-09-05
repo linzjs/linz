@@ -2,7 +2,6 @@
 
 const linz = require('../linz');
 const emailSchema = require('../schemas/emailSchema');
-const docSchema = require('../schemas/docSchema');
 
 const mtUserSchema = new linz.mongoose.Schema({
     alternativeEmails: [emailSchema],

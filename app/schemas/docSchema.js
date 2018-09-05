@@ -2,7 +2,10 @@
 
 const linz = require('../');
 
-const docSchema = new linz.mongoose.Schema({ name: String });
+const docSchema = new linz.mongoose.Schema({
+    name: String,
+    time: Date,
+});
 
 docSchema.plugin(linz.formtools.plugins.embeddedDocument, {
     form: {
@@ -10,6 +13,10 @@ docSchema.plugin(linz.formtools.plugins.embeddedDocument, {
             fieldset: 'Details',
             required: true,
         },
+        time: {
+            fieldset: 'Details',
+            required: true,
+        }
     },
 });
 

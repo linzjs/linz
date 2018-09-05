@@ -297,6 +297,13 @@
 
             if (!isModalWired) {
 
+                $('#documentsModal').on('show.bs.modal', function (e) {
+
+                    // Load the datepicker code incase the documentarray contains date inputs.
+                    linz.loadDatepicker();
+
+                });
+
                 $('#documentsModal').on('shown.bs.modal', function (e) {
 
                     // Enable form validation.
@@ -314,6 +321,7 @@
                     $('#documentsModal .modal-body form').bootstrapValidator();
 
                     $('#documentsModal').animate({ scrollTop: 0 }, 'fast');
+
                 });
 
                 var template = $('template.document-array-list').clone().html();
