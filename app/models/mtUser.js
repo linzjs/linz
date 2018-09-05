@@ -32,6 +32,15 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
         },
         alternativeEmails: {
             fieldset: 'Details',
+            widget: linz.formtools.widgets.documents({
+                setLabel: function setLabel (doc) {
+
+                    doc.label = doc.email + ' (' + doc.type + ')';
+
+                    return doc;
+
+                },
+            }),
         },
         org: {
             fieldset: 'Details',
