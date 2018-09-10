@@ -10,6 +10,7 @@
 - Added new middleware apis `setLinzNamespace`, `setModelForm`, `setRecord`.
 - Moved all public middleware to the `linz.api.middleware` namespace.
 - Fixed the datepicker in documentarray modals.
+- Added the ability to provide custom scripts and styles to linz.api.views.render using `data.scripts` and `data.styles`.
 
 ## v1.0.0-16.1.0 (9 August 2018)
 
