@@ -19,7 +19,7 @@ module.exports = function (req, res, next) {
 				yourChange: {},
 				theirChange: {}
 			},
-			form = model.linz.formtools.form;
+			form = model.form;
 
 		model.schema.eachPath(function (fieldName, schemaType) {
 
@@ -145,8 +145,8 @@ module.exports = function (req, res, next) {
 	});
 
 	// exclude fields that are not editable
-	Object.keys(Model.linz.formtools.form).forEach(function (fieldName) {
-		if (Model.linz.formtools.form[fieldName].edit && Model.linz.formtools.form[fieldName].edit.disabled) {
+	Object.keys(Model.form).forEach(function (fieldName) {
+		if (Model.form[fieldName].edit && Model.form[fieldName].edit.disabled) {
 			exclusionFields[fieldName] = 0;
 		}
 	});
@@ -226,12 +226,12 @@ module.exports = function (req, res, next) {
 			var fieldName = diff.path[0];
 
 			// change fieldname to the related field defined in the relationship
-			if (Model.linz.formtools.form[fieldName].relationship) {
-				fieldName = Model.linz.formtools.form[fieldName].relationship;
+			if (Model.form[fieldName].relationship) {
+				fieldName = Model.form[fieldName].relationship;
 			}
 
 			if (!diffKeys[fieldName]) {
-				diffKeys[fieldName] = Model.linz.formtools.form[fieldName].type;
+				diffKeys[fieldName] = Model.form[fieldName].type;
 			}
 
 		});
