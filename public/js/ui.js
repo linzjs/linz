@@ -204,6 +204,7 @@ if (!linz) {
                 var format = $(this).attr('data-linz-date-format') || 'YYYY-MM-DD';
                 var useCurrent = $(this).attr('data-linz-date-use-current') === 'true';
                 var dateValue = $(this).attr('data-linz-date-value');
+                var sideBySide = $(this).attr('data-linz-date-side-by-side') === 'true';
 
                 // Update the UTC string to the format required.
                 $(this).val(moment(dateValue).format(format));
@@ -214,6 +215,7 @@ if (!linz) {
                 // Setup the datetimepicker plugin.
                 $(this).datetimepicker({
                     format: format,
+                    sideBySide: sideBySide,
                     useCurrent: useCurrent,
                 });
 

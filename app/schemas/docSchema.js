@@ -16,6 +16,10 @@ docSchema.plugin(linz.formtools.plugins.embeddedDocument, {
         time: {
             fieldset: 'Details',
             required: true,
+            widget: linz.formtools.widgets.date({
+                'data-linz-date-format': 'DD.MM.YY HH:mm a',
+                'data-linz-date-side-by-side': 'true',
+            }),
         }
     },
 });
