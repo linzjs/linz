@@ -1,6 +1,6 @@
 'use strict';
 
-const linz = require('../');
+const linz = require('linz');
 
 beforeAll((done) => {
 

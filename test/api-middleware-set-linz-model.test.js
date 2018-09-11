@@ -1,6 +1,6 @@
 'use strict';
 
-jest.mock('/app/linz.js', () => ({
+jest.mock('linz', () => ({
     api: {
         model: {
             get: () => ({ linz: { formtools: {} } }),
@@ -10,7 +10,7 @@ jest.mock('/app/linz.js', () => ({
     },
 }));
 
-const setLinzModel = require('../lib/api/middleware/set-linz-model');
+const setLinzModel = require('linz/lib/api/middleware/set-linz-model');
 
 test('it sets the linz model', () => {
 

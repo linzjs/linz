@@ -3,9 +3,9 @@
 const {
     parseField,
     parseForm,
-} = require('../lib/api/formtools/parse-form');
+} = require('linz/lib/api/formtools/parse-form');
 
-const linz = require('../linz');
+const linz = require('linz');
 
 let UserModelSchema;
 let UserModel;

@@ -1,6 +1,6 @@
 'use strict';
 
-const linz = require('../');
+const linz = require('linz');
 
 test('sets a default', () => {
 
@@ -28,7 +28,7 @@ test('sets a default', () => {
     expect(typeof linz.get('permissions')).toBe('function');
     expect(linz.get('login middleware')).toHaveProperty('get');
     expect(linz.get('login middleware')).toHaveProperty('post');
-    expect(linz.get('logout middleware')).toEqual({ get: [require('../lib/api/middleware/logout')] });
+    expect(linz.get('logout middleware')).toEqual({ get: [require('linz/lib/api/middleware/logout')] });
     expect(linz.get('disable navigation cache')).toEqual(false);
     expect(typeof linz.get('navigationTransform')).toBe('function');
     expect(typeof linz.get('customAttributes')).toBe('function');

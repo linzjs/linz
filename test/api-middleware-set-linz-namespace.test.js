@@ -1,6 +1,6 @@
 'use strict';
 
-const setLinzNamespace = require('../lib/api/middleware/set-linz-namespace');
+const setLinzNamespace = require('linz/lib/api/middleware/set-linz-namespace');
 
 test('it sets the linz namespace', () => {
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const setModelForm = require('../lib/api/middleware/set-model-form');
+const setModelForm = require('linz/lib/api/middleware/set-model-form');
 
 test('it sets the model form', () => {
 

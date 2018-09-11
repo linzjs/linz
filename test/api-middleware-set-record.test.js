@@ -1,6 +1,6 @@
 'use strict';
 
-const setRecord = require('../lib/api/middleware/set-record');
+const setRecord = require('linz/lib/api/middleware/set-record');
 
 test('it sets the record', () => {
 

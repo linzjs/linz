@@ -1,6 +1,6 @@
 'use strict';
 
-const linz = require('../linz');
+const linz = require('linz');
 const async = require('async');
 const moment = require('moment');
 
