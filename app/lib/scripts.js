@@ -1,5 +1,7 @@
 'use strict';
 
+const linz = require('../linz');
+
 /**
  * Set the scripts that certain pages load.
  * @param {Object} req HTTP request object.

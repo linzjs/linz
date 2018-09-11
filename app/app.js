@@ -38,61 +38,6 @@ class App extends EventEmitter {
 
         linz.on('initialised', () => {
 
-            const docSchema = require('./schemas/docSchema');
-
-            const customFormDsl = {
-                name: {
-                    fieldset: 'Original',
-                },
-                email: {
-                    fieldset: 'Original',
-                },
-                alternativeEmails: {
-                    fieldset: 'Original',
-                    type: 'documentarray',
-                    widget: linz.formtools.widgets.documents({
-                        setLabel: function setLabel(doc) {
-
-                            doc.label = doc.email + ' (' + doc.type + ')';
-
-                            return doc;
-
-                        },
-                    }),
-                },
-                username: {
-                    fieldset: 'Original',
-                },
-                age: {
-                    fieldset: 'Original',
-                    type: 'number',
-                },
-                birthday: {
-                    label: 'Birthday',
-                    fieldset: 'Details',
-                    type: 'date',
-                },
-                street: {
-                    label: 'Street',
-                    fieldset: 'Details',
-                },
-                docs: {
-                    label: 'Docs',
-                    fieldset: 'Details',
-                    type: 'documentarray',
-                    schema: docSchema,
-                    widget: linz.formtools.widgets.documents({
-                        setLabel: function setLabel(doc) {
-
-                            doc.label = doc.name;
-
-                            return doc;
-
-                        },
-                    }),
-                },
-            };
-
             linz.app.get('/', middleware.import, (req, res) => res.redirect(linz.get('login path')));
 
             // Custom form example.

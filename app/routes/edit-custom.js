@@ -2,6 +2,74 @@
 
 const linz = require('../linz');
 
+let docSchema;
+
+/**
+ * Get the custom form dsl. (Bypasses the linz circular dependency bug)
+ * @returns {Object} Returns the dorm dsl.
+ */
+const getCustomFormDsl = () => {
+
+    // Only load it once.
+    if (!docSchema) {
+        docSchema = require('../schemas/docSchema');
+    }
+
+    return {
+        name: {
+            fieldset: 'Original',
+        },
+        email: {
+            fieldset: 'Original',
+        },
+        alternativeEmails: {
+            fieldset: 'Original',
+            type: 'documentarray',
+            widget: linz.formtools.widgets.documents({
+                setLabel: function setLabel(doc) {
+
+                    doc.label = doc.email + ' (' + doc.type + ')';
+
+                    return doc;
+
+                },
+            }),
+        },
+        username: {
+            fieldset: 'Original',
+        },
+        age: {
+            fieldset: 'Original',
+            type: 'number',
+        },
+        birthday: {
+            label: 'Birthday',
+            fieldset: 'Details',
+            type: 'date',
+        },
+        street: {
+            label: 'Street',
+            fieldset: 'Details',
+        },
+        docs: {
+            label: 'Docs',
+            fieldset: 'Details',
+            type: 'documentarray',
+            schema: docSchema,
+            widget: linz.formtools.widgets.documents({
+                setLabel: function setLabel(doc) {
+
+                    doc.label = doc.name;
+
+                    return doc;
+
+                },
+            }),
+        },
+    };
+
+};
+
 /**
  * Render the custom form.
  * @param {Object} req HTTP request object.
@@ -24,7 +92,7 @@ const renderForm = (req, res, next) => {
             return linz.api.model.generateFormString(linz.api.model.get('mtUser'), {
                 actionUrl: `${linz.get('admin path')}/model/mtUser/${id}/action/edit-custom`,
                 cancelUrl: `${linz.get('admin path')}/model/mtUser/list`,
-                form: customFormDsl,
+                form: getCustomFormDsl(),
                 record,
                 req,
                 type: 'edit',
@@ -45,7 +113,7 @@ const renderForm = (req, res, next) => {
  */
 const parseForm = (req, res, next) => {
 
-    linz.api.formtools.parseForm(linz.api.model.get('mtUser'), req, customFormDsl)
+    linz.api.formtools.parseForm(linz.api.model.get('mtUser'), req, getCustomFormDsl())
         .then(record => res.json({ page: record }))
         .catch(next);
 
