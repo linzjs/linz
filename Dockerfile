@@ -24,6 +24,7 @@ COPY /linz.js /app/node_modules/linz/linz.js
 COPY /package.json /app/node_modules/linz/package.json
 
 COPY /app /app
+COPY /devops /app/devops
 COPY /test /app/test
 
 CMD dockerize -wait tcp://mongodb:27017 -wait tcp://redis:6379 -timeout 20s yarn start
