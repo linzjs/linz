@@ -18,7 +18,7 @@ model
 model.generateForm(model, options)
 ----------------------------------
 
-Generate a form in the conext of a Linz model. This is useful if you want to customise the form and is used by Linz internally.
+Generate a form in the context of a Linz model. This is useful if you want to customise the form and is used by Linz internally.
 
 model: object
 +++++++++++++++
@@ -40,7 +40,7 @@ Property   Type   Description
 model.generateFormString(model, options)
 ----------------------------------------
 
-Generate form HTML in the conext of a Linz model.
+Generate form HTML in the context of a Linz model.
 
 model: object
 +++++++++++++++
