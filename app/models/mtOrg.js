@@ -1,6 +1,6 @@
 'use strict';
 
-const linz = require('../linz');
+const linz = require('linz');
 
 const mtOrgSchema = new linz.mongoose.Schema({
     name:  String,

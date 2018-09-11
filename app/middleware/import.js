@@ -1,4 +1,4 @@
-var linz = require('../linz');
+var linz = require('linz');
 
 module.exports = function (req, res, next) {
 

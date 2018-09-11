@@ -11,6 +11,7 @@
     "docker": "./devops/docker.sh",
     "jest": "jest --detectOpenHandles --forceExit",
     "report-coverage": "./devops/report-coverage.sh",
+    "start": "node server.js",
     "test": "npm-run-all --sequential build test-start clean",
     "test-app": "npm-run-all -s jest report-coverage",
     "test-start": "./devops/test.sh"

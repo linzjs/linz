@@ -1,6 +1,6 @@
 'use strict';
 
-const linz = require('../linz');
+const linz = require('linz');
 
 let docSchema;
 
@@ -125,7 +125,7 @@ const renderForm = (req, res, next) => {
 const parseForm = (req, res, next) => {
 
     linz.api.formtools.parseForm(linz.api.model.get('mtUser'), req, getCustomFormDsl())
-        .then(data => res.render('partials/edit-custom-form', {
+        .then(data => res.render('partials/edit-custom-result', {
             backLink: req.get('Referrer'),
             html: JSON.stringify(data),
             title: 'Custom edit form result',

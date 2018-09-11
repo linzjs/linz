@@ -1,6 +1,6 @@
 'use strict';
 
-const linz = require('../linz');
+const linz = require('linz');
 const emailSchema = require('../schemas/emailSchema');
 
 const mtUserSchema = new linz.mongoose.Schema({

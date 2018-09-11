@@ -13,8 +13,18 @@ WORKDIR /app
 # Remove the flags once the packages have been updated and the errors no longer occur.
 RUN yarn
 
-COPY / /app
-# Copy back the example app directory to /app
+# Add linz to the node_modules so we can use it via require('linz')
+COPY /lib /app/node_modules/linz/lib
+COPY /middleware /app/node_modules/linz/middleware
+COPY /params /app/node_modules/linz/params
+COPY /public /app/node_modules/linz/public
+COPY /routes /app/node_modules/linz/routes
+COPY /views /app/node_modules/linz/views
+COPY /linz.js /app/node_modules/linz/linz.js
+COPY /package.json /app/node_modules/linz/package.json
+
 COPY /app /app
+
+RUN ls -al /app
 
 CMD dockerize -wait tcp://mongodb:27017 -wait tcp://redis:6379 -timeout 20s yarn start
