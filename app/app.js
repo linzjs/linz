@@ -8,6 +8,8 @@ const middleware = require('./lib/loader')('./middleware');
 const session = require('./lib/session');
 const scripts = require('./lib/scripts');
 const editCustomRoute = require('./routes/edit-custom');
+const handlebars = require('express-handlebars');
+const path = require('path');
 
 const port = 8888;
 
@@ -37,6 +39,13 @@ class App extends EventEmitter {
         });
 
         linz.on('initialised', () => {
+
+            linz.app.set('views', path.join(__dirname, 'app/views/'));
+            linz.app.engine('handlebars', handlebars.create({
+                layoutsDir: path.join(__dirname, 'app/views/'),
+                partialsDir: path.join(__dirname, 'app/views/partials/'),
+            }).engine);
+            linz.app.set('view engine', 'handlebars');
 
             linz.app.get('/', middleware.import, (req, res) => res.redirect(linz.get('login path')));
 

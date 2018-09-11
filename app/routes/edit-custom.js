@@ -99,7 +99,18 @@ const renderForm = (req, res, next) => {
             });
 
         })
-        .then(body => linz.api.views.render({ body }, req, res))
+        .then(html => res.render('partials/edit-custom-form', {
+            html,
+            title: 'Custom edit form',
+        }, (err, page) => {
+
+            if (err) {
+                return Promise.reject(err);
+            }
+
+            return linz.api.views.render({ page }, req, res);
+
+        }))
         .catch(next);
 
 };
@@ -114,7 +125,19 @@ const renderForm = (req, res, next) => {
 const parseForm = (req, res, next) => {
 
     linz.api.formtools.parseForm(linz.api.model.get('mtUser'), req, getCustomFormDsl())
-        .then(record => res.json({ page: record }))
+        .then(data => res.render('partials/edit-custom-form', {
+            backLink: req.get('Referrer'),
+            html: JSON.stringify(data),
+            title: 'Custom edit form result',
+        }, (err, page) => {
+
+            if (err) {
+                return Promise.reject(err);
+            }
+
+            return linz.api.views.render({ page }, req, res);
+
+        }))
         .catch(next);
 
 };

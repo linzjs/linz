@@ -63,6 +63,7 @@
   },
   "devDependencies": {
     "connect-redis": "3.3.3",
+    "express-handlebars": "3.0.0",
     "ioredis": "3.2.2",
     "jest": "23.4.2",
     "npm-run-all": "4.1.3",
