@@ -195,33 +195,45 @@ if (!linz) {
 
             $('[data-ui-datepicker]').each(function () {
 
+                var field = $(this);
+
                 // Stop processing if the date picker has already been setup.
-                if ($(this).data('DateTimePicker')) {
+                if (field.data('DateTimePicker')) {
                     return;
                 }
 
                 // Support format and useCurrent customissations via the widget.
-                var format = $(this).attr('data-linz-date-format') || 'YYYY-MM-DD';
-                var useCurrent = $(this).attr('data-linz-date-use-current') === 'true';
-                var dateValue = $(this).attr('data-linz-date-value');
-                var sideBySide = $(this).attr('data-linz-date-side-by-side') === 'true';
+                var format = field.attr('data-linz-date-format') || 'YYYY-MM-DD';
+                var useCurrent = field.attr('data-linz-date-use-current') === 'true';
+                var dateValue = field.attr('data-linz-date-value');
+                var sideBySide = field.attr('data-linz-date-side-by-side') === 'true';
 
                 // Update the UTC string to the format required.
-                $(this).val(moment(dateValue).format(format));
-
-                // Remove all event listeners.
-                $(this).unbind();
+                field.val(moment(dateValue).format(format));
 
                 // Setup the datetimepicker plugin.
-                $(this).datetimepicker({
+                field.datetimepicker({
                     format: format,
                     sideBySide: sideBySide,
                     useCurrent: useCurrent,
                 });
 
+                // Trigger the change event on load for modals.
+                field.change();
+
+                // Trigger the change event for the field whenever the datepicker is shown or changed.
+                field.on({
+                    'dp.change': function() {
+                        field.change();
+                    },
+                    'dp.show': function () {
+                        field.change();
+                    },
+                });
+
                 // Prevent manually editing the date field.
-                $(this).bind('paste', eventPreventDefault);
-                $(this).on('keydown', eventPreventDefault);
+                field.bind('paste', eventPreventDefault);
+                field.on('keydown', eventPreventDefault);
 
             });
 

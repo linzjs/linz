@@ -132,8 +132,32 @@
 
     DocumentArray.prototype.editDocument = function (editingFor) {
 
+        var form = $('#documentsModal .modal-body form').html(this.retrieveForm(editingFor));
+        var datepickers = form.find('[data-linz-date-format]');
+
+        var transforms = [];
+
+        // Loop through each datetimepicker field and create a new transform so we get a proper date string.
+        datepickers.each(function () {
+
+            var field = $(this);
+            var name = field.attr('name');
+            var format = field.data('linz-date-format');
+
+            var transform = {};
+
+            transform.name = new RegExp(name);
+
+            transform.getset = function (type, value) {
+                return moment(value, format);
+            };
+
+            transforms.push(transform);
+
+        });
+
         // apply the form to the modal
-        $('#documentsModal .modal-body form').html(this.retrieveForm(editingFor)).binddata(this.editingObject);
+        form.binddata(this.editingObject, { transforms: transforms });
 
         // apply the label to the modal
         $('#documentsModal .modal-title').html(this.retrieveLabel(editingFor));
