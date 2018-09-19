@@ -326,7 +326,7 @@
                     // Load the datepicker code incase the documentarray contains date inputs.
                     linz.loadDatepicker();
 
-                    var values = JSON.parse($(this).siblings('form').find('input[name="docs"]').val());
+                    var values = JSON.parse($(this).siblings('form').find('input[name="' + data.editingFor + '"]').val());
 
                     // Set the value for each datepicker
                     if (data.editingIndex && values && values.length) {
