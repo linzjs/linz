@@ -321,10 +321,29 @@
 
             if (!isModalWired) {
 
-                $('#documentsModal').on('show.bs.modal', function (e) {
+                $('#documentsModal').on('show.bs.modal', function () {
 
                     // Load the datepicker code incase the documentarray contains date inputs.
                     linz.loadDatepicker();
+
+                    var values = JSON.parse($(this).siblings('form').find('input[name="docs"]').val());
+
+                    // Set the value for each datepicker
+                    if (data.editingIndex && values && values.length) {
+
+                        var datepickers = $(this).find('[data-linz-date-format]');
+
+                        datepickers.each(function () {
+
+                            var field = $(this);
+                            var name = field.attr('name');
+                            var format = field.data('linz-date-format');
+
+                            field.val(moment(values[data.editingIndex][name]).format(format));
+
+                        });
+
+                    }
 
                 });
 
