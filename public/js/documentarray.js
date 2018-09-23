@@ -321,7 +321,9 @@
 
             if (!isModalWired) {
 
-                $('#documentsModal').on('show.bs.modal', function () {
+                var documentsModal = $('#documentsModal');
+
+                documentsModal.on('show.bs.modal', function () {
 
                     // Load the datepicker code incase the documentarray contains date inputs.
                     linz.loadDatepicker();
@@ -329,16 +331,13 @@
                     // Set the value for each datepicker
                     if (data.editingIndex && data.editingFor) {
 
-                        var values = JSON.parse($(this).siblings('form').find('input[name="' + data.editingFor + '"]').val());
-                        var datepickers = $(this).find('[data-linz-date-format]');
+                        $('[data-ui-datepicker]').each(function () {
 
-                        datepickers.each(function () {
+                            var datepicker = $(this);
+                            var values = JSON.parse(documentsModal.siblings('form').find('input[name="' + data.editingFor + '"]').val());
+                            var name = datepicker.attr('name');
 
-                            var field = $(this);
-                            var name = field.attr('name');
-                            var format = field.data('linz-date-format');
-
-                            field.val(moment(values[data.editingIndex][name]).format(format));
+                            datepicker.data('DateTimePicker').date(moment(values[data.editingIndex][name]));
 
                         });
 
@@ -346,7 +345,7 @@
 
                 });
 
-                $('#documentsModal').on('shown.bs.modal', function (e) {
+                documentsModal.on('shown.bs.modal', function (e) {
 
                     // Enable form validation.
                     var validator = $('#documentsModal .modal-body form').data('bootstrapValidator');
@@ -362,7 +361,7 @@
                     // Freshly start the validator every time the modal is shown.
                     $('#documentsModal .modal-body form').bootstrapValidator();
 
-                    $('#documentsModal').animate({ scrollTop: 0 }, 'fast');
+                    documentsModal.animate({ scrollTop: 0 }, 'fast');
 
                 });
 

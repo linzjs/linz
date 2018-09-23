@@ -1,6 +1,7 @@
 'use strict';
 
 const linz = require('linz');
+const moment = require('moment');
 
 let docSchema;
 
@@ -59,7 +60,7 @@ const getCustomFormDsl = () => {
             widget: linz.formtools.widgets.documents({
                 setLabel: function setLabel(doc) {
 
-                    doc.label = doc.name;
+                    doc.label = doc.name + ' ' + moment(doc.time).format('hh:mm a');
 
                     return doc;
 
