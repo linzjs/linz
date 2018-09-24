@@ -208,15 +208,16 @@ if (!linz) {
                 var dateValue = field.attr('data-linz-date-value');
                 var sideBySide = field.attr('data-linz-date-side-by-side') === 'true';
 
-                // Update the UTC string to the format required.
-                field.val(moment(dateValue).format(format));
-
                 // Setup the datetimepicker plugin.
                 field.datetimepicker({
                     format: format,
                     sideBySide: sideBySide,
                     useCurrent: useCurrent,
                 });
+
+                if (dateValue) {
+                    field.data('DateTimePicker').date(moment(dateValue));
+                }
 
                 // Trigger the change event on load for modals.
                 field.change();

@@ -5,11 +5,11 @@ const emailSchema = require('../schemas/emailSchema');
 
 const mtUserSchema = new linz.mongoose.Schema({
     alternativeEmails: [emailSchema],
-    age: Number,
     bAdmin: {
         default: false,
         type: Boolean,
     },
+    birthday: Date,
     email: String,
     name:  String,
     org: {
@@ -45,8 +45,9 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
         org: {
             fieldset: 'Details',
         },
-        age: {
+        birthday: {
             fieldset: 'Details',
+            widget: linz.formtools.widgets.date({ 'data-linz-date-format': 'DD/MM/YYYY' }),
         },
         username: {
             fieldset: 'Access',
