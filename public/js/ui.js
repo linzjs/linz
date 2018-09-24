@@ -215,9 +215,7 @@ if (!linz) {
                     useCurrent: useCurrent,
                 });
 
-                if (dateValue) {
-                    field.data('DateTimePicker').date(moment(dateValue));
-                }
+                field.data('DateTimePicker').date(moment(dateValue));
 
                 // Trigger the change event on load for modals.
                 field.change();
