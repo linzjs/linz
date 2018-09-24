@@ -98,13 +98,54 @@ afterAll((done) => linz.mongoose.connection.close(done));
 
 test('it parses a field to the correct value', () => {
 
-    expect(parseField('123', 'number')).toBe(123);
-    expect(parseField('2018-09-04', 'date')).toEqual(new Date('2018-09-04T00:00:00.000Z'));
-    expect(parseField('false', 'boolean')).toBe(false);
-    expect(parseField('trueval', 'boolean')).toBe(true);
-    expect(parseField('val', 'array')).toEqual(['val']);
-    expect(parseField('[{"test":"test"}]', 'documentarray')).toEqual([{ test: 'test' }]);
-    expect(parseField('[{"test":"test"}]', 'unknown')).toBe('[{"test":"test"}]');
+    expect(parseField('test', {
+        test: '123',
+    }, {
+        fieldType: 'number',
+        form: { test: {} },
+    })).toBe(123);
+
+    expect(parseField('test', {
+        test: '2018-09-04',
+    }, {
+        fieldType: 'date',
+        form: { test: {} },
+    })).toEqual(new Date('2018-09-04T00:00:00.000Z'));
+
+    expect(parseField('test', {
+        test: 'false',
+    }, {
+        fieldType: 'boolean',
+        form: { test: {} },
+    })).toBe(false);
+
+    expect(parseField('test', {
+        test: 'trueval',
+    }, {
+        fieldType: 'boolean',
+        form: { test: {} },
+    })).toBe(true);
+
+    expect(parseField('test', {
+        test: 'val',
+    }, {
+        fieldType: 'array',
+        form: { test: {} },
+    })).toEqual(['val']);
+
+    expect(parseField('test', {
+        test: '[{"test":"test"}]',
+    }, {
+        fieldType: 'documentarray',
+        form: { test: {} },
+    })).toEqual([{ test: 'test' }]);
+
+    expect(parseField('test', {
+        test: '[{"test":"test"}]',
+    }, {
+        fieldType: 'unknown',
+        form: { test: {} },
+    })).toBe('[{"test":"test"}]');
 
 });
 
