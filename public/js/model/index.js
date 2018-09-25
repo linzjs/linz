@@ -98,6 +98,8 @@ linz.addLoadEvent(function () {
 
         assignRemoveButton();
         linz.loadDatepicker();
+        // Setup the defaults for the index view only (not the documentarrays)
+        linz.loadDatepickerDefaults();
 
         return false;
 

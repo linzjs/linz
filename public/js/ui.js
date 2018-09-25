@@ -228,19 +228,6 @@ if (!linz) {
                     useCurrent: useCurrent,
                 });
 
-                // Set a default date using the provided timezones.
-                var setDefaultDate = function setDefaultDate () {
-
-                    if (field.data('utc-offset')) {
-                        return field.data('DateTimePicker').date(moment(dateValue).subtract(getOffset(moment().format('Z')) - getOffset(field.data('utc-offset')), 'minutes'));
-                    }
-
-                    field.data('DateTimePicker').date(moment(dateValue));
-
-                };
-
-                setDefaultDate();
-
                 // Trigger the change event on load for modals.
                 field.change();
 
@@ -257,6 +244,40 @@ if (!linz) {
                 // Prevent manually editing the date field.
                 field.bind('paste', eventPreventDefault);
                 field.on('keydown', eventPreventDefault);
+
+            });
+
+        }
+
+    }
+
+    function loadDatepickerDefaults() {
+
+        if ($('[data-ui-datepicker]').length) {
+
+            // Get the offsets as an integer
+            var getOffset = (offset) => {
+
+                var symbol = offset.charAt(0);
+                var time = offset.substring(1).split(':');
+                var hours = Number.parseInt(time[0], 10) * 60;
+                var minutes = Number.parseInt(time[1], 10);
+                var total = Number.parseInt(symbol + (hours + minutes));
+
+                return total;
+
+            };
+
+            $('[data-ui-datepicker]').each(function () {
+
+                var field = $(this);
+                var dateValue = field.attr('data-linz-date-value');
+
+                if (field.data('utc-offset')) {
+                    return field.data('DateTimePicker').date(moment(dateValue).subtract(getOffset(moment().format('Z')) - getOffset(field.data('utc-offset')), 'minutes'));
+                }
+
+                field.data('DateTimePicker').date(moment(dateValue));
 
             });
 
@@ -314,6 +335,7 @@ if (!linz) {
 
     linz.setPath = setPath;
     linz.loadDatepicker = loadDatepicker;
+    linz.loadDatepickerDefaults = loadDatepickerDefaults;
     linz.isTemplateSupported = isTemplateSupported;
     linz.addDeleteConfirmation = addDeleteConfirmation;
     linz.addDisabledBtnAlert = addDisabledBtnAlert;

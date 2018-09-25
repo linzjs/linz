@@ -133,23 +133,49 @@
     DocumentArray.prototype.editDocument = function (editingFor) {
 
         var form = $('#documentsModal .modal-body form').html(this.retrieveForm(editingFor));
-        var datepickers = form.find('[data-linz-date-format]');
 
         var transforms = [];
 
         // Loop through each datetimepicker field and create a new transform so we get a proper date string.
-        datepickers.each(function () {
+        $('#documentsModal .modal-body form [data-linz-date-format]').each(function () {
 
             var field = $(this);
             var name = field.attr('name');
             var format = field.data('linz-date-format');
+            var offset = moment().format('Z');
+
+            if (field.data('utc-offset')) {
+                offset = field.data('utc-offset');
+            }
+
+            // Get the offsets as an integer
+            var getOffset = (offset) => {
+
+                var symbol = offset.charAt(0);
+                var time = offset.substring(1).split(':');
+                var hours = Number.parseInt(time[0], 10) * 60;
+                var minutes = Number.parseInt(time[1], 10);
+                var total = Number.parseInt(symbol + (hours + minutes));
+
+                return total;
+
+            };
 
             var transform = {};
 
             transform.name = new RegExp(name);
 
             transform.getset = function (type, value) {
-                return moment(value, format);
+
+                if ('get' === type && value) {
+
+                    return moment.parseZone(moment(value, format)
+                        .utcOffset(offset, true)
+                        .format())
+                        .toISOString();
+
+                }
+
             };
 
             transforms.push(transform);
@@ -303,6 +329,19 @@
 
     $.fn.documentarray = function(option, parameter, extraOptions) {
 
+        // Get the offsets as an integer
+        var getOffset = (offset) => {
+
+            var symbol = offset.charAt(0);
+            var time = offset.substring(1).split(':');
+            var hours = Number.parseInt(time[0], 10) * 60;
+            var minutes = Number.parseInt(time[1], 10);
+            var total = Number.parseInt(symbol + (hours + minutes));
+
+            return total;
+
+        };
+
         return this.each(function(index, el) {
 
             var data = $(this).data('documentarray'),
@@ -328,20 +367,28 @@
                     // Load the datepicker code incase the documentarray contains date inputs.
                     linz.loadDatepicker();
 
-                    // Set the value for each datepicker
-                    if (data.editingIndex && data.editingFor) {
+                    $('[data-ui-datepicker]').each(function () {
 
-                        $('[data-ui-datepicker]').each(function () {
+                        var datepicker = $(this);
 
-                            var datepicker = $(this);
-                            var values = JSON.parse(documentsModal.siblings('form').find('input[name="' + data.editingFor + '"]').val());
-                            var name = datepicker.attr('name');
+                        if (!data.editingIndex || !data.editingFor) {
+                            return datepicker.data('DateTimePicker').date(moment());
+                        }
 
-                            datepicker.data('DateTimePicker').date(moment(values[data.editingIndex][name]));
+                        var values = JSON.parse(documentsModal.siblings('form').find('input[name="' + data.editingFor + '"]').val());
+                        var name = datepicker.attr('name');
+                        var dateValue = values[data.editingIndex][name];
 
-                        });
+                        if (!dateValue) {
+                            return datepicker.data('DateTimePicker').date(moment());
+                        }
 
-                    }
+                        var offset = datepicker.data('utc-offset') || moment().format('Z');
+
+                        datepicker.data('DateTimePicker').date(moment(dateValue)
+                            .subtract(getOffset(moment().format('Z')) - getOffset(offset), 'minutes'));
+
+                    });
 
                 });
 
