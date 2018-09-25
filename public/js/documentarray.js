@@ -487,7 +487,9 @@
 
     $(function() {
 
-        $('[data-document-field-for]').documentarray();
+        $('[data-document-field-for]').each(function () {
+            $(this).documentarray();
+        });
 
     });
 
