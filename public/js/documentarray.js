@@ -372,7 +372,7 @@
                         var datepicker = $(this);
 
                         if (!data.editingIndex || !data.editingFor) {
-                            return datepicker.data('DateTimePicker').date(moment());
+                            return;
                         }
 
                         var values = JSON.parse(documentsModal.siblings('form').find('input[name="' + data.editingFor + '"]').val());
