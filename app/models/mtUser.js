@@ -10,6 +10,7 @@ const mtUserSchema = new linz.mongoose.Schema({
         type: Boolean,
     },
     birthday: Date,
+    customOffset: Date,
     email: String,
     name:  String,
     org: {
@@ -47,7 +48,14 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
         },
         birthday: {
             fieldset: 'Details',
-            widget: linz.formtools.widgets.date({ 'data-linz-date-format': 'DD/MM/YYYY' }),
+            widget: linz.formtools.widgets.date({ 'data-linz-date-format': 'DD/MM/YYYY hh:mm a' }),
+        },
+        customOffset: {
+            fieldset: 'Details',
+            widget: linz.formtools.widgets.date({
+                'data-linz-date-format': 'DD/MM/YYYY hh:mm a',
+                'data-utc-offset': '-03:30',
+            }),
         },
         username: {
             fieldset: 'Access',
