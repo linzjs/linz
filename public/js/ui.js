@@ -170,6 +170,7 @@ if (!linz) {
         });
 
         loadDatepicker();
+        loadDatepickerDefaults();
 
     });
 
@@ -218,7 +219,6 @@ if (!linz) {
                 // Support format and useCurrent customissations via the widget.
                 var format = field.attr('data-linz-date-format') || 'YYYY-MM-DD';
                 var useCurrent = field.attr('data-linz-date-use-current') === 'true';
-                var dateValue = field.attr('data-linz-date-value');
                 var sideBySide = field.attr('data-linz-date-side-by-side') === 'true';
 
                 // Setup the datetimepicker plugin.

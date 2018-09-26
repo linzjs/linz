@@ -412,6 +412,10 @@
 
                 });
 
+                documentsModal.on('hidden.bs.modal', function () {
+                    data.reset();
+                });
+
                 var template = $('template.document-array-list').clone().html();
 
                 if (!data.canEdit) {
@@ -487,9 +491,7 @@
 
     $(function() {
 
-        $('[data-document-field-for]').each(function () {
-            $(this).documentarray();
-        });
+        $('[data-document-field-for]').documentarray();
 
     });
 
