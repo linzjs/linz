@@ -21,7 +21,7 @@ module.exports = (req, res) => {
                 crossorigin: 'anonymous',
             },
             { src: `${linz.get('admin path')}/public/js/jquery.binddata.js` },
-            { src: `${linz.get('admin path')}/public/js/documentarray.js?v1` },
+            { src: `${linz.get('admin path')}/public/js/documentarray.js?v2` },
             {
                 integrity: 'sha256-/wPGlKXtfdj9ryVH2IQ78d1Zx2/4PXT/leOL4Jt1qGU=',
                 src: '//cdnjs.cloudflare.com/ajax/libs/deep-diff/0.2.0/deep-diff.min.js',
