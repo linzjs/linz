@@ -148,19 +148,6 @@
                 offset = field.data('utc-offset');
             }
 
-            // Get the offsets as an integer
-            var getOffset = (offset) => {
-
-                var symbol = offset.charAt(0);
-                var time = offset.substring(1).split(':');
-                var hours = Number.parseInt(time[0], 10) * 60;
-                var minutes = Number.parseInt(time[1], 10);
-                var total = Number.parseInt(symbol + (hours + minutes));
-
-                return total;
-
-            };
-
             var transform = {};
 
             transform.name = new RegExp(name);
