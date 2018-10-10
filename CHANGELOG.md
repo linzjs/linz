@@ -14,6 +14,7 @@
 - Added the ability to provide custom scripts and styles to linz.api.views.render using `data.scripts` and `data.styles`.
 - Fixed the datetimepicker on documentarray fields.
 - Added the ability to manually set a timezone offset using `data-utc-offset` in the date widget. This *must* be in the ISO offset format and begin with a plus (+) or minus (-) symbol with the hours and minutes having a leading 0 eg `+00:00`
+- Added the ability to provide helpText to a document array field.
 
 ## v1.0.0-16.1.0 (9 August 2018)
 

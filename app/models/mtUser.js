@@ -33,6 +33,7 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
         },
         alternativeEmails: {
             fieldset: 'Details',
+            helpText: 'Add some alternative emails',
             widget: linz.formtools.widgets.documents({
                 setLabel: function setLabel (doc) {
 
