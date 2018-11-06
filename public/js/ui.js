@@ -192,19 +192,6 @@ if (!linz) {
             timezoneInput.setAttribute('name', 'linzTimezoneOffset');
             timezoneInput.setAttribute('value', moment().format('Z'));
 
-            // Get the offsets as an integer
-            var getOffset = (offset) => {
-
-                var symbol = offset.charAt(0);
-                var time = offset.substring(1).split(':');
-                var hours = Number.parseInt(time[0], 10) * 60;
-                var minutes = Number.parseInt(time[1], 10);
-                var total = Number.parseInt(symbol + (hours + minutes));
-
-                return total;
-
-            };
-
             $('[data-ui-datepicker]').parents('form').prepend(timezoneInput);
 
             $('[data-ui-datepicker]').each(function () {
@@ -256,7 +243,7 @@ if (!linz) {
         if ($('[data-ui-datepicker]').length) {
 
             // Get the offsets as an integer
-            var getOffset = (offset) => {
+            var getOffset = function getOffset(offset) {
 
                 var symbol = offset.charAt(0);
                 var time = offset.substring(1).split(':');

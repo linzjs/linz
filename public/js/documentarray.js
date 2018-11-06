@@ -317,7 +317,7 @@
     $.fn.documentarray = function(option, parameter, extraOptions) {
 
         // Get the offsets as an integer
-        var getOffset = (offset) => {
+        var getOffset = function getOffset(offset) {
 
             var symbol = offset.charAt(0);
             var time = offset.substring(1).split(':');
