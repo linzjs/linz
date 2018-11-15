@@ -17,6 +17,7 @@
 - Added the ability to provide helpText to a document array field.
 - The form DSL no longer accepts a callback function as the second parameter. The function provided must now return the form object.
 - Turned off autocomplete for some widgets.
+- Fixed model version compare forms being undefined.
 
 ## v1.0.0-16.1.0 (9 August 2018)
 
