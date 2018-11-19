@@ -92,6 +92,7 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
             {
                 exclusions: '_id',
                 label: 'Choose fields to export',
+                dateFormat: 'DD',
             },
         ],
     },

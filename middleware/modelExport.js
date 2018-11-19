@@ -36,137 +36,21 @@ const prettifyData = (req, fieldName, val) => {
     }
 
     if (req.linz.model.schema.tree[fieldName].ref) {
-        return referenceRenderer(val, { link: false });
+
+        return referenceRenderer(val, {
+            link: false,
+            model: linz.mongoose.models[req.linz.model.schema.tree[fieldName].ref],
+        });
+
     }
 
     return Promise.resolve(val);
 
 };
 
-var modelExportHelpers = function modelExportHelpers (req, res) {
-
-    var getRecordData = function getRecordData (fields, record) {
-
-        var orderedRecord = {};
-
-        // order field names in the selected order
-        fields.forEach(function (fieldName) {
-            orderedRecord[fieldName] = prettifyData(fieldName, record[fieldName]);
-        });
-
-        return linz.utils.json2CSV(orderedRecord);
-
-    };
-
-    /**
-     * Format a date object using the list dsl settings.
-     * @param {Date} val A date object.
-     * @return {String} A date string.
-     */
-    const formatDate = (val) => {
-
-        if (!(val instanceof Date)) {
-            return val;
-        }
-
-        return moment(val)
-            .utcOffset((useLocalTime && linz.api.session.getTimezone(req)) || 0)
-            .format((typeof dateFormat === 'string') && dateFormat);
-
-    };
-
-    var prettifyData = function prettifyData (fieldName, val) {
-
-        if (val === undefined || val === '' || val === null) {
-            return val;
-        }
-
-        if (typeof val === 'number') {
-            return val;
-        }
-
-        var Model = req.linz.model;
-
-        if (Model.schema.tree[fieldName].ref) {
-            return val.title;
-        }
-
-        if (Array.isArray(val)) {
-
-            if (val.length === 0) {
-                return '';
-            }
-
-            var strArr = [];
-
-            val.forEach(function (obj) {
-
-                if (typeof obj === 'object') {
-
-                    var arr = [];
-
-                    // tostring embedded object
-                    Object.keys(obj).forEach(function (key) {
-                        if (key === '_id' || key === 'id' || key === 'dateModified' || key === 'dateCreated' || obj[key] === '' || obj[key] === undefined) {
-                            return;
-                        }
-                        return arr.push(key + ': ' + (obj[key] || '').toString());
-                    });
-
-                    return strArr.push(arr.join(', '));
-                }
-
-                return strArr.push(obj.toString());
-
-            });
-
-            return strArr.join(', ');
-
-        }
-
-        if (typeof val === 'boolean' || 'true,false,yes,no'.indexOf(val) >= 0 ) {
-            return (linz.utils.asBoolean(val) ? 'Yes' : 'No');
-        }
-
-        if (val instanceof Date) {
-            val = formatDate(val);
-        }
-
-        return val;
-
-    };
+var modelExportHelpers = function modelExportHelpers (req) {
 
     return {
-
-        mongooseToCSV: (fields, form) => {
-
-            var count = 0;
-
-            return (doc) => new Promise((resolve) => {
-
-                var str = '',
-                    record = doc.toObject({virtuals: true });
-
-                if (count !== 0) {
-                    return resolve(getRecordData(fields, record));
-                }
-
-                var arr = [];
-
-                // get field labels
-                fields.forEach(function (fieldName) {
-                    arr.push(form[fieldName].label);
-                });
-
-                str = arr.join() + '\n';
-
-                count++;
-
-                return resolve(str + getRecordData(fields, record));
-
-            });
-
-        },
 
         getFilters: function getFilters (cb) {
 
@@ -227,7 +111,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
                             filters = Model.setFiltersAsQuery(filters);
                         }
 
-                        return cb(err, filters);
+                        return callback(err, filters);
 
                     });
 
@@ -244,7 +128,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
             }
 
             filters = filters || { '$and': [] };
-            filters['$and'] = filters['$and'] || [];
+            filters.$and = filters.$and || [];
 
             var ids = [],
                 db  = linz.mongoose.connection.db;
@@ -255,7 +139,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
             });
 
             // let's add selected Ids to the filters
-            filters['$and'].push({
+            filters.$and.push({
                 _id: { $in: ids}
             });
 
@@ -337,7 +221,7 @@ module.exports = {
                     fieldLabels = {};
 
                 // get a list of field names
-                req.linz.model.schema.eachPath(function (pathname, schemaType) {
+                req.linz.model.schema.eachPath(function (pathname) {
 
                     if (excludedFieldNames.indexOf(pathname) >= 0) {
                         // exit if current field name is one of the exclusion fields
@@ -375,7 +259,7 @@ module.exports = {
 
         // since a custom export function is not defined for model, use local export function
         var asyncFn = [],
-            helpers = modelExportHelpers(req, res);
+            helpers = modelExportHelpers(req);
 
         asyncFn.push(helpers.getFilters);
         asyncFn.push(helpers.addIdFilters);
@@ -449,10 +333,21 @@ module.exports = {
                         // Generate the header rows using the form label.
                         const headers = fields.map(fieldName => form[fieldName] && form[fieldName].label);
 
-                        // Generate the cells using the default render or transpose function if provided.
-                        Promise.all(docs.map((doc) => new Promise((rowResolve, rowReject) => {
+                        // The docs coming from the db can be in a different order, re-arrange them so they match with the headers.
+                        const sortedDocs = docs.map(doc => {
 
-                            const row = [];
+                            const sortedDoc = {};
+
+                            fields.forEach(fieldName => sortedDoc[fieldName] = doc[fieldName]);
+
+                            return sortedDoc;
+
+                        });
+
+                        // Generate the cells using the default render or transpose function if provided.
+                        Promise.all(sortedDocs.map((doc) => new Promise((rowResolve, rowReject) => {
+
+                            const row = {};
 
                             Promise.all(fields.map((fieldName) => {
 
@@ -461,7 +356,7 @@ module.exports = {
 
                                     // For backwards compatibility, wrap in a promise function.
                                     return Promise.resolve(form[fieldName].transpose.export(doc[fieldName], doc))
-                                        .then(val => row.push(val));
+                                        .then(val => row[fieldName] = val);
 
                                 }
 
@@ -470,15 +365,25 @@ module.exports = {
 
                                     // For backwards compatibility, wrap in a promise function.
                                     return Promise.resolve(form[fieldName].transpose(doc[fieldName], doc))
-                                        .then(val => row.push(val));
+                                        .then(val => row[fieldName] = val);
 
                                 }
 
                                 return prettifyData(req, fieldName, doc[fieldName])
-                                    .then(val => row.push(val));
+                                    .then(val => row[fieldName] = val);
 
                             }))
-                                .then(() => rowResolve(row.join(', ')))
+                                .then(() => {
+
+                                    // The promises can resolve at different times, causing the headers and rows to be out of sync.
+                                    // This fixes that issue so the headers match with the cell values.
+                                    const orderedRow = [];
+
+                                    fields.forEach(fieldName => orderedRow.push(row[fieldName]))
+
+                                    return rowResolve(orderedRow.join(', '));
+
+                                })
                                 .catch(rowReject);
 
                         })))
