@@ -5,6 +5,44 @@ var linz = require('../'),
 let useLocalTime = false;
 let dateFormat = false;
 
+const {
+    isDate,
+} = require('../lib/util');
+
+const {
+    arrayRenderer,
+    booleanRenderer,
+    dateRenderer,
+    referenceRenderer,
+} = require('../lib/renderers');
+
+const prettifyData = (req, fieldName, val) => {
+
+    if (typeof val === 'boolean') {
+        return booleanRenderer(val);
+    }
+
+    if (isDate(val)) {
+
+        return dateRenderer(val, {
+            format: (typeof dateFormat === 'string') && dateFormat,
+            offset: (useLocalTime && linz.api.session.getTimezone(req)) || 0,
+        });
+
+    }
+
+    if (Array.isArray(val)) {
+        return arrayRenderer(val);
+    }
+
+    if (req.linz.model.schema.tree[fieldName].ref) {
+        return referenceRenderer(val, { link: false });
+    }
+
+    return Promise.resolve(val);
+
+};
+
 var modelExportHelpers = function modelExportHelpers (req, res) {
 
     var getRecordData = function getRecordData (fields, record) {
@@ -100,17 +138,17 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
     return {
 
-        mongooseToCSV: function mongooseToCSV (fields, form) {
+        mongooseToCSV: (fields, form) => {
 
             var count = 0;
 
-            return function (doc) {
+            return (doc) => new Promise((resolve) => {
 
                 var str = '',
                     record = doc.toObject({virtuals: true });
 
                 if (count !== 0) {
-                    return getRecordData(fields, record);
+                    return resolve(getRecordData(fields, record));
                 }
 
                 var arr = [];
@@ -124,9 +162,9 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
                 count++;
 
-                return str + getRecordData(fields, record);
+                return resolve(str + getRecordData(fields, record));
 
-            };
+            });
 
         },
 
@@ -391,10 +429,6 @@ module.exports = {
 
             filterFieldNames = filterFieldNames.concat(fields);
 
-            // serve .csv file
-            res.setHeader('Content-disposition', 'attachment; filename=' + Model.linz.formtools.model.plural + '-' + moment(Date.now()).format('l').replace(/\//g, '.', 'g') + '.csv');
-            res.writeHead(200, { 'Content-Type': 'text/csv' });
-
             // pipe data to response stream
             req.linz.model.getQuery(req, filters, function getQuery (err, query) {
 
@@ -402,10 +436,61 @@ module.exports = {
                     return next(err);
                 }
 
-                query.select(filterFieldNames.join(' '))
-                    .populate(refFieldNames.join(' '), '-_id -__v -dateCreated -dateModified -createdBy -modifiedBy')
-                    .stream({ transform: helpers.mongooseToCSV(fields, form) })
-                    .pipe(res);
+                const exportQuery = query.select(filterFieldNames.join(' '))
+                    .populate(refFieldNames.join(' '), '-_id -__v -dateCreated -dateModified -createdBy -modifiedBy');
+
+                linz.api.util.generateExport({
+                    contentType: 'text/csv',
+                    format: results => new Promise((resolve, reject) => {
+
+                        // Wrap the doc in an array if it only returns a single document.
+                        const docs = [].concat(results);
+
+                        // Generate the header rows using the form label.
+                        const headers = fields.map(fieldName => form[fieldName] && form[fieldName].label);
+
+                        // Generate the cells using the default render or transpose function if provided.
+                        Promise.all(docs.map((doc) => new Promise((rowResolve, rowReject) => {
+
+                            const row = [];
+
+                            Promise.all(fields.map((fieldName) => {
+
+                                // Support an additional context layer.
+                                if (form[fieldName].transpose && form[fieldName].transpose.export) {
+
+                                    // For backwards compatibility, wrap in a promise function.
+                                    return Promise.resolve(form[fieldName].transpose.export(doc[fieldName], doc))
+                                        .then(val => row.push(val));
+
+                                }
+
+                                // Support a transpose function.
+                                if (form[fieldName].transpose) {
+
+                                    // For backwards compatibility, wrap in a promise function.
+                                    return Promise.resolve(form[fieldName].transpose(doc[fieldName], doc))
+                                        .then(val => row.push(val));
+
+                                }
+
+                                return prettifyData(req, fieldName, doc[fieldName])
+                                    .then(val => row.push(val));
+
+                            }))
+                                .then(() => rowResolve(row.join(', ')))
+                                .catch(rowReject);
+
+                        })))
+                            .then(rows => resolve(`${headers.join(', ')}\n${rows.join('\n')}`))
+                            .catch(reject);
+
+                    }),
+                    name: `${Model.linz.formtools.model.plural}-${moment(Date.now()).format('l').replace(/\//g, '.', 'g')}`,
+                    query: exportQuery,
+                    req,
+                    res,
+                });
 
             });
 

@@ -88,6 +88,12 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
                 label: 'Customised edit form',
             },
         ],
+        export: [
+            {
+                exclusions: '_id',
+                label: 'Choose fields to export',
+            },
+        ],
     },
     model: {
         description: 'Manage users.',
