@@ -60,7 +60,9 @@ module.exports = function (req) {
 
         async.each(Object.keys(record), (fieldName, getReferenceDone) => {
 
-            linz.versions.renderers.cellRenderers.default(record[fieldName], record, fieldName, Model, (err, str) => {
+            const defaultRenderer = Model.versions.cellRenderers.default || linz.versions.renderers.cellRenderers.default;
+
+            defaultRenderer(record[fieldName], record, fieldName, Model, (err, str) => {
                 if (err) {
                     return getReferenceDone(err);
                 }

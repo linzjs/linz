@@ -10,6 +10,7 @@
 - Added a new renderer `linz.api.renderers.referenceRenderer()` to help display a reference field.
 - Updated the modelExport route to `transpose` fields if a `transpose` or `transpose.export` function is provided in the formDSL. This allows you to completely customise exported fields before displaying them in the exported file.
 - Custom export routes can now take advantage of `linz.api.util.generateExport()` to fully customise what kind of file is generated. For example you can generate `.xls` and `.csv` files and customise the content.
+- Added the ability to provide a custom default renderer for the versions plugin.
 
 ## Unreleased
 
