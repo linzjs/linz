@@ -35,7 +35,7 @@ const prettifyData = (req, fieldName, val) => {
         return arrayRenderer(val);
     }
 
-    if (req.linz.model.schema.tree[fieldName].ref) {
+    if (val && req.linz.model.schema.tree[fieldName].ref) {
 
         return referenceRenderer(val, {
             link: false,
@@ -320,8 +320,7 @@ module.exports = {
                     return next(err);
                 }
 
-                const exportQuery = query.select(filterFieldNames.join(' '))
-                    .populate(refFieldNames.join(' '), '-_id -__v -dateCreated -dateModified -createdBy -modifiedBy');
+                const exportQuery = query.select(filterFieldNames.join(' '));
 
                 linz.api.util.generateExport({
                     contentType: 'text/csv',
@@ -370,7 +369,18 @@ module.exports = {
                                 }
 
                                 return prettifyData(req, fieldName, doc[fieldName])
-                                    .then(val => row[fieldName] = val);
+                                    .then(val => {
+
+                                        let parsedVal = val;
+
+                                        // Wrap all fields with delimeters (commas) with quotes.
+                                        if (/,/.test(val)) {
+                                            parsedVal = `"${val}"`;
+                                        }
+
+                                        return row[fieldName] = parsedVal;
+
+                                    });
 
                             }))
                                 .then(() => {
@@ -381,13 +391,13 @@ module.exports = {
 
                                     fields.forEach(fieldName => orderedRow.push(row[fieldName]))
 
-                                    return rowResolve(orderedRow.join(', '));
+                                    return rowResolve(orderedRow.join(','));
 
                                 })
                                 .catch(rowReject);
 
                         })))
-                            .then(rows => resolve(`${headers.join(', ')}\n${rows.join('\n')}`))
+                            .then(rows => resolve(`${headers.join(',')}\n${rows.join('\n')}`))
                             .catch(reject);
 
                     }),
