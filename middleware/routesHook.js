@@ -1,6 +1,6 @@
 'use strict';
 
-const linz = require('linz');
+const linz = require('../');
 
 module.exports = function routesHook (req, res, next) {
 
