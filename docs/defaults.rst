@@ -72,6 +72,57 @@ This will result in a ``body`` tag with custom attributes on all Linz pages::
 
   <body data-linz-usergroup='20'>
 
+routes
+------
+
+The ``routes`` default allows you to define middleware that should be executed during the process of specific Linz routes.
+
+To use ``routes`` create an object, keyed by a HTTP verb (i.e. ``get``), with the value being an object keyed by a Linz route path, and the value being a middleware function. For example::
+
+  const routes = {
+    get: {
+      '/model/:model/:id/overview': (req, res, next) => {
+
+        // Middleware functionality
+
+        return next();
+
+      },
+    },
+  };
+
+This would result in the middleware being executed whenever an overview page for any record of any model is viewed.
+
+Importantly, the middleware above is executed after Linz middleware processing and before Linz route processing (i.e. where the view is rendered). This gives you great flexibility and also allows you to benefit from all of the work already completed by Linz. For example, you can inspect the record by referencing ``req.linz.record``.
+
+The following is an object containing an example showing all routes you can hook into::
+
+  const routes = {
+    get: {
+        '/models/list': (req, res, next) => next(),
+        '/model/:model/list': (req, res, next) => next(),
+        '/model/:model/new': (req, res, next) => next(),
+        '/model/:model/export': (req, res, next) => next(),
+        '/model/:model/:id/overview': (req, res, next) => next(),
+        '/model/:model/:id/edit': (req, res, next) => next(),
+        '/model/:model/:id/delete': (req, res, next) => next(),
+        '/model/:model/:id/json': (req, res, next) => next(),
+        '/model/:model/:id/action/:action': (req, res, next) => next(),
+        '/configs/list': (req, res, next) => next(),
+        '/config/:config/overview': (req, res, next) => next(),
+        '/config/:config/edit': (req, res, next) => next(),
+        '/config/:config/default': (req, res, next) => next(),
+        '/config/:config/json': (req, res, next) => next(),
+    },
+    post: {
+        '/model/:model/list': (req, res, next) => next(),
+        '/model/:model/create': (req, res, next) => next(),
+        '/model/:model/export': (req, res, next) => next(),
+        '/model/:model/:id/save': (req, res, next) => next(),
+        '/config/:config/save': (req, res, next) => next(),
+    },
+  };
+
 scripts
 -------
 
@@ -144,7 +195,7 @@ You can also supply a ``content`` property, which if provided, will add the valu
 mongoOptions
 ------------
 
-Mongoose's default connection logic is deprecated as of 4.11.0. ``mongoOptions`` contains the minimum default connection logic required for a connection:
+Mongoose's default connection logic is deprecated as of 4.11.0. ``mongoOptions`` contains the minimum default connection logic required for a connection::
 
   'mongoOptions': {
     useMongoClient: true
