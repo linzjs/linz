@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.0.0-16.2.0 (5 December 2018)
 
 - Added a new default `routes`, which allows you to define middleware to be executed during the processing of a Linz route.
 
