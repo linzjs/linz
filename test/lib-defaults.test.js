@@ -1,6 +1,7 @@
 'use strict';
 
 const linz = require('linz');
+const supertest = require('supertest');
 
 test('sets a default', () => {
 
@@ -33,31 +34,129 @@ test('sets a default', () => {
     expect(typeof linz.get('navigationTransform')).toBe('function');
     expect(typeof linz.get('customAttributes')).toBe('function');
     expect(linz.get('mongoOptions')).toEqual({ useMongoClient: true });
+    expect(linz.get('routes')).toEqual({});
 
 });
 
-test('overrides defaults', (done) => {
+describe('once Linz is initialised', () => {
 
-    linz.init({
-        options: {
-            'admin path': '/testadmin',
-            'load configs': false,
-            'load models': false,
-            'login path': '/logintest',
-            'logout path': '/logouttest',
-            'mongo': 'mongodb://mongodb:27017/defaults-test',
-            'user model': 'user',
-        },
+    const routeMock = jest.fn((req, res, next) => next());
+
+    beforeAll((done) => {
+
+        linz.init({
+            options: {
+                'load configs': false,
+                'load models': false,
+                'mongo': 'mongodb://mongodb:27017/lib-defaults',
+                'user model': 'user',
+                'routes': {
+                    'get': {
+                        '/model/:model/list': routeMock,
+                    },
+                },
+            },
+        });
+
+        linz.once('initialised', () => {
+
+            const userSchema = new linz.mongoose.Schema({
+                name: String,
+                email: String,
+                username: String,
+                password: String,
+                bAdmin: {
+                    type: Boolean,
+                    default: false
+                },
+            });
+
+            userSchema.plugin(linz.formtools.plugins.document, {
+                list: {
+                    fields: {
+                        name: true,
+                        email: true,
+                    },
+                },
+                model: { title: 'username' },
+                overview: {
+                    summary: {
+                        fields: {
+                            name: true,
+                            email: true,
+                        },
+                    },
+                },
+            });
+
+            userSchema.virtual('hasAdminAccess').get(function () {
+                return this.bAdmin === true;
+            });
+
+            userSchema.methods.verifyPassword = function (candidatePassword, callback) {
+                return callback(null, this.password === candidatePassword);
+            }
+
+            // Set manually as we're not loading via file.
+            linz.set('models', {
+                user: linz.mongoose.model('user', userSchema),
+            });
+
+            // Because we aren't loading the models from file, we have to initialise it ourselves.
+            linz.initModels();
+
+            return done();
+
+        });
+
+    }, 10000);
+
+    afterAll(() => linz.mongoose.disconnect());
+
+    test('overrides defaults', () => {
+
+        expect(linz.get('load configs')).toBe(false);
+        expect(linz.get('load models')).toBe(false);
+        expect(linz.get('mongo')).toBe('mongodb://mongodb:27017/lib-defaults');
+
     });
 
-    linz.once('initialised', () => {
+    test('executes middleware defined via routes default', async () => {
 
-        expect(linz.get('admin path')).toBe('/testadmin');
-        expect(linz.get('login path')).toBe('/logintest');
-        expect(linz.get('logout path')).toBe('/logouttest');
+        expect.assertions(2);
 
-        return done();
+        const user = new linz.api.model.get('user')();
+
+        user.set({
+            bAdmin: true,
+            email: 'test@test.com',
+            name: 'Test user',
+            password: 'password',
+            username: 'test',
+        });
+
+        const request = supertest.agent(linz.app);
+
+        return Promise.all([
+            user.save(),
+        ])
+            // Login first.
+            // Supertest seems to use non native promises which stop Jest tests from completing.
+            // Wrapping it in a Promise.resolve fixes that.
+            .then(() => Promise.resolve(request.post('/admin/login').send({
+                password: 'password',
+                username: 'test',
+            })))
+            .then(() => Promise.resolve(request.get('/admin/models/list')))
+            .then(() => {
+
+                expect(routeMock.mock.calls.length).toBe(0);
+
+                return Promise.resolve(request.get('/admin/model/user/list'));
+
+            })
+            .then(() => expect(routeMock.mock.calls.length).toBe(1));
 
     });
 
-}, 10000);
+});

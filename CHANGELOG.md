@@ -19,6 +19,10 @@
 - Turned off autocomplete for some widgets.
 - Fixed model version compare forms being undefined.
 
+## v1.0.0-16.2.0 (5 December 2018)
+
+- Added a new default `routes`, which allows you to define middleware to be executed during the processing of a Linz route.
+
 ## v1.0.0-16.1.0 (9 August 2018)
 
 - Updated the reference renderer to link to the record overview.
@@ -63,10 +67,6 @@
 - Added missing `namespaceForm` middleware to certain routes.
 - Better handling of errors in `modelSave` middleware.
 - Rewrote `modelSave` route removing usage of Async.
-
-### BREAKING CHANGES
-
-- Form properties are now opt-in rather than opt-out. You will have to specifically add the properties for them to appear.
 
 ### Improvements
 
