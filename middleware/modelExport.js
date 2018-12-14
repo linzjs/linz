@@ -351,7 +351,7 @@ module.exports = {
                             Promise.all(fields.map((fieldName) => {
 
                                 // Support an additional context layer.
-                                if (form[fieldName].transpose && form[fieldName].transpose.export) {
+                                if (form[fieldName].transpose && form[fieldName].transpose.export && typeof form[fieldName].transpose.export === 'function') {
 
                                     // For backwards compatibility, wrap in a promise function.
                                     return Promise.resolve(form[fieldName].transpose.export(doc[fieldName], doc))
@@ -360,7 +360,7 @@ module.exports = {
                                 }
 
                                 // Support a transpose function.
-                                if (form[fieldName].transpose) {
+                                if (form[fieldName].transpose && typeof form[fieldName].transpose === 'function') {
 
                                     // For backwards compatibility, wrap in a promise function.
                                     return Promise.resolve(form[fieldName].transpose(doc[fieldName], doc))

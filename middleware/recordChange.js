@@ -36,7 +36,7 @@ module.exports = function (req, res, next) {
 			}
 
 			// if transpose is defined for this field, let's tranpose their change so it can compare in the correct format on client side
-			if (form[fieldName].transpose) {
+			if (form[fieldName].transpose && typeof form[fieldName].transpose === 'function') {
 				theirChange[fieldName] = form[fieldName].transpose(theirChange[fieldName], theirChange);
 			}
 
