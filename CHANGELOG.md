@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.0.0-16.2.1 (18 December 2018)
 
 - Added support primary record actions with a modal on the model index.
 
