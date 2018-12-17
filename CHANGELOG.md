@@ -2,7 +2,7 @@
 
 ## v1.0.0-16.2.1 (18 December 2018)
 
-- Added support primary record actions with a modal on the model index.
+- Added support for primary record actions with a modal on the model index.
 
 ## v1.0.0-16.2.0 (5 December 2018)
 
