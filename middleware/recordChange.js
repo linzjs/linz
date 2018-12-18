@@ -77,7 +77,6 @@ module.exports = function (req, res, next) {
 					break;
 
 				case 'date':
-				case 'datetime':
 
 					if (hasValue(yourChange[fieldName])) {
 						data.yourChange[fieldName] = moment(new Date(yourChange[fieldName])).format('YYYY-MM-DD');
