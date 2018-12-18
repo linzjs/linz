@@ -18,7 +18,7 @@ model
 model.generateForm(model, options)
 ----------------------------------
 
-Generate a form in the context of a Linz model. This is useful if you want to customise the form and is used by Linz internally.
+Generate a form in the context of a Linz model. This is useful if you want to customise the form or to present a Linz form other than the create and edit views. This API is also used by Linz internally.
 
 model: object
 +++++++++++++++
@@ -41,6 +41,7 @@ model.generateFormString(model, options)
 ----------------------------------------
 
 Generate form HTML in the context of a Linz model.
+This uses model.generateForm to generate the form object and returns the rendered view as a HTML string. Generally, this should be used when you want to render a customised Linz form.
 
 model: object
 +++++++++++++++
