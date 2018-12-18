@@ -2,5 +2,5 @@
 
 # Stop the infrastructure
 echo "Stopping containers."
-docker stop mongodb
-docker stop redis
+docker container stop mongodb
+docker container stop redis
