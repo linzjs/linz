@@ -7,6 +7,8 @@ let dateFormat = false;
 
 var modelExportHelpers = function modelExportHelpers (req, res) {
 
+    const { labels } = req.linz.model.linz.formtools;
+
     var getRecordData = function getRecordData (fields, record) {
 
         var orderedRecord = {};
@@ -117,7 +119,7 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
 
                 // get field labels
                 fields.forEach(function (fieldName) {
-                    arr.push(form[fieldName].label);
+                    arr.push(labels[fieldName]);
                 });
 
                 str = arr.join() + '\n';
@@ -275,6 +277,8 @@ module.exports = {
 
     get: function (req, res, next) {
 
+        const { labels } = req.linz.model.linz.formtools;
+
         req.linz.model.getList(req, function (err, list) {
 
             if (err) {
@@ -288,26 +292,19 @@ module.exports = {
             req.linz.export = getExport(list.export);
             req.linz.export.fields = {};
 
-            // retrieve the form to provide a list of fields to choose from
-            req.linz.model.getForm(req, function (formErr, form){
-
-                if (formErr) {
-                    return next(formErr);
-                }
-
-                var excludedFieldNames = req.linz.export.exclusions.concat(',__v').split(','),
+            var excludedFieldNames = req.linz.export.exclusions.concat(',__v').split(','),
                     fieldLabels = {};
 
                 // get a list of field names
-                req.linz.model.schema.eachPath(function (pathname, schemaType) {
+                req.linz.model.schema.eachPath(function (pathname) {
 
-                    if (excludedFieldNames.indexOf(pathname) >= 0 || !form[pathname]) {
-                        // exit if current field name is one of the exclusion fields or missing
+                    if (excludedFieldNames.indexOf(pathname) >= 0) {
+                        // exit if current field name is one of the exclusion fields
                         return;
                     }
 
                     // get a list of fields by the label ready for sorting
-                    fieldLabels[form[pathname].label] = pathname;
+                    fieldLabels[labels[pathname]] = pathname;
 
                 });
 
@@ -320,8 +317,6 @@ module.exports = {
                 });
 
                 return next(null);
-
-            });
 
         });
 
