@@ -301,13 +301,9 @@ module.exports = {
                 // get a list of field names
                 req.linz.model.schema.eachPath(function (pathname, schemaType) {
 
-                    if (excludedFieldNames.indexOf(pathname) >= 0) {
-                        // exit if current field name is one of the exclusion fields
+                    if (excludedFieldNames.indexOf(pathname) >= 0 || !form[pathname]) {
+                        // exit if current field name is one of the exclusion fields or missing
                         return;
-                    }
-
-                    if (!form[pathname]) {
-                        throw new Error(`Could not find ${pathname} field in the labels array.`);
                     }
 
                     // get a list of fields by the label ready for sorting
