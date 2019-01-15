@@ -4,7 +4,6 @@
 
 ### BREAKING CHANGES
 
-- The form DSL no longer accepts a callback function as the second parameter. The function provided must now return the form object.
 - Replaced `linz.publicMiddleware.namespace` with `linz.api.middleware.setLinzNamespace()`.
 - Moved all public middleware to the `linz.api.middleware` namespace.
 - Removed the datetime and datetimelocal field types, the date type should be used instead.
