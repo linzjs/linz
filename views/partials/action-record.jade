@@ -24,7 +24,11 @@ div.btn-group
                 if action.icon
                     span(class='glyphicon glyphicon-' + action.icon)
         else
-            a.btn.btn-default(href=linz.api.url.getAdminLink(model, action.action, record._id), data-linz-control="primary")
+            - action.attributes = action.attributes || {}
+            if action.modal.active
+                - action.attributes['data-linz-control'] = 'record-action'
+                - action.attributes['data-target'] = '#recordActionModal'
+            a.btn.btn-default(href=linz.api.url.getAdminLink(model, action.action, record._id) data-linz-control="primary" class=(action.modal.active && 'disabled'))&attributes(action.attributes)
                 if !action.icon
                     != action.label
                 if action.icon

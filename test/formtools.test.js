@@ -473,9 +473,9 @@ describe('formtools', () => {
                             label: 'Name',
                             renderer: linz.formtools.cellRenderers.overviewLink
                         },
-                        email: true,
+                        email: false,
                         username: true,
-                        bActive: true,
+                        bActive: 0,
                         groups: true,
                         sendWelcomeEmail: {
                             label: 'Welcome emails',
@@ -814,6 +814,14 @@ describe('formtools', () => {
 
                     it('should default to overview link rendered for title, if renderer is not provided', () => {
                         expect(overridesListOpts.fields.title.renderer.name).toBe('overviewLinkRenderer');
+                    });
+
+                    it('should remove fields set to falsy values', () => {
+
+                        expect(overridesListOpts.fields).not.toHaveProperty('email');
+                        expect(overridesListOpts.fields).not.toHaveProperty('bActive');
+                        expect(overridesListOpts.fields).toHaveProperty('username');
+
                     });
 
                 }); // end describe('field overrides')

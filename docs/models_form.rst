@@ -117,8 +117,6 @@ The ``type`` property is intended to help Linz with two things:
 - ``array`` to render checkboxes for multiple select.
 - ``boolean`` to render radio inputs.
 - ``date`` to render a date input.
-- ``datetime`` to render a datetime input.
-- ``datetimeLocal`` to render a datetime-local input.
 - ``digit`` to render a text input with a regex of ``[0-9]*``.
 - ``documentarray`` to render a custom control to manage multiple sub-documents.
 - ``email`` to render an email input.

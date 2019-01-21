@@ -5,10 +5,7 @@ var linz = require('../'),
 let useLocalTime = false;
 let dateFormat = false;
 
-const {
-    isDate,
-} = require('../lib/util');
-
+const { isDate } = require('../lib/util');
 const {
     arrayRenderer,
     booleanRenderer,

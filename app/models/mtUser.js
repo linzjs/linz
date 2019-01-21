@@ -77,7 +77,7 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
         fields: {
             name: true,
             username: true,
-            email: true,
+            email: false,
             bAdmin: true,
             org: { renderer: linz.formtools.cellRenderers.defaultRenderer },
         },

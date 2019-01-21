@@ -1,6 +1,14 @@
 # CHANGELOG
 
-## Unreleased
+## v1.0.0-17.0.0 (21 January 2019)
+
+### BREAKING CHANGES
+
+- Replaced `linz.publicMiddleware.namespace` with `linz.api.middleware.setLinzNamespace()`.
+- Moved all public middleware to the `linz.api.middleware` namespace.
+- Removed the datetime and datetimelocal field types, the date type should be used instead.
+
+### IMPROVEMENTS
 
 - Added a new function `linz.api.util.generateExport()` to help generate exports from any route.
 - Added a new renderer `linz.api.renderers.arrayRenderer()` to help display an array of strings.
@@ -17,19 +25,27 @@
 - Added the ability to create a custom form based on the model schema via `linz.api.model.generateForm()` and `linz.api.model.generateFormString()`.
 - Added the ability to define custom fields in the form DSL. When specifying a custom field you should add a `type` property if you want an input other than `text`.
 - Add the ability to edit `public` and `views` files without restarting the node process.
-- Replaced `linz.publicMiddleware.namespace` with `linz.api.middleware.setLinzNamespace()`.
 - Added persistent storage to the local development environment.
 - Added new formtool apis `namespaceForm`, `namespaceList`, `namespaceOverview`, `parseForm`.
 - Added new middleware apis `setLinzNamespace`, `setModelForm`, `setRecord`.
-- Moved all public middleware to the `linz.api.middleware` namespace.
-- Fixed the datepicker in documentarray modals.
 - Added the ability to provide custom scripts and styles to linz.api.views.render using `data.scripts` and `data.styles`.
-- Fixed the datetimepicker on documentarray fields.
 - Added the ability to manually set a timezone offset using `data-utc-offset` in the date widget. This *must* be in the ISO offset format and begin with a plus (+) or minus (-) symbol with the hours and minutes having a leading 0 eg `+00:00`
 - Added the ability to provide helpText to a document array field.
-- The form DSL no longer accepts a callback function as the second parameter. The function provided must now return the form object.
 - Turned off autocomplete for some widgets.
+
+### BUG FIXES
+
+- Fixed the datepicker in documentarray modals.
+- Fixed the datetimepicker on documentarray fields.
 - Fixed model version compare forms being undefined.
+
+## v1.0.0-16.2.1 (18 December 2018)
+
+- Added support for primary record actions with a modal on the model index.
+
+## v1.0.0-16.2.0 (5 December 2018)
+
+- Added a new default `routes`, which allows you to define middleware to be executed during the processing of a Linz route.
 
 ## v1.0.0-16.1.0 (9 August 2018)
 
@@ -75,10 +91,6 @@
 - Added missing `namespaceForm` middleware to certain routes.
 - Better handling of errors in `modelSave` middleware.
 - Rewrote `modelSave` route removing usage of Async.
-
-### BREAKING CHANGES
-
-- Form properties are now opt-in rather than opt-out. You will have to specifically add the properties for them to appear.
 
 ### Improvements
 

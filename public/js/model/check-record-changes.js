@@ -83,7 +83,7 @@ if (!linz) {
         var yourChangeLabel = data.yourChange[fieldName],
             theirChangeLabel = data.theirChange[fieldName];
 
-        if (fieldType === 'date' || fieldType === 'datetime') {
+        if (fieldType === 'date') {
 
             if (yourChangeLabel !== '') {
                 try {
