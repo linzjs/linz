@@ -285,3 +285,12 @@ The ``transpose`` property will accept a function with the signature::
 If provided, it will be executed before a field's value is rendered to a form. It is useful if you'd like to manipulate the server-side data that is rendered to a form.
 
 In some instances, data storage requirements are different form that of client side data requirements. ``transpose`` in combination with ``transform`` can be used effectively to manage these scenarios.
+
+{field-name}.transpose.export
+======================
+
+The ``transpose.export`` property can accept a function with the signature::
+
+  transpose.export (val) => Promise
+
+If provided, it will be executed before a field's value is exported. It is useful if you'd like to manipulate the server-side data that is rendered to the export csv.
