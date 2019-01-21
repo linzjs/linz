@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
 # Stop the infrastructure
-docker stop mongodb
-docker stop redis
+echo "Stopping containers."
+docker container stop mongodb
+docker container stop redis

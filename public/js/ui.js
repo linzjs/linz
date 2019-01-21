@@ -170,6 +170,7 @@ if (!linz) {
         });
 
         loadDatepicker();
+        loadDatepickerDefaults();
 
     });
 
@@ -190,31 +191,80 @@ if (!linz) {
             timezoneInput.setAttribute('type', 'hidden');
             timezoneInput.setAttribute('name', 'linzTimezoneOffset');
             timezoneInput.setAttribute('value', moment().format('Z'));
-            
+
             $('[data-ui-datepicker]').parents('form').prepend(timezoneInput);
 
             $('[data-ui-datepicker]').each(function () {
 
+                var field = $(this);
+
+                // Stop processing if the date picker has already been setup.
+                if (field.data('DateTimePicker')) {
+                    return;
+                }
+
                 // Support format and useCurrent customissations via the widget.
-                var format = $(this).attr('data-linz-date-format') || 'YYYY-MM-DD'; 
-                var useCurrent = $(this).attr('data-linz-date-use-current') === 'true';
-                var dateValue = $(this).attr('data-linz-date-value');
-
-                // Update the UTC string to the format required.
-                $(this).val(moment(dateValue).format(format));
-
-                // Remove all event listeners.
-                $(this).unbind();
+                var format = field.attr('data-linz-date-format') || 'YYYY-MM-DD';
+                var useCurrent = field.attr('data-linz-date-use-current') === 'true';
+                var sideBySide = field.attr('data-linz-date-side-by-side') === 'true';
 
                 // Setup the datetimepicker plugin.
-                $(this).datetimepicker({
+                field.datetimepicker({
                     format: format,
+                    sideBySide: sideBySide,
                     useCurrent: useCurrent,
                 });
 
+                // Trigger the change event on load for modals.
+                field.change();
+
+                // Trigger the change event for the field whenever the datepicker is shown or changed.
+                field.on({
+                    'dp.change': function() {
+                        field.change();
+                    },
+                    'dp.show': function () {
+                        field.change();
+                    },
+                });
+
                 // Prevent manually editing the date field.
-                $(this).bind('paste', eventPreventDefault);
-                $(this).on('keydown', eventPreventDefault);
+                field.bind('paste', eventPreventDefault);
+                field.on('keydown', eventPreventDefault);
+
+            });
+
+        }
+
+    }
+
+    function loadDatepickerDefaults() {
+
+        if ($('[data-ui-datepicker]').length) {
+
+            // Get the offsets as an integer
+            var getOffset = function getOffset(offset) {
+
+                var symbol = offset.charAt(0);
+                var time = offset.substring(1).split(':');
+                var hours = Number.parseInt(time[0], 10) * 60;
+                var minutes = Number.parseInt(time[1], 10);
+                var total = Number.parseInt(symbol + (hours + minutes));
+
+                return total;
+
+            };
+
+            $('[data-ui-datepicker]').each(function () {
+
+                var field = $(this);
+                var dateValue = field.attr('data-linz-date-value');
+
+                if (field.data('utc-offset')) {
+                    return field.data('DateTimePicker').date(moment(dateValue).subtract(getOffset(moment().format('Z')) - getOffset(field.data('utc-offset')), 'minutes'));
+                }
+
+                field.data('DateTimePicker').date(moment(dateValue));
 
             });
 
@@ -272,6 +322,7 @@ if (!linz) {
 
     linz.setPath = setPath;
     linz.loadDatepicker = loadDatepicker;
+    linz.loadDatepickerDefaults = loadDatepickerDefaults;
     linz.isTemplateSupported = isTemplateSupported;
     linz.addDeleteConfirmation = addDeleteConfirmation;
     linz.addDisabledBtnAlert = addDisabledBtnAlert;

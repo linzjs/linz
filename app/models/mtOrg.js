@@ -1,6 +1,6 @@
 'use strict';
 
-const linz = require('../linz');
+const linz = require('linz');
 
 const mtOrgSchema = new linz.mongoose.Schema({
     name:  String,
@@ -20,10 +20,6 @@ mtOrgSchema.plugin(linz.formtools.plugins.document, {
         title: 'name',
     },
     overview: { name: true },
-    permissions: {
-        canCreate: false,
-        canDelete: false
-    },
 });
 
 module.exports = linz.mongoose.model('mtOrg', mtOrgSchema);

@@ -3,9 +3,12 @@
 const { EventEmitter } = require('events');
 const express = require('express');
 const http = require('http');
-const linz = require('./linz');
+const linz = require('linz');
 const middleware = require('./lib/loader')('./middleware');
 const session = require('./lib/session');
+const scripts = require('./lib/scripts');
+const editCustomRoute = require('./routes/edit-custom');
+const handlebars = require('express-handlebars');
 
 const port = 8888;
 
@@ -26,16 +29,24 @@ class App extends EventEmitter {
 
         linz.init({
             'express': app,
-            'session middleware': session,
             'options': {
                 'mongo': 'mongodb://mongodb:27017/lmt',
+                'session middleware': session,
                 'user model': 'mtUser',
-            }
+                'scripts': scripts,
+            },
         });
 
         linz.on('initialised', () => {
 
+            linz.app.engine('handlebars', handlebars.create().engine);
+            linz.app.set('view engine', 'handlebars');
+
             linz.app.get('/', middleware.import, (req, res) => res.redirect(linz.get('login path')));
+
+            // Custom form example.
+            linz.app.get(`${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`, editCustomRoute.get);
+            linz.app.post(`${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`, editCustomRoute.post);
 
             linz.app.use(linz.middleware.error);
 

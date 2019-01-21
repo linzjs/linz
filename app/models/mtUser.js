@@ -1,23 +1,25 @@
 'use strict';
 
-const linz = require('../linz');
+const linz = require('linz');
+const emailSchema = require('../schemas/emailSchema');
 
 const mtUserSchema = new linz.mongoose.Schema({
-    name:  String,
-    email: String,
-    username: String,
-    password: String,
+    alternativeEmails: [emailSchema],
     bAdmin: {
+        default: false,
         type: Boolean,
-        default: false
     },
+    birthday: Date,
+    customOffset: Date,
+    email: String,
+    name:  String,
     org: {
         ref: 'mtOrg',
         type: linz.mongoose.Schema.Types.ObjectId,
     },
+    password: String,
+    username: String,
 });
-
-const customRenderer = (value, record, fieldName, model, callback) => callback(null, 'test');
 
 // add the formtools plugin
 mtUserSchema.plugin(linz.formtools.plugins.document, {
@@ -29,8 +31,32 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
         email: {
             fieldset: 'Details',
         },
+        alternativeEmails: {
+            fieldset: 'Details',
+            helpText: 'Add some alternative emails',
+            widget: linz.formtools.widgets.documents({
+                setLabel: function setLabel (doc) {
+
+                    doc.label = doc.email + ' (' + doc.type + ')';
+
+                    return doc;
+
+                },
+            }),
+        },
         org: {
             fieldset: 'Details',
+        },
+        birthday: {
+            fieldset: 'Details',
+            widget: linz.formtools.widgets.date({ 'data-linz-date-format': 'DD/MM/YYYY hh:mm a' }),
+        },
+        customOffset: {
+            fieldset: 'Details',
+            widget: linz.formtools.widgets.date({
+                'data-linz-date-format': 'DD/MM/YYYY hh:mm a',
+                'data-utc-offset': '-03:30',
+            }),
         },
         username: {
             fieldset: 'Access',
@@ -45,16 +71,23 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
         },
     },
     labels: {
-            bAdmin: 'Has admin access?',
+        bAdmin: 'Has admin access?',
     },
     list: {
         fields: {
             name: true,
             username: true,
-            email: true,
+            email: false,
             bAdmin: true,
             org: { renderer: linz.formtools.cellRenderers.defaultRenderer },
         },
+        recordActions: [
+            {
+                action: 'edit-custom',
+                disabled: false,
+                label: 'Customised edit form',
+            },
+        ],
     },
     model: {
         description: 'Manage users.',
@@ -72,15 +105,6 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
                 },
             },
         },
-    },
-    // Default empty object, which Linz can accept.
-    permissions: function (user, callback) {
-
-      return callback(null, {
-            canCreate: false,
-            canDelete: false
-        });
-
     },
 });
 

@@ -77,7 +77,6 @@ module.exports = function (req, res, next) {
 					break;
 
 				case 'date':
-				case 'datetime':
 
 					if (hasValue(yourChange[fieldName])) {
 						data.yourChange[fieldName] = moment(new Date(yourChange[fieldName])).format('YYYY-MM-DD');
@@ -144,12 +143,18 @@ module.exports = function (req, res, next) {
 		exclusionFields[fieldName] = 0;
 	});
 
-	// exclude fields that are not editable
-	Object.keys(Model.linz.formtools.form).forEach(function (fieldName) {
-		if (Model.linz.formtools.form[fieldName].edit && Model.linz.formtools.form[fieldName].edit.disabled) {
-			exclusionFields[fieldName] = 0;
-		}
-	});
+    // Exclude fields that are not editable.
+    if (Model.linz.formtools.form) {
+
+        Object.keys(Model.linz.formtools.form).forEach((fieldName) => {
+
+            if (Model.linz.formtools.form[fieldName].edit && Model.linz.formtools.form[fieldName].edit.disabled) {
+                exclusionFields[fieldName] = 0;
+            }
+
+        });
+
+    }
 
 	// remove modifiedByProperty field if it exists in exclusion fields
 	delete exclusionFields[ccSettings.modifiedByProperty];
@@ -226,11 +231,11 @@ module.exports = function (req, res, next) {
 			var fieldName = diff.path[0];
 
 			// change fieldname to the related field defined in the relationship
-			if (Model.linz.formtools.form[fieldName].relationship) {
+            if (Model.linz.formtools.form && Model.linz.formtools.form[fieldName].relationship) {
 				fieldName = Model.linz.formtools.form[fieldName].relationship;
 			}
 
-			if (!diffKeys[fieldName]) {
+            if (Model.linz.formtools.form && !diffKeys[fieldName]) {
 				diffKeys[fieldName] = Model.linz.formtools.form[fieldName].type;
 			}
 

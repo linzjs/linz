@@ -1,5 +1,32 @@
 # CHANGELOG
 
+## v1.0.0-17.0.0 (21 January 2019)
+
+### BREAKING CHANGES
+
+- Replaced `linz.publicMiddleware.namespace` with `linz.api.middleware.setLinzNamespace()`.
+- Moved all public middleware to the `linz.api.middleware` namespace.
+- Removed the datetime and datetimelocal field types, the date type should be used instead.
+
+### IMPROVEMENTS
+
+- Added the ability to create a custom form based on the model schema via `linz.api.model.generateForm()` and `linz.api.model.generateFormString()`.
+- Added the ability to define custom fields in the form DSL. When specifying a custom field you should add a `type` property if you want an input other than `text`.
+- Add the ability to edit `public` and `views` files without restarting the node process.
+- Added persistent storage to the local development environment.
+- Added new formtool apis `namespaceForm`, `namespaceList`, `namespaceOverview`, `parseForm`.
+- Added new middleware apis `setLinzNamespace`, `setModelForm`, `setRecord`.
+- Added the ability to provide custom scripts and styles to linz.api.views.render using `data.scripts` and `data.styles`.
+- Added the ability to manually set a timezone offset using `data-utc-offset` in the date widget. This *must* be in the ISO offset format and begin with a plus (+) or minus (-) symbol with the hours and minutes having a leading 0 eg `+00:00`
+- Added the ability to provide helpText to a document array field.
+- Turned off autocomplete for some widgets.
+
+### BUG FIXES
+
+- Fixed the datepicker in documentarray modals.
+- Fixed the datetimepicker on documentarray fields.
+- Fixed model version compare forms being undefined.
+
 ## v1.0.0-16.2.1 (18 December 2018)
 
 - Added support for primary record actions with a modal on the model index.

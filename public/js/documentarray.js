@@ -132,8 +132,45 @@
 
     DocumentArray.prototype.editDocument = function (editingFor) {
 
+        var form = $('#documentsModal .modal-body form').html(this.retrieveForm(editingFor));
+
+        var transforms = [];
+
+        // Loop through each datetimepicker field and create a new transform so we get a proper date string.
+        $('#documentsModal .modal-body form [data-linz-date-format]').each(function () {
+
+            var field = $(this);
+            var name = field.attr('name');
+            var format = field.data('linz-date-format');
+            var offset = moment().format('Z');
+
+            if (field.data('utc-offset')) {
+                offset = field.data('utc-offset');
+            }
+
+            var transform = {};
+
+            transform.name = new RegExp(name);
+
+            transform.getset = function (type, value) {
+
+                if ('get' === type && value) {
+
+                    return moment.parseZone(moment(value, format)
+                        .utcOffset(offset, true)
+                        .format())
+                        .toISOString();
+
+                }
+
+            };
+
+            transforms.push(transform);
+
+        });
+
         // apply the form to the modal
-        $('#documentsModal .modal-body form').html(this.retrieveForm(editingFor)).binddata(this.editingObject);
+        form.binddata(this.editingObject, { transforms: transforms });
 
         // apply the label to the modal
         $('#documentsModal .modal-title').html(this.retrieveLabel(editingFor));
@@ -279,6 +316,19 @@
 
     $.fn.documentarray = function(option, parameter, extraOptions) {
 
+        // Get the offsets as an integer
+        var getOffset = function getOffset(offset) {
+
+            var symbol = offset.charAt(0);
+            var time = offset.substring(1).split(':');
+            var hours = Number.parseInt(time[0], 10) * 60;
+            var minutes = Number.parseInt(time[1], 10);
+            var total = Number.parseInt(symbol + (hours + minutes));
+
+            return total;
+
+        };
+
         return this.each(function(index, el) {
 
             var data = $(this).data('documentarray'),
@@ -297,7 +347,39 @@
 
             if (!isModalWired) {
 
-                $('#documentsModal').on('shown.bs.modal', function (e) {
+                var documentsModal = $('#documentsModal');
+
+                documentsModal.on('show.bs.modal', function () {
+
+                    // Load the datepicker code incase the documentarray contains date inputs.
+                    linz.loadDatepicker();
+
+                    $('[data-ui-datepicker]').each(function () {
+
+                        var datepicker = $(this);
+
+                        if (!data.editingIndex || !data.editingFor) {
+                            return;
+                        }
+
+                        var values = JSON.parse(documentsModal.siblings('form').find('input[name="' + data.editingFor + '"]').val());
+                        var name = datepicker.attr('name');
+                        var dateValue = values[data.editingIndex][name];
+
+                        if (!dateValue) {
+                            return datepicker.data('DateTimePicker').date(moment());
+                        }
+
+                        var offset = datepicker.data('utc-offset') || moment().format('Z');
+
+                        datepicker.data('DateTimePicker').date(moment(dateValue)
+                            .subtract(getOffset(moment().format('Z')) - getOffset(offset), 'minutes'));
+
+                    });
+
+                });
+
+                documentsModal.on('shown.bs.modal', function (e) {
 
                     // Enable form validation.
                     var validator = $('#documentsModal .modal-body form').data('bootstrapValidator');
@@ -313,7 +395,12 @@
                     // Freshly start the validator every time the modal is shown.
                     $('#documentsModal .modal-body form').bootstrapValidator();
 
-                    $('#documentsModal').animate({ scrollTop: 0 }, 'fast');
+                    documentsModal.animate({ scrollTop: 0 }, 'fast');
+
+                });
+
+                documentsModal.on('hidden.bs.modal', function () {
+                    data.reset();
                 });
 
                 var template = $('template.document-array-list').clone().html();

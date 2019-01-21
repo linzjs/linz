@@ -1,12 +1,12 @@
 'use strict';
 
-const linz = require('../linz');
+const linz = require('linz');
 const {
     initModels,
     setModelConcurrencyControlOptions,
     setModelOptions,
     setModelVersionSettings,
-} = require('../lib/helpers-models');
+} = require('linz/lib/helpers-models');
 
 beforeEach((done) => {
 
