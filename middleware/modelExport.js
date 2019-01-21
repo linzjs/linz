@@ -320,84 +320,11 @@ module.exports = {
                 const exportQuery = query.select(filterFieldNames.join(' '));
 
                 linz.api.util.generateExport({
+                    columns: fields.map((fieldName) => ({
+                        key: fieldName,
+                        header: form[fieldName] && form[fieldName].label,
+                    })),
                     contentType: 'text/csv',
-                    format: results => new Promise((resolve, reject) => {
-
-                        // Wrap the doc in an array if it only returns a single document.
-                        const docs = [].concat(results);
-
-                        // Generate the header rows using the form label.
-                        const headers = fields.map(fieldName => form[fieldName] && form[fieldName].label);
-
-                        // The docs coming from the db can be in a different order, re-arrange them so they match with the headers.
-                        const sortedDocs = docs.map(doc => {
-
-                            const sortedDoc = {};
-
-                            fields.forEach(fieldName => sortedDoc[fieldName] = doc[fieldName]);
-
-                            return sortedDoc;
-
-                        });
-
-                        // Generate the cells using the default render or transpose function if provided.
-                        Promise.all(sortedDocs.map((doc) => new Promise((rowResolve, rowReject) => {
-
-                            const row = {};
-
-                            Promise.all(fields.map((fieldName) => {
-
-                                // Support an additional context layer.
-                                if (form[fieldName].transpose && form[fieldName].transpose.export && typeof form[fieldName].transpose.export === 'function') {
-
-                                    // For backwards compatibility, wrap in a promise function.
-                                    return Promise.resolve(form[fieldName].transpose.export(doc[fieldName], doc))
-                                        .then(val => row[fieldName] = val);
-
-                                }
-
-                                // Support a transpose function.
-                                if (form[fieldName].transpose && typeof form[fieldName].transpose === 'function') {
-
-                                    // For backwards compatibility, wrap in a promise function.
-                                    return Promise.resolve(form[fieldName].transpose(doc[fieldName], doc))
-                                        .then(val => row[fieldName] = val);
-
-                                }
-
-                                return prettifyData(req, fieldName, doc[fieldName])
-                                    .then(val => {
-
-                                        let parsedVal = val;
-
-                                        // Wrap all fields with delimeters (commas) with quotes.
-                                        if (/,/.test(val)) {
-                                            parsedVal = `"${val}"`;
-                                        }
-
-                                        return row[fieldName] = parsedVal;
-
-                                    });
-
-                            }))
-                                .then(() => {
-
-                                    // The promises can resolve at different times, causing the headers and rows to be out of sync.
-                                    // This fixes that issue so the headers match with the cell values.
-                                    const orderedRow = [];
-
-                                    fields.forEach(fieldName => orderedRow.push(row[fieldName]))
-
-                                    return rowResolve(orderedRow.join(','));
-
-                                })
-                                .catch(rowReject);
-
-                        })))
-                            .then(rows => resolve(`${headers.join(',')}\n${rows.join('\n')}`))
-                            .catch(reject);
-
-                    }),
                     name: `${Model.linz.formtools.model.plural}-${moment(Date.now()).format('l').replace(/\//g, '.', 'g')}`,
                     query: exportQuery,
                     req,
