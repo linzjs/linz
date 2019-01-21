@@ -329,6 +329,21 @@ module.exports = {
                     query: exportQuery,
                     req,
                     res,
+                    transform: (doc) => {
+
+                        const fields = Object.keys(doc);
+
+                        fields.forEach((fieldName) => {
+
+                            if (form[fieldName].transpose && form[fieldName].transpose.export && typeof form[fieldName].transpose.export === 'function') {
+                                doc[fieldName] = form[fieldName].transpose.export(doc[fieldName]);
+                            }
+
+                        });
+
+                        return doc;
+
+                    },
                 });
 
             });
