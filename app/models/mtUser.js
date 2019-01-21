@@ -50,7 +50,7 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
         },
         birthday: {
             fieldset: 'Details',
-            transpose: { 'export': (val) => moment(val).format('D MMMM YYYY') },
+            transpose: { 'export': (val) => Promise.resolve(moment(val).format('D MMMM YYYY')) },
             widget: linz.formtools.widgets.date({ 'data-linz-date-format': 'DD/MM/YYYY hh:mm a' }),
         },
         customOffset: {
@@ -94,7 +94,7 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
             {
                 exclusions: '_id',
                 label: 'Choose fields to export',
-                dateFormat: 'DD',
+                dateFormat: 'DD MMM YYYY',
             },
         ],
     },

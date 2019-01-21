@@ -22,14 +22,10 @@ const prettifyData = (req, fieldName, val) => {
     if (isDate(val)) {
 
         return dateRenderer(val, {
-            format: (typeof dateFormat === 'string') && dateFormat,
+            format: (typeof dateFormat === 'string' && dateFormat) || linz.get('date format'),
             offset: (useLocalTime && linz.api.session.getTimezone(req)) || 0,
         });
 
-    }
-
-    if (Array.isArray(val)) {
-        return arrayRenderer(val);
     }
 
     if (val && req.linz.model.schema.tree[fieldName].ref) {
@@ -329,19 +325,29 @@ module.exports = {
                     query: exportQuery,
                     req,
                     res,
-                    transform: (doc) => {
+                    transform: (doc, callback) => {
 
                         const fields = Object.keys(doc);
+                        const promises = [];
 
                         fields.forEach((fieldName) => {
 
+                            // The formdsl transform takes precendence over the default.
                             if (form[fieldName].transpose && form[fieldName].transpose.export && typeof form[fieldName].transpose.export === 'function') {
-                                doc[fieldName] = form[fieldName].transpose.export(doc[fieldName]);
+
+                                return promises.push(form[fieldName].transpose.export(doc[fieldName])
+                                    .then((val) => (doc[fieldName] = val)));
+
                             }
+
+                            return promises.push(prettifyData(req, fieldName, doc[fieldName])
+                                .then((val) => (doc[fieldName] = val)));
 
                         });
 
-                        return doc;
+                        Promise.all(promises)
+                            .then(() => callback(null, doc))
+                            .catch(callback);
 
                     },
                 });
