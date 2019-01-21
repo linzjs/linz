@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.0.0-17.0.0 (21 January 2019)
 
 ### BREAKING CHANGES
 
