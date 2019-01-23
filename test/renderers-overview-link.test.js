@@ -15,7 +15,7 @@ beforeAll((done) => {
 
     linz.once('initialised', () => {
 
-        const userSchema = new linz.mongoose.Schema({ name: String });
+        const userSchema = new linz.mongoose.Schema({ name: String }, { autoIndex: false });
 
         userSchema.plugin(linz.formtools.plugins.document, {
             form: { name: true },
@@ -34,7 +34,7 @@ beforeAll((done) => {
 
 }, 10000);
 
-beforeEach(async () => {
+afterEach(async () => {
 
     await linz.api.model.get('user').collection.drop();
 

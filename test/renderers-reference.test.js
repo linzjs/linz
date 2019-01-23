@@ -21,14 +21,14 @@ beforeAll((done) => {
                 ref: 'org',
                 type: linz.mongoose.Schema.Types.ObjectId,
             },
-        });
+        }, { autoIndex: false });
 
         userSchema.plugin(linz.formtools.plugins.document, {
             form: { name: true },
             model: { title: 'name' },
         });
 
-        const orgSchema = new linz.mongoose.Schema({ name: String });
+        const orgSchema = new linz.mongoose.Schema({ name: String }, { autoIndex: false });
 
         orgSchema.plugin(linz.formtools.plugins.document, {
             form: { name: true },
@@ -50,7 +50,7 @@ beforeAll((done) => {
 
 }, 10000);
 
-beforeEach(async () => {
+afterEach(async () => {
 
     await linz.api.model.get('org').collection.drop();
     await linz.api.model.get('user').collection.drop();
