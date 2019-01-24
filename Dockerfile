@@ -23,6 +23,7 @@ COPY /views /app/node_modules/linz/views
 COPY /linz.js /app/node_modules/linz/linz.js
 COPY /package.json /app/node_modules/linz/package.json
 
+# Enable codecov integration.
 COPY /codecov.yml /jest.config.js /app/
 
 COPY /app /app
