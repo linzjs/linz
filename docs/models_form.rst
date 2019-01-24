@@ -278,9 +278,21 @@ In some instances, client side data requirements are different from that of data
 {field-name}.transpose
 ======================
 
-The ``transpose`` property will accept a function with the signature::
+The ``transpose`` property will accept an object with context::
 
-  transpose (field, record)
+  transpose.{context} (field, record)
+
+The following contexts are currently accepted:
+
+- ``form`` The default transpose function.
+- ``export`` Only used for exporting records.
+
+{field-name}.transpose.form
+======================
+
+The ``transpose.form`` property will accept a function with the signature::
+
+  transpose.form (field, record)
 
 If provided, it will be executed before a field's value is rendered to a form. It is useful if you'd like to manipulate the server-side data that is rendered to a form.
 

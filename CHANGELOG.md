@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Added the ability to transform individual export values. `form[field].transpose.export => (val) => Promise.resolve(val)`. This function must return a promise.
+- Deprecated the transpose function in favour of the context one. `transpose: (val) => ...` should now be `transpose: { form: (val) => ... }`.
 
 ## v1.0.0-17.0.0 (21 January 2019)
 
