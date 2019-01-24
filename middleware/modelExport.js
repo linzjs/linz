@@ -7,11 +7,11 @@ let dateFormat = false;
 
 const { isDate } = require('../lib/util');
 const {
-    arrayRenderer,
     booleanRenderer,
     dateRenderer,
     referenceRenderer,
 } = require('../lib/renderers');
+const { getTransposeFn } = require('../lib/util');
 
 const prettifyData = (req, fieldName, val) => {
 
@@ -332,10 +332,9 @@ module.exports = {
 
                         fields.forEach((fieldName) => {
 
-                            // The formdsl transform takes precendence over the default.
-                            if (form[fieldName].transpose && form[fieldName].transpose.export && typeof form[fieldName].transpose.export === 'function') {
+                            if (getTransposeFn(form, fieldName, 'export')) {
 
-                                return promises.push(form[fieldName].transpose.export(doc[fieldName])
+                                return promises.push(getTransposeFn(form, fieldName, 'export')(doc[fieldName])
                                     .then((val) => (doc[fieldName] = val)));
 
                             }

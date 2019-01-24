@@ -1,7 +1,9 @@
 var linz = require('../'),
 	async = require('async'),
 	deep = require('deep-diff'),
-	moment = require('moment');
+    moment = require('moment');
+
+const { getTransposeFn } = require('../lib/util');
 
 module.exports = function (req, res, next) {
 
@@ -33,11 +35,11 @@ module.exports = function (req, res, next) {
 				data.theirChange['versionNo'] = theirChange['__v'];
 
 				return;
-			}
+            }
 
-			// if transpose is defined for this field, let's tranpose their change so it can compare in the correct format on client side
-			if (form[fieldName].transpose && typeof form[fieldName].transpose === 'function') {
-				theirChange[fieldName] = form[fieldName].transpose(theirChange[fieldName], theirChange);
+			// if transpose is defined for this field, let's transpose their change so it can compare in the correct format on client side
+			if (getTransposeFn(form, fieldName, 'form')) {
+				theirChange[fieldName] = getTransposeFn(form, fieldName, 'form')(theirChange[fieldName], theirChange);
 			}
 
 			switch (form[fieldName].type) {
