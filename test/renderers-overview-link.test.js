@@ -1,6 +1,7 @@
 'use strict';
 
 const linz = require('linz');
+const { collections } = require('./lib');
 
 beforeAll((done) => {
 
@@ -34,9 +35,15 @@ beforeAll((done) => {
 
 }, 10000);
 
-afterEach(async () => {
+beforeEach(async (done) => {
 
-    await linz.api.model.get('user').collection.drop();
+    let existingCollections = await collections();
+
+    if (existingCollections.includes['user']) {
+        await linz.api.model.get('user').collection.drop();
+    }
+
+    return done();
 
 });
 
