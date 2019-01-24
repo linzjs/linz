@@ -23,6 +23,8 @@ COPY /views /app/node_modules/linz/views
 COPY /linz.js /app/node_modules/linz/linz.js
 COPY /package.json /app/node_modules/linz/package.json
 
+COPY /codecov.yml /jest.config.js /app/
+
 COPY /app /app
 COPY /devops /app/devops
 COPY /test /app/test
