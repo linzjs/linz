@@ -30,7 +30,7 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
             helpText: 'The users full name.',
             transpose: {
                 'export': (val) => Promise.resolve(`Exporting ${val} name`),
-                'form': (val) => `Transposing the ${val} using the form context`,
+                'form': (val) => Promise.resolve(`Transposing the ${val} using the form context`),
             },
         },
         email: {
