@@ -2,44 +2,61 @@ var linz = require('../'),
     async = require('async'),
     moment = require('moment');
 
-let useLocalTime = false;
-let dateFormat = false;
-
 const { isDate } = require('../lib/util');
 const {
-    booleanRenderer,
-    dateRenderer,
-    referenceRenderer,
-} = require('../lib/renderers');
+    boolean,
+    date,
+    referenceName,
+} = require('../lib/formtools/renderers-cell');
 const { getTransposeFn } = require('../lib/util');
 
-const prettifyData = (req, fieldName, val) => {
+const prettifyData = (req, fieldName, val) => new Promise((resolve, reject) => {
 
     if (typeof val === 'boolean') {
-        return booleanRenderer(val);
+
+        return boolean(val, null, null, null, (err, result) => {
+
+            if (err) {
+                return reject(err);
+            }
+
+            return resolve(result);
+
+        });
+
     }
 
     if (isDate(val)) {
 
-        return dateRenderer(val, {
-            format: (typeof dateFormat === 'string' && dateFormat) || linz.get('date format'),
-            offset: (useLocalTime && linz.api.session.getTimezone(req)) || 0,
+        return date(val, null, null, null, (err, result) => {
+
+            if (err) {
+                return reject(err);
+            }
+
+            return resolve(result);
+
         });
 
     }
 
     if (val && req.linz.model.schema.tree[fieldName].ref) {
 
-        return referenceRenderer(val, {
-            link: false,
-            model: linz.mongoose.models[req.linz.model.schema.tree[fieldName].ref],
+        return referenceName(val, null, fieldName, req.linz.model, (err, result) => {
+
+            if (err) {
+                return reject(err);
+            }
+
+            return resolve(result);
+
         });
 
     }
 
-    return Promise.resolve(val);
+    return resolve(val);
 
-};
+});
 
 var modelExportHelpers = function modelExportHelpers (req) {
 
@@ -275,9 +292,6 @@ module.exports = {
             if (err) {
                 return next(err);
             }
-
-            useLocalTime = exportObj && exportObj.useLocalTime;
-            dateFormat = exportObj && exportObj.dateFormat;
 
             var fields = req.body.selectedFields.split(','),
                 refFieldNames = [],

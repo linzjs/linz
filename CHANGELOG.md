@@ -15,18 +15,9 @@
 
 ### IMPROVEMENTS
 
-- Added a new function `linz.api.util.generateExport()` to help generate exports from any route.
-- Added a new renderer `linz.api.renderers.arrayRenderer()` to help display an array of strings.
-- Added a new renderer `linz.api.renderers.booleanRenderer()` to help display a boolean field.
-- Added a new renderer `linz.api.renderers.dateRenderer()` to help display a date field.
-- Added a new renderer `linz.api.renderers.overviewLinkRenderer()` to help display an overview record.
-- Added a new renderer `linz.api.renderers.referenceRenderer()` to help display a reference field.
 - Updated the modelExport route to `transpose` fields if a `transpose` or `transpose.export` function is provided in the formDSL. This allows you to completely customise exported fields before displaying them in the exported file.
 - Custom export routes can now take advantage of `linz.api.util.generateExport()` to fully customise what kind of file is generated. For example you can generate `.xls` and `.csv` files and customise the content.
 - Added the ability to provide a custom default renderer for the versions plugin.
-
-## Unreleased
-
 - Added the ability to create a custom form based on the model schema via `linz.api.model.generateForm()` and `linz.api.model.generateFormString()`.
 - Added the ability to define custom fields in the form DSL. When specifying a custom field you should add a `type` property if you want an input other than `text`.
 - Add the ability to edit `public` and `views` files without restarting the node process.
