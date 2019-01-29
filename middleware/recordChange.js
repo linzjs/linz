@@ -142,7 +142,7 @@ module.exports = function (req, res, next) {
         });
 
         return Promise.all(promises)
-            .then((data) => data);
+            .then(() => data);
 
 	};
 
