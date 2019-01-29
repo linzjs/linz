@@ -28,10 +28,6 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
         name: {
             fieldset: 'Details',
             helpText: 'The users full name.',
-            transpose: {
-                'export': (val) => Promise.resolve(`Exporting ${val} name`),
-                'form': (val) => Promise.resolve(`Transposing the ${val} using the form context`),
-            },
         },
         email: {
             fieldset: 'Details',
@@ -48,6 +44,9 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
 
                 },
             }),
+            transpose: {
+                'export': (val) => Promise.resolve(val.map(({ email }) => email).join(',')),
+            },
         },
         org: {
             fieldset: 'Details',
