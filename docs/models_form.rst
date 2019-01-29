@@ -278,13 +278,11 @@ In some instances, client side data requirements are different from that of data
 {field-name}.transpose
 ======================
 
-The ``transpose`` property will accept an object with context::
+The ``transpose`` property will accept an object with context.
 
-  transpose.{context} (field, record)
+Currently, the following contexts are accepted:
 
-The following contexts are currently accepted:
-
-- ``form`` The default transpose function.
+- ``form`` Used within context of forms and creating and editing model records.
 - ``export`` Only used for exporting records.
 
 {field-name}.transpose.form
