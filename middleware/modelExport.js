@@ -127,7 +127,7 @@ var modelExportHelpers = function modelExportHelpers (req) {
 
                 }
 
-            ]);
+            ], cb);
 
         },
 

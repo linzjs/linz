@@ -86,6 +86,7 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
             bAdmin: true,
             org: { renderer: linz.formtools.cellRenderers.defaultRenderer },
         },
+        filters: { username: { filter: linz.formtools.filters.text } },
         recordActions: [
             {
                 action: 'edit-custom',
