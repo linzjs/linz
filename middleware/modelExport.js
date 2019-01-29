@@ -348,7 +348,7 @@ module.exports = {
 
                             if (getTransposeFn(form, fieldName, 'export')) {
 
-                                return promises.push(getTransposeFn(form, fieldName, 'export')(doc[fieldName])
+                                return promises.push(getTransposeFn(form, fieldName, 'export')(doc[fieldName], doc)
                                     .then((val) => (doc[fieldName] = val)));
 
                             }
