@@ -133,7 +133,7 @@ var modelExportHelpers = function modelExportHelpers (req) {
 
         getSearchFilters: (filters, cb) => {
 
-            if (!form.search && !form.search.length) {
+            if (!form.search || !form.search.length) {
                 return cb(null, filters);
             }
 
@@ -182,12 +182,11 @@ var modelExportHelpers = function modelExportHelpers (req) {
             filters = filters || { '$and': [] };
             filters.$and = filters.$and || [];
 
-            var ids = [],
-                db  = linz.mongoose.connection.db;
+            var ids = [];
 
             // compile ids into ObjectId type
             req.body.selectedIds.split(',').forEach(function (id) {
-                ids.push(new db.bsonLib.ObjectID(id));
+                ids.push(new linz.mongoose.Types.ObjectId(id));
             });
 
             // let's add selected Ids to the filters
