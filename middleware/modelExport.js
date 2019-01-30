@@ -60,6 +60,9 @@ const prettifyData = (req, fieldName, val) => new Promise((resolve, reject) => {
 
 var modelExportHelpers = function modelExportHelpers (req) {
 
+    const form = JSON.parse(req.body.filters);
+    const Model = req.linz.model;
+
     return {
 
         getFilters: function getFilters (cb) {
@@ -67,9 +70,6 @@ var modelExportHelpers = function modelExportHelpers (req) {
             if (!req.body.filters.length) {
                 return cb(null, {});
             }
-
-            var Model = req.linz.model,
-                form = JSON.parse(req.body.filters);
 
             // check if there are any filters in the form post
             if (!form.selectedFilters) {
@@ -128,6 +128,48 @@ var modelExportHelpers = function modelExportHelpers (req) {
                 }
 
             ], cb);
+
+        },
+
+        getSearchFilters: (filters, cb) => {
+
+            if (!form.search && !form.search.length) {
+                return cb(null, filters);
+            }
+
+            if (!filters.$and) {
+                filters.$and = [];
+            }
+
+            Model.getList(req, (err, list) => {
+
+                if (err) {
+                    return cb(err);
+                }
+
+                const searchFields = list.search;
+
+                async.map(searchFields, (field, fieldCallback) => {
+
+                    linz.api.model.titleField(req.params.model, field, (err, titleField) => {
+
+                        if (err) {
+                            return fieldCallback(err);
+                        }
+
+                        return fieldCallback(null, linz.api.query.fieldRegexp(titleField, form.search));
+
+                    });
+
+                }, (err, $or) => {
+
+                    filters.$and.push({ $or });
+
+                    return cb(err, filters);
+
+                });
+
+            });
 
         },
 
@@ -272,6 +314,7 @@ module.exports = {
             helpers = modelExportHelpers(req);
 
         asyncFn.push(helpers.getFilters);
+        asyncFn.push(helpers.getSearchFilters);
         asyncFn.push(helpers.addIdFilters);
         asyncFn.push(helpers.getForm);
         asyncFn.push(helpers.getList);
