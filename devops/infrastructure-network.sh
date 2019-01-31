@@ -1,13 +1,19 @@
 #!/usr/bin/env bash
 
-if [ ! "$(docker network ls -q -f name=linz)" ]; then
+NETWORK_NAME="linz-dev"
 
-  echo "Creating Linz network ..."
+if [[ $TARGET_ENV == "test" ]]; then
+    NETWORK_NAME="linz"
+fi
 
-  docker network create linz
+if [ ! "$(docker network ls -q -f name=$NETWORK_NAME)" ]; then
+
+  echo "Creating $NETWORK_NAME network ..."
+
+  docker network create $NETWORK_NAME
 
 else
 
-  echo "Linz network exists, skipping..."
+  echo "$NETWORK_NAME network exists, skipping..."
 
 fi

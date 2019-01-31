@@ -7,13 +7,7 @@ done
 
 # Link the infrastructure and run the image.
 # Stop the containers even if the tests fail.
-docker run -it --name linz --network linz -v $PWD/public:/app/node_modules/linz/public -v $PWD/views:/app/node_modules/linz/views --rm -p 8888:8888 linz
-
-# Store the exit status of the tests.
-exitWith=$?
+docker run -it --name linz-dev --network linz-dev -v $PWD/public:/app/node_modules/linz/public -v $PWD/views:/app/node_modules/linz/views --rm -p 8888:8888 linz-dev
 
 # Clean up.
 source $PWD/devops/clean.sh
-
-# Now we can exit, with the status of the tests.
-exit $exitWith

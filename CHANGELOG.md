@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Unreleased
+
+- `app` now has it's own `package.json` with linz as a file-based dependency.
+- `app` dependencies have now been removed from Linz's `package.json` `devDependencies`.
+- A dev-only Dockerfile (`Dockerfile.dev`) has now been created for development purposes.
+- `Dockerfile` is now purely focused on building Linz, not running an app using Linz.
+- You can now run `yarn dev` and `yarn test` at the same time.
+
 ## v1.0.0-17.1.0 (31 January 2019)
 
 - Added the ability to transform individual export values. `form[field].transpose.export => (val) => Promise.resolve(val)`. This function must return a promise.
