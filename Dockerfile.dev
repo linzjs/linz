@@ -1,21 +1,3 @@
-# #
-# # First stage: build Linz
-# #
-# FROM node:8-alpine as linz
-
-# COPY /devops /linz/devops
-# COPY /lib /linz/lib
-# COPY /middleware /linz/middleware
-# COPY /params /linz/params
-# COPY /public /linz/public
-# COPY /routes /linz/routes
-# COPY /views /linz/views
-# COPY /test /linz/test
-# COPY /linz.js /package.json /yarn.lock /linz/
-
-#
-# Second stage: build the app
-#
 FROM node:8-alpine
 
 # Setup dockerize.
@@ -27,11 +9,21 @@ RUN apk add --no-cache bash curl git openssl && \
 
 WORKDIR /app
 
-# Copy the app across
-COPY /app /app
-COPY --from=linz:latest /linz /linz
+# Copy package files
+COPY package.json yarn.lock linz.js /linz/
+COPY /app/package.json /app/yarn.lock /app/
 
-# # Build the app
+# Build the app
 RUN yarn
+
+# Copy other files
+COPY /app /app
+COPY /lib /app/node_modules/linz/lib
+COPY /middleware /app/node_modules/linz/middleware
+COPY /params /app/node_modules/linz/params
+COPY /public /app/node_modules/linz/public
+COPY /routes /app/node_modules/linz/routes
+COPY /views /app/node_modules/linz/views
+COPY /test /app/node_modules/linz/test
 
 CMD dockerize -wait tcp://mongodb-dev:27017 -wait tcp://redis-dev:6379 -timeout 20s yarn start

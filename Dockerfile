@@ -1,6 +1,3 @@
-#
-# First stage: build Linz
-#
 FROM node:8-alpine
 
 # Setup dockerize.
