@@ -1,6 +1,6 @@
 {
   "name": "linz",
-  "version": "1.0.0-17.0.0",
+  "version": "1.0.0-17.1.0",
   "description": "Node.js web application framework",
   "license": "MIT",
   "main": "linz.js",
@@ -40,6 +40,7 @@
     "clone": "1.0.2",
     "connect-flash": "^0.1.1",
     "cookie-parser": "1.0.x",
+    "csv-stringify": "4.3.1",
     "debug": "0.7.4",
     "dedupe": "2.1.0",
     "deep-diff": "0.2.0",
@@ -60,6 +61,7 @@
     "passport-local": "1.0.0",
     "printf": "0.2.x",
     "sentence-case": "2.1.1",
+    "stream-transform": "1.0.8",
     "stylus": "~0.40.3"
   },
   "devDependencies": {

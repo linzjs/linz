@@ -2,6 +2,7 @@
 
 const linz = require('linz');
 const emailSchema = require('../schemas/emailSchema');
+const moment = require('moment');
 
 const mtUserSchema = new linz.mongoose.Schema({
     alternativeEmails: [emailSchema],
@@ -43,12 +44,16 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
 
                 },
             }),
+            transpose: {
+                'export': (val) => Promise.resolve(val.map(({ email }) => email).join(',')),
+            },
         },
         org: {
             fieldset: 'Details',
         },
         birthday: {
             fieldset: 'Details',
+            transpose: { 'export': (val) => Promise.resolve(moment(val).format('D MMMM YYYY')) },
             widget: linz.formtools.widgets.date({ 'data-linz-date-format': 'DD/MM/YYYY hh:mm a' }),
         },
         customOffset: {
@@ -81,11 +86,19 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
             bAdmin: true,
             org: { renderer: linz.formtools.cellRenderers.defaultRenderer },
         },
+        filters: { username: { filter: linz.formtools.filters.text } },
         recordActions: [
             {
                 action: 'edit-custom',
                 disabled: false,
                 label: 'Customised edit form',
+            },
+        ],
+        export: [
+            {
+                exclusions: '_id',
+                label: 'Choose fields to export',
+                dateFormat: 'DD MMM YYYY',
             },
         ],
     },

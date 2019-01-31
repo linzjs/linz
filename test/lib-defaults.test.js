@@ -157,6 +157,6 @@ describe('once Linz is initialised', () => {
             })
             .then(() => expect(routeMock.mock.calls.length).toBe(1));
 
-    });
+    }, 10000);
 
 });

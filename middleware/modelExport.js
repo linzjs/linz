@@ -2,144 +2,74 @@ var linz = require('../'),
     async = require('async'),
     moment = require('moment');
 
-let useLocalTime = false;
-let dateFormat = false;
+const { isDate } = require('../lib/util');
+const {
+    boolean,
+    date,
+    referenceName,
+} = require('../lib/formtools/renderers-cell');
+const { getTransposeFn } = require('../lib/util');
 
-var modelExportHelpers = function modelExportHelpers (req, res) {
+const prettifyData = (req, fieldName, val) => new Promise((resolve, reject) => {
 
-    const { labels } = req.linz.model.linz.formtools;
+    if (typeof val === 'boolean') {
 
-    var getRecordData = function getRecordData (fields, record) {
+        return boolean(val, null, null, null, (err, result) => {
 
-        var orderedRecord = {};
-
-        // order field names in the selected order
-        fields.forEach(function (fieldName) {
-            orderedRecord[fieldName] = prettifyData(fieldName, record[fieldName]);
-        });
-
-        return linz.utils.json2CSV(orderedRecord);
-
-    };
-
-    /**
-     * Format a date object using the list dsl settings.
-     * @param {Date} val A date object.
-     * @return {String} A date string.
-     */
-    const formatDate = (val) => {
-
-        if (!(val instanceof Date)) {
-            return val;
-        }
-
-        return moment(val)
-            .utcOffset((useLocalTime && linz.api.session.getTimezone(req)) || 0)
-            .format((typeof dateFormat === 'string') && dateFormat);
-
-    };
-
-    var prettifyData = function prettifyData (fieldName, val) {
-
-        if (val === undefined || val === '' || val === null) {
-            return val;
-        }
-
-        if (typeof val === 'number') {
-            return val;
-        }
-
-        var Model = req.linz.model;
-
-        if (Model.schema.tree[fieldName].ref) {
-            return val.title;
-        }
-
-        if (Array.isArray(val)) {
-
-            if (val.length === 0) {
-                return '';
+            if (err) {
+                return reject(err);
             }
 
-            var strArr = [];
+            return resolve(result);
 
-            val.forEach(function (obj) {
+        });
 
-                if (typeof obj === 'object') {
+    }
 
-                    var arr = [];
+    if (isDate(val)) {
 
-                    // tostring embedded object
-                    Object.keys(obj).forEach(function (key) {
-                        if (key === '_id' || key === 'id' || key === 'dateModified' || key === 'dateCreated' || obj[key] === '' || obj[key] === undefined) {
-                            return;
-                        }
-                        return arr.push(key + ': ' + (obj[key] || '').toString());
-                    });
+        return date(val, null, null, null, (err, result) => {
 
-                    return strArr.push(arr.join(', '));
-                }
+            if (err) {
+                return reject(err);
+            }
 
-                return strArr.push(obj.toString());
+            return resolve(result);
 
-            });
+        });
 
-            return strArr.join(', ');
+    }
 
-        }
+    if (val && req.linz.model.schema.tree[fieldName].ref) {
 
-        if (typeof val === 'boolean' || 'true,false,yes,no'.indexOf(val) >= 0 ) {
-            return (linz.utils.asBoolean(val) ? 'Yes' : 'No');
-        }
+        return referenceName(val, null, fieldName, req.linz.model, (err, result) => {
 
-        if (val instanceof Date) {
-            val = formatDate(val);
-        }
+            if (err) {
+                return reject(err);
+            }
 
-        return val;
+            return resolve(result);
 
-    };
+        });
+
+    }
+
+    return resolve(val);
+
+});
+
+var modelExportHelpers = function modelExportHelpers (req) {
+
+    const form = JSON.parse(req.body.filters);
+    const Model = req.linz.model;
 
     return {
-
-        mongooseToCSV: function mongooseToCSV (fields, form) {
-
-            var count = 0;
-
-            return function (doc) {
-
-                var str = '',
-                    record = doc.toObject({virtuals: true });
-
-                if (count !== 0) {
-                    return getRecordData(fields, record);
-                }
-
-                var arr = [];
-
-                // get field labels
-                fields.forEach(function (fieldName) {
-                    arr.push(labels[fieldName]);
-                });
-
-                str = arr.join() + '\n';
-
-                count++;
-
-                return str + getRecordData(fields, record);
-
-            };
-
-        },
 
         getFilters: function getFilters (cb) {
 
             if (!req.body.filters.length) {
                 return cb(null, {});
             }
-
-            var Model = req.linz.model,
-                form = JSON.parse(req.body.filters);
 
             // check if there are any filters in the form post
             if (!form.selectedFilters) {
@@ -191,13 +121,55 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
                             filters = Model.setFiltersAsQuery(filters);
                         }
 
-                        return cb(err, filters);
+                        return callback(err, filters);
 
                     });
 
                 }
 
-            ]);
+            ], cb);
+
+        },
+
+        getSearchFilters: (filters, cb) => {
+
+            if (!form.search || !form.search.length) {
+                return cb(null, filters);
+            }
+
+            if (!filters.$and) {
+                filters.$and = [];
+            }
+
+            Model.getList(req, (err, list) => {
+
+                if (err) {
+                    return cb(err);
+                }
+
+                const searchFields = list.search;
+
+                async.map(searchFields, (field, fieldCallback) => {
+
+                    linz.api.model.titleField(req.params.model, field, (err, titleField) => {
+
+                        if (err) {
+                            return fieldCallback(err);
+                        }
+
+                        return fieldCallback(null, linz.api.query.fieldRegexp(titleField, form.search));
+
+                    });
+
+                }, (err, $or) => {
+
+                    filters.$and.push({ $or });
+
+                    return cb(err, filters);
+
+                });
+
+            });
 
         },
 
@@ -208,18 +180,17 @@ var modelExportHelpers = function modelExportHelpers (req, res) {
             }
 
             filters = filters || { '$and': [] };
-            filters['$and'] = filters['$and'] || [];
+            filters.$and = filters.$and || [];
 
-            var ids = [],
-                db  = linz.mongoose.connection.db;
+            var ids = [];
 
             // compile ids into ObjectId type
             req.body.selectedIds.split(',').forEach(function (id) {
-                ids.push(new db.bsonLib.ObjectID(id));
+                ids.push(new linz.mongoose.Types.ObjectId(id));
             });
 
             // let's add selected Ids to the filters
-            filters['$and'].push({
+            filters.$and.push({
                 _id: { $in: ids}
             });
 
@@ -277,8 +248,6 @@ module.exports = {
 
     get: function (req, res, next) {
 
-        const { labels } = req.linz.model.linz.formtools;
-
         req.linz.model.getList(req, function (err, list) {
 
             if (err) {
@@ -292,7 +261,14 @@ module.exports = {
             req.linz.export = getExport(list.export);
             req.linz.export.fields = {};
 
-            var excludedFieldNames = req.linz.export.exclusions.concat(',__v').split(','),
+            // retrieve the form to provide a list of fields to choose from
+            req.linz.model.getForm(req, function (formErr, form){
+
+                if (formErr) {
+                    return next(formErr);
+                }
+
+                var excludedFieldNames = req.linz.export.exclusions.concat(',__v').split(','),
                     fieldLabels = {};
 
                 // get a list of field names
@@ -303,8 +279,12 @@ module.exports = {
                         return;
                     }
 
+                    if (!form[pathname]) {
+                        throw new Error(`Could not find ${pathname} field in the labels array.`);
+                    }
+
                     // get a list of fields by the label ready for sorting
-                    fieldLabels[labels[pathname]] = pathname;
+                    fieldLabels[form[pathname].label] = pathname;
 
                 });
 
@@ -318,6 +298,8 @@ module.exports = {
 
                 return next(null);
 
+            });
+
         });
 
     },
@@ -328,9 +310,10 @@ module.exports = {
 
         // since a custom export function is not defined for model, use local export function
         var asyncFn = [],
-            helpers = modelExportHelpers(req, res);
+            helpers = modelExportHelpers(req);
 
         asyncFn.push(helpers.getFilters);
+        asyncFn.push(helpers.getSearchFilters);
         asyncFn.push(helpers.addIdFilters);
         asyncFn.push(helpers.getForm);
         asyncFn.push(helpers.getList);
@@ -351,9 +334,6 @@ module.exports = {
             if (err) {
                 return next(err);
             }
-
-            useLocalTime = exportObj && exportObj.useLocalTime;
-            dateFormat = exportObj && exportObj.dateFormat;
 
             var fields = req.body.selectedFields.split(','),
                 refFieldNames = [],
@@ -382,10 +362,6 @@ module.exports = {
 
             filterFieldNames = filterFieldNames.concat(fields);
 
-            // serve .csv file
-            res.setHeader('Content-disposition', 'attachment; filename=' + Model.linz.formtools.model.plural + '-' + moment(Date.now()).format('l').replace(/\//g, '.', 'g') + '.csv');
-            res.writeHead(200, { 'Content-Type': 'text/csv' });
-
             // pipe data to response stream
             req.linz.model.getQuery(req, filters, function getQuery (err, query) {
 
@@ -393,10 +369,43 @@ module.exports = {
                     return next(err);
                 }
 
-                query.select(filterFieldNames.join(' '))
-                    .populate(refFieldNames.join(' '), '-_id -__v -dateCreated -dateModified -createdBy -modifiedBy')
-                    .stream({ transform: helpers.mongooseToCSV(fields, form) })
-                    .pipe(res);
+                const exportQuery = query.select(filterFieldNames.join(' '));
+
+                linz.api.util.generateExport({
+                    columns: fields.map((fieldName) => ({
+                        key: fieldName,
+                        header: form[fieldName] && form[fieldName].label,
+                    })),
+                    contentType: 'text/csv',
+                    name: `${Model.linz.formtools.model.plural}-${moment(Date.now()).format('l').replace(/\//g, '.', 'g')}`,
+                    query: exportQuery,
+                    req,
+                    res,
+                    transform: (doc, callback) => {
+
+                        const fields = Object.keys(doc);
+                        const promises = [];
+
+                        fields.forEach((fieldName) => {
+
+                            if (getTransposeFn(form, fieldName, 'export')) {
+
+                                return promises.push(getTransposeFn(form, fieldName, 'export')(doc[fieldName], doc)
+                                    .then((val) => (doc[fieldName] = val)));
+
+                            }
+
+                            return promises.push(prettifyData(req, fieldName, doc[fieldName])
+                                .then((val) => (doc[fieldName] = val)));
+
+                        });
+
+                        Promise.all(promises)
+                            .then(() => callback(null, doc))
+                            .catch(callback);
+
+                    },
+                });
 
             });
 

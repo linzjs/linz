@@ -2,7 +2,7 @@
 
 # Setup the infrastructure.
 for script in "infrastructure-network.sh" "infrastructure-mongo.sh" "infrastructure-redis.sh"; do
-    source "$PWD/devops/${script}"
+    TARGET_ENV=test source "$PWD/devops/${script}"
 done
 
 # Link the infrastructure and run the image.

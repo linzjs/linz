@@ -13,7 +13,7 @@ When using Linz notifications in this manner, you must make use of `connect-flas
   // Perform task.
 
   // Create the notification.
-  req.flash('linz-notification', linz.api.view.notification({ text: 'Notification message', type: 'success' }));
+  req.flash('linz-notification', linz.api.views.notification({ text: 'Notification message', type: 'success' }));
 
   // Redirect the user back.
   return res.redirect('back');

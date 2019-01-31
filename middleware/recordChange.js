@@ -1,7 +1,10 @@
 var linz = require('../'),
 	async = require('async'),
 	deep = require('deep-diff'),
-	moment = require('moment');
+    moment = require('moment');
+
+const { deprecate } = require('util');
+const { getTransposeFn } = require('../lib/util');
 
 module.exports = function (req, res, next) {
 
@@ -19,7 +22,9 @@ module.exports = function (req, res, next) {
 				yourChange: {},
 				theirChange: {}
 			},
-			form = model.linz.formtools.form;
+            form = model.linz.formtools.form;
+
+        const promises = [];
 
 		model.schema.eachPath(function (fieldName, schemaType) {
 
@@ -33,11 +38,19 @@ module.exports = function (req, res, next) {
 				data.theirChange['versionNo'] = theirChange['__v'];
 
 				return;
-			}
+            }
 
-			// if transpose is defined for this field, let's tranpose their change so it can compare in the correct format on client side
-			if (form[fieldName].transpose) {
-				theirChange[fieldName] = form[fieldName].transpose(theirChange[fieldName], theirChange);
+			// if transpose is defined for this field, let's transpose their change so it can compare in the correct format on client side
+			if (getTransposeFn(form, fieldName, 'form')) {
+
+                let transposeFn = getTransposeFn(form, fieldName, 'form')(theirChange[fieldName], theirChange);
+
+                if (!(transposeFn instanceof Promise)) {
+                    transposeFn = Promise.resolve(deprecate(() => transposeFn, 'Transposing a field without returning a promise has been deprecated.')());
+                }
+
+                promises.push(transposeFn.then((result) => (theirChange[fieldName] = result)));
+
 			}
 
 			switch (form[fieldName].type) {
@@ -126,9 +139,10 @@ module.exports = function (req, res, next) {
 					data.theirChange[fieldName] = theirChange[fieldName];
 
 			}
-		});
+        });
 
-		return data;
+        return Promise.all(promises)
+            .then(() => data);
 
 	};
 
@@ -198,55 +212,60 @@ module.exports = function (req, res, next) {
 			return res.status(200).json(resData);
 		}
 
-		var cleanData = sanitiseData(Model, exclusionFields, formData, result),
-			yourChange = cleanData.yourChange,
-			theirChange = cleanData.theirChange;
+        sanitiseData(Model, exclusionFields, formData, result)
+            .then((cleanData) => {
 
-		// check if version number for yourChange and theirChange, if it is the same, no changes occurred, exit!
-		// also check if version number from form request is the same as yourChange, this means the conflict has been resolved, exit!
-		if (parseInt(yourChange.versionNo) === parseInt(theirChange.versionNo) || (req.params.versionNo && parseInt(req.params.versionNo) === parseInt(theirChange.versionNo))) {
+                const yourChange = cleanData.yourChange;
+                const theirChange = cleanData.theirChange;
 
-			return res.status(200).json(resData);
-		}
+                // check if version number for yourChange and theirChange, if it is the same, no changes occurred, exit!
+                // also check if version number from form request is the same as yourChange, this means the conflict has been resolved, exit!
+                if (parseInt(yourChange.versionNo) === parseInt(theirChange.versionNo) || (req.params.versionNo && parseInt(req.params.versionNo) === parseInt(theirChange.versionNo))) {
 
-		// let's do a diff for the fields changed
-		var diffResult = deep.diff(theirChange, yourChange, function (path, key) {
+                    return res.status(200).json(resData);
+                }
 
-			if (key === 'versionNo') {
-				return true;
-			}
+                // let's do a diff for the fields changed
+                var diffResult = deep.diff(theirChange, yourChange, function (path, key) {
 
-		});
+                    if (key === 'versionNo') {
+                        return true;
+                    }
 
-		if (!diffResult || (diffResult.length === 1 && diffResult[0].path && diffResult[0].path[0] === 'modifiedBy')) {
-			// exit if there is not diff result or if diff result only contains the modifiedBy field
-			return res.status(200).json(resData);
-		}
+                });
 
-		var diffKeys = {};
+                if (!diffResult || (diffResult.length === 1 && diffResult[0].path && diffResult[0].path[0] === 'modifiedBy')) {
+                    // exit if there is not diff result or if diff result only contains the modifiedBy field
+                    return res.status(200).json(resData);
+                }
 
-		// get a list of unique field names and it's type
-		diffResult.forEach(function (diff) {
+                var diffKeys = {};
 
-			var fieldName = diff.path[0];
+                // get a list of unique field names and it's type
+                diffResult.forEach(function (diff) {
 
-			// change fieldname to the related field defined in the relationship
-            if (Model.linz.formtools.form && Model.linz.formtools.form[fieldName].relationship) {
-				fieldName = Model.linz.formtools.form[fieldName].relationship;
-			}
+                    var fieldName = diff.path[0];
 
-            if (Model.linz.formtools.form && !diffKeys[fieldName]) {
-				diffKeys[fieldName] = Model.linz.formtools.form[fieldName].type;
-			}
+                    // change fieldname to the related field defined in the relationship
+                    if (Model.linz.formtools.form && Model.linz.formtools.form[fieldName].relationship) {
+                        fieldName = Model.linz.formtools.form[fieldName].relationship;
+                    }
 
-		});
+                    if (Model.linz.formtools.form && !diffKeys[fieldName]) {
+                        diffKeys[fieldName] = Model.linz.formtools.form[fieldName].type;
+                    }
 
-		resData.hasChanged = true;
-		resData.theirChange = theirChange;
-		resData.yourChange = yourChange;
-		resData.diff = diffKeys;
+                });
 
-		return res.status(200).json(resData);
+                resData.hasChanged = true;
+                resData.theirChange = theirChange;
+                resData.yourChange = yourChange;
+                resData.diff = diffKeys;
+
+                return res.status(200).json(resData);
+
+            })
+            .catch(next);
 
 	});
 

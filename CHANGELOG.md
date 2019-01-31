@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## v1.0.0-17.1.0 (31 January 2019)
+
+- Added the ability to transform individual export values. `form[field].transpose.export => (val) => Promise.resolve(val)`. This function must return a promise.
+- Deprecated the transpose function in favour of the context one. `transpose: (val) => ...` should now be `transpose: { form: (val) => ... }`.
+- Updated the modelExport route to `transpose` fields if a `transpose` or `transpose.export` function is provided in the formDSL. This allows you to completely customise exported fields before displaying them in the exported file.
+- Custom export routes can now take advantage of `linz.api.util.generateExport()` to fully customise what kind of file is generated. For example you can generate `.xls` and `.csv` files and customise the content.
+- Added the ability to provide a custom default renderer for the versions plugin.
+
 ## v1.0.0-17.0.0 (21 January 2019)
 
 ### BREAKING CHANGES
