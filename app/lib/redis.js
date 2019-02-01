@@ -2,6 +2,8 @@
 
 const Redis = require('ioredis');
 
+Redis.Promise.onPossiblyUnhandledRejection((err) => console.log(`Unhandled Redis error: ${err}`));
+
 class IORedis {
 
     constructor () {
