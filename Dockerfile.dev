@@ -1,0 +1,29 @@
+FROM node:8-alpine
+
+# Setup dockerize.
+# Keep bash and curl to run the codecov bash script.
+ENV DOCKERIZE_VERSION v0.6.0
+RUN apk add --no-cache bash curl git openssl && \
+    curl -sSL https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz | tar -C /usr/local/bin -xzvf - && \
+    apk del openssl
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json yarn.lock linz.js /linz/
+COPY /app/package.json /app/yarn.lock /app/
+
+# Build the app
+RUN yarn
+
+# Copy other files
+COPY /app /app
+COPY /lib /app/node_modules/linz/lib
+COPY /middleware /app/node_modules/linz/middleware
+COPY /params /app/node_modules/linz/params
+COPY /public /app/node_modules/linz/public
+COPY /routes /app/node_modules/linz/routes
+COPY /views /app/node_modules/linz/views
+COPY /test /app/node_modules/linz/test
+
+CMD dockerize -wait tcp://mongodb-dev:27017 -wait tcp://redis-dev:6379 -timeout 20s yarn start

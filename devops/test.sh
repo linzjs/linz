@@ -7,13 +7,13 @@ done
 
 # Link the infrastructure and run the image.
 # Stop the containers even if the tests fail.
-docker run -it --name linz --network linz --rm -p 8888:8888 linz yarn test-app
+docker run -it --name linz --network linz --rm --workdir /linz linz yarn test-app
 
 # Store the exit status of the tests.
 exitWith=$?
 
 # Clean up.
-source $PWD/devops/clean.sh
+TARGET_ENV=test source $PWD/devops/clean.sh
 
 # Now we can exit, with the status of the tests.
 exit $exitWith

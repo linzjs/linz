@@ -30,7 +30,7 @@ class App extends EventEmitter {
         linz.init({
             'express': app,
             'options': {
-                'mongo': 'mongodb://mongodb:27017/lmt',
+                'mongo': 'mongodb://mongodb-dev:27017/lmt',
                 'session middleware': session,
                 'user model': 'mtUser',
                 'scripts': scripts,

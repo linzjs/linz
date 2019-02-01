@@ -8,7 +8,7 @@ class IORedis {
 
     constructor () {
 
-        const redis = new Redis('redis://redis:6379', {
+        const redis = new Redis('redis://redis-dev:6379', {
             retryStrategy: (times) => {
 
                 if (times >= 10) {
