@@ -1,5 +1,6 @@
 .model-filters(data-linz-has-search='' + ((model.list.search) ? 'true' : 'false') + '')
 	form#filters.filters(method='post', role='form')
+		input(type="hidden" name="_csrf" value="#{csrfToken}")
 		if model.list.search
 			div.input-group
 				if Object.keys(model.list.filters).length

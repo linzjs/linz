@@ -1,6 +1,7 @@
 "use strict";
 
 const { deprecate } = require('util');
+const csrf = require('./lib/csrf');
 
 /**
  * Load required modules
@@ -489,6 +490,8 @@ Linz.prototype.defaultConfiguration = function (cb) {
 };
 
 Linz.prototype.mountAdmin = function (cb) {
+
+    this.app.use(csrf(this));
 
     debugGeneral('Mounting Linz on ' + this.get('admin path'));
     this.app.use(this.get('admin path'), this.router);
