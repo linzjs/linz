@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+
+- Added csrf protection across all routes. For custom forms, the user will need to add `csrfToken: req.csrfToken()` to the options when using `linz.api.model.generateFormString()`.
+- Csrf protection can be customised by setting the linz option `csrf options`. This takes an object with the same options listed here https://www.npmjs.com/package/csurf.
+
 ## v1.0.0-17.1.1
 
 - `app` now has it's own `package.json` with linz as a file-based dependency.
