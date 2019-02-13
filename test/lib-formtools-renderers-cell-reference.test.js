@@ -106,11 +106,18 @@ test('renders a link to the ref record overview', async () => {
         organisation.save(),
         user.save(),
     ])
-        // Login first.
-        .then(() => request.post('/admin/login').send({
-            password: 'password',
-            username: 'test',
-        }))
+        .then(() => request.get('/admin/login').send())
+        .then((token) => {
+
+            const [csrfToken] = /(?<=name="_csrf" value=")(.*)(?="\/><div)/.exec(token.text);
+
+            return request.post('/admin/login').send({
+                _csrf: csrfToken,
+                password: 'password',
+                username: 'test',
+            });
+
+        })
         // Supertest seems to use non native promises which stop Jest tests from completing.
         // Wrapping it in a Promise.resolve fixes that.
         .then(() => Promise.resolve(request.get('/admin/model/user/list')))
