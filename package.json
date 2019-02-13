@@ -7,12 +7,12 @@
   "scripts": {
     "build": "./devops/build.sh",
     "build-dev": "./devops/build-dev.sh",
-    "dev": "npm-run-all --sequential build-dev dev-start",
+    "dev": "./node_modules/.bin/npm-run-all --sequential build-dev dev-start",
     "dev-start": "./devops/dev.sh",
     "jest": "jest --detectOpenHandles --forceExit",
     "report-coverage": "./devops/report-coverage.sh",
-    "test": "npm-run-all --sequential build test-start",
-    "test-app": "npm-run-all -s jest report-coverage",
+    "test": "./node_modules/.bin/npm-run-all --sequential build test-start",
+    "test-app": "./node_modules/.bin/npm-run-all -s jest report-coverage",
     "test-start": "./devops/test.sh"
   },
   "repository": {
