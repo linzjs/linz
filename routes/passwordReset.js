@@ -13,6 +13,7 @@ module.exports = {
             .then(([scripts, styles]) => {
 
                 return res.render(linz.api.views.viewPath('passwordReset.jade'), {
+                    csrfToken: req.csrfToken(),
                     record: req.linz.record,
                     scripts,
                     styles,
@@ -32,6 +33,7 @@ module.exports = {
             .then(([scripts, styles]) => {
 
                 return res.render(linz.api.views.viewPath('passwordReset.jade'), {
+                    csrfToken: req.csrfToken(),
                     scripts,
                     styles,
                     success: true,

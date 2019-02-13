@@ -35,6 +35,7 @@ var route = function (req, res, next) {
                 return res.render(linz.api.views.viewPath('configEdit.jade'), {
                     actionUrl: linz.api.url.getAdminLink(req.linz.config, 'save', req.linz.record._id),
                     cancelUrl: linz.api.url.getAdminLink(req.linz.config, 'list'),
+                    csrfToken: req.csrfToken(),
                     form: editForm.render(),
                     record: req.linz.record,
                     scripts,

@@ -27,6 +27,7 @@ var route = function (req, res, next) {
         .then(([scripts, styles]) => {
 
             var locals = {
+                csrfToken: req.csrfToken(),
                 customAttributes: res.locals.customAttributes,
                 formtools: req.linz.model.linz.formtools,
                 model: req.linz.model,

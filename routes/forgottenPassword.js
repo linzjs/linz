@@ -17,6 +17,7 @@ module.exports = {
             .then(([scripts, styles]) => {
 
                 return res.render(linz.api.views.viewPath('forgottenPassword.jade'), {
+                    csrfToken: req.csrfToken(),
                     scripts,
                     styles,
                 });
@@ -39,6 +40,7 @@ module.exports = {
             .then(([scripts, styles]) => {
 
                 return res.render(linz.api.views.viewPath('forgottenPassword.jade'), {
+                    csrfToken: req.csrfToken(),
                     email: req.body.email,
                     scripts,
                     styles,

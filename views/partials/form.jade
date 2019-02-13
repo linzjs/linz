@@ -1,7 +1,7 @@
 include ../mixins/documentarray
 
 form.form-horizontal.model(role='form', action='#{actionUrl}', method='post', data-linz-validation='true')
-    input(type="hidden" name="_csrf" value="#{csrfToken}")
+	input(type="hidden" name="_csrf" value="#{csrfToken}")
 	.form-group.control-bar.control-bar-top
 		.col-sm-12
 			button.btn.btn-primary(type='submit') Save

@@ -93,6 +93,7 @@ const renderForm = (req, res, next) => {
             return linz.api.model.generateFormString(linz.api.model.get('mtUser'), {
                 actionUrl: `${linz.get('admin path')}/model/mtUser/${id}/action/edit-custom`,
                 cancelUrl: `${linz.get('admin path')}/model/mtUser/list`,
+                csrfToken: req.csrfToken(),
                 form: getCustomFormDsl(),
                 record,
                 req,

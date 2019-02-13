@@ -14,6 +14,7 @@ var route = function (req, res, next) {
 
             var locals = {
                 config: req.linz.config,
+                csrfToken: req.csrfToken(),
                 formtools: req.linz.config.linz.formtools,
                 overview: req.linz.overview,
                 permissions: req.linz.config.linz.formtools.permissions,

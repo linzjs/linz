@@ -112,6 +112,7 @@ var route = function (req, res, next) {
                         return res.render(linz.api.views.viewPath('recordEdit.jade'), Object.assign(data, {
                             cancelUrl: linz.api.url.getAdminLink(req.linz.model),
                             conflictHandlersJS: conflictHandlersJS,
+                            csrfToken: req.csrfToken(),
                             form: editForm.render(),
                             model: req.linz.model,
                             record: req.linz.record,

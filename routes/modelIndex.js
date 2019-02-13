@@ -86,6 +86,7 @@ var route = function (req, res, next) {
             });
 
             const data = {
+                csrfToken: req.csrfToken(),
                 customAttributes: res.locals.customAttributes,
                 form,
                 from: pageSize*page-pageSize,
