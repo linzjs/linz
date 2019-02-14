@@ -50,6 +50,7 @@ Linz is quite new and under rapid development. It is used quite successfully in 
 
    cell_renderers
    forgot_password
+   security
 
 .. _contribution-docs:
 
