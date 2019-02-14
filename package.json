@@ -56,7 +56,7 @@
     "less-middleware": "1.0.3",
     "moment": "2.22.2",
     "mongoose": "4.13.12",
-    "mongoose-version": "github:idearium/mongoose-version",
+    "mongoose-version": "idearium/mongoose-version#451253904ca21c41d6e6c41edfde239b43fd3341",
     "passport": "0.2.x",
     "passport-local": "1.0.0",
     "printf": "0.2.x",
