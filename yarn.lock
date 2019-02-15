@@ -3204,9 +3204,9 @@ mongodb@2.2.34:
     mongodb-core "2.1.18"
     readable-stream "2.2.7"
 
-"mongoose-version@github:flashmedia/mongoose-version":
+mongoose-version@idearium/mongoose-version#451253904ca21c41d6e6c41edfde239b:
   version "0.2.4"
-  resolved "https://codeload.github.com/flashmedia/mongoose-version/tar.gz/451253904ca21c41d6e6c41edfde239b43fd3341"
+  resolved "https://codeload.github.com/idearium/mongoose-version/tar.gz/451253904ca21c41d6e6c41edfde239b43fd3341"
   dependencies:
     mongoose "3.8.x"
 
