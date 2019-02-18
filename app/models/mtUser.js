@@ -80,7 +80,7 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
     },
     list: {
         fields: {
-            name: true,
+            name: { renderer: linz.formtools.cellRenderers.overviewLink },
             username: true,
             email: false,
             bAdmin: true,
@@ -108,16 +108,42 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
         title: 'username',
     },
     overview: {
-        summary: {
-            fields: {
-                name: {
-                    renderer: linz.formtools.cellRenderers.defaultRenderer
-                },
-                email: {
-                    renderer: linz.formtools.cellRenderers.defaultRenderer
-                },
+        body: [
+            {
+                fields: [
+                    {
+                        fieldName: 'name',
+                        renderer: linz.formtools.cellRenderers.defaultRenderer
+                    },
+                    {
+                        fieldName: 'email',
+                        renderer: linz.formtools.cellRenderers.defaultRenderer
+                    },
+                ],
+                label: 'Details',
             },
-        },
+            [
+                {
+                    fields: [
+                        {
+                            fieldName: 'name',
+                            renderer: linz.formtools.cellRenderers.defaultRenderer
+                        },
+                    ],
+                    label: 'Section 1',
+                },
+                {
+                    fields: [
+                        {
+                            fieldName: 'email',
+                            renderer: linz.formtools.cellRenderers.defaultRenderer
+                        },
+                    ],
+                    label: 'Section 2',
+                },
+            ],
+            (req, res, record, model, cb) => cb(null, 'Custom HTML section'),
+        ],
     },
 });
 
