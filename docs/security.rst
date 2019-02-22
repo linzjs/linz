@@ -48,3 +48,10 @@ When implementing a custom page with a form, make sure to pass the following hid
 This is handled automatically for you when using ``linz.api.model.generateFormString()``. Just make sure to add the `csrfToken` option::
 
     linz.api.model.generateFormString(linz.api.model.get('user'), { csrfToken: req.csrfToken() });
+
+Adding CSRF protection to a non linz route
+==========================================
+
+Linz exposes a csrf api ``linz.api.middleware.csrf`` which can be used to provide CSRF protection for a non Linz route, for example an api route might look something like this::
+
+    linz.app.use('/api', linz.api.middleware.csrf, apiRoute);
