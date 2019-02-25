@@ -261,11 +261,11 @@ module.exports = {
             req.linz.export = getExport(list.export);
             req.linz.export.fields = {};
 
-            // retrieve the form to provide a list of fields to choose from
-            req.linz.model.getForm(req, function (formErr, form){
+            // retrieve the labels to provide a list of fields to choose from
+            req.linz.model.getLabels((labelErr, labels) => {
 
-                if (formErr) {
-                    return next(formErr);
+                if (labelErr) {
+                    return next(labelErr);
                 }
 
                 var excludedFieldNames = req.linz.export.exclusions.concat(',__v').split(','),
@@ -279,12 +279,12 @@ module.exports = {
                         return;
                     }
 
-                    if (!form[pathname]) {
-                        throw new Error(`Could not find ${pathname} field in the labels array.`);
+                    if (!labels[pathname]) {
+                        throw new Error(`Could not find ${pathname} field in the labels object.`);
                     }
 
                     // get a list of fields by the label ready for sorting
-                    fieldLabels[form[pathname].label] = pathname;
+                    fieldLabels[labels[pathname]] = pathname;
 
                 });
 
@@ -329,7 +329,11 @@ module.exports = {
 
         });
 
-        async.waterfall(asyncFn, function (err, filters, form, list, exportObj) {
+        asyncFn.push(function (filters, form, list, exportObj, cb) {
+            return req.linz.model.getLabels((err, labels) => cb(err, filters, form, list, exportObj, labels));
+        });
+
+        async.waterfall(asyncFn, function (err, filters, form, list, exportObj, labels) {
 
             if (err) {
                 return next(err);
@@ -374,7 +378,7 @@ module.exports = {
                 linz.api.util.generateExport({
                     columns: fields.map((fieldName) => ({
                         key: fieldName,
-                        header: form[fieldName] && form[fieldName].label,
+                        header: labels[fieldName],
                     })),
                     contentType: 'text/csv',
                     name: `${Model.linz.formtools.model.plural}-${moment(Date.now()).format('l').replace(/\//g, '.', 'g')}`,
