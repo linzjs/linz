@@ -122,10 +122,12 @@ Actions
 
 For example::
 
-  actions: [
-    {
-      label: 'Import people',
-      action: 'import-from-csv',
-      modal: true
-    }
-  ]
+  overview: {
+    actions: [
+      {
+        label: 'Import people',
+        action: 'import-from-csv',
+        modal: true,
+      },
+    ],
+  }
