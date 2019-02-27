@@ -3163,9 +3163,9 @@ mongodb@2.2.34:
     mongodb-core "2.1.18"
     readable-stream "2.2.7"
 
-mongoose-version@idearium/mongoose-version#4ec7aa5b6bd628a7da8e7ab4ce1888bb74ff8b6b:
+mongoose-version@linzjs/mongoose-version#27fa6beefa28f5ac983e967b5de6aea693a07728:
   version "0.2.4"
-  resolved "https://codeload.github.com/idearium/mongoose-version/tar.gz/4ec7aa5b6bd628a7da8e7ab4ce1888bb74ff8b6b"
+  resolved "https://codeload.github.com/linzjs/mongoose-version/tar.gz/27fa6beefa28f5ac983e967b5de6aea693a07728"
   dependencies:
     mongoose "4"
 
