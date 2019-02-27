@@ -7,7 +7,7 @@
 - Fixed not being able to return html in an overview section.
 - Export fields are no longer required to be in the formDSL.
 
-## v1.0.0-17.1.1
+## v1.0.0-17.1.1 (1 February 2019)
 
 - `app` now has it's own `package.json` with linz as a file-based dependency.
 - `app` dependencies have now been removed from Linz's `package.json` `devDependencies`.
