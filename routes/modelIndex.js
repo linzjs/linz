@@ -144,6 +144,7 @@ var route = function (req, res, next) {
                     async.eachOf(data.records, (record, index, callback) => {
 
                         renderRecordAction({
+                            csrfToken: req.csrfToken(),
                             model: data.model,
                             permissions: data.permissions,
                             record
