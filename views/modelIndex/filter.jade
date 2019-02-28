@@ -1,3 +1,6 @@
+block globalVars
+	- var csrfToken = csrfToken
+
 .form-group
 	label.control-label.filter-name(for='' + ((fieldName) ? fieldName: '') + '')= ((fieldName) ? (( model.list.activeFilters[fieldName] && model.list.activeFilters[fieldName].label) ? model.list.activeFilters[fieldName].label: '') : '')
 	.filter-control

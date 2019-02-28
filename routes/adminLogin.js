@@ -9,7 +9,6 @@ var route = {
 
         var linz = require('../'),
             locals = {
-                csrfToken: req.csrfToken(),
                 customAttributes: res.locals.customAttributes,
                 hasResetPassword: linz.api.model.get(linz.get('user model')).sendPasswordResetEmail, // check if resetPassword() is defined for user model
                 loginError: req.flash('error'), //set login error message
@@ -44,6 +43,7 @@ var route = {
 
                     // Now render the final template, within the layout.
                     return res.render(linz.api.views.viewPath('adminLogin.jade'), {
+                        csrfToken: req.csrfToken(),
                         html,
                         scripts,
                         styles,
