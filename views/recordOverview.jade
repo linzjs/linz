@@ -14,7 +14,6 @@ block header
                 if permissions.canDelete !== false
                     span.delete
                         form(action=linz.api.url.getAdminLink(model, 'delete', record._id), method='post')
-                            input(type='hidden', name='_csrf', value=csrfToken)
                             button(value='submit', class='btn btn-default', data-linz-control='delete')
                                 i.fa.fa-trash-o
                                 | Delete

@@ -14,7 +14,6 @@ div.btn-group
                 span(class="glyphicon glyphicon-trash")
         else
             form(action=linz.api.url.getAdminLink(model, 'delete', record._id), method='post', class='btn-group')
-                input(type='hidden', name='_csrf', value=csrfToken)
                 button(value='submit', class='btn btn-default', data-linz-control='delete')
                     span(class="glyphicon glyphicon-trash")
     for action in model.list.primaryRecordActions
