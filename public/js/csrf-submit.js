@@ -1,6 +1,6 @@
 'use strict';
 
-var insertToken = function () {
+var insertCSRFToken = function () {
 
     $('form').each(function() {
 
@@ -22,12 +22,12 @@ var insertToken = function () {
 
 linz.addLoadEvent(function () {
 
-    insertToken();
+    insertCSRFToken();
 
     // Update whenever a new form is loaded
     $('#linzModal, #groupActionModal, #recordActionModal, #exportModal, #documentsModal').on({
-        'show.bs.modal': insertToken,
-        'shown.bs.modal': insertToken
+        'show.bs.modal': insertCSRFToken,
+        'shown.bs.modal': insertCSRFToken
     });
 
 });

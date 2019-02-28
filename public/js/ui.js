@@ -139,7 +139,9 @@ if (!linz) {
             var url = button[0].nodeName === 'BUTTON' ? button.attr('data-href') : button.attr('href');
 
             // open modal and load URL
-            $('#linzModal').modal().load(url);
+            $('#linzModal').modal().load(url, function () {
+                insertCSRFToken();
+            });
 
             // remove modal shown event
             $('#linzModal').off('shown.bs.modal');
