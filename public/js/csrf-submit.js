@@ -25,7 +25,7 @@ linz.addLoadEvent(function () {
     insertToken();
 
     // Update whenever a new form is loaded
-    $('#linzModal, #groupActionModal, #recordActionModal, #exportModal, #documentsModal').on('shown.bs.modal', function (e) {
+    $('#linzModal, #groupActionModal, #recordActionModal, #exportModal, #documentsModal').on('show.bs.modal', function () {
         insertToken();
     });
 
