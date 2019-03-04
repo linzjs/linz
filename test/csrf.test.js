@@ -66,7 +66,6 @@ test('provides csrf protection', async () => {
     expect(response.status).toBe(403);
     expect(response.text).toMatch(/ForbiddenError:\ invalid\ csrf\ token/);
 
-
 });
 
 test('allows valid requests through', async () => {
@@ -84,7 +83,8 @@ test('allows valid requests through', async () => {
     await user.save();
 
     const token = await request.get('/admin/login').send();
-    const [csrfToken] = /(?<=name="_csrf" value=")(.*)(?="\/><div)/.exec(token.text);
+
+    const [csrfToken] = /(?<=name="csrf-token" content=")(.*)(?="><title>)/.exec(token.text);
 
     const response = await request.post('/admin/login').send({
         _csrf: csrfToken,

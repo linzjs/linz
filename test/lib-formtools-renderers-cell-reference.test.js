@@ -109,7 +109,7 @@ test('renders a link to the ref record overview', async () => {
         .then(() => request.get('/admin/login').send())
         .then((token) => {
 
-            const [csrfToken] = /(?<=name="_csrf" value=")(.*)(?="\/><div)/.exec(token.text);
+            const [csrfToken] = /(?<=name="csrf-token" content=")(.*)(?="><title>)/.exec(token.text);
 
             return request.post('/admin/login').send({
                 _csrf: csrfToken,
