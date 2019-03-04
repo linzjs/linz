@@ -7,7 +7,6 @@ if model && model.modelName
 if view
     - attributes['data-linz-view'] = view
 html(lang="en")&attributes(attributes)
-    block globalVars
     include partials/head
     - bodyAttributes = []
     if customAttributes && customAttributes.length
