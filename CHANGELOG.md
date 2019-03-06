@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+- Made the modal CSRF script selector more generic so it pick up custom modals too.
+
 ## v1.0.0-18.0.0 (6 March 2019)
 
 ### BREAKING CHANGES
