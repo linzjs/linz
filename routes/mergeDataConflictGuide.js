@@ -12,6 +12,7 @@ var route = function (req, res, next) {
         .then(([scripts, styles]) => {
 
             return res.render(linz.api.views.viewPath('merge-data-conflict-guide.jade'), {
+                csrfToken: req.csrfToken(),
                 scripts,
                 styles,
             });

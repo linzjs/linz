@@ -59,6 +59,7 @@ var route = function (req, res, next) {
                         return res.render(linz.api.views.viewPath('modelCreate.jade'), Object.assign(data, {
                             actionUrl: linz.api.url.getAdminLink(req.linz.model, 'create'),
                             cancelUrl: linz.api.url.getAdminLink(req.linz.model),
+                            csrfToken: req.csrfToken(),
                             form: editForm.render(),
                             label: {
                                 singular,

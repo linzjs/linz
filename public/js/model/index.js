@@ -230,7 +230,9 @@ linz.addLoadEvent(function () {
         var queryObj = $(this),
             url = queryObj.attr('href');
 
-        $('#groupActionModal').modal().load(url);
+        $('#groupActionModal').modal().load(url, function () {
+            insertCSRFToken();
+        });
 
        return false;
     });
@@ -241,7 +243,9 @@ linz.addLoadEvent(function () {
         var queryObj = $(this),
             url = queryObj.attr('href');
 
-        $('#recordActionModal').modal().load(url);
+        $('#recordActionModal').modal().load(url, function () {
+            insertCSRFToken();
+        });
 
        return false;
 
@@ -320,10 +324,16 @@ linz.addLoadEvent(function () {
         inputModelName.name = 'modelName';
         inputModelName.value = $('[data-linz-model]').attr('data-linz-model');
 
+        var tokenInput = document.createElement('input');
+        tokenInput.type = 'hidden';
+        tokenInput.name = '_csrf';
+        tokenInput.value = $('meta[name=csrf-token]').attr('content');
+
         // append to the form
         form.appendChild(inputFilters);
         form.appendChild(inputSelectedIds);
         form.appendChild(inputModelName);
+        form.appendChild(tokenInput);
 
         // append form to body
         document.body.appendChild(form);

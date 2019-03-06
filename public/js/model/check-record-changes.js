@@ -52,7 +52,9 @@ if (!linz) {
             }
 
             // since there is a change, lets load a modal to highlight the changes and provide user with options for the next step
-            $('#linzModal').modal().load('/admin/merge-data-conflict-guide', function () {});
+            $('#linzModal').modal().load('/admin/merge-data-conflict-guide', function () {
+                insertCSRFToken();
+            });
 
             Object.keys(data.diff).forEach(function (fieldName) {
 

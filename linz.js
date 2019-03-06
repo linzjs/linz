@@ -490,6 +490,10 @@ Linz.prototype.defaultConfiguration = function (cb) {
 
 Linz.prototype.mountAdmin = function (cb) {
 
+    // We need access to the linz defaults so the require has to go here.
+    const csrf = require('./lib/csrf');
+    this.app.use(csrf());
+
     debugGeneral('Mounting Linz on ' + this.get('admin path'));
     this.app.use(this.get('admin path'), this.router);
 

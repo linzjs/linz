@@ -55,21 +55,13 @@ You create Models in the ``model`` directory; one file per model. The file shoul
       }
     },
     overview: {
-      summary: {
-        fields: {
-          name: {
-            renderer: linz.formtools.cellRenderers.defaultRenderer
-          },
-          email: {
-            renderer: linz.formtools.cellRenderers.defaultRenderer
-          }
-        }
-      }
+      body: {
+        fields: [
+          'name',
+          'email',
+        ],
+      },
     },
-    fields: {
-      usePublishingDate: false,
-      usePublishingStatus: false
-    }
   });
 
   var person = module.exports = linz.mongoose.model('person', personSchema);

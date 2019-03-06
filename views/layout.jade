@@ -3,63 +3,63 @@ include mixins/navigation
 doctype html
 - attributes = []
 if model && model.modelName
-	- attributes['data-linz-model'] = model.modelName
+    - attributes['data-linz-model'] = model.modelName
 if view
-	- attributes['data-linz-view'] = view
+    - attributes['data-linz-view'] = view
 html(lang="en")&attributes(attributes)
-	include partials/head
-	- bodyAttributes = []
-	if customAttributes && customAttributes.length
-		each attribute in customAttributes
-			- bodyAttributes[attribute.name] = attribute.value
-	body&attributes(bodyAttributes)
-		.navbar.navbar-inverse.navbar-fixed-top.linz-navbar-inverse(role='navigation')
-			.container
-				.navbar-header
-					button.navbar-toggle(type='button', data-linz-nav-toggle)
-						span.sr-only Toggle navigation
-						span.icon-bar
-						span.icon-bar
-						span.icon-bar
-					a.navbar-brand(href=linz.get('admin path'))= linz.get('admin title')
-				.navbar-right
-					ul.nav.navbar-nav
-						li
-							a(href=linz.get('logout path')) Logout
+    include partials/head
+    - bodyAttributes = []
+    if customAttributes && customAttributes.length
+        each attribute in customAttributes
+            - bodyAttributes[attribute.name] = attribute.value
+    body&attributes(bodyAttributes)
+        .navbar.navbar-inverse.navbar-fixed-top.linz-navbar-inverse(role='navigation')
+            .container
+                .navbar-header
+                    button.navbar-toggle(type='button', data-linz-nav-toggle)
+                        span.sr-only Toggle navigation
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    a.navbar-brand(href=linz.get('admin path'))= linz.get('admin title')
+                .navbar-right
+                    ul.nav.navbar-nav
+                        li
+                            a(href=linz.get('logout path')) Logout
 
-		nav.linz
-			ul
-				each node,index in linzNavigation
-					if node.children && node.children.length
-						if request && request.path && node.href === request.path
-							li(class='active')
-								mixin submenu(node)
-						else
-							li
-								mixin submenu(node)
-					else
-						if (request && request.path && node.href === request.path)
-							li(class='active')
-								mixin basic(node)
-						else
-							li
-								mixin basic(node)
-		.wrap
-			block page
-				header
-					.container
-						.row
-							.col-xs-12
-								block header
-				block content
+        nav.linz
+            ul
+                each node,index in linzNavigation
+                    if node.children && node.children.length
+                        if request && request.path && node.href === request.path
+                            li(class='active')
+                                mixin submenu(node)
+                        else
+                            li
+                                mixin submenu(node)
+                    else
+                        if (request && request.path && node.href === request.path)
+                            li(class='active')
+                                mixin basic(node)
+                        else
+                            li
+                                mixin basic(node)
+        .wrap
+            block page
+                header
+                    .container
+                        .row
+                            .col-xs-12
+                                block header
+                block content
 
-		.modal.fade.modal-linz#groupActionModal(tabindex="-1" role="dialog" aria-hidden="true")
-		.modal.fade.modal-linz#recordActionModal(tabindex="-1" role="dialog" aria-hidden="true")
-		.modal.fade.modal-linz#exportModal(tabindex="-1" role="dialog" aria-hidden="true")
-				.modal-dialog
-						.modal-content
-		.modal.fade.modal-linz#linzModal(tabindex="-1" role="dialog" aria-hidden="true")
+        .modal.fade.modal-linz#groupActionModal(tabindex="-1" role="dialog" aria-hidden="true")
+        .modal.fade.modal-linz#recordActionModal(tabindex="-1" role="dialog" aria-hidden="true")
+        .modal.fade.modal-linz#exportModal(tabindex="-1" role="dialog" aria-hidden="true")
+                .modal-dialog
+                        .modal-content
+        .modal.fade.modal-linz#linzModal(tabindex="-1" role="dialog" aria-hidden="true")
 
-		include partials/foot
-		if notifications
-			!= notifications
+        include partials/foot
+        if notifications
+            != notifications

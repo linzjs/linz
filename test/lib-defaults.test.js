@@ -140,13 +140,18 @@ describe('once Linz is initialised', () => {
         return Promise.all([
             user.save(),
         ])
-            // Login first.
-            // Supertest seems to use non native promises which stop Jest tests from completing.
-            // Wrapping it in a Promise.resolve fixes that.
-            .then(() => Promise.resolve(request.post('/admin/login').send({
-                password: 'password',
-                username: 'test',
-            })))
+            .then(() => request.get('/admin/login').send())
+            .then((token) => {
+
+                const [csrfToken] = /(?<=name="csrf-token" content=")(.*)(?="><title>)/.exec(token.text);
+
+                return request.post('/admin/login').send({
+                    _csrf: csrfToken,
+                    password: 'password',
+                    username: 'test',
+                });
+
+            })
             .then(() => Promise.resolve(request.get('/admin/models/list')))
             .then(() => {
 

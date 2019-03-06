@@ -86,6 +86,7 @@ var route = function (req, res, next) {
             });
 
             const data = {
+                csrfToken: req.csrfToken(),
                 customAttributes: res.locals.customAttributes,
                 form,
                 from: pageSize*page-pageSize,
@@ -143,6 +144,7 @@ var route = function (req, res, next) {
                     async.eachOf(data.records, (record, index, callback) => {
 
                         renderRecordAction({
+                            csrfToken: req.csrfToken(),
                             model: data.model,
                             permissions: data.permissions,
                             record

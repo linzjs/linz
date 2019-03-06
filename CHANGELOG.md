@@ -1,6 +1,19 @@
 # CHANGELOG
 
-## v1.0.0-17.1.1
+## v1.0.0-18.0.0 (6 March 2019)
+
+### BREAKING CHANGES
+
+- The default record delete button now uses a post request.
+
+### IMPROVEMENTS
+
+- Added csrf protection across all routes. For custom forms, the user will need to add `csrfToken: req.csrfToken()` to the options when using `linz.api.model.generateFormString()`.
+- Csrf protection can be customised by setting the linz option `csrf options`. This takes an object with the same options listed here https://www.npmjs.com/package/csurf.
+- Fixed not being able to return html in an overview section.
+- Export fields are no longer required to be in the formDSL.
+
+## v1.0.0-17.1.1 (1 February 2019)
 
 - `app` now has it's own `package.json` with linz as a file-based dependency.
 - `app` dependencies have now been removed from Linz's `package.json` `devDependencies`.

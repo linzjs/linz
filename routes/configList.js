@@ -34,6 +34,7 @@ var route = function (req, res, next) {
 
                 return res.render(linz.api.views.viewPath('configList.jade'), {
                     configs: req.linz.configs,
+                    csrfToken: req.csrfToken(),
                     list: req.linz.configList,
                     records: req.linz.records,
                     renderActionsField: renderActionsField,

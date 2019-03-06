@@ -13,9 +13,9 @@ div.btn-group
             a.btn.btn-default(href='', data-linz-control="delete", data-linz-disabled='true', data-linz-disabled-message=record.delete.message)
                 span(class="glyphicon glyphicon-trash")
         else
-            a.btn.btn-default(href=linz.api.url.getAdminLink(model, 'delete', record._id), data-linz-control="delete")
-                span(class="glyphicon glyphicon-trash")
-
+            form(action=linz.api.url.getAdminLink(model, 'delete', record._id), method='post', class='btn-group')
+                button(value='submit', class='btn btn-default', data-linz-control='delete')
+                    span(class="glyphicon glyphicon-trash")
     for action in model.list.primaryRecordActions
         if (record.recordActions && record.recordActions[action.label] && record.recordActions[action.label].disabled)
             a.btn.btn-default(href='', data-linz-control="primary", data-linz-disabled='true', data-linz-disabled-message=record.recordActions[action.label].message)

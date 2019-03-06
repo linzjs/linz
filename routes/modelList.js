@@ -82,6 +82,7 @@ var route = function (req, res, next) {
             .then(([scripts, styles]) => {
 
                 return res.render(linz.api.views.viewPath('modelList.jade'), Object.assign(data, {
+                    csrfToken: req.csrfToken(),
                     customAttributes: res.locals.customAttributes,
                     models: modelsList,
                     pageTitle: 'Models',

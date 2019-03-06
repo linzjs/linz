@@ -43,6 +43,7 @@ var route = {
 
                     // Now render the final template, within the layout.
                     return res.render(linz.api.views.viewPath('adminLogin.jade'), {
+                        csrfToken: req.csrfToken(),
                         html,
                         scripts,
                         styles,
