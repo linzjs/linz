@@ -33,6 +33,7 @@ module.exports = (req, res) => {
                 crossorigin: 'anonymous',
             },
             { src: `${linz.get('admin path')}/public/js/model/edit.js` },
+            { dataAttributes: { test: 'test' } },
         ]);
 
     }

@@ -4,6 +4,7 @@
 
 - Made the modal CSRF script selector more generic so it pick up custom modals too.
 - Added new dataAttributes, nomodule, nonce, and referrerpolicy properties to scripts.
+- Development app now starts using `start` instead of `dev`.
 
 ## v1.0.0-18.0.0 (6 March 2019)
 

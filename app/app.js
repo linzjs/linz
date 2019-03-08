@@ -4,10 +4,10 @@ const { EventEmitter } = require('events');
 const express = require('express');
 const http = require('http');
 const linz = require('linz');
-const middleware = require('./lib/loader')('./middleware');
 const session = require('./lib/session');
 const scripts = require('./lib/scripts');
 const editCustomRoute = require('./routes/edit-custom');
+const resetData = require('./routes/reset-data');
 const handlebars = require('express-handlebars');
 
 const port = 8888;
@@ -42,8 +42,8 @@ class App extends EventEmitter {
             linz.app.engine('handlebars', handlebars.create().engine);
             linz.app.set('view engine', 'handlebars');
 
-            linz.app.get('/', middleware.import, (req, res) => res.redirect(linz.get('login path')));
-
+            linz.app.get('/', (req, res) => res.redirect(linz.get('login path')));
+            linz.app.get('/reset', resetData);
             // Custom form example.
             linz.app.get(`${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`, editCustomRoute.get);
             linz.app.post(`${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`, editCustomRoute.post);
