@@ -36,10 +36,10 @@ var findAForm = function (node) {
         insertCSRFToken(node);
     }
 
-    if (node.children) {
+    if (node.children && node.children.length) {
 
-        for (var child of node.children) {
-            findAForm(child);
+        for (var i = 0; i < node.children.length; i++) {
+            findAForm(node.children[i]);
         }
 
     }
@@ -48,19 +48,17 @@ var findAForm = function (node) {
 
 var mutated = function (mutationsList, observer) {
 
-    for (var mutation of mutationsList) {
+    mutationsList.forEach(function (mutation) {
 
         if (mutation.type === 'childList' && mutation.addedNodes.length && !mutation.removedNodes.length) {
 
-            for (var node of mutation.addedNodes) {
-
-                findAForm(node);
-
+            for (var i = 0; i < mutation.addedNodes.length; i++) {
+                findAForm(mutation.addedNodes[i]);
             }
 
         }
 
-    }
+    });
 
 }
 
