@@ -5,6 +5,7 @@
 - Made the modal selector more generic so it also works with custom modals.
 - Made it much harder to post a form before the CSRF token is added.
 - Added new dataAttributes, nomodule, nonce, and referrerpolicy properties to scripts.
+- Added new dataAttributes to styles.
 - Development app now starts using `start` instead of `dev`.
 
 ## v1.0.0-18.0.0 (6 March 2019)

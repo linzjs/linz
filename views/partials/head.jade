@@ -7,9 +7,9 @@ head
     if styles && styles.length
         each style in styles
             if style.content
-                style(media=style.media nonce=style.nonce title=style.title type=style.type)!= style.content
+                style(media=style.media nonce=style.nonce title=style.title type=style.type)&attributes(style.dataAttributes)!= style.content
             else
-                link(as=style.as crossorigin=style.crossorigin href=style.href hreflang=style.hreflang media=style.media rel=style.rel sizes=style.sizes title=style.title type=style.type)
+                link(as=style.as crossorigin=style.crossorigin href=style.href hreflang=style.hreflang media=style.media rel=style.rel sizes=style.sizes title=style.title type=style.type)&attributes(style.dataAttributes)
     if scripts && scripts.length
         each script in scripts
             if script.inHead

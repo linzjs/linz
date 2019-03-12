@@ -6,6 +6,7 @@ const http = require('http');
 const linz = require('linz');
 const session = require('./lib/session');
 const scripts = require('./lib/scripts');
+const styles = require('./lib/styles');
 const editCustomRoute = require('./routes/edit-custom');
 const resetData = require('./routes/reset-data');
 const handlebars = require('express-handlebars');
@@ -34,6 +35,7 @@ class App extends EventEmitter {
                 'session middleware': session,
                 'user model': 'mtUser',
                 'scripts': scripts,
+                'styles': styles,
             },
         });
 
