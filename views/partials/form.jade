@@ -3,12 +3,12 @@ include ../mixins/documentarray
 form.form-horizontal.model(role='form', action='#{actionUrl}', method='post', data-linz-validation='true')
 	.form-group.control-bar.control-bar-top
 		.col-sm-12
-			button.btn.btn-primary(type='submit') Save
+			button.btn.btn-primary(type='submit', data-linz-csrf-required, disabled) Save
 			a.btn.btn-link(href='#{cancelUrl}') or cancel
 	input(type="hidden", name="versionNo", value=record && record.__v)
 	!= form
 	.form-group.control-bar
 		.col-sm-offset-2.col-sm-10
-			button.btn.btn-primary(type='submit') Save
+			button.btn.btn-primary(type='submit', data-linz-csrf-required, disabled) Save
 			a.btn.btn-link(href='#{cancelUrl}') or cancel
 mixin documentarray()

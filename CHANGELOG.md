@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Made the modal CSRF script selector more generic so it pick up custom modals too.
+- Made it much harder to post a form before the CSRF token is added.
 
 ## v1.0.0-18.0.0 (6 March 2019)
 
