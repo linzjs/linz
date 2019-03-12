@@ -8,9 +8,12 @@ const {
 test('it does not mutate the original script', () => {
 
     const doNotMutate = { dataAttributes: { test: 'Should not mutate' } };
+    const emptyObj = { dataAttributes: {} };
 
     const parsedAttributes = parseDataAttributes(doNotMutate);
 
+    // Double check we aren't mutating the original object.
+    expect(parseDataAttributes(emptyObj)).not.toBe(emptyObj);
     expect(doNotMutate).toEqual({ dataAttributes: { test: 'Should not mutate' } });
     expect(parsedAttributes).toEqual({ dataAttributes: { 'data-test': 'Should not mutate' } });
 
