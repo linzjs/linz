@@ -25,7 +25,7 @@ linz.addLoadEvent(function () {
     insertCSRFToken();
 
     // Update whenever a new form is loaded
-    $('#linzModal, #groupActionModal, #recordActionModal, #exportModal, #documentsModal').on({
+    $('.modal').on({
         'show.bs.modal': insertCSRFToken,
         'shown.bs.modal': insertCSRFToken
     });
