@@ -156,7 +156,7 @@ You should use the existing array as the array that is resolved with the promise
 
 The script objects can contain an additional ``inHead`` boolean option to optionally load the script in the head tag.
 
-To create data attributes, you can add a ``dataAttributes`` property with a key being prefixed with ``data-``. For example::
+To create data attributes, you can add a ``dataAttributes`` property with a key that will be prefixed with ``data-`` when output in HTML. For example::
 
   scripts (req, res) => {
 

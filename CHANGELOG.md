@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Made the modal CSRF script selector more generic so it pick up custom modals too.
+- Made the modal selector more generic so it also works with custom modals.
 - Made it much harder to post a form before the CSRF token is added.
 - Added new dataAttributes, nomodule, nonce, and referrerpolicy properties to scripts.
 - Development app now starts using `start` instead of `dev`.
@@ -55,7 +55,7 @@
 - Added new formtool apis `namespaceForm`, `namespaceList`, `namespaceOverview`, `parseForm`.
 - Added new middleware apis `setLinzNamespace`, `setModelForm`, `setRecord`.
 - Added the ability to provide custom scripts and styles to linz.api.views.render using `data.scripts` and `data.styles`.
-- Added the ability to manually set a timezone offset using `data-utc-offset` in the date widget. This *must* be in the ISO offset format and begin with a plus (+) or minus (-) symbol with the hours and minutes having a leading 0 eg `+00:00`
+- Added the ability to manually set a timezone offset using `data-utc-offset` in the date widget. This _must_ be in the ISO offset format and begin with a plus (+) or minus (-) symbol with the hours and minutes having a leading 0 eg `+00:00`
 - Added the ability to provide helpText to a document array field.
 - Turned off autocomplete for some widgets.
 
