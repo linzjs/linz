@@ -210,7 +210,7 @@ You should use the existing array as the array that is resolved with the promise
 
 To create data attributes, you can add a ``dataAttributes`` property with a key that will be prefixed with ``data-`` when output in HTML. For example::
 
-  scripts (req, res) => {
+  styles (req, res) => {
 
     return Promise.resolve(res.locals.styles.concat([
       {
