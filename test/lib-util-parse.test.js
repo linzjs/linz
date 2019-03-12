@@ -2,8 +2,8 @@
 
 const {
     parseDataAttributes,
-    parseScripts,
-} = require('../lib/scripts');
+    parseScriptsAndStyles,
+} = require('../lib/util');
 
 test('it does not mutate the original script', () => {
 
@@ -37,9 +37,9 @@ test('it creates data attributes', () => {
 
 });
 
-test('it parses an array of scripts', () => {
+test('it parses an array of scripts and styles', () => {
 
-    const script = parseScripts([
+    const script = parseScriptsAndStyles([
         {
             dataAttributes: {
                 test: 'test',
