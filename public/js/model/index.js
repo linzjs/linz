@@ -230,9 +230,7 @@ linz.addLoadEvent(function () {
         var queryObj = $(this),
             url = queryObj.attr('href');
 
-        $('#groupActionModal').modal().load(url, function () {
-            insertCSRFToken();
-        });
+        $('#groupActionModal').modal().load(url);
 
        return false;
     });
@@ -243,9 +241,7 @@ linz.addLoadEvent(function () {
         var queryObj = $(this),
             url = queryObj.attr('href');
 
-        $('#recordActionModal').modal().load(url, function () {
-            insertCSRFToken();
-        });
+        $('#recordActionModal').modal().load(url);
 
        return false;
 

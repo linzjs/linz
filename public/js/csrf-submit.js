@@ -1,8 +1,14 @@
 'use strict';
 
-var insertCSRFToken = function () {
+var insertCSRFToken = function (form) {
 
-    $('form').each(function() {
+    if (!form) {
+        return;
+    }
+
+    $(form).each(function() {
+
+        // Now enable anything with data-linz-csrf-required, within form
 
         var tokenInput = document.createElement('input');
 
@@ -16,18 +22,55 @@ var insertCSRFToken = function () {
 
         $(this).prepend(tokenInput);
 
+        $('[data-linz-csrf-required]', this).removeClass('disabled');
+        $('[data-linz-csrf-required]', this).removeAttr('disabled');
+
     });
+
 
 };
 
-linz.addLoadEvent(function () {
+var findAForm = function (node) {
 
-    insertCSRFToken();
+    if (node.nodeType === Node.ELEMENT_NODE && node.tagName.toLowerCase() === 'form') {
+        insertCSRFToken(node);
+    }
 
-    // Update whenever a new form is loaded
-    $('.modal').on({
-        'show.bs.modal': insertCSRFToken,
-        'shown.bs.modal': insertCSRFToken
+    if (node.children && node.children.length) {
+
+        for (var i = 0; i < node.children.length; i++) {
+            findAForm(node.children[i]);
+        }
+
+    }
+
+  }
+
+var mutated = function (mutationsList, observer) {
+
+    mutationsList.forEach(function (mutation) {
+
+        if (mutation.type === 'childList' && mutation.addedNodes.length && !mutation.removedNodes.length) {
+
+            for (var i = 0; i < mutation.addedNodes.length; i++) {
+                findAForm(mutation.addedNodes[i]);
+            }
+
+        }
+
     });
+
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    var mutationObserver = new MutationObserver(mutated);
+
+    mutationObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+    });
+
+    findAForm(document.body);
 
 });

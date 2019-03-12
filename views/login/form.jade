@@ -15,4 +15,4 @@
 				ul
 					each error in loginError
 						li= error
-		button.btn.btn-primary(type='submit') Sign-in
+		button.btn.btn-primary(type='submit', data-linz-csrf-required, disabled) Sign-in

@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Made the modal CSRF script selector more generic so it pick up custom modals too.
+- Made it much harder to post a form before the CSRF token is added.
 - Added new dataAttributes, nomodule, nonce, and referrerpolicy properties to scripts.
 - Development app now starts using `start` instead of `dev`.
 

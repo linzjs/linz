@@ -9,8 +9,6 @@ $(function ready () {
 
         $(this).find('.modal-content').load(url, function () {
 
-            insertCSRFToken();
-
             var user = $('body').attr('data-linz-user');
 
             var fields = JSON.parse($('.exportForm').attr('data-model-export-fields')),

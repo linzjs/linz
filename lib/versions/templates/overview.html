@@ -54,9 +54,7 @@
                 url = queryObj[0].nodeName === 'BUTTON' ? queryObj.attr('data-href') : queryObj.attr('href');
 
             // open modal and load URL
-            $('#linzModal').modal().load(url, function () {
-                insertCSRFToken();
-            });
+            $('#linzModal').modal().load(url);
 
             // remove modal shown event
             $('#linzModal').off('shown.bs.modal');
