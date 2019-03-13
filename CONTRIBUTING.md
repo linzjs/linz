@@ -7,11 +7,13 @@ Linz has a complete development environment, within this repository. The followi
 - Node.js.
 - Yarn or NPM.
 
-Once you've cloned this repository to your host, run `yarn dev` or `npm run dev` and once the container has started, you will be able to visit the dev environment at `localhost:8888`.
+Once you've cloned this repository to your host, run `yarn start` or `npm run start` and once the container has started, you will be able to visit the dev environment at `localhost:8888`.
+
+Initially you will need to import some data using `http://localhost:8888/reset`.
 
 Use `test` as the username, and `password` as the password when logging in.
 
-To re-run the import script and reset the default records, simply visit `http://localhost:8888` again.
+To reset all data, simply visit `http://localhost:8888/reset` again.
 
 ## Testing
 

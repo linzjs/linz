@@ -7,7 +7,7 @@
   "scripts": {
     "build": "./devops/build.sh",
     "build-dev": "./devops/build-dev.sh",
-    "dev": "./node_modules/.bin/npm-run-all --sequential build-dev dev-start",
+    "start": "./node_modules/.bin/npm-run-all --sequential build-dev dev-start",
     "dev-start": "./devops/dev.sh",
     "jest": "jest --detectOpenHandles --forceExit",
     "report-coverage": "./devops/report-coverage.sh",

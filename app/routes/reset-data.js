@@ -1,6 +1,8 @@
-var linz = require('linz');
+'use strict';
 
-module.exports = function (req, res, next) {
+const linz = require('linz');
+
+module.exports = (req, res, next) => {
 
     // Create a default organisation for Linz
     const mtOrg = linz.api.model.get('mtOrg');
@@ -26,8 +28,12 @@ module.exports = function (req, res, next) {
         org.save(),
     ];
 
-    Promise.all(records)
-        .then(() => next())
+    Promise.all([
+        mtOrg.collection.drop(),
+        mtUser.collection.drop(),
+    ])
+        .then(() => Promise.all(records))
+        .then(() => res.redirect('/'))
         .catch(next);
 
 };

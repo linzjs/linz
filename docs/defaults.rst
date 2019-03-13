@@ -156,6 +156,24 @@ You should use the existing array as the array that is resolved with the promise
 
 The script objects can contain an additional ``inHead`` boolean option to optionally load the script in the head tag.
 
+To create data attributes, you can add a ``dataAttributes`` property with a key that will be prefixed with ``data-`` when output in HTML. For example::
+
+  scripts (req, res) => {
+
+    return Promise.resolve(res.locals.scripts.concat([
+      {
+        dataAttributes: {
+          test: 'test',
+        },
+      },
+    ]));
+
+  }
+
+will create the script::
+
+  <script data-test="test"></script>
+
 You can also supply a ``content`` property, which if provided, will add the value of the ``content`` property within the script open and close tags.
 
 styles
@@ -189,6 +207,24 @@ The function should return an array of objects containing the same HTML attribut
 
 ``res.locals.styles`` contains all the styles used by Linz, be careful when removing/updating these as it could break functionality within Linz.
 You should use the existing array as the array that is resolved with the promise because it will replace ``res.locals.styles``, not append to it.
+
+To create data attributes, you can add a ``dataAttributes`` property with a key that will be prefixed with ``data-`` when output in HTML. For example::
+
+  styles (req, res) => {
+
+    return Promise.resolve(res.locals.styles.concat([
+      {
+        dataAttributes: {
+          test: 'test',
+        },
+      },
+    ]));
+
+  }
+
+will create the script::
+
+  <link data-test="test" />
 
 You can also supply a ``content`` property, which if provided, will add the value of the ``content`` property within a ``style`` open and close tags.
 
