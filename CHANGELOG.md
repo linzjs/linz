@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.0.0-18.1.0 (13 March 2019)
 
 - Made the modal selector more generic so it also works with custom modals.
 - Made it much harder to post a form before the CSRF token is added.
