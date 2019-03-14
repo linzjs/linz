@@ -383,9 +383,8 @@ module.exports = {
                     }))),
                     contentType: 'text/csv',
                     name: `${Model.linz.formtools.model.plural}-${moment(Date.now()).format('l').replace(/\//g, '.', 'g')}`,
-                    query: exportQuery,
-                    req,
                     res,
+                    stream: exportQuery.lean().cursor(),
                     transform: (doc, callback) => {
 
                         const fields = Object.keys(doc);

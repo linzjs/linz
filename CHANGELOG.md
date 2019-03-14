@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Added the ability to split object fields over multiple columns in the default export.
+- Made the export api more generic so you can pass in any stream instead of a query.
 
 ## v1.0.0-18.1.0 (13 March 2019)
 
