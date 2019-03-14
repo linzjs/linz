@@ -20,6 +20,7 @@ const mtUserSchema = new linz.mongoose.Schema({
     },
     password: String,
     username: String,
+    objectField: linz.mongoose.Schema.Types.Mixed,
 });
 
 // add the formtools plugin
@@ -74,6 +75,13 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
             fieldset: 'Access',
             helpText: 'This controls if the user has access to admin.',
         },
+        objectField: {
+            fieldset: 'Misc',
+            transpose: {
+                'export': (val) => Promise.resolve([val, true]),
+            },
+            visible: false,
+        },
     },
     labels: {
         bAdmin: 'Has admin access?',
@@ -96,9 +104,31 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
         ],
         export: [
             {
+                columns: (columns) => {
+
+                    // Usually you would want to filter out the object field based on the key
+                    // For testing purposes it has been left in.
+                    const updatedColumns = columns.slice();
+
+                    return updatedColumns.concat([
+                        {
+                            key: 'objectField1',
+                            header: 'Object Field 1',
+                        },
+                        {
+                            key: 'objectField2',
+                            header: 'Object Field 2',
+                        },
+                        {
+                            key: 'objectField3',
+                            header: 'Object Field 3',
+                        },
+                    ]);
+
+                },
+                dateFormat: 'DD MMM YYYY',
                 exclusions: '_id',
                 label: 'Choose fields to export',
-                dateFormat: 'DD MMM YYYY',
             },
         ],
     },
