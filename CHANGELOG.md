@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+- Added the ability to split object fields over multiple columns in the default export.
+
 ## v1.0.0-18.1.0 (13 March 2019)
 
 - Made the modal selector more generic so it also works with custom modals.
