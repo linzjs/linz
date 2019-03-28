@@ -71,9 +71,10 @@ if (!linz) {
         .fail(function(res) {
 
             var json = res.responseJSON;
-            var errorMessage = json.error;
 
             if (json) {
+
+                var errorMessage = json.error;
 
                 console.error(errorMessage);
 
