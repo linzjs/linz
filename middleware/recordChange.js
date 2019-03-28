@@ -1,6 +1,6 @@
 var linz = require('../'),
-	async = require('async'),
-	deep = require('deep-diff'),
+    async = require('async'),
+    deep = require('deep-diff'),
     moment = require('moment');
 
 const { deprecate } = require('util');
@@ -8,40 +8,40 @@ const { getTransposeFn } = require('../lib/util');
 
 module.exports = function (req, res, next) {
 
-	var Model = req.linz.model,
-		ccSettings = Model.concurrencyControl,
-		formData = req.body,
-		resData = {
-			hasChanged: false
-		},
-		exclusionFields = {};
+    var Model = req.linz.model,
+        ccSettings = Model.concurrencyControl,
+        formData = req.body,
+        resData = {
+            hasChanged: false
+        },
+        exclusionFields = {};
 
-	var sanitiseData = function (model, exclusions, yourChange, theirChange) {
+        const sanitiseData = (model, exclusions, yourChange, theirChange) => new Promise((resolve, reject) => {
 
-		var data = {
-				yourChange: {},
-				theirChange: {}
-			},
+        var data = {
+                yourChange: {},
+                theirChange: {}
+            },
             form = model.linz.formtools.form;
 
         const promises = [];
 
-		model.schema.eachPath(function (fieldName, schemaType) {
+        model.schema.eachPath(function (fieldName, schemaType) {
 
-			if (exclusions.hasOwnProperty(fieldName)) {
-				return;
-			}
-
-			if (fieldName === '__v') {
-
-				data.yourChange['versionNo'] = yourChange['versionNo'];
-				data.theirChange['versionNo'] = theirChange['__v'];
-
-				return;
+            if (exclusions.hasOwnProperty(fieldName)) {
+                return;
             }
 
-			// if transpose is defined for this field, let's transpose their change so it can compare in the correct format on client side
-			if (getTransposeFn(form, fieldName, 'form')) {
+            if (fieldName === '__v') {
+
+                data.yourChange['versionNo'] = yourChange['versionNo'];
+                data.theirChange['versionNo'] = theirChange['__v'];
+
+                return;
+            }
+
+            // if transpose is defined for this field, let's transpose their change so it can compare in the correct format on client side
+            if (getTransposeFn(form, fieldName, 'form')) {
 
                 let transposeFn = getTransposeFn(form, fieldName, 'form')(theirChange[fieldName], theirChange);
 
@@ -51,111 +51,112 @@ module.exports = function (req, res, next) {
 
                 promises.push(transposeFn.then((result) => (theirChange[fieldName] = result)));
 
-			}
+            }
 
-			switch (form[fieldName].type) {
+            switch (form[fieldName].type) {
 
-				case 'number':
+                case 'number':
 
-					data.yourChange[fieldName] = parseFloat(yourChange[fieldName]);
+                    data.yourChange[fieldName] = parseFloat(yourChange[fieldName]);
 
-					if (isNaN(data.yourChange[fieldName])) {
-						data.yourChange[fieldName] = '';
-					}
+                    if (isNaN(data.yourChange[fieldName])) {
+                        data.yourChange[fieldName] = '';
+                    }
 
-					data.theirChange[fieldName] = parseFloat(theirChange[fieldName]);
+                    data.theirChange[fieldName] = parseFloat(theirChange[fieldName]);
 
-					if (isNaN(data.theirChange[fieldName])) {
-						data.theirChange[fieldName] = '';
-					}
+                    if (isNaN(data.theirChange[fieldName])) {
+                        data.theirChange[fieldName] = '';
+                    }
 
-					break;
+                    break;
 
-				// handle multi-criteria case
-				case 'boolean':
-				case 'objectid':
+                // handle multi-criteria case
+                case 'boolean':
+                case 'objectid':
 
-					if (hasValue(yourChange[fieldName])) {
-						data.yourChange[fieldName] = yourChange[fieldName].toString();
-					} else {
-						data.yourChange[fieldName] = '';
-					}
+                    if (hasValue(yourChange[fieldName])) {
+                        data.yourChange[fieldName] = yourChange[fieldName].toString();
+                    } else {
+                        data.yourChange[fieldName] = '';
+                    }
 
-					if (hasValue(theirChange[fieldName])) {
-						data.theirChange[fieldName] = theirChange[fieldName].toString();
-					} else {
-						data.theirChange[fieldName] = '';
-					}
+                    if (hasValue(theirChange[fieldName])) {
+                        data.theirChange[fieldName] = theirChange[fieldName].toString();
+                    } else {
+                        data.theirChange[fieldName] = '';
+                    }
 
-					break;
+                    break;
 
-				case 'date':
+                case 'date':
 
-					if (hasValue(yourChange[fieldName])) {
-						data.yourChange[fieldName] = moment(new Date(yourChange[fieldName])).format('YYYY-MM-DD');
-					} else {
-						data.yourChange[fieldName] = '';
-					}
+                    if (hasValue(yourChange[fieldName])) {
+                        data.yourChange[fieldName] = moment(new Date(yourChange[fieldName])).format('YYYY-MM-DD');
+                    } else {
+                        data.yourChange[fieldName] = '';
+                    }
 
-					if (hasValue(theirChange[fieldName])) {
-						data.theirChange[fieldName] = moment(new Date(theirChange[fieldName])).format('YYYY-MM-DD');
-					} else {
-						data.theirChange[fieldName] = '';
-					}
+                    if (hasValue(theirChange[fieldName])) {
+                        data.theirChange[fieldName] = moment(new Date(theirChange[fieldName])).format('YYYY-MM-DD');
+                    } else {
+                        data.theirChange[fieldName] = '';
+                    }
 
-					break;
+                    break;
 
-				case 'documentarray':
+                case 'documentarray':
 
-					data.yourChange[fieldName] = yourChange[fieldName];
-					data.theirChange[fieldName] = JSON.stringify(theirChange[fieldName]);
-					break;
+                    data.yourChange[fieldName] = yourChange[fieldName];
+                    data.theirChange[fieldName] = JSON.stringify(theirChange[fieldName]);
+                    break;
 
-				case 'array':
+                case 'array':
 
-					if (hasValue(yourChange[fieldName])) {
+                    if (hasValue(yourChange[fieldName])) {
 
-						// handle when array field contains only one value which is not of type array
-						data.yourChange[fieldName] = yourChange[fieldName];
+                        // handle when array field contains only one value which is not of type array
+                        data.yourChange[fieldName] = yourChange[fieldName];
 
-						if (!Array.isArray(data.yourChange[fieldName])) {
-							data.yourChange[fieldName] = data.yourChange[fieldName].split();
-						}
+                        if (!Array.isArray(data.yourChange[fieldName])) {
+                            data.yourChange[fieldName] = data.yourChange[fieldName].split();
+                        }
 
-					} else {
-						data.yourChange[fieldName] = [];
-					}
+                    } else {
+                        data.yourChange[fieldName] = [];
+                    }
 
-					if (hasValue(theirChange[fieldName])) {
-						data.theirChange[fieldName] = theirChange[fieldName];
-					} else {
-						data.theirChange[fieldName] = [];
-					}
+                    if (hasValue(theirChange[fieldName])) {
+                        data.theirChange[fieldName] = theirChange[fieldName];
+                    } else {
+                        data.theirChange[fieldName] = [];
+                    }
 
-					break;
+                    break;
 
-				default:
-					data.yourChange[fieldName] = yourChange[fieldName];
-					data.theirChange[fieldName] = theirChange[fieldName];
+                default:
+                    data.yourChange[fieldName] = yourChange[fieldName];
+                    data.theirChange[fieldName] = theirChange[fieldName];
 
-			}
+            }
         });
 
         return Promise.all(promises)
-            .then(() => data);
+            .then(() => resolve(data))
+            .catch(reject);
 
-	};
+    });
 
-	var hasValue = function (val) {
-		if (val === undefined || val === '' || val === null || val === '[]' || Array.isArray(val) && val.length === 0 || Array.isArray(val) && val.length === 1 && val[0] === '') {
-			return false;
-		}
-		return true;
-	}
+    var hasValue = function (val) {
+        if (val === undefined || val === '' || val === null || val === '[]' || Array.isArray(val) && val.length === 0 || Array.isArray(val) && val.length === 1 && val[0] === '') {
+            return false;
+        }
+        return true;
+    }
 
-	ccSettings.settings.exclusions.forEach(function (fieldName) {
-		exclusionFields[fieldName] = 0;
-	});
+    ccSettings.settings.exclusions.forEach(function (fieldName) {
+        exclusionFields[fieldName] = 0;
+    });
 
     // Exclude fields that are not editable.
     if (Model.linz.formtools.form) {
@@ -170,47 +171,51 @@ module.exports = function (req, res, next) {
 
     }
 
-	// remove modifiedByProperty field if it exists in exclusion fields
-	delete exclusionFields[ccSettings.modifiedByProperty];
+    // remove modifiedByProperty field if it exists in exclusion fields
+    delete exclusionFields[ccSettings.modifiedByProperty];
 
-	async.waterfall([
+    async.waterfall([
 
-		function (cb) {
+        function (cb) {
 
-			Model.findById(req.params.id, exclusionFields, { lean: 1 }, function (err, doc) {
+            Model.findById(req.params.id, exclusionFields, { lean: 1 }, function (err, doc) {
 
-				if (err) {
-					return cb(err);
-				}
+                if (err) {
+                    return cb(err);
+                }
 
-				return cb(null, doc);
+                return cb(null, doc);
 
-			});
-		},
+            });
+        },
 
-		function (doc, cb) {
+        function (doc, cb) {
 
-			if (!doc) {
-				return cb(null);
-			}
+            if (!doc) {
+                return cb(null);
+            }
 
-			ccSettings.modifiedByCellRenderer(doc[ccSettings.modifiedByProperty], doc, ccSettings.modifiedByProperty, Model, function (err, result) {
-				if (err) {
-					return cb(err);
-				}
+            ccSettings.modifiedByCellRenderer(doc[ccSettings.modifiedByProperty], doc, ccSettings.modifiedByProperty, Model, function (err, result) {
+                if (err) {
+                    return cb(err);
+                }
 
-				doc[ccSettings.modifiedByProperty] = result;
+                doc[ccSettings.modifiedByProperty] = result;
 
-				return cb(null, doc);
-			});
+                return cb(null, doc);
+            });
 
-		}
+        }
 
-	], function (err, result) {
+    ], function (err, result) {
 
-		if (!result) {
-			return res.status(200).json(resData);
-		}
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+
+        if (!result) {
+            return res.status(200).json(resData);
+        }
 
         sanitiseData(Model, exclusionFields, formData, result)
             .then((cleanData) => {
@@ -265,8 +270,8 @@ module.exports = function (req, res, next) {
                 return res.status(200).json(resData);
 
             })
-            .catch(next);
+            .catch((error) => res.status(500).json({ error: error.message }));
 
-	});
+    });
 
 }
