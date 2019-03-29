@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Unreleased
+
+- Fixed listQuery not being applied in the exports.
+- Fixed single field and record exports not showing up correctly.
+
 ## v1.0.0-18.1.0 (13 March 2019)
 
 - Made the modal selector more generic so it also works with custom modals.
