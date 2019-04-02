@@ -1,0 +1,20 @@
+{
+    "docs": {
+        "Developer documentation": [
+            "getting-started-with-linz",
+            "linz-defaults",
+            "models",
+            "permissions",
+            "api"
+        ],
+        "Models": ["list-dsl", "form-dsl"],
+        "Features": ["notifications", "request-namespace"],
+        "Advanced concepts": [
+            "cell-renderers",
+            "forgot-password-process",
+            "security"
+        ],
+        "Contributing documentation": ["getting-started-with-linz-development"],
+        "About Linz": ["linz-definitions"]
+    }
+}
