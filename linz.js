@@ -545,14 +545,14 @@ Linz.prototype.bootstrapExpress = function (cb) {
     if (typeof this.get('cookie parser') === 'function') {
         this.app.use(this.get('cookie parser'));
     } else {
-        this.app.use(cookieParser((this.get('cookie secret'))));
+        this.app.use(cookieParser(this.get('cookie secret'), this.get('cookie options')));
     }
 
     // need to hook session in here as it must be before passport.initialize
     if (typeof this.get('session middleware') === 'function') {
         this.app.use(this.get('session middleware'));
     } else {
-        this.app.use(expressSession({ secret: this.get('cookie secret') }));
+        this.app.use(expressSession(this.get('session options')));
     }
 
     // setup connect-flash
