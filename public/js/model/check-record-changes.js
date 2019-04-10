@@ -28,54 +28,17 @@ if (!linz) {
             formUrl += '/' + resolvedVersionNo;
         }
 
-        $.ajax({
-            method: 'post',
-            url: formUrl,
-            dataType: 'json',
-            data: formData
-        })
-        .done(function(data, textStatus, jqXHR) {
+        if (formValidator.isValid()) {
 
-            if (!data.hasChanged) {
+            // since there are no change, submit the form, proceed with normal save operation
+            return form.submit();
 
-                if (formValidator.isValid()) {
+        } else {
 
-                    // since there are no change, submit the form, proceed with normal save operation
-                    return form.submit();
+            return formValidator.validate();
 
-                } else {
+        }
 
-                    return formValidator.validate();
-
-                }
-
-            }
-
-            // since there is a change, lets load a modal to highlight the changes and provide user with options for the next step
-            $('#linzModal').modal().load('/admin/merge-data-conflict-guide');
-
-            Object.keys(data.diff).forEach(function (fieldName) {
-
-                var formField = $(form).find(':input[name="' + fieldName + '"]');
-
-                if (!formField.length) {
-                    // exit if field is not found!
-                    return;
-                }
-
-                linz[formField.attr('data-linz-conflict-handler')](fieldName, data.diff[fieldName], formField, data, form, formValidator);
-
-            });
-
-        })
-        .fail(function(jqXHR, textStatus, errorThrown ) {
-
-            alert('An error has occured while attempting to check if this record has been editted by other user.');
-            return false;
-
-        });
-
-        return false;
     });
 
     function standardInputFieldConflictHandler(fieldName, fieldType, formField, data, form, formValidator) {
