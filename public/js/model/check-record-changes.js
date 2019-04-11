@@ -74,11 +74,7 @@ if (!linz) {
 
             if (json) {
 
-                var errorMessage = json.error;
-
-                console.error(errorMessage);
-
-                return alert(errorMessage);
+                return alert(json.error);
 
             }
 
