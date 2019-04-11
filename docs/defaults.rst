@@ -36,7 +36,26 @@ Alternatively, you can set a default using the ``linz.set`` function::
 The defaults
 ============
 
-The following lists the defaults that you can use to customise Linz.
+The following lists the defaults that you can use to customise Linz. Please note, not all defaults are detailed. Please `review the code for more information`_.
+
+.. _review the code for more information: https://github.com/linzjs/linz/blob/master/lib/defaults.js
+
+.. _cookie-options-reference:
+
+cookie options
+--------------
+
+This is the options object that is passed to the session middleware, and cookie parser middleware. By default the ``HttpOnly`` and ``SameSite`` attributes are enabled. The ``Secure`` attribute is off by default, but it's recommended to turn this on if you're delivering Linz over HTTPS (which we highly encourage).
+
+Review the options for the `session middleware`_ and the `cookie parser middleware`_.
+
+.. _session middleware: https://github.com/expressjs/session#cookie
+.. _cookie parser middleware: https://github.com/jshttp/cookie#options
+
+cookie secret
+-------------
+
+This is the secret that is used to secure the session cookie used by Linz. You can change this to any string that you'd like. It is passed to the default session middleware and cookie parser middleware.
 
 customAttributes
 ----------------
@@ -175,6 +194,16 @@ will create the script::
   <script data-test="test"></script>
 
 You can also supply a ``content`` property, which if provided, will add the value of the ``content`` property within the script open and close tags.
+
+session options
+---------------
+
+This is the options object that is passed to the session middleware. The ``cookie`` property is set based on the :ref:`cookie-options-reference` default.
+
+Review the options for the `session middleware`_ and the `cookie parser middleware`_.
+
+.. _session middleware: https://github.com/expressjs/session#cookie
+.. _cookie parser middleware: https://github.com/jshttp/cookie#options
 
 styles
 -------
