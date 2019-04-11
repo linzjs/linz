@@ -518,8 +518,9 @@ Linz.prototype.bootstrapExpress = function (cb) {
 
     debugGeneral('Bootstrapping express');
 
-    // Setup `/public` middleware first as we don't need session handle to resolve this routes
+    this.app.disable('x-powered-by');
 
+    // Setup `/public` middleware first as we don't need session handle to resolve this routes
     if ((process.env.NODE_ENV || 'development') === 'development') {
 
         this.app.use(this.get('admin path') + '/public', lessMiddleware(__dirname + '/public', {
