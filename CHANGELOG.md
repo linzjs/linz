@@ -4,6 +4,7 @@
 
 - Added `session options` default object passed to `express-session` middleware.
 - Added `cookie options` default object passed to `cookie-parser` and `express-session` middleware.
+- The `linzReturnUrl` cookie is now signed by default.
 - Through the above, updated Linz's default cookie settings to be more inline with OWASP recommendations.
 - The example app demonstrates how to extend the default session options.
 - Removed the X-Powered-By header.
