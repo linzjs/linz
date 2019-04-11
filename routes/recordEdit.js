@@ -79,7 +79,7 @@ var route = function (req, res, next) {
 
             if (req.linz.model.concurrencyControl) {
                 defaultScripts.push({
-                    src: `${linz.get('admin path')}/public/js/model/check-record-changes.js`,
+                    src: `${linz.get('admin path')}/public/js/model/check-record-changes.js?v2`,
                 });
             }
 
