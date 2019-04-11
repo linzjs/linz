@@ -74,7 +74,7 @@ if (!linz) {
 
             if (json) {
 
-                return alert(json.error);
+                return alert('An error has occurred: ' + json.error);
 
             }
 
