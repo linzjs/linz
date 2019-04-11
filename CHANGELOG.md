@@ -6,6 +6,8 @@
 - Added `cookie options` default object passed to `cookie-parser` and `express-session` middleware.
 - Through the above, updated Linz's default cookie settings to be more inline with OWASP recommendations.
 - The example app demonstrates how to extend the default session options.
+- Removed the X-Powered-By header.
+- Added the X-XSS-Protection header.
 
 ## v1.0.0-18.1.0 (13 March 2019)
 
