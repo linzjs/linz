@@ -14,7 +14,8 @@ var express = require('express'),
     bunyan = require('bunyan'),
     async = require('async'),
     lessMiddleware = require('less-middleware'),
-    flash = require('connect-flash');
+    flash = require('connect-flash'),
+    xssFilter = require('x-xss-protection');
 
 /**
  * Define error handling loggers
@@ -519,6 +520,7 @@ Linz.prototype.bootstrapExpress = function (cb) {
     debugGeneral('Bootstrapping express');
 
     this.app.disable('x-powered-by');
+    this.app.use(xssFilter());
 
     // Setup `/public` middleware first as we don't need session handle to resolve this routes
     if ((process.env.NODE_ENV || 'development') === 'development') {
