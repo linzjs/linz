@@ -4,7 +4,7 @@
 Error handling
 **************
 
-Linz consistently manages all errors by passing the error through to `next`. This allows a consistent approach to error handleing and provides a centralised approach to intercept those errors if desired.
+Linz consistently manages all errors by passing the error through to `next`. This allows a consistent approach to error handling and provides a centralised approach to intercept those errors if desired.
 
 Linz provides an error handling middleware at ``linz.api.middleware.error``. You should mount this to your Express app as the last piece of error middleware. It will:
 

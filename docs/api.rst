@@ -18,7 +18,7 @@ error
 error.json(err, statusCode = 500)
 ---------------------------------
 
-Take an Error object and add ``err`` and ``statusCode`` properties. In an error is encountered by the Linz error handling middleware with these properties, the error will be return via JSON, rather than HTML.
+Take an Error object and add ``err`` and ``statusCode`` properties. If an error is encountered by the Linz error handling middleware with these properties, the error will be returned via JSON, rather than HTML.
 
 error.store(err, req)
 ---------------------
