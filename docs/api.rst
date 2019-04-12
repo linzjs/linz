@@ -12,6 +12,19 @@ At present, we're working on a long term effort to expose all of Linz's function
 
 You can access the Linz APIs via ``linz.api``.
 
+error
+=====
+
+error.json(err, statusCode = 500)
+---------------------------------
+
+Take an Error object and add ``err`` and ``statusCode`` properties. In an error is encountered by the Linz error handling middleware with these properties, the error will be return via JSON, rather than HTML.
+
+error.store(err, req)
+---------------------
+
+Take an Error object and store it on ``req`` within the Linz namespace at ``req.linz.error``. This becomes useful for logging errors that might be produced by Linz.
+
 model
 =====
 

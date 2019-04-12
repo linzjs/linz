@@ -1,15 +1,17 @@
 'use strict';
 
 const { EventEmitter } = require('events');
+const editCustomRoute = require('./routes/edit-custom');
+const error = require('./routes/error');
+const errorJson = require('./routes/error-json');
 const express = require('express');
+const handlebars = require('express-handlebars');
 const http = require('http');
 const linz = require('linz');
-const session = require('./lib/session');
-const scripts = require('./lib/scripts');
-const styles = require('./lib/styles');
-const editCustomRoute = require('./routes/edit-custom');
 const resetData = require('./routes/reset-data');
-const handlebars = require('express-handlebars');
+const scripts = require('./lib/scripts');
+const session = require('./lib/session');
+const styles = require('./lib/styles');
 
 const port = 8888;
 
@@ -46,6 +48,9 @@ class App extends EventEmitter {
 
             linz.app.get('/', (req, res) => res.redirect(linz.get('login path')));
             linz.app.get('/reset', resetData);
+            linz.app.get('/error', error);
+            linz.app.get('/error-json', errorJson);
+
             // Custom form example.
             linz.app.get(`${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`, editCustomRoute.get);
             linz.app.post(`${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`, editCustomRoute.post);
