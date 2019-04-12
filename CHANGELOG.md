@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## v1.0.0-18.2.0 (12 April 2019)
+
+- Linz's error handling middleware will now add the error to `req`.
+- Linz's error handling middleware can now return errors via JSON.
+- Updated error handling for JSON errors.
+- Added `linz.api.error` functions.
+- Added routes to the example app to generate errors for testing purposes.
+- Updated documentation.
+
 ## v1.0.0-18.1.0 (13 March 2019)
 
 - Made the modal selector more generic so it also works with custom modals.
