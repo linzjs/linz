@@ -68,9 +68,18 @@ if (!linz) {
             });
 
         })
-        .fail(function(jqXHR, textStatus, errorThrown ) {
+        .fail(function(res) {
 
-            alert('An error has occured while attempting to check if this record has been editted by other user.');
+            var json = res.responseJSON;
+
+            if (json) {
+
+                return alert('An error has occurred: ' + json.error);
+
+            }
+
+            alert('An error has occurred while attempting to check if this record has been edited by another user.');
+
             return false;
 
         });

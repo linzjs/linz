@@ -41,6 +41,7 @@ Linz is quite new and under rapid development. It is used quite successfully in 
 
    notifications
    request_namespace
+   error_handling
 
 .. _advanced-docs:
 
