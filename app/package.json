@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "An example application using Linz.",
   "main": "server.js",
+  "engines": {
+    "node": ">=8.6"
+  },
   "author": "Scott Mebberson",
   "license": "MIT",
   "private": true,

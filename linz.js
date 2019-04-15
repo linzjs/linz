@@ -14,7 +14,8 @@ var express = require('express'),
     bunyan = require('bunyan'),
     async = require('async'),
     lessMiddleware = require('less-middleware'),
-    flash = require('connect-flash');
+    flash = require('connect-flash'),
+    xssFilter = require('x-xss-protection');
 
 /**
  * Define error handling loggers
@@ -518,8 +519,10 @@ Linz.prototype.bootstrapExpress = function (cb) {
 
     debugGeneral('Bootstrapping express');
 
-    // Setup `/public` middleware first as we don't need session handle to resolve this routes
+    this.app.disable('x-powered-by');
+    this.app.use(xssFilter());
 
+    // Setup `/public` middleware first as we don't need session handle to resolve this routes
     if ((process.env.NODE_ENV || 'development') === 'development') {
 
         this.app.use(this.get('admin path') + '/public', lessMiddleware(__dirname + '/public', {
@@ -545,14 +548,14 @@ Linz.prototype.bootstrapExpress = function (cb) {
     if (typeof this.get('cookie parser') === 'function') {
         this.app.use(this.get('cookie parser'));
     } else {
-        this.app.use(cookieParser((this.get('cookie secret'))));
+        this.app.use(cookieParser(this.get('cookie secret'), this.get('cookie options')));
     }
 
     // need to hook session in here as it must be before passport.initialize
     if (typeof this.get('session middleware') === 'function') {
         this.app.use(this.get('session middleware'));
     } else {
-        this.app.use(expressSession({ secret: this.get('cookie secret') }));
+        this.app.use(expressSession(this.get('session options')));
     }
 
     // setup connect-flash

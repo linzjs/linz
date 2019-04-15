@@ -1,6 +1,6 @@
 {
   "name": "linz",
-  "version": "1.0.0-18.2.0",
+  "version": "1.0.0-18.3.0",
   "description": "Node.js web application framework",
   "license": "MIT",
   "main": "linz.js",
@@ -38,7 +38,7 @@
     "chalk": "^2.4.1",
     "clone": "1.0.2",
     "connect-flash": "^0.1.1",
-    "cookie-parser": "1.0.x",
+    "cookie-parser": "1.4.4",
     "csurf": "^1.9.0",
     "csv-stringify": "4.3.1",
     "debug": "0.7.4",
@@ -48,7 +48,7 @@
     "diff": "1.0.8",
     "escape-string-regexp": "1.0.5",
     "express": "^4.16.4",
-    "express-session": "1.0.x",
+    "express-session": "1.15.6",
     "formist": "0.1.10",
     "handlebars": "4.0.11",
     "inflection": "1.3.8",
@@ -62,7 +62,8 @@
     "printf": "0.2.x",
     "sentence-case": "2.1.1",
     "stream-transform": "1.0.8",
-    "stylus": "~0.40.3"
+    "stylus": "~0.40.3",
+    "x-xss-protection": "1.1.0"
   },
   "devDependencies": {
     "jest": "23.4.2",
