@@ -1,13 +1,12 @@
 'use strict';
 
 const linz = require('linz');
-const moment = require('moment');
 const mtUserSchema = require('./schema');
 
 // add the formtools plugin
 mtUserSchema.plugin(linz.formtools.plugins.document, require('./formtools'));
 
-// mtUserSchema.plugin(linz.concurrencyControl.plugin, require('./concurrency-control'));
+mtUserSchema.plugin(linz.concurrencyControl.plugin, require('./concurrency-control'));
 
 mtUserSchema.virtual('hasAdminAccess').get(function () {
     return this.bAdmin === true;
@@ -22,6 +21,8 @@ mtUserSchema.pre('save', function (next, callback, req) {
     if (req.user) {
         this.modifiedBy = req.user.username;
     }
+
+    this.increment();
 
     return next(callback, req);
 

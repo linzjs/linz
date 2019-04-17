@@ -1,6 +1,7 @@
 'use strict';
 
 const linz = require('linz');
+const moment = require('moment');
 
 module.exports = {
     name: {
