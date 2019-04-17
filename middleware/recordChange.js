@@ -92,9 +92,9 @@ const updateArray = ({ data, fieldName, theirChange, yourChange }) => {
 
 };
 
-const updateData = ({ data, fieldName, form, theirChange, yourChange }) => {
+const updateData = ({ data, fieldName, form, schema, theirChange, yourChange }) => {
 
-    const { type } = form[fieldName];
+    const type = form[fieldName] && form[fieldName].type || schema.paths[fieldName].type;
 
     if (type === 'number') {
         return updateNumber({ data, fieldName, theirChange, yourChange });
@@ -161,7 +161,7 @@ const sanitiseData = (model, exclusions, yourChange, theirChange) => new Promise
 
         }
 
-        updateData({ data, fieldName, form, theirChange, yourChange });
+        updateData({ data, fieldName, form, schema: model.schema, theirChange, yourChange });
 
     });
 
@@ -279,14 +279,15 @@ module.exports = (req, res, next) => {
                 diffResult.forEach((diff) => {
 
                     let [fieldName] = diff.path;
+                    let field = model.form && model.form[fieldName] || model.schema.paths[fieldName];
 
                     // Change fieldname to the related field defined in the relationship.
-                    if (model.form && model.form[fieldName].relationship) {
-                        fieldName = model.form[fieldName].relationship;
+                    if (field && field.relationship) {
+                        fieldName = field.relationship;
                     }
 
-                    if (model.form && !diffKeys[fieldName]) {
-                        diffKeys[fieldName] = model.form[fieldName].type;
+                    if (!diffKeys[fieldName]) {
+                        diffKeys[fieldName] = field.type;
                     }
 
                 });
