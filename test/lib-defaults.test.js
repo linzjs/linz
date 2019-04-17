@@ -126,7 +126,7 @@ describe('once Linz is initialised', () => {
 
         });
 
-    }, 10000);
+    }, 20000);
 
     afterAll(() => linz.mongoose.disconnect());
 
@@ -179,6 +179,6 @@ describe('once Linz is initialised', () => {
             })
             .then(() => expect(routeMock.mock.calls.length).toBe(1));
 
-    }, 10000);
+    }, 20000);
 
 });
