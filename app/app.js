@@ -1,17 +1,19 @@
 'use strict';
 
+const express = require('express');
+const http = require('http');
+const linz = require('linz');
+
 const { EventEmitter } = require('events');
 const editCustomRoute = require('./routes/edit-custom');
 const error = require('./routes/error');
 const errorJson = require('./routes/error-json');
-const express = require('express');
 const handlebars = require('express-handlebars');
-const http = require('http');
-const linz = require('linz');
 const resetData = require('./routes/reset-data');
 const scripts = require('./lib/scripts');
 const session = require('./lib/session');
 const styles = require('./lib/styles');
+const whoAmI = require('./routes/who-am-i');
 
 const port = 8888;
 
@@ -47,6 +49,7 @@ class App extends EventEmitter {
             linz.app.set('view engine', 'handlebars');
 
             linz.app.get('/', (req, res) => res.redirect(linz.get('login path')));
+            linz.app.get('/who-am-i', whoAmI);
             linz.app.get('/reset', resetData);
             linz.app.get('/error', error);
             linz.app.get('/error-json', errorJson);
