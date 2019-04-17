@@ -3,6 +3,8 @@
 const linz = require('linz');
 
 const mtOrgSchema = new linz.mongoose.Schema({
+    createdBy: String,
+    modifiedBy: String,
     name:  String,
 });
 
@@ -20,6 +22,16 @@ mtOrgSchema.plugin(linz.formtools.plugins.document, {
         title: 'name',
     },
     overview: { name: true },
+});
+
+mtOrgSchema.pre('save', function (next, callback, req) {
+
+    if (req.user) {
+        this.modifiedBy = req.user.username;
+    }
+
+    return next(callback, req);
+
 });
 
 module.exports = linz.mongoose.model('mtOrg', mtOrgSchema);

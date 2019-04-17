@@ -11,8 +11,10 @@ const mtUserSchema = new linz.mongoose.Schema({
         type: Boolean,
     },
     birthday: Date,
+    createdBy: String,
     customOffset: Date,
     email: String,
+    modifiedBy: String,
     name:  String,
     org: {
         ref: 'mtOrg',
@@ -112,6 +114,27 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
             {
                 fields: [
                     {
+                        fieldName: 'createdBy',
+                        renderer: linz.formtools.cellRenderers.defaultRenderer
+                    },
+                    {
+                        fieldName: 'dateCreated',
+                        renderer: linz.formtools.cellRenderers.dateRenderer
+                    },
+                    {
+                        fieldName: 'modifiedBy',
+                        renderer: linz.formtools.cellRenderers.defaultRenderer
+                    },
+                    {
+                        fieldName: 'dateModified',
+                        renderer: linz.formtools.cellRenderers.dateRenderer
+                    },
+                ],
+                label: 'Metadata',
+            },
+            {
+                fields: [
+                    {
                         fieldName: 'name',
                         renderer: linz.formtools.cellRenderers.defaultRenderer
                     },
@@ -147,6 +170,8 @@ mtUserSchema.plugin(linz.formtools.plugins.document, {
     },
 });
 
+// mtUserSchema.plugin(linz.concurrencyControl.plugin, require('./concurrency-control'));
+
 mtUserSchema.virtual('hasAdminAccess').get(function () {
     return this.bAdmin === true;
 });
@@ -154,5 +179,15 @@ mtUserSchema.virtual('hasAdminAccess').get(function () {
 mtUserSchema.methods.verifyPassword = function (candidatePassword, callback) {
     return callback(null, this.password === candidatePassword);
 }
+
+mtUserSchema.pre('save', function (next, callback, req) {
+
+    if (req.user) {
+        this.modifiedBy = req.user.username;
+    }
+
+    return next(callback, req);
+
+});
 
 module.exports = linz.mongoose.model('mtUser', mtUserSchema);
