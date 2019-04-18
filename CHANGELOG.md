@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v1.0.0-18.3.1 (18 April 2019)
+
+- Fixed concurrency plugin.
+
 ## v1.0.0-18.3.0 (15 April 2019)
 
 - Added `session options` default object passed to `express-session` middleware.

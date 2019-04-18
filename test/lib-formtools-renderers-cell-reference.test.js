@@ -127,4 +127,4 @@ test('renders a link to the ref record overview', async () => {
 
         });
 
-});
+}, 10000);
