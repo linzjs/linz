@@ -374,17 +374,17 @@ module.exports = {
                 }
 
                 const exportQuery = query.select(filterFieldNames.join(' '));
+                const columnsFn = exportObj.columns || ((columns) => columns);
 
                 linz.api.util.generateExport({
-                    columns: fields.map((fieldName) => ({
+                    columns: columnsFn(fields.map((fieldName) => ({
                         key: fieldName,
                         header: labels[fieldName],
-                    })),
+                    }))),
                     contentType: 'text/csv',
                     name: `${Model.linz.formtools.model.plural}-${moment(Date.now()).format('l').replace(/\//g, '.', 'g')}`,
-                    query: exportQuery,
-                    req,
                     res,
+                    stream: exportQuery.lean().cursor(),
                     transform: (doc, callback) => {
 
                         const fields = Object.keys(doc);
@@ -395,7 +395,23 @@ module.exports = {
                             if (getTransposeFn(form, fieldName, 'export')) {
 
                                 return promises.push(getTransposeFn(form, fieldName, 'export')(doc[fieldName], doc)
-                                    .then((val) => (doc[fieldName] = val)));
+                                    .then((result) => {
+
+                                        const updatedDoc = doc;
+                                        let val = result;
+                                        let merge = false;
+
+                                        if (Array.isArray(val)) {
+                                            [val, merge = false] = val;
+                                        }
+
+                                        if (!merge) {
+                                            return (doc[fieldName] = val);
+                                        }
+
+                                        return (doc = Object.assign({}, updatedDoc, val));
+
+                                    }));
 
                             }
 
