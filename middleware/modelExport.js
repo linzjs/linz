@@ -373,58 +373,50 @@ module.exports = {
                     return next(err);
                 }
 
-                const exportQuery = query.select(filterFieldNames.join(' '));
-                const columnsFn = exportObj.columns || ((columns) => columns);
+                req.linz.model.listQuery(req, query, (listQueryErr, listQuery) => {
 
-                linz.api.util.generateExport({
-                    columns: columnsFn(fields.map((fieldName) => ({
-                        key: fieldName,
-                        header: labels[fieldName],
-                    }))),
-                    contentType: 'text/csv',
-                    name: `${Model.linz.formtools.model.plural}-${moment(Date.now()).format('l').replace(/\//g, '.', 'g')}`,
-                    res,
-                    stream: exportQuery.lean().cursor(),
-                    transform: (doc, callback) => {
+                    if (listQueryErr) {
+                        return next(listQueryErr);
+                    }
 
-                        const fields = Object.keys(doc);
-                        const promises = [];
+                    const exportQuery = listQuery.select(filterFieldNames.join(' '));
 
-                        fields.forEach((fieldName) => {
+                    linz.api.util.generateExport({
+                        columns: fields.map((fieldName) => ({
+                            key: fieldName,
+                            header: labels[fieldName],
+                        })),
+                        contentType: 'text/csv',
+                        name: `${Model.linz.formtools.model.plural}-${moment(Date.now()).format('l').replace(/\//g, '.', 'g')}`,
+                        query: exportQuery,
+                        req,
+                        res,
+                        transform: (doc, callback) => {
 
-                            if (getTransposeFn(form, fieldName, 'export')) {
+                            const fields = Object.keys(doc);
+                            const promises = [];
 
-                                return promises.push(getTransposeFn(form, fieldName, 'export')(doc[fieldName], doc)
-                                    .then((result) => {
+                            fields.forEach((fieldName) => {
 
-                                        const updatedDoc = doc;
-                                        let val = result;
-                                        let merge = false;
+                                if (getTransposeFn(form, fieldName, 'export')) {
 
-                                        if (Array.isArray(val)) {
-                                            [val, merge = false] = val;
-                                        }
+                                    return promises.push(getTransposeFn(form, fieldName, 'export')(doc[fieldName], doc)
+                                        .then((val) => (doc[fieldName] = val)));
 
-                                        if (!merge) {
-                                            return (doc[fieldName] = val);
-                                        }
+                                }
 
-                                        return (doc = Object.assign({}, updatedDoc, val));
+                                return promises.push(prettifyData(req, fieldName, doc[fieldName])
+                                    .then((val) => (doc[fieldName] = val)));
 
-                                    }));
+                            });
 
-                            }
+                            Promise.all(promises)
+                                .then(() => callback(null, doc))
+                                .catch(callback);
 
-                            return promises.push(prettifyData(req, fieldName, doc[fieldName])
-                                .then((val) => (doc[fieldName] = val)));
+                        },
+                    });
 
-                        });
-
-                        Promise.all(promises)
-                            .then(() => callback(null, doc))
-                            .catch(callback);
-
-                    },
                 });
 
             });
