@@ -26,7 +26,7 @@ mtOrgSchema.plugin(linz.formtools.plugins.document, {
 
 mtOrgSchema.pre('save', function (next, callback, req) {
 
-    if (req.user) {
+    if (req && req.user) {
         this.modifiedBy = req.user.username;
     }
 
