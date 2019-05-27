@@ -269,7 +269,7 @@ The ``query`` property can be used to directly alter the Mongoose query object t
 
 The ``transform`` property will accept a function with the signature::
 
-  transform (field, 'beforeSave', form, user)
+  transform (field, record)
 
 If provided, it will be executed before a record is saved to the database. It is useful if you need to manipulate client side data before it is stored in the database.
 
