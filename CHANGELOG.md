@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+- Stopped empty date fields getting today's date automatically applied.
+
 ## v1.0.0-18.4.0 (27 May 2019)
 
 - Added the ability to split object fields over multiple columns in the default export.
