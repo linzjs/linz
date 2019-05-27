@@ -260,7 +260,7 @@ if (!linz) {
                 var field = $(this);
                 var dateValue = field.attr('data-linz-date-value');
 
-                // Don't default the default, only continue if there is one already.
+                // Don't default the date, only continue if there is one already.
                 if (!dateValue) {
                     return;
                 }
