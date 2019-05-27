@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## v1.0.0-18.4.0 (27 May 2019)
+
+- Added the ability to split object fields over multiple columns in the default export.
+- Made the export api more generic so you can pass in any stream instead of a query.
+- Fixed the transform function to pass the correct parameters.
+- Fixed listQuery not being applied in the exports.
+- Fixed single field and record exports not showing up correctly.
+
 ## v1.0.0-18.3.1 (18 April 2019)
 
 - Fixed concurrency plugin.

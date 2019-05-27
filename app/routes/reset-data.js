@@ -24,6 +24,11 @@ module.exports = (req, res, next) => {
         email: 'test@test.com',
         modifiedBy: 'reset-script',
         name: 'Test user',
+        objectField: {
+            objectField1: 'Object Field 1',
+            objectField2: 'Object Field 2',
+            objectField3: 'Object Field 3',
+        },
         org: org._id,
         password: 'password',
         username: 'test',

@@ -53,4 +53,11 @@ module.exports = {
         fieldset: 'Access',
         helpText: 'This controls if the user has access to admin.',
     },
+    objectField: {
+        fieldset: 'Misc',
+        transpose: {
+            'export': (val) => Promise.resolve([val, true]),
+        },
+        visible: false,
+    },
 };

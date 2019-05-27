@@ -21,6 +21,7 @@ const mtUserSchema = new linz.mongoose.Schema({
     },
     password: String,
     username: String,
+    objectField: linz.mongoose.Schema.Types.Mixed,
 });
 
 module.exports = mtUserSchema;

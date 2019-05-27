@@ -18,7 +18,7 @@ mtUserSchema.methods.verifyPassword = function (candidatePassword, callback) {
 
 mtUserSchema.pre('save', function (next, callback, req) {
 
-    if (req.user) {
+    if (req && req.user) {
         this.modifiedBy = req.user.username;
     }
 
