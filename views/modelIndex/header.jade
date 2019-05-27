@@ -59,7 +59,7 @@
 				for exp in model.list.export
 					if exp.enabled && permissions.canExport !== false
 						- attributes = {}
-						if exp.action === 'export'
+						if exp.action === 'export' || exp.modal
 							- attributes['data-target'] = '#exportModal'
 						a.btn.btn-default(href='' + linz.api.url.getAdminLink(model, exp.action) data-linz-control="export" class=(exp.action && 'disabled'))&attributes(attributes)= exp.label
 			else
