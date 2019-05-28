@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.0.0-18.4.1
 
 - Stopped empty date fields getting today's date automatically applied.
 
