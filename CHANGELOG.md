@@ -1,10 +1,10 @@
 # CHANGELOG
 
-## unreleased
+## 1.0.0-18.4.2 (31 May 2019)
 
 - Added support for `modal` form to custom exports.
 
-## v1.0.0-18.4.1
+## v1.0.0-18.4.1 (29 May 2019)
 
 - Stopped empty date fields getting today's date automatically applied.
 
