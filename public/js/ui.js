@@ -260,6 +260,11 @@ if (!linz) {
                 var field = $(this);
                 var dateValue = field.attr('data-linz-date-value');
 
+                // Don't default the date, only continue if there is one already.
+                if (!dateValue) {
+                    return;
+                }
+
                 if (field.data('utc-offset')) {
                     return field.data('DateTimePicker').date(moment(dateValue).subtract(getOffset(moment().format('Z')) - getOffset(field.data('utc-offset')), 'minutes'));
                 }
