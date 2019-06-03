@@ -230,7 +230,23 @@ linz.addLoadEvent(function () {
         var queryObj = $(this),
             url = queryObj.attr('href');
 
-        $('#groupActionModal').modal().load(url);
+        // Bind model save button and update the selected ids to modal form.
+        $('#groupActionModal').modal().load(url, function () {
+
+            var selectedIDs = [],
+                _this = this;
+
+            $('input[data-linz-control="checked-record"]:checked').each(function () {
+                selectedIDs.push($(this).val());
+            });
+
+            // add selected IDs to hidden field
+            $(_this).find('[data-group-action="ids"]').val(selectedIDs);
+
+            // add form validation
+            $(_this).find('form[data-linz-validation="true"]').bootstrapValidator({});
+
+        });
 
        return false;
     });
@@ -244,24 +260,6 @@ linz.addLoadEvent(function () {
         $('#recordActionModal').modal().load(url);
 
        return false;
-
-    });
-
-    // bind model save button and update the selected ids to modal form
-    $('#groupActionModal').on('shown.bs.modal', function (e) {
-
-        var selectedIDs = [],
-            _this = this;
-
-        $('input[data-linz-control="checked-record"]:checked').each(function () {
-            selectedIDs.push($(this).val());
-        });
-
-        // add selected IDs to hidden field
-        $(_this).find('[data-group-action="ids"]').val(selectedIDs);
-
-        // add form validation
-        $(_this).find('form[data-linz-validation="true"]').bootstrapValidator({});
 
     });
 
