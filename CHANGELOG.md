@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 1.0.0-18.4.3 (3 June 2019)
 
 - Fixed group actions on the list view.
 
