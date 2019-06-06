@@ -60,143 +60,7 @@ const prettifyData = (req, fieldName, val) => new Promise((resolve, reject) => {
 
 var modelExportHelpers = function modelExportHelpers (req) {
 
-    const form = JSON.parse(req.body.filters);
-    const Model = req.linz.model;
-
     return {
-
-        getFilters: function getFilters (cb) {
-
-            if (!req.body.filters.length) {
-                return cb(null, {});
-            }
-
-            // check if there are any filters in the form post
-            if (!form.selectedFilters) {
-                return cb(null, {});
-            }
-
-            async.waterfall([
-
-                function (callback) {
-
-                    Model.getList(req, function (err, list) {
-
-                        if (err) {
-                            return cb(err);
-                        }
-
-                        return callback(null, list);
-
-                    });
-                },
-
-                function (list, callback) {
-
-                    var filters = {};
-
-                    async.each(form.selectedFilters.split(','), function (fieldName, filtersDone) {
-
-                        // call the filter renderer and update the content with the result
-                        list.filters[fieldName].filter.filter(fieldName, form, function (err, result) {
-
-                            if (err) {
-                                return filtersDone(err);
-                            }
-
-                            filters = Model.addSearchFilter(filters, result);
-
-                            return filtersDone(null);
-
-                        });
-
-                    }, function (err) {
-
-                        if (err) {
-                            return cb(err);
-                        }
-
-                        // consolidate filters into query
-                        if (Object.keys(filters).length) {
-                            filters = Model.setFiltersAsQuery(filters);
-                        }
-
-                        return callback(err, filters);
-
-                    });
-
-                }
-
-            ], cb);
-
-        },
-
-        getSearchFilters: (filters, cb) => {
-
-            if (!form.search || !form.search.length) {
-                return cb(null, filters);
-            }
-
-            if (!filters.$and) {
-                filters.$and = [];
-            }
-
-            Model.getList(req, (err, list) => {
-
-                if (err) {
-                    return cb(err);
-                }
-
-                const searchFields = list.search;
-
-                async.map(searchFields, (field, fieldCallback) => {
-
-                    linz.api.model.titleField(req.params.model, field, (err, titleField) => {
-
-                        if (err) {
-                            return fieldCallback(err);
-                        }
-
-                        return fieldCallback(null, linz.api.query.fieldRegexp(titleField, form.search));
-
-                    });
-
-                }, (err, $or) => {
-
-                    filters.$and.push({ $or });
-
-                    return cb(err, filters);
-
-                });
-
-            });
-
-        },
-
-        addIdFilters: function addIdFilters (filters, cb) {
-
-            if (!req.body.selectedIds.length) {
-                return cb(null, filters);
-            }
-
-            filters = filters || { '$and': [] };
-            filters.$and = filters.$and || [];
-
-            var ids = [];
-
-            // compile ids into ObjectId type
-            req.body.selectedIds.split(',').forEach(function (id) {
-                ids.push(new linz.mongoose.Types.ObjectId(id));
-            });
-
-            // let's add selected Ids to the filters
-            filters.$and.push({
-                _id: { $in: ids}
-            });
-
-            return cb(null, filters);
-
-        },
 
         getForm: function getForm(filters, cb) {
 
@@ -312,9 +176,13 @@ module.exports = {
         var asyncFn = [],
             helpers = modelExportHelpers(req);
 
-        asyncFn.push(helpers.getFilters);
-        asyncFn.push(helpers.getSearchFilters);
-        asyncFn.push(helpers.addIdFilters);
+        asyncFn.push((cb) => {
+
+            linz.api.middleware.getFilters(req)
+                .then((filters) => cb(null, filters))
+                .catch(cb);
+
+        });
         asyncFn.push(helpers.getForm);
         asyncFn.push(helpers.getList);
 
