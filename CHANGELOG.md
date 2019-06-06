@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+- Added a new api `linz.api.middleware.getFilters(req)` to get the current list view filters from a post request.
+
 ## 1.0.0-18.4.3 (3 June 2019)
 
 - Fixed group actions on the list view.
