@@ -178,7 +178,7 @@ module.exports = {
 
         asyncFn.push((cb) => {
 
-            linz.api.middleware.getFilters(req)
+            linz.api.formtools.list.getFilters(req)
                 .then((filters) => cb(null, filters))
                 .catch(cb);
 

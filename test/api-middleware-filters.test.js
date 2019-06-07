@@ -1,7 +1,7 @@
 'use strict';
 
 const linz = require('linz');
-const { getFilters } = require('linz/lib/api/middleware/filters');
+const { getFilters } = require('linz/lib/api/formtools/list');
 let UserSchema;
 
 // Wait for the database
