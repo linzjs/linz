@@ -11,8 +11,10 @@ module.exports = function  (req, res, next) {
     let body = req.body;
     let queryErrorCount = 0;
 
+    const model = linz.api.middleware.getModelFromRequest(req);
+
     // set up session control
-    var session = req.session[req.params.model] = req.session[req.params.model] || {};
+    var session = req.session[model] = req.session[model] || {};
         session.list = session.list || {};
         session.list.formData = session.list.formData || {};
 
@@ -101,7 +103,7 @@ module.exports = function  (req, res, next) {
             // check if there are toolbar items required
             function (cb) {
 
-                formtoolsAPI.list.renderToolbarItems(req, res, req.params.model, function (err, result) {
+                formtoolsAPI.list.renderToolbarItems(req, res, model, function (err, result) {
 
                     if (err) {
                         return cb(err);
@@ -123,7 +125,7 @@ module.exports = function  (req, res, next) {
                     return cb(null);
                 }
 
-                formtoolsAPI.list.renderFilters(req, req.params.model, function (err, result) {
+                formtoolsAPI.list.renderFilters(req, model, function (err, result) {
 
                     if (err) {
                         return cb(err);
@@ -197,7 +199,7 @@ module.exports = function  (req, res, next) {
                     return cb(null);
                 }
 
-                formtoolsAPI.list.getActiveFilters(req, session.list.formData.selectedFilters.split(','), session.list.formData, req.params.model, function (err, result) {
+                formtoolsAPI.list.getActiveFilters(req, session.list.formData.selectedFilters.split(','), session.list.formData, model, function (err, result) {
 
                     if (err) {
                         return cb(err);
@@ -218,7 +220,7 @@ module.exports = function  (req, res, next) {
                     return cb(null);
                 }
 
-                formtoolsAPI.list.renderSearchFilters(req, session.list.formData.selectedFilters.split(','), session.list.formData, req.params.model, function (err, result) {
+                formtoolsAPI.list.renderSearchFilters(req, session.list.formData.selectedFilters.split(','), session.list.formData, model, function (err, result) {
 
                     if (err) {
                         return cb(err);
@@ -246,7 +248,7 @@ module.exports = function  (req, res, next) {
 
                 async.map(req.linz.model.list.search, (field, fieldCallback) => {
 
-                    linz.api.model.titleField(req.params.model, field, (err, titleField) => {
+                    linz.api.model.titleField(model, field, (err, titleField) => {
 
                         if (err) {
                             return fieldCallback(err);
@@ -289,7 +291,7 @@ module.exports = function  (req, res, next) {
                 let fields = Object.keys(req.linz.model.list.fields);
 
                 // Work in the title field
-                linz.api.model.titleField(req.params.model, 'title', (err, titleField) => {
+                linz.api.model.titleField(model, 'title', (err, titleField) => {
 
                     if (err) {
                         return cb(err);

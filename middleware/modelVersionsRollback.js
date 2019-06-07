@@ -8,7 +8,7 @@ module.exports = {
 
     post: function (req, res, next) {
 
-        var Model = linz.api.model.get(req.params.model);
+        var Model = linz.api.model.get(linz.api.middleware.getModelFromRequest(req));
 
         async.series({
 
