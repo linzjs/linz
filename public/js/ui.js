@@ -182,6 +182,15 @@ if (!linz) {
         e.preventDefault();
     }
 
+    // Trigger the necessary changes for the form validation
+    // https://github.com/nghuuphuoc/bootstrapvalidator/blob/0c96659eda586269c02a45948744ac135676ff0d/src/js/bootstrapValidator.js#L49
+    function triggerChange (field) {
+
+        field.trigger('keyup');
+        field.trigger('input');
+
+    }
+
     function loadDatepicker() {
 
         if ($('[data-ui-datepicker]').length) {
@@ -221,10 +230,10 @@ if (!linz) {
                 // Trigger the change event for the field whenever the datepicker is shown or changed.
                 field.on({
                     'dp.change': function() {
-                        field.change();
+                        triggerChange(field);
                     },
                     'dp.show': function () {
-                        field.change();
+                        triggerChange(field);
                     },
                 });
 
