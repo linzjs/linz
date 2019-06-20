@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 1.0.0-18.4.4 (20 June 2019)
 
 - Fixed a bug preventing invalid date fields from being validated.
 
