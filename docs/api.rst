@@ -25,6 +25,14 @@ error.store(err, req)
 
 Take an Error object and store it on ``req`` within the Linz namespace at ``req.linz.error``. This becomes useful for logging errors that might be produced by Linz.
 
+formtools
+=========
+
+list.getFilters(req)
+--------------------
+
+Get the filters for a request. Used when you want to match a query to what is displayed in the list view.
+
 model
 =====
 

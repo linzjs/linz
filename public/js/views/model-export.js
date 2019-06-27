@@ -16,6 +16,28 @@ $(function ready () {
                 savedFields = mergeFields(getCookie(exportCookieName), fields),
                 bSelectAll = true;
 
+            var createHiddenInput = function (name, element) {
+
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = name;
+                input.setAttribute('data-linz-export', element);
+                $('.exportForm').prepend(input);
+
+            };
+
+            if (!$('.exportForm').find('[name="selectedIds"]').length) {
+                createHiddenInput('selectedIds', 'ids');
+            }
+
+            if (!$('.exportForm').find('[name="selectedFields"]').length) {
+                createHiddenInput('selectedFields', 'fields');
+            }
+
+            if (!$('.exportForm').find('[name="filters"]').length) {
+                createHiddenInput('filters', 'filters');
+            }
+
             drawExportList(savedFields);
 
             var selectedIDs = [];

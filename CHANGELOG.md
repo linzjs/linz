@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.0.0-18.5.0 (27 June 2019)
+
+- Added a new api `linz.api.formtools.list.getFilters(req)` to get the current list view filters from a post request.
+
 ## 1.0.0-18.4.4 (20 June 2019)
 
 - Fixed a bug preventing invalid date fields from being validated.
