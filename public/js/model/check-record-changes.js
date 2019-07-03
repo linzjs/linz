@@ -5,14 +5,20 @@ if (!linz) {
 (function () {
 
     var resolvedVersionNo;
+    var preventDefault = true;
 
     $('form').bootstrapValidator({}).on('success.form.bv', function(e) {
 
-        // Prevent form submission
-        e.preventDefault();
+        if (preventDefault === true) {
 
-        // disable submit button
-        $(e.target).find('[type="submit"]').attr('disabled','disabled');
+            // Prevent form submission
+            e.preventDefault();
+
+            // disable submit button
+            $(e.target).find('[type="submit"]').attr('disabled','disabled');
+
+        }
+
 
     });
 
@@ -44,6 +50,10 @@ if (!linz) {
                     return form.submit();
 
                 } else {
+
+                    // This path will be triggered if a form has remote validation.
+                    // Set this variable to false to allow the form to submit upon next successful validation.
+                    preventDefault = false;
 
                     return formValidator.validate();
 
