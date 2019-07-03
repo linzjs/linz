@@ -10,6 +10,7 @@ const error = require('./routes/error');
 const errorJson = require('./routes/error-json');
 const handlebars = require('express-handlebars');
 const resetData = require('./routes/reset-data');
+const isEmail = require('./routes/is-email');
 const scripts = require('./lib/scripts');
 const session = require('./lib/session');
 const styles = require('./lib/styles');
@@ -57,6 +58,9 @@ class App extends EventEmitter {
             // Custom form example.
             linz.app.get(`${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`, editCustomRoute.get);
             linz.app.post(`${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`, editCustomRoute.post);
+
+            // Remote validation example.
+            linz.app.get(`${linz.get('admin path')}/is-email`, isEmail);
 
             linz.app.use(linz.middleware.error);
 

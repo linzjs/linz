@@ -16,6 +16,7 @@
     "connect-redis": "3.4.0",
     "express-handlebars": "3.0.0",
     "ioredis": "4.5.1",
+    "is-email": "1.0.0",
     "linz": "file:/linz"
   }
 }
