@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 1.0.0-18.5.1 (4 July 2019)
 
 - Fixed a validation issue when a form has a remote validator.
 
