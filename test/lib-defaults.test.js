@@ -10,7 +10,7 @@ test('sets a default', () => {
     expect(linz.get('admin title')).toBe('Linz');
     expect(linz.get('login path')).toBe('/admin/login');
     expect(linz.get('logout path')).toBe('/admin/logout');
-    expect(linz.get('admin forgot password path')).toBe('/admin/forgot-your-password');
+    expect(linz.get('admin forgot password path')).toBe('/forgot-your-password');
     expect(linz.get('admin password reset path')).toBe('/password-reset');
     expect(linz.get('admin password pattern')).toBe('(?=(?:^.{8,}$))(?=(?:.*?[a-z]{1,}?))(?=(?:.*?[A-Z]{1,}?))(?=(?:.*?[0-9]{1,}?))(?=(?:.*?(?:\\W{1,}?|\\D{1,}?)))');
     expect(linz.get('admin password pattern help text')).toBe('Min. 8 characters. Must contain at least 1 uppercase letter, 1 lowercase leter, a symbol (e.g. ! ~ *) and a number.');
