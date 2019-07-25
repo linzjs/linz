@@ -1,3 +1,12 @@
 'use strict';
 
-module.exports = { fields: { name: true } };
+module.exports = {
+    export: [
+        {
+            dateFormat: 'DD MMM YYYY',
+            inclusions: 'name',
+            label: 'Choose fields to export',
+        },
+    ],
+    fields: { name: true },
+};

@@ -1,6 +1,7 @@
-var linz = require('../'),
-    async = require('async'),
-    moment = require('moment');
+const linz = require('../');
+const async = require('async');
+const moment = require('moment');
+const { deprecate } = require('util');
 
 const { isDate } = require('../lib/util');
 const {
@@ -108,6 +109,29 @@ var getExport = function (exports) {
 
 }
 
+// When deprecating this, also remove the following lines:
+// plugin-helps.js#L361: exclusions: exp.exclusions || '_id,dateCreated,dateModified,createdBy,modifiedBy',
+const getInclusionsFromExclusions = deprecate(function (exportObj, model) {
+
+    const exclusions = (exportObj.exclusions || '').split(',');
+    const inclusions = [];
+
+    model.schema.eachPath(function (pathname) {
+
+        const exclude = ['__v'].concat(exclusions);
+
+        if (exclude.includes(pathname)) {
+            return;
+        }
+
+        inclusions.push(pathname);
+
+    });
+
+    return inclusions;
+
+}, 'Export exclusions have been deprecated, use inclusions instead.');
+
 module.exports = {
 
     get: function (req, res, next) {
@@ -132,23 +156,21 @@ module.exports = {
                     return next(labelErr);
                 }
 
-                var excludedFieldNames = req.linz.export.exclusions.concat(',__v').split(','),
-                    fieldLabels = {};
+                const includedFields = req.linz.export.inclusions.length > 0 ? req.linz.export.inclusions.split(',') : getInclusionsFromExclusions(req.linz.export, req.linz.model);
 
-                // get a list of field names
-                req.linz.model.schema.eachPath(function (pathname) {
+                const fieldLabels = {};
+                const includedPaths = Object
+                    .keys(req.linz.model.schema.paths)
+                    .filter((key) => includedFields.includes(key));
 
-                    if (excludedFieldNames.indexOf(pathname) >= 0) {
-                        // exit if current field name is one of the exclusion fields
-                        return;
-                    }
+                includedPaths.forEach(function (field) {
 
-                    if (!labels[pathname]) {
-                        throw new Error(`Could not find ${pathname} field in the labels object.`);
+                    if (!labels[field]) {
+                        throw new Error(`Could not find ${field} field in the labels object.`);
                     }
 
                     // get a list of fields by the label ready for sorting
-                    fieldLabels[labels[pathname]] = pathname;
+                    fieldLabels[labels[field]] = field;
 
                 });
 
