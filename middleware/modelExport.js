@@ -1,5 +1,4 @@
 const linz = require('../');
-const async = require('async');
 const moment = require('moment');
 const { deprecate } = require('util');
 
@@ -10,6 +9,20 @@ const {
     referenceName,
 } = require('../lib/formtools/renderers-cell');
 const { getTransposeFn } = require('../lib/util');
+
+const promisify = (fn, callWith = []) => () => new Promise((resolve, reject) => {
+
+    fn.apply(null, callWith.concat((err, form) => {
+
+        if (err) {
+            return reject(err);
+        }
+
+        return resolve(form);
+
+    }));
+
+});
 
 const prettifyData = (req, fieldName, val) => new Promise((resolve, reject) => {
 
@@ -58,30 +71,6 @@ const prettifyData = (req, fieldName, val) => new Promise((resolve, reject) => {
     return resolve(val);
 
 });
-
-var modelExportHelpers = function modelExportHelpers (req) {
-
-    return {
-
-        getForm: function getForm(filters, cb) {
-
-            req.linz.model.getForm(req, function (err, form) {
-                return cb(err, filters, form);
-            });
-
-        },
-
-        getList: function getList (filters, form, cb) {
-
-            req.linz.model.getList(req, function (err, list) {
-                return cb(err, filters, form, list);
-            });
-
-        }
-
-    };
-
-};
 
 // this will retrieve the export object, using Linz's default export handler amongst custom export handlers
 // this is based on the knowledge that only Linz's default export handler can have an `action` of `export`
@@ -136,25 +125,21 @@ module.exports = {
 
     get: function (req, res, next) {
 
-        req.linz.model.getList(req, function (err, list) {
+        const getLabels = promisify(req.linz.model.getLabels);
+        const getList = promisify(req.linz.model.getList, [req]);
 
-            if (err) {
-                return next(err);
-            }
+        Promise.all([
+            getLabels(),
+            getList(),
+        ])
+            .then(([labels, list]) => {
 
-            // attach our list object to the model
-            req.linz.model.list = list;
+                // attach our list object to the model
+                req.linz.model.list = list;
 
-            // retrieve the export object
-            req.linz.export = getExport(list.export);
-            req.linz.export.fields = {};
-
-            // retrieve the labels to provide a list of fields to choose from
-            req.linz.model.getLabels((labelErr, labels) => {
-
-                if (labelErr) {
-                    return next(labelErr);
-                }
+                // retrieve the export object
+                req.linz.export = getExport(list.export);
+                req.linz.export.fields = {};
 
                 const includedFields = req.linz.export.inclusions.length > 0 ? req.linz.export.inclusions.split(',') : getInclusionsFromExclusions(req.linz.export, req.linz.model);
 
@@ -184,156 +169,130 @@ module.exports = {
 
                 return next(null);
 
-            });
-
-        });
+            })
+            .catch(next);
 
     },
 
     post: function (req, res, next) {
 
         var Model = req.linz.model;
+        const getForm = promisify(req.linz.model.getForm, [req]);
+        const getLabels = promisify(req.linz.model.getLabels);
+        const getList = promisify(req.linz.model.getList, [req]);
 
-        // since a custom export function is not defined for model, use local export function
-        var asyncFn = [],
-            helpers = modelExportHelpers(req);
+        return Promise.all([
+            getForm(),
+            getLabels(),
+            getList(),
+            linz.api.formtools.list.getFilters(req),
+        ])
+            .then(([form, labels, list, filters]) => {
 
-        asyncFn.push((cb) => {
+                const exportObj = getExport(list.export);
+                const includedFields = exportObj.inclusions.length > 0 ? exportObj.inclusions.split(',') : getInclusionsFromExclusions(exportObj, Model);
+                const bodyFields = req.body.selectedFields.split(',');
+                const refFieldNames = [];
+                const fields = includedFields.filter((field) => bodyFields.includes(field))
 
-            linz.api.formtools.list.getFilters(req)
-                .then((filters) => cb(null, filters))
-                .catch(cb);
+                let filterFieldNames = [];
 
-        });
-        asyncFn.push(helpers.getForm);
-        asyncFn.push(helpers.getList);
+                fields.forEach(function (fieldName, index, arr) {
 
-        // get the actual export object
-        asyncFn.push(function (filters, form, list, callback) {
-
-            // retrieve the export
-            var _export = getExport(list.export);
-            _export.fields = {};
-
-            return callback(null, filters, form, list, _export);
-
-        });
-
-        asyncFn.push(function (filters, form, list, exportObj, cb) {
-            return req.linz.model.getLabels((err, labels) => cb(err, filters, form, list, exportObj, labels));
-        });
-
-        async.waterfall(asyncFn, function (err, filters, form, list, exportObj, labels) {
-
-            if (err) {
-                return next(err);
-            }
-
-            var fields = req.body.selectedFields.split(','),
-                refFieldNames = [],
-                filterFieldNames = [];
-
-            fields.forEach(function (fieldName, index, arr) {
-
-                // remove any property that doesn't exist in the model
-                if (!Model.schema.tree[fieldName]) {
-                    return arr.splice(index, 1);
-                }
-
-                // check if there any ref fields selected to be exported
-                if(!Model.schema.tree[fieldName].ref) {
-                    return;
-                }
-
-                return refFieldNames.push(fieldName);
-
-            });
-
-            // check if _id is excluded
-            if (exportObj.exclusions.indexOf('_id') >= 0) {
-                filterFieldNames.push('-_id');
-            }
-
-            filterFieldNames = filterFieldNames.concat(fields);
-
-            // pipe data to response stream
-            req.linz.model.getQuery(req, filters, function getQuery (err, query) {
-
-                if (err) {
-                    return next(err);
-                }
-
-                req.linz.model.listQuery(req, query, (listQueryErr, listQuery) => {
-
-                    if (listQueryErr) {
-                        return next(listQueryErr);
+                    // check if there any ref fields selected to be exported
+                    if(!Model.schema.tree[fieldName] || !Model.schema.tree[fieldName].ref) {
+                        return;
                     }
 
-                    const exclusions = exportObj.exclusions.split(',');
-                    const exportQuery = listQuery.select(filterFieldNames.join(' '));
-                    const columnsFn = exportObj.columns || ((columns) => columns);
-                    const formattedFields = fields
-                        .filter(field => !exclusions.includes(field))
-                        .map(fieldName => ({
-                            header: labels[fieldName],
-                            key: fieldName,
-                        }));
-                    const columns = columnsFn(formattedFields);
+                    return refFieldNames.push(fieldName);
 
-                    linz.api.util.generateExport({
-                        columns,
-                        contentType: 'text/csv',
-                        name: `${Model.linz.formtools.model.plural}-${moment(Date.now()).format('l').replace(/\//g, '.', 'g')}`,
-                        req,
-                        res,
-                        stream: exportQuery.lean().cursor(),
-                        transform: (doc, callback) => {
+                });
 
-                            const fields = Object.keys(doc);
-                            const promises = [];
+                // If _id is not included, exclude it from the export;
+                if (!fields.includes('_id')) {
+                    filterFieldNames.push('-_id');
+                }
 
-                            fields.forEach((fieldName) => {
+                filterFieldNames = filterFieldNames.concat(fields);
 
-                                if (getTransposeFn(form, fieldName, 'export')) {
+                // pipe data to response stream
+                req.linz.model.getQuery(req, filters, function getQuery (err, query) {
 
-                                    return promises.push(getTransposeFn(form, fieldName, 'export')(doc[fieldName], doc)
-                                        .then((result) => {
+                    if (err) {
+                        return next(err);
+                    }
 
-                                            const updatedDoc = doc;
-                                            let val = result;
-                                            let merge = false;
+                    req.linz.model.listQuery(req, query, (listQueryErr, listQuery) => {
 
-                                            if (Array.isArray(val)) {
-                                                [val, merge = false] = val;
-                                            }
+                        if (listQueryErr) {
+                            return next(listQueryErr);
+                        }
 
-                                            if (!merge) {
-                                                return (doc[fieldName] = val);
-                                            }
+                        const exclusions = exportObj.exclusions.split(',');
+                        const exportQuery = listQuery.select(filterFieldNames.join(' '));
+                        const columnsFn = exportObj.columns || ((columns) => columns);
+                        const formattedFields = fields
+                            .map(fieldName => ({
+                                header: labels[fieldName],
+                                key: fieldName,
+                            }));
+                        const columns = columnsFn(formattedFields);
 
-                                            return (doc = Object.assign({}, updatedDoc, val));
+                        linz.api.util.generateExport({
+                            columns,
+                            contentType: 'text/csv',
+                            name: `${Model.linz.formtools.model.plural}-${moment(Date.now()).format('l').replace(/\//g, '.', 'g')}`,
+                            req,
+                            res,
+                            stream: exportQuery.lean().cursor(),
+                            transform: (doc, callback) => {
 
-                                        }));
+                                const fields = Object.keys(doc);
+                                const promises = [];
 
-                                }
+                                fields.forEach((fieldName) => {
 
-                                return promises.push(prettifyData(req, fieldName, doc[fieldName])
-                                    .then((val) => (doc[fieldName] = val)));
+                                    if (getTransposeFn(form, fieldName, 'export')) {
 
-                            });
+                                        return promises.push(getTransposeFn(form, fieldName, 'export')(doc[fieldName], doc)
+                                            .then((result) => {
 
-                            Promise.all(promises)
-                                .then(() => callback(null, doc))
-                                .catch(callback);
+                                                const updatedDoc = doc;
+                                                let val = result;
+                                                let merge = false;
 
-                        },
+                                                if (Array.isArray(val)) {
+                                                    [val, merge = false] = val;
+                                                }
+
+                                                if (!merge) {
+                                                    return (doc[fieldName] = val);
+                                                }
+
+                                                return (doc = Object.assign({}, updatedDoc, val));
+
+                                            }));
+
+                                    }
+
+                                    return promises.push(prettifyData(req, fieldName, doc[fieldName])
+                                        .then((val) => (doc[fieldName] = val)));
+
+                                });
+
+                                Promise.all(promises)
+                                    .then(() => callback(null, doc))
+                                    .catch(callback);
+
+                            },
+                        });
+
                     });
 
                 });
 
-            });
-
-        });
+            })
+            .catch(next);
 
     }
 };
