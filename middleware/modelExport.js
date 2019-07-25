@@ -247,14 +247,19 @@ module.exports = {
                         return next(listQueryErr);
                     }
 
+                    const exclusions = exportObj.exclusions.split(',');
                     const exportQuery = listQuery.select(filterFieldNames.join(' '));
                     const columnsFn = exportObj.columns || ((columns) => columns);
+                    const formattedFields = fields
+                        .filter(field => !exclusions.includes(field))
+                        .map(fieldName => ({
+                            header: labels[fieldName],
+                            key: fieldName,
+                        }));
+                    const columns = columnsFn(formattedFields);
 
                     linz.api.util.generateExport({
-                        columns: columnsFn(fields.map((fieldName) => ({
-                            key: fieldName,
-                            header: labels[fieldName],
-                        }))),
+                        columns,
                         contentType: 'text/csv',
                         name: `${Model.linz.formtools.model.plural}-${moment(Date.now()).format('l').replace(/\//g, '.', 'g')}`,
                         req,
