@@ -228,7 +228,6 @@ module.exports = {
                             return next(listQueryErr);
                         }
 
-                        const exclusions = exportObj.exclusions.split(',');
                         const exportQuery = listQuery.select(filterFieldNames.join(' '));
                         const columnsFn = exportObj.columns || ((columns) => columns);
                         const formattedFields = fields
