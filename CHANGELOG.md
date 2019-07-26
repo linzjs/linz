@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 1.0.0-18.5.2 (26 July 2019)
 
 - Improved client side CSRF code.
 
