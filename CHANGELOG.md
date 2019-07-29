@@ -2,7 +2,9 @@
 
 ## Unreleased
 
-- Mitigated against mass assignment attacks.
+- Added protection to help mitigate XSS attacks.
+- Added protection to help mitigate mass assignment attacks.
+- Added an API to escape data before rendering.
 
 ## v1.0.0-18.6.0 (29 July 2019)
 
