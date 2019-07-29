@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Added protection to help mitigate XSS attacks.
+- Mitigated against mass assignment attacks.
 
 ## v1.0.0-18.6.0 (29 July 2019)
 
