@@ -1,31 +1,32 @@
 # CHANGELOG
 
-## Unreleased
+## v1.0.0-18.6.0 (29 July 2019)
 
 - Updated export to support new inclusions property.
 - **Deprecated** the export exclusions property in favour of the inclusions property.
+- Improved development environment.
 
-## 1.0.0-18.5.2 (26 July 2019)
+## v1.0.0-18.5.2 (26 July 2019)
 
 - Improved client side CSRF code.
 
-## 1.0.0-18.5.1 (4 July 2019)
+## v1.0.0-18.5.1 (4 July 2019)
 
 - Fixed a validation issue when a form has a remote validator.
 
-## 1.0.0-18.5.0 (27 June 2019)
+## v1.0.0-18.5.0 (27 June 2019)
 
 - Added a new api `linz.api.formtools.list.getFilters(req)` to get the current list view filters from a post request.
 
-## 1.0.0-18.4.4 (20 June 2019)
+## v1.0.0-18.4.4 (20 June 2019)
 
 - Fixed a bug preventing invalid date fields from being validated.
 
-## 1.0.0-18.4.3 (3 June 2019)
+## v1.0.0-18.4.3 (3 June 2019)
 
 - Fixed group actions on the list view.
 
-## 1.0.0-18.4.2 (31 May 2019)
+## v1.0.0-18.4.2 (31 May 2019)
 
 - Added support for `modal` form to custom exports.
 
