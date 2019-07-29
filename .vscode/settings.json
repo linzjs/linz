@@ -6,5 +6,10 @@
     "cSpell.words": [
         "formtools",
         "linz"
-    ]
+    ],
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": false,
+        "editor.formatOnPaste": false
+    }
 }

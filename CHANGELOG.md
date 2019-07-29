@@ -1,26 +1,32 @@
 # CHANGELOG
 
-## 1.0.0-18.5.2 (26 July 2019)
+## v1.0.0-18.6.0 (29 July 2019)
+
+- Updated export to support new inclusions property.
+- **Deprecated** the export exclusions property in favour of the inclusions property.
+- Improved development environment.
+
+## v1.0.0-18.5.2 (26 July 2019)
 
 - Improved client side CSRF code.
 
-## 1.0.0-18.5.1 (4 July 2019)
+## v1.0.0-18.5.1 (4 July 2019)
 
 - Fixed a validation issue when a form has a remote validator.
 
-## 1.0.0-18.5.0 (27 June 2019)
+## v1.0.0-18.5.0 (27 June 2019)
 
 - Added a new api `linz.api.formtools.list.getFilters(req)` to get the current list view filters from a post request.
 
-## 1.0.0-18.4.4 (20 June 2019)
+## v1.0.0-18.4.4 (20 June 2019)
 
 - Fixed a bug preventing invalid date fields from being validated.
 
-## 1.0.0-18.4.3 (3 June 2019)
+## v1.0.0-18.4.3 (3 June 2019)
 
 - Fixed group actions on the list view.
 
-## 1.0.0-18.4.2 (31 May 2019)
+## v1.0.0-18.4.2 (31 May 2019)
 
 - Added support for `modal` form to custom exports.
 
@@ -93,7 +99,7 @@
 **Rereleased v1.0.0-17.1.0 as v1.0.0-17.1.1.**
 
 - Added the ability to transform individual export values. `form[field].transpose.export => (val) => Promise.resolve(val)`. This function must return a promise.
-- Deprecated the transpose function in favour of the context one. `transpose: (val) => ...` should now be `transpose: { form: (val) => ... }`.
+- **Deprecated** the transpose function in favour of the context one. `transpose: (val) => ...` should now be `transpose: { form: (val) => ... }`.
 - Updated the modelExport route to `transpose` fields if a `transpose` or `transpose.export` function is provided in the formDSL. This allows you to completely customise exported fields before displaying them in the exported file.
 - Custom export routes can now take advantage of `linz.api.util.generateExport()` to fully customise what kind of file is generated. For example you can generate `.xls` and `.csv` files and customise the content.
 - Added the ability to provide a custom default renderer for the versions plugin.
