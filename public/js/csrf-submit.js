@@ -50,7 +50,7 @@ var mutated = function (mutationsList, observer) {
 
     mutationsList.forEach(function (mutation) {
 
-        if (mutation.type === 'childList' && mutation.addedNodes.length && !mutation.removedNodes.length) {
+        if (mutation.type === 'childList' && mutation.addedNodes.length) {
 
             for (var i = 0; i < mutation.addedNodes.length; i++) {
                 findAForm(mutation.addedNodes[i]);
