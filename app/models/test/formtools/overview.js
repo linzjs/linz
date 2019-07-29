@@ -58,15 +58,15 @@ module.exports = {
             ],
             label: 'Digit',
         },
-        // {
-        //     fields: [
-        //         {
-        //             fieldName: 'documents',
-        //             renderer: linz.formtools.cellRenderers.documentarray,
-        //         },
-        //     ],
-        //     label: 'Documents',
-        // },
+        {
+            fields: [
+                {
+                    fieldName: 'documents',
+                    renderer: linz.formtools.cellRenderers.documentarray,
+                },
+            ],
+            label: 'Documents',
+        },
         {
             fields: [
                 {

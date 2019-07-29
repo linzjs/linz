@@ -44,13 +44,13 @@ module.exports = (req, res, next) => {
         ckeditor: '<p>test</p> ',
         date: new Date(),
         digit: 123,
-        // documents: [
-        //     {
-        //         time: new Date(),
-        //         name: 'Test',
-        //         _id: '5d0c6f9830ef170022e83408',
-        //     },
-        // ],
+        documents: [
+            {
+                time: new Date(),
+                name: 'Test',
+                _id: '5d0c6f9830ef170022e83408',
+            },
+        ],
         email: 'test@test.com',
         hidden: 'hidden',
         multipleSelect: ['value1', 'value2'],
@@ -74,13 +74,13 @@ module.exports = (req, res, next) => {
         ckeditor: `" /><script>alert('xss')</script><br class="`,
         date: new Date(),
         digit: `" /><script>alert('xss')</script><br class="`,
-        // documents: [
-        //     {
-        //         time: new Date(),
-        //         name: `" /><script>alert('xss')</script><br class="`,
-        //         _id: '5d0c6f9830ef170022e83408',
-        //     },
-        // ],
+        documents: [
+            {
+                time: new Date(),
+                name: `" /><script>alert('xss')</script><br class="`,
+                _id: '5d0c6f9830ef170022e83408',
+            },
+        ],
         email: `" /><script>alert('xss')</script><br class="`,
         hidden: `" /><script>alert('xss')</script><br class="`,
         multipleSelect: [`" /><script>alert('xss')</script><br class="`],
