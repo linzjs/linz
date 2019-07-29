@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+- Added protection to help mitigate XSS attacks.
+
 ## v1.0.0-18.6.0 (29 July 2019)
 
 - Updated export to support new inclusions property.

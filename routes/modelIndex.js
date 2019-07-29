@@ -85,6 +85,18 @@ var route = function (req, res, next) {
 
             });
 
+            const clean = (obj) => {
+
+                const newObj = {};
+
+                Object.keys(obj).forEach((key) => {
+                    newObj[key] = linz.api.util.escape(obj[key]);
+                });
+
+                return newObj;
+
+            };
+
             const data = {
                 csrfToken: req.csrfToken(),
                 customAttributes: res.locals.customAttributes,
@@ -96,7 +108,7 @@ var route = function (req, res, next) {
                     plural: req.linz.model.linz.formtools.model.plural,
                 },
                 model: req.linz.model,
-                modelQuery: JSON.stringify(req.linz.model.formData),
+                modelQuery: JSON.stringify(clean(req.linz.model.formData)),
                 page,
                 pages,
                 pageTitle: req.linz.model.linz.formtools.model.plural,
