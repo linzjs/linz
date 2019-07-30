@@ -5,6 +5,7 @@
 - Added protection to help mitigate XSS attacks.
 - Added protection to help mitigate mass assignment attacks.
 - Added an API to escape data before rendering.
+- Updated formist to the latest version.
 
 ## v1.0.0-18.6.0 (29 July 2019)
 
