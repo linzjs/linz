@@ -6,6 +6,9 @@ const mtUserSchema = require('./schema');
 // add the formtools plugin
 mtUserSchema.plugin(linz.formtools.plugins.document, require('./formtools'));
 
+// Add versions plugin
+mtUserSchema.plugin(linz.versions.plugin, require('./versions'));
+
 mtUserSchema.plugin(linz.concurrencyControl.plugin, require('./concurrency-control'));
 
 mtUserSchema.virtual('hasAdminAccess').get(function () {
