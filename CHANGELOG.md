@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.0.0-18.7.0
 
 - Added protection to help mitigate XSS attacks.
 - Added protection to help mitigate mass assignment attacks.
