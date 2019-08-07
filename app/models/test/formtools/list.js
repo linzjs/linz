@@ -54,10 +54,16 @@ module.exports = {
         number: { filter: linz.formtools.filters.number },
         password: { filter: linz.formtools.filters.text },
         radios: { filter: linz.formtools.filters.text },
-        select: { filter: linz.formtools.filters.text },
+        select: { filter: linz.formtools.filters.list(list, false) },
         tel: { filter: linz.formtools.filters.text },
         textArea: { filter: linz.formtools.filters.fulltext },
         text: { filter: linz.formtools.filters.text },
         url: { filter: linz.formtools.filters.text },
     },
+    export: [
+        {
+            dateFormat: 'DD MMM YYYY',
+            label: 'Choose fields to export',
+        },
+    ],
 };

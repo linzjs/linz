@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v1.0.0-18.7.1
+
+- Fixed an export issue when using filters.
+
 ## v1.0.0-18.7.0
 
 - Added protection to help mitigate XSS attacks.
