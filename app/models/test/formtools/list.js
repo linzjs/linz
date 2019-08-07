@@ -63,7 +63,6 @@ module.exports = {
     export: [
         {
             dateFormat: 'DD MMM YYYY',
-            inclusions: 'select date',
             label: 'Choose fields to export',
         },
     ],

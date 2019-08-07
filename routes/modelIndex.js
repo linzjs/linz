@@ -108,7 +108,7 @@ var route = function (req, res, next) {
                     plural: req.linz.model.linz.formtools.model.plural,
                 },
                 model: req.linz.model,
-                modelQuery: JSON.stringify(clean(req.linz.model.formData)),
+                modelQuery: JSON.stringify(req.linz.model.formData),
                 page,
                 pages,
                 pageTitle: req.linz.model.linz.formtools.model.plural,
