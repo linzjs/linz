@@ -91,6 +91,16 @@ session.getTimezone(req)
 
 Get the timezone offset of the current user.
 
+Util
+====
+
+The methods exposed via the ``linz.api.util`` namespace have functionality that are broad and general in nature.
+
+util.escape(userInputFromDatabase)
+------------------------
+
+Use this method to escape a string before using it in HTML. This method should be used whenever you're displaying information from an untrusted source (i.e. information from the database supplied by a user).
+
 Views
 =====
 

@@ -43,7 +43,7 @@ module.exports = {
 
             },
             dateFormat: 'DD MMM YYYY',
-            exclusions: '_id',
+            exclusions: '_id,password',
             label: 'Choose fields to export',
         },
     ],

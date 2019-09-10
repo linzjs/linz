@@ -85,6 +85,18 @@ var route = function (req, res, next) {
 
             });
 
+            const clean = (obj) => {
+
+                const newObj = {};
+
+                Object.keys(obj).forEach((key) => {
+                    newObj[key] = linz.api.util.escape(obj[key]);
+                });
+
+                return newObj;
+
+            };
+
             const data = {
                 csrfToken: req.csrfToken(),
                 customAttributes: res.locals.customAttributes,
