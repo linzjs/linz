@@ -1,15 +1,20 @@
 'use strict';
 
-const { EventEmitter } = require('events');
 const express = require('express');
 const http = require('http');
 const linz = require('linz');
-const session = require('./lib/session');
-const scripts = require('./lib/scripts');
-const styles = require('./lib/styles');
+
+const { EventEmitter } = require('events');
 const editCustomRoute = require('./routes/edit-custom');
-const resetData = require('./routes/reset-data');
+const error = require('./routes/error');
+const errorJson = require('./routes/error-json');
 const handlebars = require('express-handlebars');
+const resetData = require('./routes/reset-data');
+const isEmail = require('./routes/is-email');
+const scripts = require('./lib/scripts');
+const session = require('./lib/session');
+const styles = require('./lib/styles');
+const whoAmI = require('./routes/who-am-i');
 
 const port = 8888;
 
@@ -45,10 +50,17 @@ class App extends EventEmitter {
             linz.app.set('view engine', 'handlebars');
 
             linz.app.get('/', (req, res) => res.redirect(linz.get('login path')));
+            linz.app.get('/who-am-i', whoAmI);
             linz.app.get('/reset', resetData);
+            linz.app.get('/error', error);
+            linz.app.get('/error-json', errorJson);
+
             // Custom form example.
             linz.app.get(`${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`, editCustomRoute.get);
             linz.app.post(`${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`, editCustomRoute.post);
+
+            // Remote validation example.
+            linz.app.get(`${linz.get('admin path')}/is-email`, isEmail);
 
             linz.app.use(linz.middleware.error);
 

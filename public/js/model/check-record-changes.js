@@ -5,14 +5,20 @@ if (!linz) {
 (function () {
 
     var resolvedVersionNo;
+    var preventDefault = true;
 
     $('form').bootstrapValidator({}).on('success.form.bv', function(e) {
 
-        // Prevent form submission
-        e.preventDefault();
+        if (preventDefault === true) {
 
-        // disable submit button
-        $(e.target).find('[type="submit"]').attr('disabled','disabled');
+            // Prevent form submission
+            e.preventDefault();
+
+            // disable submit button
+            $(e.target).find('[type="submit"]').attr('disabled','disabled');
+
+        }
+
 
     });
 
@@ -45,6 +51,10 @@ if (!linz) {
 
                 } else {
 
+                    // This path will be triggered if a form has remote validation.
+                    // Set this variable to false to allow the form to submit upon next successful validation.
+                    preventDefault = false;
+
                     return formValidator.validate();
 
                 }
@@ -68,9 +78,18 @@ if (!linz) {
             });
 
         })
-        .fail(function(jqXHR, textStatus, errorThrown ) {
+        .fail(function(res) {
 
-            alert('An error has occured while attempting to check if this record has been editted by other user.');
+            var json = res.responseJSON;
+
+            if (json) {
+
+                return alert('An error has occurred: ' + json.error);
+
+            }
+
+            alert('An error has occurred while attempting to check if this record has been edited by another user.');
+
             return false;
 
         });

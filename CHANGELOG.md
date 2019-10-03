@@ -1,5 +1,85 @@
 # CHANGELOG
 
+## v1.0.0-18.7.2
+
+- Fixed UI bug preventing export buttons from showing up on smaller devices.
+
+## v1.0.0-18.7.1
+
+- Fixed an export issue when using filters.
+
+## v1.0.0-18.7.0
+
+- Added protection to help mitigate XSS attacks.
+- Added protection to help mitigate mass assignment attacks.
+- Added an API to escape data before rendering.
+- Updated formist to the latest version.
+
+## v1.0.0-18.6.0 (29 July 2019)
+
+- Updated export to support new inclusions property.
+- **Deprecated** the export exclusions property in favour of the inclusions property.
+- Improved development environment.
+
+## v1.0.0-18.5.2 (26 July 2019)
+
+- Improved client side CSRF code.
+
+## v1.0.0-18.5.1 (4 July 2019)
+
+- Fixed a validation issue when a form has a remote validator.
+
+## v1.0.0-18.5.0 (27 June 2019)
+
+- Added a new api `linz.api.formtools.list.getFilters(req)` to get the current list view filters from a post request.
+
+## v1.0.0-18.4.4 (20 June 2019)
+
+- Fixed a bug preventing invalid date fields from being validated.
+
+## v1.0.0-18.4.3 (3 June 2019)
+
+- Fixed group actions on the list view.
+
+## v1.0.0-18.4.2 (31 May 2019)
+
+- Added support for `modal` form to custom exports.
+
+## v1.0.0-18.4.1 (29 May 2019)
+
+- Stopped empty date fields getting today's date automatically applied.
+
+## v1.0.0-18.4.0 (27 May 2019)
+
+- Added the ability to split object fields over multiple columns in the default export.
+- Made the export api more generic so you can pass in any stream instead of a query.
+- Fixed the transform function to pass the correct parameters.
+- Fixed listQuery not being applied in the exports.
+- Fixed single field and record exports not showing up correctly.
+
+## v1.0.0-18.3.1 (18 April 2019)
+
+- Fixed concurrency plugin.
+
+## v1.0.0-18.3.0 (15 April 2019)
+
+- Added `session options` default object passed to `express-session` middleware.
+- Added `cookie options` default object passed to `cookie-parser` and `express-session` middleware.
+- The `linzReturnUrl` cookie is now signed by default.
+- Through the above, updated Linz's default cookie settings to be more inline with OWASP recommendations.
+- The example app demonstrates how to extend the default session options.
+- Removed the X-Powered-By header.
+- Added the X-XSS-Protection header.
+
+## v1.0.0-18.2.0 (12 April 2019)
+
+- Linz's error handling middleware will now add the error to `req`.
+- Linz's error handling middleware can now return errors via JSON.
+- Updated error handling for JSON errors.
+- Added `linz.api.error` functions.
+- Added routes to the example app to generate errors for testing purposes.
+- Updated documentation.
+
 ## v1.0.0-18.1.0 (13 March 2019)
 
 - Made the modal selector more generic so it also works with custom modals.
@@ -34,7 +114,7 @@
 **Rereleased v1.0.0-17.1.0 as v1.0.0-17.1.1.**
 
 - Added the ability to transform individual export values. `form[field].transpose.export => (val) => Promise.resolve(val)`. This function must return a promise.
-- Deprecated the transpose function in favour of the context one. `transpose: (val) => ...` should now be `transpose: { form: (val) => ... }`.
+- **Deprecated** the transpose function in favour of the context one. `transpose: (val) => ...` should now be `transpose: { form: (val) => ... }`.
 - Updated the modelExport route to `transpose` fields if a `transpose` or `transpose.export` function is provided in the formDSL. This allows you to completely customise exported fields before displaying them in the exported file.
 - Custom export routes can now take advantage of `linz.api.util.generateExport()` to fully customise what kind of file is generated. For example you can generate `.xls` and `.csv` files and customise the content.
 - Added the ability to provide a custom default renderer for the versions plugin.

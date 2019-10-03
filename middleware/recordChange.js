@@ -1,168 +1,194 @@
-var linz = require('../'),
-	async = require('async'),
-	deep = require('deep-diff'),
-    moment = require('moment');
+'use strict';
+
+const linz = require('../');
+const async = require('async');
+const deep = require('deep-diff');
+const moment = require('moment');
 
 const { deprecate } = require('util');
 const { getTransposeFn } = require('../lib/util');
 
-module.exports = function (req, res, next) {
+const hasValue = (val) => {
 
-	var Model = req.linz.model,
-		ccSettings = Model.concurrencyControl,
-		formData = req.body,
-		resData = {
-			hasChanged: false
-		},
-		exclusionFields = {};
+    if (typeof val === 'undefined' || val === '' || val === null || val === '[]' || (Array.isArray(val) && val.length === 0) || (Array.isArray(val) && val.length === 1 && val[0] === '')) {
+        return false;
+    }
 
-	var sanitiseData = function (model, exclusions, yourChange, theirChange) {
+    return true;
 
-		var data = {
-				yourChange: {},
-				theirChange: {}
-			},
-            form = model.linz.formtools.form;
+};
 
-        const promises = [];
+const updateNumber = ({ data, fieldName, theirChange, yourChange }) => {
 
-		model.schema.eachPath(function (fieldName, schemaType) {
+    data.theirChange[fieldName] = parseFloat(theirChange[fieldName]);
+    data.yourChange[fieldName] = parseFloat(yourChange[fieldName]);
 
-			if (exclusions.hasOwnProperty(fieldName)) {
-				return;
-			}
+    if (isNaN(data.theirChange[fieldName])) {
+        data.theirChange[fieldName] = '';
+    }
 
-			if (fieldName === '__v') {
+    if (isNaN(data.yourChange[fieldName])) {
+        data.yourChange[fieldName] = '';
+    }
 
-				data.yourChange['versionNo'] = yourChange['versionNo'];
-				data.theirChange['versionNo'] = theirChange['__v'];
+};
 
-				return;
+const updateBoolean = ({ data, fieldName, theirChange, yourChange }) => {
+
+    data.theirChange[fieldName] = '';
+    data.yourChange[fieldName] = '';
+
+    if (hasValue(theirChange[fieldName])) {
+        data.theirChange[fieldName] = theirChange[fieldName].toString();
+    }
+
+    if (hasValue(yourChange[fieldName])) {
+        data.yourChange[fieldName] = yourChange[fieldName].toString();
+    }
+
+};
+
+const updateDate = ({ data, fieldName, theirChange, yourChange }) => {
+
+    data.theirChange[fieldName] = '';
+    data.yourChange[fieldName] = '';
+
+    if (hasValue(theirChange[fieldName])) {
+        data.theirChange[fieldName] = moment(new Date(theirChange[fieldName])).format('YYYY-MM-DD');
+    }
+
+    if (hasValue(yourChange[fieldName])) {
+        data.yourChange[fieldName] = moment(new Date(yourChange[fieldName])).format('YYYY-MM-DD');
+    }
+
+};
+
+const updateDocumentArray = ({ data, fieldName, theirChange, yourChange }) => {
+
+    data.yourChange[fieldName] = yourChange[fieldName];
+    data.theirChange[fieldName] = JSON.stringify(theirChange[fieldName]);
+
+};
+
+const updateArray = ({ data, fieldName, theirChange, yourChange }) => {
+
+    data.yourChange[fieldName] = [];
+    data.theirChange[fieldName] = [];
+
+    if (hasValue(yourChange[fieldName])) {
+
+        // Handle when array field contains only one value which is not of type array
+        data.yourChange[fieldName] = yourChange[fieldName];
+
+        if (!Array.isArray(data.yourChange[fieldName])) {
+            data.yourChange[fieldName] = data.yourChange[fieldName].split();
+        }
+
+    }
+
+    if (hasValue(theirChange[fieldName])) {
+        data.theirChange[fieldName] = theirChange[fieldName];
+    }
+
+};
+
+const updateData = ({ data, fieldName, form, schema, theirChange, yourChange }) => {
+
+    const type = form[fieldName] && form[fieldName].type || schema.paths[fieldName].type;
+
+    if (type === 'number') {
+        return updateNumber({ data, fieldName, theirChange, yourChange });
+    }
+
+    if (['boolean', 'objectid'].includes(type)) {
+        return updateBoolean({ data, fieldName, theirChange, yourChange });
+    }
+
+    if (type === 'date') {
+        return updateDate({ data, fieldName, theirChange, yourChange });
+    }
+
+    if (type === 'documentarray') {
+        return updateDocumentArray({ data, fieldName, theirChange, yourChange });
+    }
+
+    if (type === 'array') {
+        return updateArray({ data, fieldName, theirChange, yourChange });
+    }
+
+    data.yourChange[fieldName] = yourChange[fieldName];
+    data.theirChange[fieldName] = theirChange[fieldName];
+
+};
+
+const sanitiseData = (model, exclusions, yourChange, theirChange) => new Promise((resolve, reject) => {
+
+    const promises = [];
+    const data = {
+        theirChange: {},
+        yourChange: {},
+    };
+    const { form } = model;
+
+    model.schema.eachPath((fieldName) => {
+
+        if (Object.prototype.hasOwnProperty.call(exclusions, fieldName)) {
+            return;
+        }
+
+        if (fieldName === '__v') {
+
+            data.yourChange.versionNo = yourChange.versionNo;
+            // eslint-disable-next-line no-underscore-dangle
+            data.theirChange.versionNo = theirChange.__v;
+
+            return;
+
+        }
+
+        const transposeFn = getTransposeFn(form, fieldName, 'form');
+
+        // If transpose is defined for this field, let's transpose their change so it can compare in the correct format on client side
+        if (transposeFn) {
+
+            let transposeResult = transposeFn(theirChange[fieldName], theirChange);
+
+            if (!(transposeResult instanceof Promise)) {
+                transposeResult = Promise.resolve(deprecate(() => transposeResult, 'Transposing a field without returning a promise has been deprecated.')());
             }
 
-			// if transpose is defined for this field, let's transpose their change so it can compare in the correct format on client side
-			if (getTransposeFn(form, fieldName, 'form')) {
+            promises.push(transposeResult.then(result => (theirChange[fieldName] = result)));
 
-                let transposeFn = getTransposeFn(form, fieldName, 'form')(theirChange[fieldName], theirChange);
+        }
 
-                if (!(transposeFn instanceof Promise)) {
-                    transposeFn = Promise.resolve(deprecate(() => transposeFn, 'Transposing a field without returning a promise has been deprecated.')());
-                }
+        updateData({ data, fieldName, form, schema: model.schema, theirChange, yourChange });
 
-                promises.push(transposeFn.then((result) => (theirChange[fieldName] = result)));
+    });
 
-			}
+    return Promise.all(promises)
+        .then(() => resolve(data))
+        .catch(reject);
 
-			switch (form[fieldName].type) {
+});
 
-				case 'number':
+module.exports = (req, res, next) => {
 
-					data.yourChange[fieldName] = parseFloat(yourChange[fieldName]);
+    const { model } = req.linz;
+    const ccSettings = model.concurrencyControl;
+    const formData = req.body;
+    const resData = { hasChanged: false };
+    const exclusionFields = {};
 
-					if (isNaN(data.yourChange[fieldName])) {
-						data.yourChange[fieldName] = '';
-					}
-
-					data.theirChange[fieldName] = parseFloat(theirChange[fieldName]);
-
-					if (isNaN(data.theirChange[fieldName])) {
-						data.theirChange[fieldName] = '';
-					}
-
-					break;
-
-				// handle multi-criteria case
-				case 'boolean':
-				case 'objectid':
-
-					if (hasValue(yourChange[fieldName])) {
-						data.yourChange[fieldName] = yourChange[fieldName].toString();
-					} else {
-						data.yourChange[fieldName] = '';
-					}
-
-					if (hasValue(theirChange[fieldName])) {
-						data.theirChange[fieldName] = theirChange[fieldName].toString();
-					} else {
-						data.theirChange[fieldName] = '';
-					}
-
-					break;
-
-				case 'date':
-
-					if (hasValue(yourChange[fieldName])) {
-						data.yourChange[fieldName] = moment(new Date(yourChange[fieldName])).format('YYYY-MM-DD');
-					} else {
-						data.yourChange[fieldName] = '';
-					}
-
-					if (hasValue(theirChange[fieldName])) {
-						data.theirChange[fieldName] = moment(new Date(theirChange[fieldName])).format('YYYY-MM-DD');
-					} else {
-						data.theirChange[fieldName] = '';
-					}
-
-					break;
-
-				case 'documentarray':
-
-					data.yourChange[fieldName] = yourChange[fieldName];
-					data.theirChange[fieldName] = JSON.stringify(theirChange[fieldName]);
-					break;
-
-				case 'array':
-
-					if (hasValue(yourChange[fieldName])) {
-
-						// handle when array field contains only one value which is not of type array
-						data.yourChange[fieldName] = yourChange[fieldName];
-
-						if (!Array.isArray(data.yourChange[fieldName])) {
-							data.yourChange[fieldName] = data.yourChange[fieldName].split();
-						}
-
-					} else {
-						data.yourChange[fieldName] = [];
-					}
-
-					if (hasValue(theirChange[fieldName])) {
-						data.theirChange[fieldName] = theirChange[fieldName];
-					} else {
-						data.theirChange[fieldName] = [];
-					}
-
-					break;
-
-				default:
-					data.yourChange[fieldName] = yourChange[fieldName];
-					data.theirChange[fieldName] = theirChange[fieldName];
-
-			}
-        });
-
-        return Promise.all(promises)
-            .then(() => data);
-
-	};
-
-	var hasValue = function (val) {
-		if (val === undefined || val === '' || val === null || val === '[]' || Array.isArray(val) && val.length === 0 || Array.isArray(val) && val.length === 1 && val[0] === '') {
-			return false;
-		}
-		return true;
-	}
-
-	ccSettings.settings.exclusions.forEach(function (fieldName) {
-		exclusionFields[fieldName] = 0;
-	});
+    ccSettings.settings.exclusions.forEach((fieldName) => {
+        exclusionFields[fieldName] = 0;
+    });
 
     // Exclude fields that are not editable.
-    if (Model.linz.formtools.form) {
+    if (model.linz.formtools.form) {
 
-        Object.keys(Model.linz.formtools.form).forEach((fieldName) => {
+        Object.keys(model.linz.formtools.form).forEach((fieldName) => {
 
-            if (Model.linz.formtools.form[fieldName].edit && Model.linz.formtools.form[fieldName].edit.disabled) {
+            if (model.linz.formtools.form[fieldName].edit && model.linz.formtools.form[fieldName].edit.disabled) {
                 exclusionFields[fieldName] = 0;
             }
 
@@ -170,89 +196,98 @@ module.exports = function (req, res, next) {
 
     }
 
-	// remove modifiedByProperty field if it exists in exclusion fields
-	delete exclusionFields[ccSettings.modifiedByProperty];
+    // Remove modifiedByProperty field if it exists in exclusion fields.
+    delete exclusionFields[ccSettings.modifiedByProperty];
 
-	async.waterfall([
+    async.waterfall([
 
-		function (cb) {
+        (cb) => {
 
-			Model.findById(req.params.id, exclusionFields, { lean: 1 }, function (err, doc) {
+            model.findById(req.params.id, exclusionFields, { lean: 1 }, (err, doc) => {
 
-				if (err) {
-					return cb(err);
-				}
-
-				return cb(null, doc);
-
-			});
-		},
-
-		function (doc, cb) {
-
-			if (!doc) {
-				return cb(null);
-			}
-
-			ccSettings.modifiedByCellRenderer(doc[ccSettings.modifiedByProperty], doc, ccSettings.modifiedByProperty, Model, function (err, result) {
-				if (err) {
-					return cb(err);
-				}
-
-				doc[ccSettings.modifiedByProperty] = result;
-
-				return cb(null, doc);
-			});
-
-		}
-
-	], function (err, result) {
-
-		if (!result) {
-			return res.status(200).json(resData);
-		}
-
-        sanitiseData(Model, exclusionFields, formData, result)
-            .then((cleanData) => {
-
-                const yourChange = cleanData.yourChange;
-                const theirChange = cleanData.theirChange;
-
-                // check if version number for yourChange and theirChange, if it is the same, no changes occurred, exit!
-                // also check if version number from form request is the same as yourChange, this means the conflict has been resolved, exit!
-                if (parseInt(yourChange.versionNo) === parseInt(theirChange.versionNo) || (req.params.versionNo && parseInt(req.params.versionNo) === parseInt(theirChange.versionNo))) {
-
-                    return res.status(200).json(resData);
+                if (err) {
+                    return cb(err);
                 }
 
-                // let's do a diff for the fields changed
-                var diffResult = deep.diff(theirChange, yourChange, function (path, key) {
+                return cb(null, doc);
+
+            });
+        },
+
+        (doc, cb) => {
+
+            if (!doc) {
+                return cb(null);
+            }
+
+            ccSettings.modifiedByCellRenderer(doc[ccSettings.modifiedByProperty], doc, ccSettings.modifiedByProperty, model, (err, result) => {
+
+                if (err) {
+                    return cb(err);
+                }
+
+                doc[ccSettings.modifiedByProperty] = result;
+
+                return cb(null, doc);
+
+            });
+
+        },
+
+    ], (err, result) => {
+
+        if (err) {
+            return next(linz.api.error.json(err));
+        }
+
+        if (!result) {
+            return res.status(200).json(resData);
+        }
+
+        sanitiseData(model, exclusionFields, formData, result)
+            .then(({ yourChange, theirChange }) => {
+
+                // Check if version number for yourChange and theirChange, if it is the same, no changes occurred, exit!
+                // Also check if version number from form request is the same as yourChange, this means the conflict has been resolved, exit!
+                if (parseInt(yourChange.versionNo, 10) === parseInt(theirChange.versionNo, 10) || (req.params.versionNo && parseInt(req.params.versionNo, 10) === parseInt(theirChange.versionNo, 10))) {
+
+                    return res.status(200).json(resData);
+
+                }
+
+                // Let's do a diff for the fields changed.
+                const diffResult = deep.diff(theirChange, yourChange, (path, key) => {
 
                     if (key === 'versionNo') {
+
                         return true;
+
                     }
 
                 });
 
                 if (!diffResult || (diffResult.length === 1 && diffResult[0].path && diffResult[0].path[0] === 'modifiedBy')) {
-                    // exit if there is not diff result or if diff result only contains the modifiedBy field
+
+                    // Exit if there is not diff result or if diff result only contains the modifiedBy field.
                     return res.status(200).json(resData);
+
                 }
 
-                var diffKeys = {};
+                const diffKeys = {};
 
-                // get a list of unique field names and it's type
-                diffResult.forEach(function (diff) {
+                // Get a list of unique field names and it's type
+                diffResult.forEach((diff) => {
 
-                    var fieldName = diff.path[0];
+                    let [fieldName] = diff.path;
+                    let field = model.form && model.form[fieldName] || model.schema.paths[fieldName];
 
-                    // change fieldname to the related field defined in the relationship
-                    if (Model.linz.formtools.form && Model.linz.formtools.form[fieldName].relationship) {
-                        fieldName = Model.linz.formtools.form[fieldName].relationship;
+                    // Change fieldname to the related field defined in the relationship.
+                    if (field && field.relationship) {
+                        fieldName = field.relationship;
                     }
 
-                    if (Model.linz.formtools.form && !diffKeys[fieldName]) {
-                        diffKeys[fieldName] = Model.linz.formtools.form[fieldName].type;
+                    if (!diffKeys[fieldName]) {
+                        diffKeys[fieldName] = field.type;
                     }
 
                 });
@@ -265,8 +300,8 @@ module.exports = function (req, res, next) {
                 return res.status(200).json(resData);
 
             })
-            .catch(next);
+            .catch(caughtErr => next(linz.api.error.json(caughtErr)));
 
-	});
+    });
 
-}
+};

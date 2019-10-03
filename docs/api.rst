@@ -12,6 +12,27 @@ At present, we're working on a long term effort to expose all of Linz's function
 
 You can access the Linz APIs via ``linz.api``.
 
+error
+=====
+
+error.json(err, statusCode = 500)
+---------------------------------
+
+Take an Error object and add ``err`` and ``statusCode`` properties. If an error is encountered by the Linz error handling middleware with these properties, the error will be returned via JSON, rather than HTML.
+
+error.store(err, req)
+---------------------
+
+Take an Error object and store it on ``req`` within the Linz namespace at ``req.linz.error``. This becomes useful for logging errors that might be produced by Linz.
+
+formtools
+=========
+
+list.getFilters(req)
+--------------------
+
+Get the filters for a request. Used when you want to match a query to what is displayed in the list view.
+
 model
 =====
 
@@ -69,6 +90,16 @@ session.getTimezone(req)
 ------------------------
 
 Get the timezone offset of the current user.
+
+Util
+====
+
+The methods exposed via the ``linz.api.util`` namespace have functionality that are broad and general in nature.
+
+util.escape(userInputFromDatabase)
+------------------------
+
+Use this method to escape a string before using it in HTML. This method should be used whenever you're displaying information from an untrusted source (i.e. information from the database supplied by a user).
 
 Views
 =====

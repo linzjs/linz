@@ -35,6 +35,23 @@ test('sets a default', () => {
     expect(typeof linz.get('customAttributes')).toBe('function');
     expect(linz.get('mongoOptions')).toEqual({ useMongoClient: true });
     expect(linz.get('routes')).toEqual({});
+    expect(linz.get('cookie options')).toEqual({
+        httpOnly: true,
+        path: '/',
+        sameSite: true,
+        signed: true,
+    });
+    expect(linz.get('session options')).toEqual({
+        cookie: {
+            httpOnly: true,
+            path: '/',
+            sameSite: true,
+            signed: true,
+        },
+        saveUninitialized: false,
+        secret: 'oST1Thr2s/iOAUgeK4yuuA==',
+        resave: false,
+    });
 
 });
 
@@ -109,7 +126,7 @@ describe('once Linz is initialised', () => {
 
         });
 
-    }, 10000);
+    }, 20000);
 
     afterAll(() => linz.mongoose.disconnect());
 
@@ -162,6 +179,6 @@ describe('once Linz is initialised', () => {
             })
             .then(() => expect(routeMock.mock.calls.length).toBe(1));
 
-    }, 10000);
+    }, 20000);
 
 });

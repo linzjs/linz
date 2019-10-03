@@ -15,7 +15,7 @@ var route = function (req, res, next) {
                 src: `${linz.get('admin path')}/public/js/template.polyfill.js`,
             },
             {
-                src: `${linz.get('admin path')}/public/js/model/index.js?v5`,
+                src: `${linz.get('admin path')}/public/js/model/index.js?v6`,
             },
         ]),
         linz.api.views.getStyles(req, res),
@@ -84,6 +84,18 @@ var route = function (req, res, next) {
                 }
 
             });
+
+            const clean = (obj) => {
+
+                const newObj = {};
+
+                Object.keys(obj).forEach((key) => {
+                    newObj[key] = linz.api.util.escape(obj[key]);
+                });
+
+                return newObj;
+
+            };
 
             const data = {
                 csrfToken: req.csrfToken(),
