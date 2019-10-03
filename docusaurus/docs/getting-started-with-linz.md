@@ -4,26 +4,133 @@ title: Getting started with Linz
 sidebar_label: Getting started with Linz
 ---
 
-Check the [documentation](https://docusaurus.io) for how to use Docusaurus.
+This will help you create a new Linz-based website. If you'd like to develop Linz itself, see :ref:`contributors-getting-started-reference`.
 
-## Lorem
+While we're working on our documentation, you can get started with Linz via our example project, see :ref:`mini-twitter-reference`.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus elementum massa eget nulla aliquet sagittis. Proin odio tortor, vulputate ut odio in, ultrices ultricies augue. Cras ornare ultrices lorem malesuada iaculis. Etiam sit amet libero tempor, pulvinar mauris sed, sollicitudin sapien.
+Linz tries to force as little new syntax on you as possible. Of course, this is unavoidable in certain situations, and there are some conventions you'll need to learn. We've tried to keep them as simple as possible.
 
-## Mauris In Code
+Linz does make use of many other open source tools, such as Mongoose or Express. Linz tries to keep the usage of these tools as plain and simple as possible. Linz doesn't wrap, customise or prettify syntax for other libraries/tools used within Linz. The three primary opensource tools that Linz relies on are:
 
+-   Express
+-   Mongoose
+-   Passport
+
+The following will be a general overview of some of the core concepts of Linz.
+
+## Singleton
+
+When you require Linz, you're returned a singleton. This has the advantage that no matter where you require Linz, you get the same Linz instance.
+
+## Initialization
+
+Linz must be initialized. During initialization, Linz accepts an options object with any of the following optional keys:
+
+-   `express`: An initialized Express intance.
+-   `passport`: An initialized Passport instance.
+-   `mongoose`: An initialized Mongoose instance.
+-   `options`: An options object to customise Linz.
+
+For example:
+
+```javascript
+var express = require('express'),
+    mongoose = require('mongoose'),
+    passport = require('passport'),
+    linz = require('linz');
+
+linz.init({
+    express: express(),
+    mongoose: mongoose
+    passport: passport,
+    options: {
+        'load configs': false
+    }
+});
 ```
-Mauris vestibulum ullamcorper nibh, ut semper purus pulvinar ut. Donec volutpat orci sit amet mauris malesuada, non pulvinar augue aliquam. Vestibulum ultricies at urna ut suscipit. Morbi iaculis, erat at imperdiet semper, ipsum nulla sodales erat, eget tincidunt justo dui quis justo. Pellentesque dictum bibendum diam at aliquet. Sed pulvinar, dolor quis finibus ornare, eros odio facilisis erat, eu rhoncus nunc dui sed ex. Nunc gravida dui massa, sed ornare arcu tincidunt sit amet. Maecenas efficitur sapien neque, a laoreet libero feugiat ut.
+
+If neither an initialized instance of Express, Passport or Mongoose, nor an options object have been passed, Linz will create them for you:
+
+```javascript
+// Use anything that has been passed through, or default it as required.
+this.app = opts.express || express();
+this.mongoose = opts.mongoose || require('mongoose');
+this.passport = opts.passport || require('passport');
+
+// overlay runtime options, these will override linz defaults
+this.options(opts.options || {});
 ```
 
-## Nulla
+.. \_options-object-reference:
 
-Nulla facilisi. Maecenas sodales nec purus eget posuere. Sed sapien quam, pretium a risus in, porttitor dapibus erat. Sed sit amet fringilla ipsum, eget iaculis augue. Integer sollicitudin tortor quis ultricies aliquam. Suspendisse fringilla nunc in tellus cursus, at placerat tellus scelerisque. Sed tempus elit a sollicitudin rhoncus. Nulla facilisi. Morbi nec dolor dolor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras et aliquet lectus. Pellentesque sit amet eros nisi. Quisque ac sapien in sapien congue accumsan. Nullam in posuere ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin lacinia leo a nibh fringilla pharetra.
+### Options object
 
-## Orci
+An object can be used to customize Linz. For example:
 
-Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin venenatis lectus dui, vel ultrices ante bibendum hendrerit. Aenean egestas feugiat dui id hendrerit. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur in tellus laoreet, eleifend nunc id, viverra leo. Proin vulputate non dolor vel vulputate. Curabitur pretium lobortis felis, sit amet finibus lorem suscipit ut. Sed non mollis risus. Duis sagittis, mi in euismod tincidunt, nunc mauris vestibulum urna, at euismod est elit quis erat. Phasellus accumsan vitae neque eu placerat. In elementum arcu nec tellus imperdiet, eget maximus nulla sodales. Curabitur eu sapien eget nisl sodales fermentum.
+```javascript
+linz.init({
+    options: {
+        mongo: `mongodb://${process.env.MONGO_HOST}/db`,
+    },
+});
+```
 
-## Phasellus
+You can read more about :ref:`defaults-reference`.
 
-Phasellus pulvinar ex id commodo imperdiet. Praesent odio nibh, sollicitudin sit amet faucibus id, placerat at metus. Donec vitae eros vitae tortor hendrerit finibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque vitae purus dolor. Duis suscipit ac nulla et finibus. Phasellus ac sem sed dui dictum gravida. Phasellus eleifend vestibulum facilisis. Integer pharetra nec enim vitae mattis. Duis auctor, lectus quis condimentum bibendum, nunc dolor aliquam massa, id bibendum orci velit quis magna. Ut volutpat nulla nunc, sed interdum magna condimentum non. Sed urna metus, scelerisque vitae consectetur a, feugiat quis magna. Donec dignissim ornare nisl, eget tempor risus malesuada quis.
+## Events
+
+The Linz object is an event emitter, and will emit the `initialized` event when Linz has finished initializing.
+
+It will also emit an event whenever a configuration is set (i.e. using the `linz.set` method). The name of the event will be the same as the name of the configuration that is set.
+
+A common pattern for setting up Linz, using the event emitter, is as follows:
+
+**server.js**:
+
+```javascript
+var linz = require('linz');
+
+linz.on('initialised', require('./app'));
+
+// Initialize Linz.
+linz.init({
+    options: {
+        'mongo': `mongodb://${process.env.DB_HOST || 'localhost'}/lmt`,
+        'user model': 'mtUser',
+    },
+});
+```
+
+**app.js**:
+
+```javascript
+var http = require('http'),
+    linz = require('linz'),
+    routes = require('./routes'),
+    port = process.env.APP_PORT || 4000;
+
+module.exports = function() {
+    // Mount routes on Express.
+    linz.app.get('/', routes.home);
+    linz.app.get('/bootstrap-users', routes.users);
+
+    // Linz error handling midleware.
+    linz.app.use(linz.middleware.error);
+
+    // Start the app.
+    http.createServer(linz.app).listen(port, function() {
+        console.log('');
+        console.log(`mini-twitter app started and running on port ${port}`);
+    });
+};
+```
+
+## Directory structure
+
+Linz expects a common directory structure. If provided, it will load content from these directories. These directories should live alongside your Node.js entry point file (i.e. `node server.js`).
+
+-   `models`: a directory of model files.
+-   `schemas`: a directory of schemas, which are used as nested schemas within a model.
+-   `configs`: a directory of config files.
+
+You can read more about each of the above and what Linz expects in the documentation covering each area.
