@@ -1,12 +1,8 @@
 'use strict';
 
-const {
-    parseDataAttributes,
-    parseScriptsAndStyles,
-} = require('../lib/util');
+const { parseDataAttributes, parseScriptsAndStyles } = require('../lib/util');
 
 test('it does not mutate the original script', () => {
-
     const doNotMutate = { dataAttributes: { test: 'Should not mutate' } };
     const emptyObj = { dataAttributes: {} };
 
@@ -14,13 +10,15 @@ test('it does not mutate the original script', () => {
 
     // Double check we aren't mutating the original object.
     expect(parseDataAttributes(emptyObj)).not.toBe(emptyObj);
-    expect(doNotMutate).toEqual({ dataAttributes: { test: 'Should not mutate' } });
-    expect(parsedAttributes).toEqual({ dataAttributes: { 'data-test': 'Should not mutate' } });
-
+    expect(doNotMutate).toEqual({
+        dataAttributes: { test: 'Should not mutate' },
+    });
+    expect(parsedAttributes).toEqual({
+        dataAttributes: { 'data-test': 'Should not mutate' },
+    });
 });
 
 test('it creates data attributes', () => {
-
     const script = parseDataAttributes({
         dataAttributes: {
             test: 'test',
@@ -34,11 +32,9 @@ test('it creates data attributes', () => {
             'data-test2': 'test2',
         },
     });
-
 });
 
 test('it parses an array of scripts and styles', () => {
-
     const script = parseScriptsAndStyles([
         {
             dataAttributes: {
@@ -68,5 +64,4 @@ test('it parses an array of scripts and styles', () => {
             },
         },
     ]);
-
 });

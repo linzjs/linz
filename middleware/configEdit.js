@@ -1,39 +1,36 @@
 var linz = require('../'),
     util = require('util'),
-	async = require('async');
+    async = require('async');
 
-module.exports = function () {
+module.exports = function() {
+    return function(req, res, next) {
+        async.series(
+            [
+                function(cb) {
+                    var db = linz.mongoose.connection.db;
 
-	return function (req, res, next) {
+                    db.collection(linz.get('configs collection name'), function(
+                        err,
+                        collection
+                    ) {
+                        collection.findOne({ _id: req.params.config }, function(
+                            err,
+                            doc
+                        ) {
+                            if (err) {
+                                return cb(err);
+                            }
 
-		async.series([
-
-			function (cb) {
-
-                var db  = linz.mongoose.connection.db;
-
-                db.collection(linz.get('configs collection name'), function (err, collection) {
-
-                    collection.findOne({ _id: req.params.config}, function (err, doc) {
-                        if (err) {
-                            return cb(err);
-                        }
-
-                        req.linz.record = doc;
-                        return cb(null);
+                            req.linz.record = doc;
+                            return cb(null);
+                        });
                     });
-
-                });
-
-			},
-
-		], function (err) {
-
-			// call the next middleware
-			return next(err);
-
-		});
-
-	}
-
-}
+                },
+            ],
+            function(err) {
+                // call the next middleware
+                return next(err);
+            }
+        );
+    };
+};

@@ -8,7 +8,6 @@ beforeAll(() => (console.error = jest.fn()));
 afterAll(() => (console.error = consoleError));
 
 test('stores the error on req', () => {
-
     const err = new Error('Test error');
     const req = {};
     const res = {};
@@ -19,11 +18,9 @@ test('stores the error on req', () => {
     expect(req.linz).toBeTruthy();
     expect(req.linz.error.message).toBe(err.message);
     expect(next.mock.calls.length).toBe(0);
-
 });
 
 test('CSRF error message is updated', () => {
-
     const err = new Error('invalid csrf token');
     const req = { body: {} };
     const res = {};
@@ -46,11 +43,9 @@ test('CSRF error message is updated', () => {
     expect(req.linz.error.code).toBe('EBADCSRFTOKEN');
     expect(req.linz.error.message).toBe('The wrong CSRF token was provided.');
     expect(next.mock.calls.length).toBe(0);
-
 });
 
 test('Returns the error via json', () => {
-
     const err = json(new Error('JSON error test'));
     const req = {};
     const res = { status: jest.fn(() => res), json: jest.fn(() => res) };
@@ -67,11 +62,9 @@ test('Returns the error via json', () => {
     expect(res.json).toBeCalledWith({ error: err.message });
 
     expect(next.mock.calls.length).toBe(0);
-
 });
 
 test('The error is logged to console', () => {
-
     const err = new Error('JSON error test');
     const req = {};
     const res = {};
@@ -85,5 +78,4 @@ test('The error is logged to console', () => {
     expect(console.error.mock.calls.length).toBe(1);
 
     expect(next.mock.calls.length).toBe(0);
-
 });

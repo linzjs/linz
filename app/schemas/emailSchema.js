@@ -16,7 +16,7 @@ emailSchema.plugin(linz.formtools.plugins.embeddedDocument, {
         email: {
             fieldset: 'Details',
             required: true,
-        }
+        },
     },
 });
 
