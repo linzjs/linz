@@ -93,8 +93,8 @@ Render some HTML, within a Linz template. Useful for developing completely custo
 
 `callback` can be one of two things:
 
-- A standard callback `function` in the format `callback(err, html)`.
-- An Express response (`res`) object.
+-   A standard callback `function` in the format `callback(err, html)`.
+-   An Express response (`res`) object.
 
 If an Express reponse object is provided, Linz will automatically call `res.render` with the rendered HTML.
 

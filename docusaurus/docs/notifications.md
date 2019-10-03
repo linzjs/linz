@@ -15,8 +15,11 @@ When using Linz notifications in this manner, you must make use of [connect-flas
 
 // Create the notification.
 req.flash(
-  'linz-notification',
-  linz.api.views.notification({ text: 'Notification message', type: 'success' })
+    'linz-notification',
+    linz.api.views.notification({
+        text: 'Notification message',
+        type: 'success',
+    })
 );
 
 // Redirect the user back.
@@ -29,8 +32,8 @@ When the page is rendered, a notification will appear, informing the user that t
 
 There are two APIs for using notifications:
 
-- `req.linz.notifications`
-- `req.flash`
+-   `req.linz.notifications`
+-   `req.flash`
 
 # req.linz.notifications
 
@@ -38,11 +41,11 @@ Before rendering a page, at some point in the route execution middlware, you can
 
 ```javascript
 app.use('/url', (req, res, next) => {
-  req.linz.notifications.push(
-    linz.api.views.notification({ text: 'A message here.' })
-  );
+    req.linz.notifications.push(
+        linz.api.views.notification({ text: 'A message here.' })
+    );
 
-  return next();
+    return next();
 });
 ```
 
@@ -56,8 +59,8 @@ To use this API, use `req.flash` like so:
 
 ```javascript
 req.flash(
-  'linz-notification',
-  linz.api.views.notification({ text: 'Message here.' })
+    'linz-notification',
+    linz.api.views.notification({ text: 'Message here.' })
 );
 ```
 

@@ -6,7 +6,7 @@ sidebar_label: Security
 
 Linz comes with a number of security features out of the box including:
 
-- CSRF Protection
+-   CSRF Protection
 
 ## CSRF Protection
 
@@ -22,9 +22,9 @@ To customise the options you can supply Linz with the option `'csrf options: {}'
 
 ```javascript
 linz.init({
-  options: {
-    'csrf options': {},
-  },
+    options: {
+        'csrf options': {},
+    },
 });
 ```
 
@@ -60,6 +60,6 @@ This is handled automatically for you when using `linz.api.model.generateFormStr
 
 ```javascript
 linz.api.model.generateFormString(linz.api.model.get('user'), {
-  csrfToken: req.csrfToken(),
+    csrfToken: req.csrfToken(),
 });
 ```

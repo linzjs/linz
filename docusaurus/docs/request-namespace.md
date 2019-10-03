@@ -16,8 +16,8 @@ And is a copy of the object you receive when requiring Linz, for example `requir
 
 It has the keys:
 
-- `notifications` which is an array of notifications Linz will display.
-- `cache` which is an internal cache that Linz uses.
+-   `notifications` which is an array of notifications Linz will display.
+-   `cache` which is an internal cache that Linz uses.
 
 Depending on which view is currently being requested, you'll also get extra information.
 
@@ -27,22 +27,22 @@ The Linz namespace can be used whenever Linz passes you `req` and becomes a very
 
 The model form, both create and edit views, also recieve:
 
-- `model` which is a reference to the current model, the basic Mongoose version of the model.
-- `model.linz` which is a reference to the current model, which extra Linz-specific information included.
-- `model.linz.form` which is a reference to the model form DSL.
+-   `model` which is a reference to the current model, the basic Mongoose version of the model.
+-   `model.linz` which is a reference to the current model, which extra Linz-specific information included.
+-   `model.linz.form` which is a reference to the model form DSL.
 
 ## Model list
 
 The model list view also receives:
 
-- `model` which is a reference to the current model, the basic Mongoose version of the model.
-- `model.linz` which is a reference to the current model, which extra Linz-specific information included.
-- `model.linz.list` which is a reference to the model List DSL.
+-   `model` which is a reference to the current model, the basic Mongoose version of the model.
+-   `model.linz` which is a reference to the current model, which extra Linz-specific information included.
+-   `model.linz.list` which is a reference to the model List DSL.
 
 ## Model overview
 
 The model overview view also receives:
 
-- `model` which is a reference to the current model, the basic Mongoose version of the model.
-- `model.linz` which is a reference to the current model, which extra Linz-specific information included.
-- `model.linz.overview` which is a reference to the model overview DSL.
+-   `model` which is a reference to the current model, the basic Mongoose version of the model.
+-   `model.linz` which is a reference to the current model, which extra Linz-specific information included.
+-   `model.linz.overview` which is a reference to the model overview DSL.
