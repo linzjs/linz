@@ -2,13 +2,11 @@ if (!linz) {
     var linz = {};
 }
 
-(function  () {
-
+(function() {
     var loadedScripts = [];
 
     // Append instead of replace the onload process.
-    function addLoadEvent (func) {
-
+    function addLoadEvent(func) {
         if (window.attachEvent) {
             return window.attachEvent('onload', func);
         }
@@ -18,12 +16,10 @@ if (!linz) {
         }
 
         return document.addEventListener('load', func, false);
-
     }
 
     function loadScript(src) {
-
-        if(loadedScripts.indexOf(src) < 0) {
+        if (loadedScripts.indexOf(src) < 0) {
             // script hasn't been added to page, let's add it now
             var script = document.createElement('script');
             script.type = 'text/javascript';
@@ -35,5 +31,4 @@ if (!linz) {
 
     linz.loadScript = loadScript;
     linz.addLoadEvent = addLoadEvent;
-
 })();

@@ -1,20 +1,23 @@
 var linz = require('../');
 
 module.exports = {
-
-    post: function (req, res, next) {
-
+    post: function(req, res, next) {
         if (!req.body.email) {
-            return next(new Error('An email address is required in order to reset your password.'));
+            return next(
+                new Error(
+                    'An email address is required in order to reset your password.'
+                )
+            );
         }
 
         var User = linz.api.model.get(linz.get('user model'));
 
         if (!User.sendPasswordResetEmail) {
-            throw new Error('sendPasswordResetEmail() is not defined for user model.');
+            throw new Error(
+                'sendPasswordResetEmail() is not defined for user model.'
+            );
         }
 
         User.sendPasswordResetEmail(req.body.email, req, res, next);
-
-    }
-}
+    },
+};

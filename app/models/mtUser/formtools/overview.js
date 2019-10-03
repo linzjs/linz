@@ -8,19 +8,19 @@ module.exports = {
             fields: [
                 {
                     fieldName: 'createdBy',
-                    renderer: linz.formtools.cellRenderers.defaultRenderer
+                    renderer: linz.formtools.cellRenderers.defaultRenderer,
                 },
                 {
                     fieldName: 'dateCreated',
-                    renderer: linz.formtools.cellRenderers.dateRenderer
+                    renderer: linz.formtools.cellRenderers.dateRenderer,
                 },
                 {
                     fieldName: 'modifiedBy',
-                    renderer: linz.formtools.cellRenderers.defaultRenderer
+                    renderer: linz.formtools.cellRenderers.defaultRenderer,
                 },
                 {
                     fieldName: 'dateModified',
-                    renderer: linz.formtools.cellRenderers.dateRenderer
+                    renderer: linz.formtools.cellRenderers.dateRenderer,
                 },
             ],
             label: 'Metadata',
@@ -29,11 +29,11 @@ module.exports = {
             fields: [
                 {
                     fieldName: 'name',
-                    renderer: linz.formtools.cellRenderers.defaultRenderer
+                    renderer: linz.formtools.cellRenderers.defaultRenderer,
                 },
                 {
                     fieldName: 'email',
-                    renderer: linz.formtools.cellRenderers.defaultRenderer
+                    renderer: linz.formtools.cellRenderers.defaultRenderer,
                 },
             ],
             label: 'Details',
@@ -43,7 +43,7 @@ module.exports = {
                 fields: [
                     {
                         fieldName: 'name',
-                        renderer: linz.formtools.cellRenderers.defaultRenderer
+                        renderer: linz.formtools.cellRenderers.defaultRenderer,
                     },
                 ],
                 label: 'Section 1',
@@ -52,7 +52,7 @@ module.exports = {
                 fields: [
                     {
                         fieldName: 'email',
-                        renderer: linz.formtools.cellRenderers.defaultRenderer
+                        renderer: linz.formtools.cellRenderers.defaultRenderer,
                     },
                 ],
                 label: 'Section 2',

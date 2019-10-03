@@ -11,7 +11,10 @@ const path = require('path');
  * @return {Void}       Redirects to the admin home.
  */
 const route = (req, res) => {
-    return res.redirect(307, path.join(linz.get('admin path'), linz.get('admin home')));
+    return res.redirect(
+        307,
+        path.join(linz.get('admin path'), linz.get('admin home'))
+    );
 };
 
 module.exports = route;

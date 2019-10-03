@@ -14,7 +14,7 @@ const mtUserSchema = new linz.mongoose.Schema({
     customOffset: Date,
     email: String,
     modifiedBy: String,
-    name:  String,
+    name: String,
     org: {
         ref: 'mtOrg',
         type: linz.mongoose.Schema.Types.ObjectId,
