@@ -164,13 +164,15 @@ The `list` keys value should be an Object, containing the following top-level ke
 -   `recordActions`
 -   `export`
 
-These allow you to describe how the model index should function. The list DSL is discussed in more detail in :ref:`models-list-reference`.
+These allow you to describe how the model index should function. The list DSL is discussed in more detail in [List DSL](./list-dsl).
 
 ## Models list DSL function
 
 The `list` keys value can also be a function. It should be a function with the following signature:
 
+```javascript
 function listDSL (req, callback) {
+```
 
 For example:
 
@@ -223,7 +225,7 @@ Each field object can contain the following keys:
 -   `schema`
 -   `relationship`
 
-These allow you to describe how the create and edit forms should function. The form DSL is discussed in more detail in :ref:`models-form-reference`.
+These allow you to describe how the create and edit forms should function. The form DSL is discussed in more detail in [Form DSL](./form-dsl).
 
 ## Models form DSL function
 
@@ -247,7 +249,7 @@ The function receives a HTTP request object, which provides lots of flexibility 
 
 ### Model permissions
 
-Model permissions is an in-depth topic and should be considered amongst other permission capabilities. Read more about :ref:`permissions-reference`.
+Model permissions is an in-depth topic and should be considered amongst other permission capabilities. Read more about [permissions](./permissions).
 
 ## Model statics, virtuals and methods
 

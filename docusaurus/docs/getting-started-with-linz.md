@@ -4,9 +4,9 @@ title: Getting started with Linz
 sidebar_label: Getting started with Linz
 ---
 
-This will help you create a new Linz-based website. If you'd like to develop Linz itself, see :ref:`contributors-getting-started-reference`.
+This will help you create a new Linz-based website. If you'd like to develop Linz itself, see [contributors-getting-started-reference](./getting-started-with-linz-development).
 
-While we're working on our documentation, you can get started with Linz via our example project, see :ref:`mini-twitter-reference`.
+While we're working on our documentation, you can get started with Linz via our example project, see [mini-twitter](./mini-twitter).
 
 Linz tries to force as little new syntax on you as possible. Of course, this is unavoidable in certain situations, and there are some conventions you'll need to learn. We've tried to keep them as simple as possible.
 
@@ -61,8 +61,6 @@ this.passport = opts.passport || require('passport');
 this.options(opts.options || {});
 ```
 
-.. \_options-object-reference:
-
 ### Options object
 
 An object can be used to customize Linz. For example:
@@ -75,7 +73,7 @@ linz.init({
 });
 ```
 
-You can read more about :ref:`defaults-reference`.
+You can read more about [Linz defaults](./linz-defaults).
 
 ## Events
 

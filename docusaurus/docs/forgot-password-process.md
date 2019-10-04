@@ -28,9 +28,9 @@ The process works as follows:
 
 More succintly:
 
-#. Send a password reset email.
-#. Verify ownership of the email.
-#. Collect a new password and update their user record.
+1. Send a password reset email.
+2. Verify ownership of the email.
+3. Collect a new password and update their user record.
 
 ## Send a password reset email
 
@@ -55,7 +55,9 @@ It needs to be a [Mongoose static](https://mongoosejs.com/docs/guide.html#static
 
 The `callback` accepts the standard Node.js signature:
 
+```javascript
 function callback (err)
+```
 
 If an `Error` is provided, Linz will render the error, otherwise it will consider the process complete.
 
@@ -96,11 +98,15 @@ It must be a [Mongoose method](https://mongoosejs.com/docs/guide.html#methods) o
 
 Your `verifyPasswordResetHash` Mongoose method should have the following signature:
 
+```javascript
 function verifyPasswordResetHash (candidateHash, callback)
+```
 
 The `candidateHash` is the hash value that was retreived from the Url. The `callback` is a standard Node.js callback:
 
+```javascript
 function callback (err, result)
+```
 
 The `result` should be a boolean value.
 
@@ -114,11 +120,15 @@ If the `hash` was verified, the user is provided an opportunity to enter a new p
 
 The new password is provided to the `updatePassword` [Mongoose static](https://mongoosejs.com/docs/guide.html#statics) on your user model. The `updatePassword` static should have the following signature:
 
+```javascript
 function updatePassword (id, newPassword, req, res, callback)
+```
 
 `id` is the `_id` of the user model record. `newPassword` is the new password provided by the user. `req` is the current request object. `res` is the current response object. `callback` is a standard Node.js callback:
 
+```javascript
 function callback (err)
+```
 
 If an `Error` is provided, Linz will render the error, otherwise it will consider the process complete.
 

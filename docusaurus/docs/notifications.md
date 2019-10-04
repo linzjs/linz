@@ -64,4 +64,4 @@ req.flash(
 );
 ```
 
-The first parameter passed to `req.flash` must be the string `'linz-notification'`, otherwise Linz will ignore it. The second parameter passed must be a [Noty options object](https://ned.im/noty/#options). Linz provides a [handy API](api#viewsnotificationnoty) defaulting some of the options.
+The first parameter passed to `req.flash` must be the string `'linz-notification'`, otherwise Linz will ignore it. The second parameter passed must be a [Noty options object](https://ned.im/noty/#options). Linz provides a [handy API](./api#viewsnotificationnoty) defaulting some of the options.

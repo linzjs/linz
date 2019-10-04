@@ -90,7 +90,7 @@ The specialized `create` and `edit` contexts always supersede the default contex
 
 ## {field-name}.label
 
-The `label` property is optional. If not provided, it takes the label from the :ref:`models-label-dsl-summary-reference`. If a label hasn't been provided for that particular model field, it simply shows the name of the field itself.
+The `label` property is optional. If not provided, it takes the label from the [Models label DSL](./models#models-label-dsl). If a label hasn't been provided for that particular model field, it simply shows the name of the field itself.
 
 The label property gives you an opportunity to customize it explicitly for the create and edit views.
 
@@ -134,7 +134,7 @@ The default widget, and the widget for all other types is the text widget.
 
 The `default` property can be supplied to define the default value of the field. The default if provided, will be used when a field has no value.
 
-If the `default` property is not provided, Linz will fallback to the `default` value as provided when defining the :ref:`models-mongoose-schemas-reference`.
+If the `default` property is not provided, Linz will fallback to the `default` value as provided when defining the [Mongoose schemas](https://linzjs.readthedocs.io/en/latest/models.html#models-mongoose-schemas-reference).
 
 ## {field-name}.list
 
@@ -202,13 +202,11 @@ The boolean `visible` property can be set to a value of `false` to stop the fiel
 
 ## {field-name}.disabled
 
-The boolean `disabled` property can be set to a value of `true` to render the input field, with a `disabled attribute`\_.
-
-.. \_disabled attribute: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-disabled
+The boolean `disabled` property can be set to a value of `true` to render the input field, with a [disabled attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-disabled).
 
 ## {field-name}.fieldset
 
-The `fieldset` property should be supplied to control which fields are grouped together under the same `fieldset`\_.
+The `fieldset` property should be supplied to control which fields are grouped together under the same [fieldset](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/fieldset).
 
 The `fieldset` property should be human readable, such as:
 
@@ -220,11 +218,9 @@ form: {
 }
 ```
 
-.. \_fieldset: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/fieldset
-
 ## {field-name}.widget
 
-The `widget` property can be set to one of the many `built-in Linz widgets`\_. For example:
+The `widget` property can be set to one of the many [built-in Linz widgets](https://github.com/linzjs/linz/tree/master/lib/formtools/widgets). For example:
 
 ```javascript
 form: {
@@ -247,8 +243,6 @@ form: {
     }
 }
 ```
-
-.. \_built-in Linz widgets: https://github.com/linzjs/linz/tree/master/lib/formtools/widgets
 
 ## {field-name}.required
 

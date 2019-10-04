@@ -78,7 +78,7 @@ Each object should contain the following keys:
 -   `useLocalTime` which allows you to export date fields in the browsers timezone offset.
 -   `modal` optionally render the results in a modal view.
 
-If you'd like to provide your own export route, you can. Replace the `inclusions` key with an `action` key that works the same as `list.actions`\_. Rather than a modal, a request to that route will be made. You're responsible for mounting a `GET` route in Express to respond to it.
+If you'd like to provide your own export route, you can. Replace the `inclusions` key with an `action` key that works the same as [list.actions](#listactions). Rather than a modal, a request to that route will be made. You're responsible for mounting a `GET` route in Express to respond to it.
 
 ## list.fields
 
@@ -110,7 +110,7 @@ fields: {
 
 If you like, you can pass an object rather than the boolean. This also allows you to customize the cell renderer used to display the data within the column.
 
-If you provide a `label`, it will override what is defined in the :ref:`models-label-dsl-summary-reference`.
+If you provide a `label`, it will override what is defined in the [Models label DSL](./models#models-label-dsl).
 
 The fields will be rendered in the order they're provided.
 
@@ -148,9 +148,7 @@ Below is an example of the `default` data type for each filter:
 -   `default`, `fulltext`, `list`: `['string']`
 -   `number`: `[4]`
 
-.. seealso:
-
-View the `complete list of Linz filters <https://github.com/linzjs/linz/tree/master/lib/formtools/filters>`\_.
+> View the [complete list of Linz filters](https://github.com/linzjs/linz/tree/master/lib/formtools/filters).
 
 ## list.groupActions
 
@@ -158,18 +156,15 @@ View the `complete list of Linz filters <https://github.com/linzjs/linz/tree/mas
 
 Each record displayed on a model index has a checkbox, checking two or more records creates a group. If `groupActions` have been defined for that model, those actions will become choosable by the user.
 
-`list.groupActions` should be an Array of Objects. Each object describes an action that a user can make, and the object takes on the same form as those described in `list.actions`\_.
+`list.groupActions` should be an Array of Objects. Each object describes an action that a user can make, and the object takes on the same form as those described in [list.actions](#listactions).
 
 You're responsible for mounting a `GET` route in Express to respond to it.
 
 ## list.help
 
-The `list.help` key can be used to provide information for a particular model. The information will appear in a `Bootstrap popover`\_.
+The `list.help` key can be used to provide information for a particular model. The information will appear in a [Bootstrap popover](https://getbootstrap.com/docs/3.3/javascript/#popovers).
 
-The `list.help` key accepts either `false`, or a `Bootstrap popovers options object`\_.
-
-.. \_Bootstrap popover: https://getbootstrap.com/docs/3.3/javascript/#popovers
-.. \_Bootstrap popovers options object: https://getbootstrap.com/docs/3.3/javascript/#popovers-options
+The `list.help` key accepts either `false`, or a [Bootstrap popovers options object](https://getbootstrap.com/docs/3.3/javascript#popovers-options).
 
 ## list.paging
 
@@ -205,7 +200,7 @@ If you don't provide a paging object it defaults to:
 
 `list.recordActions` can be used to customise record specific actions. These are actions that act upon a specific model record. The actions appear as buttons for each record in a model list. The buttons can either appear in a drop-down list, or next to the edit and delete buttons for the record.
 
-`list.recordActions` should be an Array of Objects. Each object describes an action that a user can make, specific to the record, and the object takes on the same form as those described in `list.actions`\_.
+`list.recordActions` should be an Array of Objects. Each object describes an action that a user can make, specific to the record, and the object takes on the same form as those described in [list.actions](#listactions).
 
 `list.recordActions` can have an optional key `type` and when set to `primary`, the action will be renderered next to the edit and delete buttons for the record (i.e. not within the dropdown). You can also supply a key `icon`, which if supplied, will be used rather than a label for the button. The value for `icon` should correspond with name of a Bootstrap glyphicon.
 
@@ -219,7 +214,9 @@ You're responsible for mounting a `GET` route in Express to respond to it.
 
 `list.showSummary` expects a boolean. Truthy/falsy values will also be interpreted, for example:
 
-showSummary: true
+```javascript
+showSummary: true;
+```
 
 ## list.sortBy
 

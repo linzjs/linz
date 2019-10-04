@@ -8,9 +8,7 @@ Linz has a bunch of defaults, which can be use to alter Linz and the way it work
 
 This document outlines the defaults and how they can be used to alter Linz.
 
-**Please note:** this document is a work in progress and not all defaults have been documented. For a complete list of customizations you can make, view Linz's defaults\_.
-
-.. \_defaults: https://github.com/linzjs/linz/blob/master/lib/defaults.js
+**Please note:** this document is a work in progress and not all defaults have been documented. For a complete list of customizations you can make, view Linz's [defaults](https://github.com/linzjs/linz/blob/master/lib/defaults.js).
 
 ## Setting defaults
 
@@ -19,7 +17,7 @@ There are two ways to alter the defaults:
 -   At init time.
 -   Any other time using the `linz.set` function.
 
-Read about the :ref:`options-object-reference` for more information about how to set the defaults at init time.
+Read about the [Options object](./getting-started-with-linz#options-object) for more information about how to set the defaults at init time.
 
 Alternatively, you can set a default using the `linz.set` function:
 
@@ -33,11 +31,7 @@ linz.set('mongo', `mongodb://${process.env.MONGO_HOST}/db`);
 
 ## The defaults
 
-The following lists the defaults that you can use to customise Linz. Please note, not all defaults are detailed. Please `review the code for more information`\_.
-
-.. \_review the code for more information: https://github.com/linzjs/linz/blob/master/lib/defaults.js
-
-.. \_cookie-options-reference:
+The following lists the defaults that you can use to customise Linz. Please note, not all defaults are detailed. Please [review the code for more information](https://github.com/linzjs/linz/blob/master/lib/defaults.js).
 
 ### cookie options
 
@@ -66,25 +60,27 @@ customAttributes(req);
 The function should return an array of objects containing attributes in a name/value pair:
 
 ```javascript
-  customAttributes (req) => {
+customAttributes (req) => {
 
     const attributes = [];
 
     if (req.user && req.user.group) {
-      attributes.push({
-        name: 'data-linz-usergroup',
-        value: req.user.group
-      });
+        attributes.push({
+            name: 'data-linz-usergroup',
+            value: req.user.group
+        });
     }
 
     return attributes;
 
-  }
+}
 ```
 
 This will result in a `body` tag with custom attributes on all Linz pages:
 
-  <body data-linz-usergroup='20'>
+```html
+<body data-linz-usergroup="20"></body>
+```
 
 ### routes
 
@@ -156,17 +152,17 @@ scripts(req, res);
 The function should return an array of objects containing the same HTML attributes as the `<script>` tag:
 
 ```javascript
-  scripts (req, res) => {
+scripts (req, res) => {
 
     return Promise.resolve(res.locals.scripts.concat([
-      {
-        crossorigin: 'anonymous',
-        integrity: 'sha256-5YmaxAwMjIpMrVlK84Y/+NjCpKnFYa8bWWBbUHSBGfU=',
-        src: '//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
-      },
+        {
+            crossorigin: 'anonymous',
+            integrity: 'sha256-5YmaxAwMjIpMrVlK84Y/+NjCpKnFYa8bWWBbUHSBGfU=',
+            src: '//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+        },
     ]));
 
-  }
+}
 ```
 
 `res.locals.scripts` contains all the scripts used by Linz, be careful when removing/updating these as it could break functionality within Linz.
@@ -177,17 +173,17 @@ The script objects can contain an additional `inHead` boolean option to optional
 To create data attributes, you can add a `dataAttributes` property with a key that will be prefixed with `data-` when output in HTML. For example:
 
 ```javascript
-  scripts (req, res) => {
+scripts (req, res) => {
 
     return Promise.resolve(res.locals.scripts.concat([
-      {
-        dataAttributes: {
-          test: 'test',
+        {
+            dataAttributes: {
+                test: 'test',
+            },
         },
-      },
     ]));
 
-  }
+}
 ```
 
 will create the script:
@@ -222,18 +218,18 @@ styles(req, res);
 The function should return an array of objects containing the same HTML attributes as the `<link>` tag:
 
 ```javascript
-  styles (req, res) => {
+styles (req, res) => {
 
     return Promise.resolve(res.locals.styles.concat([
-      {
-        crossorigin: 'anonymous',
-        href: '//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-        integrity: 'sha256-yMjaV542P+q1RnH6XByCPDfUFhmOafWbeLPmqKh11zo=',
-        rel: 'stylesheet',
-      },
+        {
+            crossorigin: 'anonymous',
+            href: '//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+            integrity: 'sha256-yMjaV542P+q1RnH6XByCPDfUFhmOafWbeLPmqKh11zo=',
+            rel: 'stylesheet',
+        },
     ]));
 
-  }
+}
 ```
 
 `res.locals.styles` contains all the styles used by Linz, be careful when removing/updating these as it could break functionality within Linz.
@@ -242,17 +238,17 @@ You should use the existing array as the array that is resolved with the promise
 To create data attributes, you can add a `dataAttributes` property with a key that will be prefixed with `data-` when output in HTML. For example:
 
 ```javascript
-  styles (req, res) => {
+styles (req, res) => {
 
     return Promise.resolve(res.locals.styles.concat([
-      {
-        dataAttributes: {
-          test: 'test',
+        {
+            dataAttributes: {
+                test: 'test',
+            },
         },
-      },
     ]));
 
-  }
+}
 ```
 
 will create the script:
@@ -268,14 +264,12 @@ You can also supply a `content` property, which if provided, will add the value 
 Mongoose's default connection logic is deprecated as of 4.11.0. `mongoOptions` contains the minimum default connection logic required for a connection:
 
 ```javascript
-  'mongoOptions': {
+'mongoOptions': {
     useMongoClient: true
-  }
+}
 ```
 
-See `Mongoose connections`\_. for more details and configurations.
-
-.. \_Mongoose connections: http://mongoosejs.com/docs/guide.html
+See [Mongoose connections](http://mongoosejs.com/docs/guide.html) for more details and configurations.
 
 ### 404
 
@@ -284,11 +278,11 @@ The `404` default allows you to pass in your own 404 html.
 To use `404` define a function with the following signature:
 
 ```javascript
-  /**
-   * @param {Object} req A HTTP request object.
-   * @return {Promise} Resolves with the html.
-   */
-  404 (req) => Promise.resolve(html)
+/**
+ * @param {Object} req A HTTP request object.
+ * @return {Promise} Resolves with the html.
+ */
+404 (req) => Promise.resolve(html)
 ```
 
 The function should return a Promise that resolves with the html string.
