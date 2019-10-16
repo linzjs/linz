@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v1.0.0-18.7.3
+
+- Fixed binddata not recording date picker changes.
+
 ## v1.0.0-18.7.2
 
 - Fixed UI bug preventing export buttons from showing up on smaller devices.
