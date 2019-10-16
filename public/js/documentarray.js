@@ -354,7 +354,7 @@
                     // Load the datepicker code incase the documentarray contains date inputs.
                     linz.loadDatepicker();
 
-                    $('[data-ui-datepicker]').each(function () {
+                    $('#documentsModal [data-ui-datepicker]').each(function () {
 
                         var datepicker = $(this);
 
