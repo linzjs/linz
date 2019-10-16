@@ -22,7 +22,7 @@ var route = function (req, res, next) {
                     src: `${linz.get('admin path')}/public/js/jquery.binddata.js?v1`,
                 },
                 {
-                    src: `${linz.get('admin path')}/public/js/documentarray.js?v1`,
+                    src: `${linz.get('admin path')}/public/js/documentarray.js?v3`,
                 },
                 {
                     src: `${linz.get('admin path')}/public/js/model/edit.js`,
