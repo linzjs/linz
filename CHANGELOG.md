@@ -1,6 +1,8 @@
 # CHANGELOG
 
-## Unreleased
+## v1.0.0-18.7.3 - 2019-10-16
+
+### Fixed
 
 - Added the ability to define a custom `admin forgot password path`.
 
