@@ -248,7 +248,7 @@
             for (var prop in data) {
                 var $el = this.find('[name="'+prop+'"]');
                 $el.data('bindData.data', elData);
-                $el.on('change', changeHandler);
+                $el.on('change dp.change', changeHandler);
             }
             setFormFields(this, data, elData.transforms);
         }
@@ -257,7 +257,7 @@
                 var $el = $(el);
                 var name = $el.attr('name');
                 $el.data('bindData.data', elData);
-                $el.on('change', changeHandler);
+                $el.on('change dp.change', changeHandler);
             };
             this.find('input').each(doBind);
             this.find('select').each(doBind);
