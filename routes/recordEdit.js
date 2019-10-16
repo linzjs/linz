@@ -57,7 +57,7 @@ var route = function (req, res, next) {
                     crossorigin: 'anonymous',
                 },
                 {
-                    src: `${linz.get('admin path')}/public/js/jquery.binddata.js`,
+                    src: `${linz.get('admin path')}/public/js/jquery.binddata.js?v1`,
                 },
                 {
                     src: `${linz.get('admin path')}/public/js/documentarray.js?v2`,
