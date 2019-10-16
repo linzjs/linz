@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v1.0.0-18.7.3 - 2019-10-16
+
+### Fixed
+
+- Added the ability to define a custom `admin forgot password path`.
+
 ## v1.0.0-18.7.2
 
 - Fixed UI bug preventing export buttons from showing up on smaller devices.
