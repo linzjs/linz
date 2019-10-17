@@ -20,8 +20,8 @@ module.exports = (req, res) => {
                 integrity: 'sha256-0JaDbGZRXlzkFbV8Xi8ZhH/zZ6QQM0Y3dCkYZ7JYq34=',
                 crossorigin: 'anonymous',
             },
-            { src: `${linz.get('admin path')}/public/js/jquery.binddata.js` },
-            { src: `${linz.get('admin path')}/public/js/documentarray.js?v2` },
+            { src: `${linz.get('admin path')}/public/js/jquery.binddata.js?v1` },
+            { src: `${linz.get('admin path')}/public/js/documentarray.js?v3` },
             {
                 integrity: 'sha256-/wPGlKXtfdj9ryVH2IQ78d1Zx2/4PXT/leOL4Jt1qGU=',
                 src: '//cdnjs.cloudflare.com/ajax/libs/deep-diff/0.2.0/deep-diff.min.js',

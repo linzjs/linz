@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Unreleased
+
+### Fixed
+
+- Fixed binddata not recording date picker changes.
+- Fixed opening a documentArray with a datepicker resetting other date pickers on the main page to the current date.
+- Fixed multiple `linzTimezoneOffset` attributes.
+- Fixed incorrect datepicker dates across multiple timezones.
+
 ## v1.0.0-18.7.3 - 2019-10-16
 
 ### Fixed
