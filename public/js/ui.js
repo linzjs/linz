@@ -255,19 +255,6 @@ if (!linz) {
 
         if ($('[data-ui-datepicker]').length) {
 
-            // Get the offsets as an integer
-            var getOffset = function getOffset(offset) {
-
-                var symbol = offset.charAt(0);
-                var time = offset.substring(1).split(':');
-                var hours = Number.parseInt(time[0], 10) * 60;
-                var minutes = Number.parseInt(time[1], 10);
-                var total = Number.parseInt(symbol + (hours + minutes));
-
-                return total;
-
-            };
-
             $('[data-ui-datepicker]').each(function () {
 
                 var field = $(this);
@@ -278,11 +265,10 @@ if (!linz) {
                     return;
                 }
 
-                if (field.data('utc-offset')) {
-                    return field.data('DateTimePicker').date(moment(dateValue).subtract(getOffset(moment().format('Z')) - getOffset(field.data('utc-offset')), 'minutes'));
-                }
+                var offset = field.data('utc-offset');
+                var clientDateValue = offset ? moment(dateValue).utcOffset(offset) : moment(dateValue);
 
-                field.data('DateTimePicker').date(moment(dateValue));
+                field.data('DateTimePicker').date(clientDateValue);
 
             });
 
