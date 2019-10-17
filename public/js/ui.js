@@ -193,7 +193,7 @@ if (!linz) {
 
     function loadDatepicker() {
 
-        if ($('[data-ui-datepicker]').length) {
+        if ($('[data-ui-datepicker]').length && !$('[name="linzTimezoneOffset"]').length) {
 
             // Set the timezone offset in a hidden input element.
             var timezoneInput = document.createElement('input');
@@ -202,6 +202,10 @@ if (!linz) {
             timezoneInput.setAttribute('value', moment().format('Z'));
 
             $('[data-ui-datepicker]').parents('form').prepend(timezoneInput);
+
+        }
+
+        if ($('[data-ui-datepicker]').length) {
 
             $('[data-ui-datepicker]').each(function () {
 
