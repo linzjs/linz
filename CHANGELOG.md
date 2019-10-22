@@ -9,6 +9,7 @@
 - Fixed multiple `linzTimezoneOffset` attributes.
 - Fixed incorrect datepicker dates across multiple timezones.
 - Fixed ckeditor double escaping values.
+- Fixed a XSS vulnerability with the `checkboxesWithAddition` widget.
 
 ## v1.0.0-18.7.3 - 2019-10-16
 
