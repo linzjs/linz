@@ -2,12 +2,16 @@
 
 ## Unreleased
 
+## v1.0.0-18.7.4 - 2019-10-23
+
 ### Fixed
 
 - Fixed binddata not recording date picker changes.
 - Fixed opening a documentArray with a datepicker resetting other date pickers on the main page to the current date.
 - Fixed multiple `linzTimezoneOffset` attributes.
 - Fixed incorrect datepicker dates across multiple timezones.
+- Fixed ckeditor double escaping values.
+- Fixed a XSS vulnerability with the `checkboxesWithAddition` widget.
 
 ## v1.0.0-18.7.3 - 2019-10-16
 

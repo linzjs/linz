@@ -1,6 +1,6 @@
 {
     "name": "linz",
-    "version": "1.0.0-18.7.3",
+    "version": "1.0.0-18.7.4",
     "description": "Node.js web application framework",
     "license": "MIT",
     "main": "linz.js",
