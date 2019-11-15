@@ -21,24 +21,26 @@ module.exports = {
     export: [
         {
             columns: (columns) => {
+
                 // Usually you would want to filter out the object field based on the key
-                // For testing purposes it has been left in.
-                const updatedColumns = columns.slice();
+               // For testing purposes it has been left in.
+               const updatedColumns = columns.slice();
 
                 return updatedColumns.concat([
-                    {
-                        key: 'objectField1',
-                        header: 'Object Field 1',
-                    },
-                    {
-                        key: 'objectField2',
-                        header: 'Object Field 2',
-                    },
-                    {
-                        key: 'objectField3',
-                        header: 'Object Field 3',
-                    },
-                ]);
+                   {
+                       key: 'objectField1',
+                       header: 'Object Field 1',
+                   },
+                   {
+                       key: 'objectField2',
+                       header: 'Object Field 2',
+                   },
+                   {
+                       key: 'objectField3',
+                       header: 'Object Field 3',
+                   },
+               ]);
+
             },
             dateFormat: 'DD MMM YYYY',
             exclusions: '_id,password',

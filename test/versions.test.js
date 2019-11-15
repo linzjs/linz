@@ -6,34 +6,40 @@ let UserSchema;
 
 // Wait for the database
 beforeAll((done) => {
+
     // Init Linz.
     linz.init({
         options: {
             'mongo': 'mongodb://mongodb:27017/versions-test',
             'user model': 'user',
             'load models': false,
-            'load configs': false,
-        },
+            'load configs': false
+        }
     });
 
     linz.once('initialised', () => {
+
         // setup a basic user model
         var UserSchema = new linz.mongoose.Schema({
             username: String,
             password: String,
-            email: String,
+            email: String
         });
 
         UserSchema.virtual('hasAdminAccess').get(() => true);
 
         return done();
+
     });
+
 }, 10000);
 
 afterAll((done) => linz.mongoose.connection.close(done));
 
 describe('versions', () => {
+
     describe('extends the schema', () => {
+
         let TestSchema;
 
         beforeAll(() => {
@@ -44,6 +50,7 @@ describe('versions', () => {
             expect(() => {
                 TestSchema.plugin(linz.versions.plugin);
             }).toThrow('options is required');
+
         });
 
         test('should throw error if options.collection is not provided', () => {
@@ -51,30 +58,34 @@ describe('versions', () => {
                 TestSchema.plugin(linz.versions.plugin, {});
             }).toThrow('collection name is required');
         });
-    });
+
+    })
 
     describe('sets versions options', () => {
+
         describe('defaults', () => {
+
             let versionsSetting;
             let TestSchema;
 
             beforeAll((done) => {
+
                 TestSchema = new linz.mongoose.Schema({ label: String });
 
                 TestSchema.plugin(linz.versions.plugin, {
-                    collection: 'testschema_versions',
+                    collection: 'testschema_versions'
                 });
 
-                let TestModelDefaults = linz.mongoose.model(
-                    'TestModelDefaults',
-                    TestSchema
-                );
+                let TestModelDefaults = linz.mongoose.model('TestModelDefaults', TestSchema);
 
                 TestModelDefaults.getVersionsSettings((err, settings) => {
+
                     versionsSetting = settings;
 
                     return done(err);
+
                 });
+
             });
 
             test('label defaults to "History"', () => {
@@ -87,20 +98,19 @@ describe('versions', () => {
                 expect(versionsSetting.cellRenderers).toMatchObject({
                     date: linz.versions.renderers.cellRenderers.timestamp,
                     reference: linz.versions.renderers.cellRenderers.reference,
-                    referenceName:
-                        linz.versions.renderers.cellRenderers.referenceName,
-                });
+                    referenceName:linz.versions.renderers.cellRenderers.referenceName
+                })
             });
 
             test('default renderer', () => {
                 expect(versionsSetting).toBeTruthy();
-                expect(versionsSetting.renderer).toBe(
-                    linz.versions.renderers.overview
-                );
-            });
+                expect(versionsSetting.renderer).toBe(linz.versions.renderers.overview);
+            })
+
         });
 
         describe('overwrites', () => {
+
             let versionsSetting;
             let TestSchema1;
             let dateRenderer;
@@ -109,6 +119,7 @@ describe('versions', () => {
             let versionsRenderer;
 
             beforeAll((done) => {
+
                 TestSchema1 = new linz.mongoose.Schema({ label: String });
 
                 dateRenderer = (cb) => cb(null, 'date');
@@ -126,22 +137,22 @@ describe('versions', () => {
                         cellRenderers: {
                             date: dateRenderer,
                             reference: referenceRenderer,
-                            referenceName: referenceNameRenderer,
+                            referenceName: referenceNameRenderer
                         },
-                        renderer: versionsRenderer,
-                    },
+                        renderer: versionsRenderer
+                    }
                 });
 
-                let TestModelOverwrites = linz.mongoose.model(
-                    'TestModelOverwrites',
-                    TestSchema1
-                );
+                let TestModelOverwrites = linz.mongoose.model('TestModelOverwrites', TestSchema1);
 
                 TestModelOverwrites.getVersionsSettings((err, settings) => {
+
                     versionsSetting = settings;
 
                     return done(err);
+
                 });
+
             });
 
             test('label', () => {
@@ -161,17 +172,16 @@ describe('versions', () => {
 
             test('cell renderer - reference', () => {
                 expect(versionsSetting).toBeTruthy();
-                expect(versionsSetting.cellRenderers.reference).toBe(
-                    referenceRenderer
-                );
+                expect(versionsSetting.cellRenderers.reference).toBe(referenceRenderer);
             });
 
             test('cell renderer - referenceName', () => {
                 expect(versionsSetting).toBeTruthy();
-                expect(versionsSetting.cellRenderers.referenceName).toBe(
-                    referenceNameRenderer
-                );
+                expect(versionsSetting.cellRenderers.referenceName).toBe(referenceNameRenderer);
             });
+
         });
+
     });
+
 });

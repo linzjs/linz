@@ -43,9 +43,7 @@ module.exports = {
         username: { filter: linz.formtools.filters.text },
         boolean: { filter: linz.formtools.filters.boolean },
         checkboxes: { filter: linz.formtools.filters.list(list, true) },
-        checkboxesWithAddition: {
-            filter: linz.formtools.filters.list(list, true),
-        },
+        checkboxesWithAddition: { filter: linz.formtools.filters.list(list, true) },
         ckeditor: { filter: linz.formtools.filters.text },
         date: { filter: linz.formtools.filters.date() },
         digit: { filter: linz.formtools.filters.text },

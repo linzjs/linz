@@ -19,12 +19,14 @@ const whoAmI = require('./routes/who-am-i');
 const port = 8888;
 
 class App extends EventEmitter {
+
     /**
      * App contructor.
      * @param {Object} options Linz options.
      * @return {Void} Starts the app.
      */
     constructor(options) {
+
         super();
 
         const app = express();
@@ -32,8 +34,8 @@ class App extends EventEmitter {
         this.app = app;
 
         linz.init({
-            express: app,
-            options: {
+            'express': app,
+            'options': {
                 'mongo': 'mongodb://mongodb-dev:27017/lmt',
                 'session middleware': session,
                 'user model': 'mtUser',
@@ -43,26 +45,19 @@ class App extends EventEmitter {
         });
 
         linz.on('initialised', () => {
+
             linz.app.engine('handlebars', handlebars.create().engine);
             linz.app.set('view engine', 'handlebars');
 
-            linz.app.get('/', (req, res) =>
-                res.redirect(linz.get('login path'))
-            );
+            linz.app.get('/', (req, res) => res.redirect(linz.get('login path')));
             linz.app.get('/who-am-i', whoAmI);
             linz.app.get('/reset', resetData);
             linz.app.get('/error', error);
             linz.app.get('/error-json', errorJson);
 
             // Custom form example.
-            linz.app.get(
-                `${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`,
-                editCustomRoute.get
-            );
-            linz.app.post(
-                `${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`,
-                editCustomRoute.post
-            );
+            linz.app.get(`${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`, editCustomRoute.get);
+            linz.app.post(`${linz.get('admin path')}/model/mtUser/:id/action/edit-custom`, editCustomRoute.post);
 
             // Remote validation example.
             linz.app.get(`${linz.get('admin path')}/is-email`, isEmail);
@@ -70,7 +65,9 @@ class App extends EventEmitter {
             linz.app.use(linz.middleware.error);
 
             this.emit('ready');
+
         });
+
     }
 
     /**
@@ -78,12 +75,14 @@ class App extends EventEmitter {
      * @return {Void} Starts the server.
      */
     startServer() {
+
         console.log('Starting the HTTP server.');
 
-        http.createServer(this.app).listen(port, () =>
-            console.log(`Linz started and running on port ${port}`)
-        );
+        http.createServer(this.app)
+            .listen(port, () => console.log(`Linz started and running on port ${port}`));
+
     }
+
 }
 
 module.exports = App;

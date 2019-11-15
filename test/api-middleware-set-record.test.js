@@ -3,6 +3,7 @@
 const setRecord = require('linz/lib/api/middleware/set-record');
 
 test('it sets the record', () => {
+
     const req = {
         linz: {
             model: {
@@ -13,7 +14,10 @@ test('it sets the record', () => {
     };
 
     setRecord()(req, {}, (err) => {
+
         expect(err).toBeFalsy();
         expect(req.linz.record).toBeTruthy();
+
     });
+
 });

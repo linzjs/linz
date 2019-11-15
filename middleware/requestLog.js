@@ -1,12 +1,18 @@
 var util = require('util'),
-    fs = require('fs');
+	fs = require('fs');
 
-module.exports = function(logPath) {
-    return function(req, res, next) {
-        fs.readFile(logPath, 'utf8', function(err, data) {
-            req.linz.requestLog = data;
+module.exports = function (logPath) {
 
-            next();
-        });
-    };
-};
+	return function (req, res, next) {
+
+		fs.readFile(logPath, 'utf8', function (err, data) {
+
+			req.linz.requestLog = data;
+
+			next();
+
+		});
+
+	}
+
+}

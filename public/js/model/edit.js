@@ -1,16 +1,11 @@
-(function() {
+(function () {
+
     // add support for checkboxes add button
-    $('.btn[data-linz-control="add-checkbox"]').click(function() {
+    $('.btn[data-linz-control="add-checkbox"]').click(function () {
+
         var queryObj = $(this),
-            checkboxField = queryObj
-                .parents('.input-group')
-                .find('template')
-                .clone()
-                .html(),
-            inputValue = queryObj
-                .parents('.input-group')
-                .find('input[name="add-checkbox"]')
-                .val();
+            checkboxField = queryObj.parents('.input-group').find('template').clone().html(),
+            inputValue = queryObj.parents('.input-group').find('input[name="add-checkbox"]').val();
 
         if (!inputValue) {
             return false;
@@ -25,11 +20,9 @@
         queryObj.parents('.row').before(checkboxField.html());
 
         // clear input field value after insertion
-        queryObj
-            .parents('.input-group')
-            .find('input[name="add-checkbox"]')
-            .val('');
+        queryObj.parents('.input-group').find('input[name="add-checkbox"]').val('');
 
         return false;
     });
+
 })();

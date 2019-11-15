@@ -1,4 +1,5 @@
-(function($) {
+(function( $ ) {
+
     var getPropValue = function(bean, propname) {
         var props = propname.split('.');
         var val = bean;
@@ -14,7 +15,8 @@
         for (var i = 0; i < props.length; i++) {
             if (i + 1 >= props.length) {
                 obj[props[i]] = trueFalse(value);
-            } else {
+            }
+            else {
                 if (null == obj[props[i]]) {
                     obj[props[i]] = {};
                 }
@@ -25,18 +27,19 @@
 
     var getPropNamesAndValues = function(bean, propPrefix, ret) {
         for (var prop in bean) {
-            var propname = propPrefix ? propPrefix + '.' + prop : prop;
-            var type = typeof bean[prop];
+            var propname = (propPrefix) ? propPrefix + '.' + prop : prop;
+            var type = typeof(bean[prop]);
             if ('object' === type && bean[prop] !== null) {
-                if (bean[prop] instanceof Date) {
-                    ret[propname] = convertDateToStringIfNeeded(
-                        getPropValue(bean, prop)
-                    );
-                } else {
+                if(bean[prop] instanceof Date) {
+                    ret[propname] = convertDateToStringIfNeeded(getPropValue(bean, prop));
+                }
+                else {
                     ret = getPropNamesAndValues(bean[prop], propname, ret);
                 }
-            } else if ('function' === type) {
-            } else {
+            }
+            else if ('function' === type) {
+            }
+            else {
                 if (ret == null) ret = {};
                 ret[propname] = getPropValue(bean, prop);
             }
@@ -71,11 +74,7 @@
                 value = $(this).val();
                 break;
         }
-        value = applyTransforms(
-            'get',
-            value,
-            getTransformsForField(propname, transforms)
-        );
+        value = applyTransforms('get', value, getTransformsForField(propname, transforms));
         setPropValue(bean, propname, value);
     };
 
@@ -107,20 +106,20 @@
 
     var trimTrailingZ = function(/* String */ data) {
         var lastChar = data.substring(data.length - 1, data.length);
-        if (lastChar == 'Z' || lastChar == 'z') {
+        if(lastChar == 'Z' || lastChar == 'z') {
             return data.substring(0, data.length - 1);
         }
         return data;
-    };
+    }
 
     var convertDateToStringIfNeeded = function(/* Date or String */ value) {
-        if (typeof value == 'object') {
-            if (value instanceof Date) {
+        if(typeof value == 'object') {
+            if(value instanceof Date) {
                 value = value.toJSON();
             }
         }
         return value;
-    };
+    }
 
     var getFormFields = function($form, data, transforms) {
         var getFieldData = function(index, el) {
@@ -136,7 +135,8 @@
                 case 'radio':
                     if ($(el).is(':checked')) {
                         val = $(el).val();
-                    } else {
+                    }
+                    else {
                         return;
                     }
                     break;
@@ -149,11 +149,7 @@
                 default:
                     val = $(el).val();
             }
-            val = applyTransforms(
-                'get',
-                val,
-                getTransformsForField(name, transforms)
-            );
+            val = applyTransforms('get', val, getTransformsForField(name, transforms));
             setPropValue(data, name, val);
         };
         $form.find('input').each(getFieldData);
@@ -161,7 +157,7 @@
     };
 
     var setFormField = function($form, name, value) {
-        var $el = $form.find('[name="' + name + '"]');
+        var $el = $form.find('[name="'+name+'"]');
         var type = getElementType($el);
 
         switch (type) {
@@ -172,12 +168,13 @@
                 $el.val(value);
                 break;
             case 'radio':
-                $el.filter('[value="' + value + '"]').prop('checked', true);
+                $el.filter('[value="'+value+'"]').prop('checked', true);
                 break;
             case 'checkbox':
                 if (true === value) {
                     $el.prop('checked', true);
-                } else {
+                }
+                else {
                     $el.prop('checked', false);
                 }
                 break;
@@ -186,7 +183,7 @@
                 break;
             case 'date':
                 var index = value.indexOf('T');
-                if (index >= 0) {
+                if(index >= 0) {
                     value = value.substring(0, index);
                 }
                 value = trimTrailingZ(value);
@@ -194,7 +191,7 @@
                 break;
             case 'time':
                 var index = value.indexOf('T');
-                if (index >= 0) {
+                if(index >= 0) {
                     value = value.substring(index + 1);
                 }
                 value = trimTrailingZ(value);
@@ -206,10 +203,12 @@
                 break;
             default:
                 $el.val(value);
+
         }
     };
 
-    var trueFalse = function(tf) {
+    var trueFalse = function (tf) {
+
         if (tf === 'true') {
             return true;
         } else if (tf === 'false') {
@@ -217,6 +216,7 @@
         }
 
         return tf;
+
     };
 
     $.fn.binddata = function(bean, properties) {
@@ -228,7 +228,7 @@
         var defaultProperties = {
             bindAll: true,
             onlyGetOrSet: '',
-            transforms: [],
+            transforms: []
         };
         $.extend(defaultProperties, properties);
         var data = getPropNamesAndValues(bean);
@@ -242,21 +242,22 @@
                 return this;
         }
 
-        var elData = { bean: bean, transforms: defaultProperties.transforms };
+        var elData = {bean: bean, transforms: defaultProperties.transforms};
 
         if (defaultProperties.bindAll === false) {
             for (var prop in data) {
-                var $el = this.find('[name="' + prop + '"]');
+                var $el = this.find('[name="'+prop+'"]');
                 $el.data('bindData.data', elData);
-                $el.on('change', changeHandler);
+                $el.on('change dp.change', changeHandler);
             }
             setFormFields(this, data, elData.transforms);
-        } else {
+        }
+        else {
             var doBind = function(index, el) {
                 var $el = $(el);
                 var name = $el.attr('name');
                 $el.data('bindData.data', elData);
-                $el.on('change', changeHandler);
+                $el.on('change dp.change', changeHandler);
             };
             this.find('input').each(doBind);
             this.find('select').each(doBind);

@@ -9,16 +9,18 @@ const {
 } = require('linz/lib/helpers-models');
 
 beforeEach((done) => {
+
     linz.init({
         options: {
             'mongo': 'mongodb://mongodb:27017/lib-helper-models',
             'user model': 'user',
             'load models': false,
-            'load configs': false,
-        },
+            'load configs': false
+        }
     });
 
     linz.once('initialised', () => {
+
         const userSchema = new linz.mongoose.Schema({ name: String });
 
         userSchema.plugin(linz.formtools.plugins.document, {
@@ -42,10 +44,13 @@ beforeEach((done) => {
         linz.set('models', { user: linz.mongoose.model('user', userSchema) });
 
         return done();
+
     });
+
 }, 10000);
 
 test('initialises the model', async () => {
+
     const model = linz.api.model.get('user');
 
     expect.assertions(2);
@@ -65,4 +70,5 @@ test('initialises the model', async () => {
             },
         },
     });
+
 });

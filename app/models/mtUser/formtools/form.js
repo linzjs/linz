@@ -22,15 +22,16 @@ module.exports = {
         fieldset: 'Details',
         helpText: 'Add some alternative emails',
         widget: linz.formtools.widgets.documents({
-            setLabel: function setLabel(doc) {
+            setLabel: function setLabel (doc) {
+
                 doc.label = doc.email + ' (' + doc.type + ')';
 
                 return doc;
+
             },
         }),
         transpose: {
-            export: (val) =>
-                Promise.resolve(val.map(({ email }) => email).join(',')),
+            'export': (val) => Promise.resolve(val.map(({ email }) => email).join(',')),
         },
     },
     org: {
@@ -38,12 +39,8 @@ module.exports = {
     },
     birthday: {
         fieldset: 'Details',
-        transpose: {
-            export: (val) => Promise.resolve(moment(val).format('D MMMM YYYY')),
-        },
-        widget: linz.formtools.widgets.date({
-            'data-linz-date-format': 'DD/MM/YYYY hh:mm a',
-        }),
+        transpose: { 'export': (val) => Promise.resolve(moment(val).format('D MMMM YYYY')) },
+        widget: linz.formtools.widgets.date({ 'data-linz-date-format': 'DD/MM/YYYY hh:mm a' }),
     },
     customOffset: {
         fieldset: 'Details',
@@ -66,7 +63,7 @@ module.exports = {
     objectField: {
         fieldset: 'Misc',
         transpose: {
-            export: (val) => Promise.resolve([val, true]),
+            'export': (val) => Promise.resolve([val, true]),
         },
         visible: false,
     },

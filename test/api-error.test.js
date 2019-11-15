@@ -3,6 +3,7 @@
 const { json, store } = require('linz/lib/api/error');
 
 test('stores the error on req', () => {
+
     const err = new Error('Test error');
     const req = {};
 
@@ -10,9 +11,11 @@ test('stores the error on req', () => {
 
     expect(req.linz).toBeTruthy();
     expect(req.linz.error.message).toBe(err.message);
+
 });
 
 test('sets json and statusCode properties on an error', () => {
+
     const err = new Error('Test error');
 
     json(err);
@@ -22,4 +25,5 @@ test('sets json and statusCode properties on an error', () => {
 
     expect(err.statusCode).toBeDefined();
     expect(err.statusCode).toBe(500);
+
 });

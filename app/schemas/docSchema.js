@@ -20,7 +20,7 @@ docSchema.plugin(linz.formtools.plugins.embeddedDocument, {
                 'data-linz-date-format': 'DD.MM.YY HH:mm a',
                 'data-linz-date-side-by-side': 'true',
             }),
-        },
+        }
     },
 });
 

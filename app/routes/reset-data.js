@@ -70,9 +70,7 @@ module.exports = (req, res, next) => {
         title: `" /><script>alert('xss')</script><br class="`,
         boolean: `" /><script>alert('xss')</script><br class="`,
         checkboxes: [`" /><script>alert('xss')</script><br class="`],
-        checkboxesWithAddition: [
-            `" /><script>alert('xss')</script><br class="`,
-        ],
+        checkboxesWithAddition: [`" /><script>alert('xss')</script><br class="`],
         ckeditor: `" /><script>alert('xss')</script><br class="`,
         date: new Date(),
         digit: `" /><script>alert('xss')</script><br class="`,
@@ -96,7 +94,12 @@ module.exports = (req, res, next) => {
         url: `" /><script>alert('xss')</script><br class="`,
     });
 
-    const records = [user.save(), org.save(), test.save(), testXss.save()];
+    const records = [
+        user.save(),
+        org.save(),
+        test.save(),
+        testXss.save(),
+    ];
 
     Promise.all([
         mtOrg.collection.drop(),

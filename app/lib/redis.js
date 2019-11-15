@@ -3,19 +3,23 @@
 const Redis = require('ioredis');
 
 class IORedis {
-    constructor() {
+
+    constructor () {
+
         const redis = new Redis('redis://redis-dev:6379', {
             retryStrategy: (times) => {
+
                 if (times >= 10) {
-                    console.log(
-                        'Retry limit of 10 reached, could not connect to Redis'
-                    );
+
+                    console.log('Retry limit of 10 reached, could not connect to Redis');
 
                     // eslint-disable-next-line no-process-exit
                     return process.exit(1);
+
                 }
 
                 return times * 2000;
+
             },
         });
 
@@ -27,7 +31,9 @@ class IORedis {
         redis.on('reconnecting', () => console.log('Redis reconnecting'));
 
         return redis;
+
     }
+
 }
 
 module.exports = IORedis;

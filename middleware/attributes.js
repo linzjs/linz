@@ -10,13 +10,12 @@ const linz = require('../');
  * @return {Void} Adds a classes property to res.locals.
  */
 const customAttributes = (req, res, next) => {
+
     Promise.resolve(linz.get('customAttributes')(req, res))
         .then((customAttributes) => {
+
             if (req.user) {
-                customAttributes.push({
-                    name: 'data-linz-user',
-                    value: req.user._id.toString(),
-                });
+                customAttributes.push({ name: 'data-linz-user', value: req.user._id.toString() });
             }
 
             req.locals = req.locals || {};
@@ -26,8 +25,10 @@ const customAttributes = (req, res, next) => {
             res.locals.customAttributes = customAttributes;
 
             return next();
+
         })
         .catch(next);
+
 };
 
 module.exports = customAttributes;

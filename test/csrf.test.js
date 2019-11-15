@@ -4,32 +4,29 @@ const linz = require('linz');
 const supertest = require('supertest');
 
 beforeAll((done) => {
+
     linz.init({
         options: {
             'csrf token': { value: 'token' },
             'mongo': 'mongodb://mongodb:27017/csrf',
             'user model': 'user',
             'load models': false,
-            'load configs': false,
-        },
+            'load configs': false
+        }
     });
 
     linz.once('initialised', () => {
+
         const userSchema = new linz.mongoose.Schema({
             password: String,
             username: String,
         });
 
-        userSchema.plugin(linz.formtools.plugins.document, {
-            model: { title: 'username' },
-        });
+        userSchema.plugin(linz.formtools.plugins.document, { model: { title: 'username' } });
 
         userSchema.virtual('hasAdminAccess').get(() => true);
 
-        userSchema.methods.verifyPassword = function(
-            candidatePassword,
-            callback
-        ) {
+        userSchema.methods.verifyPassword = function (candidatePassword, callback) {
             return callback(null, this.password === candidatePassword);
         };
 
@@ -40,12 +37,15 @@ beforeAll((done) => {
         linz.initModels();
 
         return done();
+
     });
+
 }, 10000);
 
 afterAll(() => linz.mongoose.disconnect());
 
 test('provides csrf protection', async () => {
+
     expect.assertions(2);
 
     const request = supertest.agent(linz.app);
@@ -65,9 +65,11 @@ test('provides csrf protection', async () => {
 
     expect(response.status).toBe(403);
     expect(response.text).toMatch(/ForbiddenError:\ invalid\ csrf\ token/);
+
 });
 
 test('allows valid requests through', async () => {
+
     expect.assertions(2);
 
     const request = supertest.agent(linz.app);
@@ -82,9 +84,7 @@ test('allows valid requests through', async () => {
 
     const token = await request.get('/admin/login').send();
 
-    const [
-        csrfToken,
-    ] = /(?<=name="csrf-token" content=")(.*)(?="><title>)/.exec(token.text);
+    const [csrfToken] = /(?<=name="csrf-token" content=")(.*)(?="><title>)/.exec(token.text);
 
     const response = await request.post('/admin/login').send({
         _csrf: csrfToken,
@@ -94,4 +94,5 @@ test('allows valid requests through', async () => {
 
     expect(response.status).toBe(302);
     expect(response.text).toMatch(/Found.\ Redirecting\ to\ \/admin/);
+
 });

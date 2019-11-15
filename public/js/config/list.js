@@ -1,3 +1,3 @@
-(function() {
+(function () {
     linz.addConfigDefaultConfirmation();
 })();

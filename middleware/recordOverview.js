@@ -1,13 +1,16 @@
 var linz = require('../'),
     async = require('async');
 
-module.exports = function() {
-    return function(req, res, next) {
+module.exports = function () {
+
+	return function (req, res, next) {
+
         req.linz.overview = req.linz.overview || {};
         const { parseDisabledProperties } = linz.api.formtools.actions;
 
         // get doc
-        req.linz.model.getObject(req.params.id, function(err, doc) {
+        req.linz.model.getObject(req.params.id, function (err, doc) {
+
             // Skip to a 404 page.
             if (err || !doc) {
                 return next(err);
@@ -15,89 +18,91 @@ module.exports = function() {
 
             req.linz.record = doc;
 
-            async.series(
-                [
-                    // Check if we need to process custom actions.
-                    function(cb) {
-                        let actions =
-                            req.linz.model.linz.formtools.overview.actions;
+            async.series([
 
-                        if (!actions.length) {
-                            return cb(null);
-                        }
+                // Check if we need to process custom actions.
+                function (cb) {
 
-                        parseDisabledProperties(req.linz.record, actions)
-                            .then((parsedActions) => {
-                                actions = parsedActions;
+                    let actions = req.linz.model.linz.formtools.overview.actions;
 
-                                return cb();
-                            })
-                            .catch(cb);
-                    },
+                    if (!actions.length) {
+                        return cb(null);
+                    }
 
-                    // Check if we need to process custom footer actions.
-                    function(cb) {
-                        let footerActions =
-                            req.linz.model.linz.formtools.overview
-                                .footerActions;
+                    parseDisabledProperties(req.linz.record, actions)
+                        .then((parsedActions) => {
 
-                        if (!footerActions.length) {
+                            actions = parsedActions;
+
                             return cb();
-                        }
 
-                        parseDisabledProperties(req.linz.record, footerActions)
-                            .then((parsedActions) => {
-                                footerActions = parsedActions;
+                        })
+                        .catch(cb);
 
-                                return cb();
-                            })
-                            .catch(cb);
-                    },
+                },
 
-                    function(cb) {
-                        linz.formtools.overview.body(
-                            req,
-                            res,
-                            req.linz.record,
-                            req.linz.model,
-                            function(err, body) {
-                                if (err) {
-                                    return cb(err);
-                                }
+                // Check if we need to process custom footer actions.
+                function (cb) {
 
-                                // body could be a string of HTML content OR an array of objects
-                                req.linz.overview.body = body;
+                    let footerActions = req.linz.model.linz.formtools.overview.footerActions;
 
-                                return cb();
-                            }
-                        );
-                    },
+                    if (!footerActions.length) {
+                        return cb();
+                    }
 
-                    function(cb) {
-                        if (!req.linz.model.versions) {
+                    parseDisabledProperties(req.linz.record, footerActions)
+                        .then((parsedActions) => {
+
+                            footerActions = parsedActions;
+
                             return cb();
+
+                        })
+                        .catch(cb);
+
+                },
+
+                function (cb) {
+
+                    linz.formtools.overview.body(req, res, req.linz.record, req.linz.model, function (err, body) {
+
+                        if (err) {
+                            return cb(err);
                         }
 
-                        req.linz.model.versions.renderer(
-                            req,
-                            res,
-                            req.linz.record,
-                            req.linz.model,
-                            req.linz.model.versions,
-                            function(err, content) {
-                                if (err) {
-                                    return cb(err);
-                                }
+                        // body could be a string of HTML content OR an array of objects
+                        req.linz.overview.body = body;
 
-                                req.linz.overview.versions = content;
+                        return cb();
 
-                                return cb();
-                            }
-                        );
-                    },
-                ],
-                next
-            );
+                    });
+
+                },
+
+                function (cb) {
+
+                    if (!req.linz.model.versions) {
+                        return cb();
+                    }
+
+                    req.linz.model.versions.renderer(req, res, req.linz.record, req.linz.model, req.linz.model.versions, function (err, content) {
+
+                        if (err) {
+                            return cb(err);
+                        }
+
+                        req.linz.overview.versions = content;
+
+                        return cb();
+
+                    });
+
+                }
+
+            ], next);
+
         });
-    };
+
+	};
+
 };
