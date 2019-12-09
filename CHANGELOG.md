@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v1.0.0-18.7.5 - 2019-12-09
+
+### Fixed
+
+- Fixed exports with a space in the name.
+
 ## v1.0.0-18.7.4 - 2019-10-23
 
 ### Fixed
