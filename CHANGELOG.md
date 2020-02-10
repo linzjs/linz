@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- Added in cookie options when clearing the `linzReturnUrl` cookie.
+
 ## v1.0.0-18.7.5 - 2019-12-09
 
 ### Fixed
