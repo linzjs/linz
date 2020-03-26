@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Added the ability to customise the linz authentication strategy through `successful` and `failed` properties. These should be functions that accept the following properties `err`, `info`, `next`, `req`, `res` and `user`.
+
 ## v1.0.0-18.7.5 - 2019-12-09
 
 ### Fixed
