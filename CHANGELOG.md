@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.0.0-18.8.0 - 2020-06-09
+
 ### Added
 
 -   Added the ability to customise the linz authentication strategy through `successful` and `failed` properties. These should be functions that accept the following properties `err`, `failureFlash`, `failureRedirect`, `info`, `next`, `req`, `res`,`successFlash`, `successRedirect` and `user`.
