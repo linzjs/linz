@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+-   Fixed default exports not appearing in the selected order.
+
 ## v1.0.0-18.8.0 - 2020-06-09
 
 ### Added
