@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## v1.0.0-18.8.1 - 2020-10-13
 
 ### Fixed
 
