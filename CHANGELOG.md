@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## Unreleased
+## v1.0.0-18.8.1 - 2020-10-13
+
+### Fixed
+
+-   Fixed default exports not appearing in the selected order.
 
 ## v1.0.0-18.8.0 - 2020-06-09
 
