@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-    baseUrl: '/',
+    baseUrl: '/linz/',
     favicon: 'img/favicon.ico',
     onBrokenLinks: 'throw',
     onBrokenMarkdownLinks: 'warn',
