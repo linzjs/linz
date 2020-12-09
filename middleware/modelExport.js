@@ -193,7 +193,16 @@ module.exports = {
                 const includedFields = exportObj.inclusions.length > 0 ? exportObj.inclusions.split(',') : getInclusionsFromExclusions(exportObj, Model);
                 const bodyFields = req.body.selectedFields.split(',');
                 const refFieldNames = [];
-                const fields = includedFields.filter((field) => bodyFields.includes(field))
+                const fields = [];
+
+                // Maintain selected field order.
+                bodyFields.forEach((field) => {
+                    const index = includedFields.indexOf(field);
+
+                    if (index >= 0) {
+                        fields.push(includedFields[index]);
+                    }
+                });
 
                 let filterFieldNames = [];
 

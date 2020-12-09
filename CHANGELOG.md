@@ -1,6 +1,26 @@
 # CHANGELOG
 
-## Unreleased
+## v1.0.0-18.8.1 - 2020-10-13
+
+### Fixed
+
+-   Fixed default exports not appearing in the selected order.
+
+## v1.0.0-18.8.0 - 2020-06-09
+
+### Added
+
+-   Added the ability to customise the linz authentication strategy through `successful` and `failed` properties. These should be functions that accept the following properties `err`, `failureFlash`, `failureRedirect`, `info`, `next`, `req`, `res`,`successFlash`, `successRedirect` and `user`.
+
+### Fixed
+
+-   Fixed missing dataAttributes causing pages to error.
+
+## v1.0.0-18.7.5 - 2019-12-09
+
+### Fixed
+
+-   Fixed exports with a space in the name.
 
 ### Added
 
