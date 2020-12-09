@@ -17,7 +17,7 @@ There are two ways to alter the defaults:
 -   At init time.
 -   Any other time using the `linz.set` function.
 
-Read about the [Options object](./getting-started-with-linz#options-object) for more information about how to set the defaults at init time.
+Read about the [Options object](/docs#options-object) for more information about how to set the defaults at init time.
 
 Alternatively, you can set a default using the `linz.set` function:
 
