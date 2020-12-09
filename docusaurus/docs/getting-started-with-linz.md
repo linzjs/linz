@@ -2,6 +2,7 @@
 id: getting-started-with-linz
 title: Getting started with Linz
 sidebar_label: Getting started with Linz
+slug: /
 ---
 
 This will help you create a new Linz-based website. If you'd like to develop Linz itself, see [contributors-getting-started-reference](./getting-started-with-linz-development).
