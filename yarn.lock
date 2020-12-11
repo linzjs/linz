@@ -753,11 +753,6 @@ cliui@^4.0.0:
     strip-ansi "^4.0.0"
     wrap-ansi "^2.0.0"
 
-clone@0.1.15:
-  version "0.1.15"
-  resolved "https://registry.yarnpkg.com/clone/-/clone-0.1.15.tgz#98f8edd892ffb28530994bd282ea7dd954fb4fe4"
-  integrity sha1-mPjt2JL/soUwmUvSgup92VT7T+Q=
-
 clone@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.2.tgz#260b7a99ebb1edfe247538175f783243cb19d149"
@@ -1310,7 +1305,7 @@ etag@~1.8.1:
 
 event-stream@~3.3.0:
   version "3.3.4"
-  resolved "http://registry.npmjs.org/event-stream/-/event-stream-3.3.4.tgz#4ab4c9a0f5a54db9338b4c34d86bfce8f4b35571"
+  resolved "https://registry.npmjs.org/event-stream/-/event-stream-3.3.4.tgz#4ab4c9a0f5a54db9338b4c34d86bfce8f4b35571"
   integrity sha1-SrTJoPWlTbkzi0w02Gv86PSzVXE=
   dependencies:
     duplexer "~0.1.1"
@@ -1626,12 +1621,12 @@ formidable@^1.1.1:
   resolved "https://registry.yarnpkg.com/formidable/-/formidable-1.2.1.tgz#70fb7ca0290ee6ff961090415f4b3df3d2082659"
   integrity sha512-Fs9VRguL0gqGHkXS5GQiMCr1VhZBxz0JnJs4JmMp/2jL18Fmbzvv7vOFRU+U8TBkHEE/CX1qDXzJplVULgsLeg==
 
-formist@0.1.10:
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/formist/-/formist-0.1.10.tgz#8a9918e19b36c7a063caefe824f1d73878d3820e"
-  integrity sha1-ipkY4Zs2x6Bjyu/oJPHXOHjTgg4=
+formist@0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/formist/-/formist-0.3.0.tgz#d2c60b8f0525d2db6d9579818a843b1422aaa0a1"
+  integrity sha512-Ik6m1sVyJrilRrlRVu+a/MZ+9qYO4qJtOlNfBWQYNc9m22yGLw9jMu2i6ihzrIAcUqWekyUgHK7ASN+O2LPeQg==
   dependencies:
-    clone "0.1.15"
+    clone "1.0.2"
 
 forwarded@~0.1.2:
   version "0.1.2"
@@ -2015,9 +2010,9 @@ inherits@2, inherits@2.0.3, inherits@^2.0.3, inherits@~2.0.1, inherits@~2.0.3:
   integrity sha1-Yzwsg+PaQqUC9SRmAiSA9CCCYd4=
 
 ini@~1.3.0:
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
-  integrity sha512-RZY5huIKCMRWDUqZlEi72f/lmXKMvuszcMBduliQ3nnWbx9X/ZBQO7DijMEYS9EhHBb2qacRUMtC7svLwe0lcw==
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.7.tgz#a09363e1911972ea16d7a8851005d84cf09a9a84"
+  integrity sha512-iKpRpXP+CrP2jyrxvg1kMUpXDyRUFDWurxbnVT1vQPx+Wz9uCYsMIqYuSBLV+PAaZG/d7kRLKRFc9oDMsH+mFQ==
 
 invariant@^2.2.2:
   version "2.2.4"
