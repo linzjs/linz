@@ -8,17 +8,6 @@ if (!linz) {
 
     $(document).ready(function () {
 
-        // javascript events for the navigation
-        $('[data-linz-nav-toggle]').click(function () {
-
-            // scroll back to the top
-            $('body').animate({scrollTop:0}, 200, 'swing', function () {
-                // show the navigation
-                $('body').toggleClass('show-nav');
-            });
-
-        });
-
         // add form validation
         $('form[data-linz-validation="true"]').bootstrapValidator({});
 
