@@ -2,10 +2,10 @@
 
 Linz has a complete development environment, within this repository. The following is required to begin developing Linz:
 
-- Docker.
-- Bash.
-- Node.js.
-- Yarn or NPM.
+-   Docker.
+-   Bash.
+-   Node.js.
+-   Yarn or NPM.
 
 Once you've cloned this repository to your host, run `yarn start` or `npm run start` and once the container has started, you will be able to visit the dev environment at `localhost:8888`.
 
