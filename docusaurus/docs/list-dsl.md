@@ -1,0 +1,258 @@
+---
+id: list-dsl
+title: List DSL
+sidebar_label: List DSL
+---
+
+The Models list DSL is used to customise the model index that is generated for each model. The list DSL has quite a few options, as the model index is highly customizable.
+
+`list` should be an object, containing the following top-level keys:
+
+-   `actions`
+-   `export`
+-   `fields`
+-   `filters`
+-   `groupActions`
+-   `help`
+-   `paging`
+-   `recordActions`
+-   `showSummary`
+-   `sortBy`
+-   `toolbarItems`
+
+These allow you to describe how the model index should function.
+
+## list.actions
+
+`list.actions` should be an Array of Objects. Each object describes an action that a user can make, at the model level. Each action should be an Object with the following keys:
+
+-   `label` is the name of the action.
+-   `action` is the last portion of a URL, which is used to perform the action.
+-   `modal` optionally render the results in a modal view.
+
+For example:
+
+```javascript
+actions: [
+    {
+        label: 'Import people',
+        action: 'import-from-csv',
+        modal: true,
+    },
+];
+```
+
+This will generate a button, on the model index, next to the model label. Multiple actions will produce a button titled _Actions_ with a drop-down list attached to it, containing all possible actions.
+
+The evaluated string `/{linz-admin-path}/model/{model-name}/action/{action.action}` will be prefixed to the value provided for `action` to generate a URL, for example `/admin/model/person/import-from-csv`. It is the developers responsibility to mount the `GET` route using Express, and respond to it accordingly.
+
+The actions will be rendered in the order they're provided.
+
+If using a modal, make sure the HTML returned from the route starts with `<div class="modal-dialog"><div class="modal-content"></div></div>`.
+
+## list.export
+
+`list.export` is used to denote that a particular model is exportable. Linz takes care of the exporting for you, unless you want to provide a custom action to handle it yourself.
+
+When a user clicks on an export, they'll be provided a pop-up modal asking them to choose and order the fields they'd like to export.
+
+`list.export` should be an Array of Objects. Each object describes an export option, for example:
+
+```javascript
+export: [
+    {
+      label: 'Choose fields to export',
+      inclusions: 'dateModified,dateCreated',
+      dateFormat: linz.get('date format'),
+      useLocalTime: false,
+      modal: false,
+    }
+]
+```
+
+Each object should contain the following keys:
+
+-   `label` which is the name of the export.
+-   `inclusions` which is a list of fields that can be exported.
+-   `dateFormat` which allows you to format the exported dates using moment date formats. (Defaults to false)
+-   `useLocalTime` which allows you to export date fields in the browsers timezone offset.
+-   `modal` optionally render the results in a modal view.
+
+If you'd like to provide your own export route, you can. Replace the `inclusions` key with an `action` key that works the same as [list.actions](#listactions). Rather than a modal, a request to that route will be made. You're responsible for mounting a `GET` route in Express to respond to it.
+
+## list.fields
+
+`list.fields` is used to customize the fields that appear in the listing on the model index.
+
+`list.fields` should be an Object, keyed by each field in your model. The value for each key should be `true` to include the field or `false` to exclude the field. For example:
+
+```javascript
+fields: {
+    name: true,
+    username: true
+}
+```
+
+Linz will convert the above into the following:
+
+```javascript
+fields: {
+    name: {
+        label: 'Name',
+        renderer: linz.formtools.cellRenderers.default
+    },
+    username: {
+        label: 'Username',
+        renderer: linz.formtools.cellRenderers.default
+    }
+}
+```
+
+If you like, you can pass an object rather than the boolean. This also allows you to customize the cell renderer used to display the data within the column.
+
+If you provide a `label`, it will override what is defined in the [Models label DSL](./models#models-label-dsl).
+
+The fields will be rendered in the order they're provided.
+
+## list.filters
+
+`list.filters` can be used to include filters which will alter the data included in the dataset for a particular model. Filters can contain a custom user interface, but Linz comes with a standard set of filters.
+
+`list.filters` should be an object, keyed by each field in your model. Each object must contain a filter, which should be an object adhering to the Linz model filter DSL. For example:
+
+```javascript
+filters: {
+    dateModified: {
+        alwaysOn: true,
+        filter: linz.formtools.filters.dateRange,
+    }
+}
+```
+
+The above will allow your model to be filtered by a date range filter, on the `dateModified` property.
+
+Each filter, keyed by the field name, can have the following keys:
+
+-   `alwaysOn` will ensure that the filter is always rendered in the list view.
+-   `default` allows you to provide a default value for the filter. It only takes affect when using `alwaysOn`.
+-   `filter` this is optional, but allows you to specify a filter and should point to a Linz filter, or your own custom one.
+-   `once` will ensure that a user can only add that filter once (works well with the `boolean` filter).
+
+> Be aware of the `default` values. Because of Linz's internal query structure most filters will need to provide the `default` value as an array, but there are some exceptions.
+
+Below is an example of the `default` data type for each filter:
+
+-   `dateRange`: `{ dateFrom: [ '2017-10-15' ], dateTo: [ '2017-10-28' ] }`
+-   `date`: `['2017-10-01']`
+-   `boolean`: `true`
+-   `default`, `fulltext`, `list`: `['string']`
+-   `number`: `[4]`
+
+> View the [complete list of Linz filters](https://github.com/linzjs/linz/tree/master/lib/formtools/filters).
+
+## list.groupActions
+
+`list.groupActions` can be used to define certain actions that are only available once a subset of data has been chosen.
+
+Each record displayed on a model index has a checkbox, checking two or more records creates a group. If `groupActions` have been defined for that model, those actions will become choosable by the user.
+
+`list.groupActions` should be an Array of Objects. Each object describes an action that a user can make, and the object takes on the same form as those described in [list.actions](#listactions).
+
+You're responsible for mounting a `GET` route in Express to respond to it.
+
+## list.help
+
+The `list.help` key can be used to provide information for a particular model. The information will appear in a [Bootstrap popover](https://getbootstrap.com/docs/3.3/javascript/#popovers).
+
+The `list.help` key accepts either `false`, or a [Bootstrap popovers options object](https://getbootstrap.com/docs/3.3/javascript#popovers-options).
+
+## list.paging
+
+`list.paging` can be used to customise the paging controls for the model index. Paging controls will only be shown when the number of results for a model index, are greater than the per page total.
+
+`list.paging` should be an Object, with the following keys:
+
+-   `active` is an optional Boolean used to turn paging on or off. It defaults to `true`.
+-   `size` is the default page size. It defaults to `20`.
+-   `sizes` is an Array of the page sizes available for a user to choose from on the model index. It defaults to `[20, 50, 100, 200]`.
+
+For example:
+
+```javascript
+  paging: {
+    active: true,
+    size: 50,
+    sizes: [50, 100, 150, 200]
+  }
+```
+
+If you don't provide a paging object it defaults to:
+
+```javascript
+  paging: {
+    active: true,
+    size: 20,
+    sizes: [20, 500, 100, 200]
+  }
+```
+
+## list.recordActions
+
+`list.recordActions` can be used to customise record specific actions. These are actions that act upon a specific model record. The actions appear as buttons for each record in a model list. The buttons can either appear in a drop-down list, or next to the edit and delete buttons for the record.
+
+`list.recordActions` should be an Array of Objects. Each object describes an action that a user can make, specific to the record, and the object takes on the same form as those described in [list.actions](#listactions).
+
+`list.recordActions` can have an optional key `type` and when set to `primary`, the action will be renderered next to the edit and delete buttons for the record (i.e. not within the dropdown). You can also supply a key `icon`, which if supplied, will be used rather than a label for the button. The value for `icon` should correspond with name of a Bootstrap glyphicon.
+
+`list.recordActions` can also accept a function, as the value to a `disabled` property. If provided, the function will be excuted with the following signature `disabled (record, callback)`. The callback has the following signature `callback (error, isDisabled, message)`. `isDisabled` should be a boolean. `true` to disable the record action, `false` to enable it and you can provide a message if the action is to be disabled.
+
+You're responsible for mounting a `GET` route in Express to respond to it.
+
+## list.showSummary
+
+`list.showSummary` can be used to include or exclude the paging controls from a model index.
+
+`list.showSummary` expects a boolean. Truthy/falsy values will also be interpreted, for example:
+
+```javascript
+showSummary: true;
+```
+
+## list.sortBy
+
+`list.sortBy` is used to customise the sort field(s) which the data in the model index will be retrieved with.
+
+`list.sortBy` should be Array of field names or objects. If using an object, the field property is required for example:
+
+```javascript
+sortBy: [
+    'name',
+    'username',
+    {
+        defaultOrder: 'asc',
+        field: 'dateModified',
+        label: 'Date modified',
+    },
+];
+```
+
+This Array will be used to populate a drop-down list on the model index. The user can choose an option from the drop-down to sort the list with.
+
+The `defaultOrder` property is used to set the default ordering of the sort. You may want to change it to `desc` when you want the latest records first.
+
+## list.toolbarItems
+
+`list.toolbarItems` can be used to provide completely customised content on the toolbar of a model index. The toolbar on the model index sits directly to the right of the Model label, and includes action buttons and drop-downs.
+
+`list.toolbarItems` should be an Array of Objects. Each object should provide a `render` key with the value of a Function. The function will be executed to retrieve HTML to be placed within the toolbar. The function will be provided the request `req`, the response object `res` and callback function which should be executed with the HTML. The callback function has the signature `callback(err, html)` For example:
+
+```javascript
+toolbarItems: [
+    {
+        renderer: function(req, res, cb) {
+            let locals = {};
+            return cb(null, templates.render('toolbarItems', locals));
+        },
+    },
+];
+```
