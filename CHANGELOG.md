@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+
+### Fixed
+
+-   Fixed the nav sidebar from preventing scrolling in some instances.
+
 ## v1.0.0-18.8.1 - 2020-10-13
 
 ### Fixed
