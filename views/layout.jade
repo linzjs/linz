@@ -16,7 +16,7 @@ html(lang="en")&attributes(attributes)
         .navbar.navbar-inverse.navbar-fixed-top.linz-navbar-inverse(role='navigation')
             .container
                 .navbar-header
-                    button.navbar-toggle(type='button', data-linz-nav-toggle)
+                    button.navbar-toggle(type='button', data-bs-toggle="offcanvas" data-bs-target="#linzNavbar")
                         span.sr-only Toggle navigation
                         span.icon-bar
                         span.icon-bar
@@ -27,23 +27,28 @@ html(lang="en")&attributes(attributes)
                         li
                             a(href=linz.get('logout path')) Logout
 
-        nav.linz
-            ul
-                each node,index in linzNavigation
-                    if node.children && node.children.length
-                        if request && request.path && node.href === request.path
-                            li(class='active')
-                                mixin submenu(node)
+        nav.linz.offcanvas.offcanvas-start(tabindex="-1" id="linzNavbar" aria-labelledby="linzNavbarLabel")
+            .offcanvas-header
+                h4.offcanvas-title(id="linzNavbarLabel")= linz.get('admin title')
+                button.btn-close.btn-close-white.text-reset(type="button" data-bs-dismiss="offcanvas" aria-label="Close")
+            .offcanvas-body
+                ul
+                    each node,index in linzNavigation
+                        if node.children && node.children.length
+                            if request && request.path && node.href === request.path
+                                li(class='active')
+                                    mixin submenu(node)
+                            else
+                                li
+                                    mixin submenu(node)
                         else
-                            li
-                                mixin submenu(node)
-                    else
-                        if (request && request.path && node.href === request.path)
-                            li(class='active')
-                                mixin basic(node)
-                        else
-                            li
-                                mixin basic(node)
+                            if (request && request.path && node.href === request.path)
+                                li(class='active')
+                                    mixin basic(node)
+                            else
+                                li
+                                    mixin basic(node)
+
         .wrap
             block page
                 header
