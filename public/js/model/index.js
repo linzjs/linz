@@ -83,23 +83,23 @@ linz.addLoadEvent(function() {
             .appendChild(document.importNode(content, true));
 
         // determine if a multiselect was added to the dom, if so, apply the plugin
-        var multiselectList = $(
+        var multiselectWidget = $(
             '.multiselect',
             $('.filter-list')
                 .children()
                 .last()
         );
 
-        multiselectList.multiselect({
+        multiselectWidget.multiselect({
             buttonContainer: '<div class="btn-group btn-group-multiselect" />',
-            enableFiltering: multiselectList.data('enable-filtering'),
-            enableCaseInsensitiveFiltering: multiselectList.data(
+            enableFiltering: multiselectWidget.data('enable-filtering'),
+            enableCaseInsensitiveFiltering: multiselectWidget.data(
                 'enable-case-insensitive-filtering'
             ),
-            enableFullValueFiltering: multiselectList.data(
+            enableFullValueFiltering: multiselectWidget.data(
                 'enable-full-value-filtering'
             ),
-            includeSelectAllOption: multiselectList.data(
+            includeSelectAllOption: multiselectWidget.data(
                 'include-select-all-option'
             ),
         });
