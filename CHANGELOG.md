@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+-   Added the ability to add select all and search to list filters.
+
 ## v1.0.0-18.9.0 - 2021-06-09
 
 ### Fixed
