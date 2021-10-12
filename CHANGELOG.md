@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+-   Navigation items are now sorted alphabetically.
+
 ## v1.0.0-18.9.0 - 2021-06-09
 
 ### Fixed
