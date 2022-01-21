@@ -87,9 +87,22 @@ Linz.prototype.set = function(setting, val, override) {
     override = !(override === false);
 
     // override unless previously set
-    if (
+    const updateSetting =
         override ||
-        (override === false && this.settings[setting] === undefined)
+        (override === false && this.settings[setting] === undefined);
+
+    const isObject = (obj) =>
+        !Object.is(obj, null) && !Array.isArray(obj) && obj === Object(obj);
+
+    if (updateSetting && isObject(this.settings[setting]) && isObject(val)) {
+        debugSet(`Merging into ${setting}`);
+        this.settings[setting] = { ...this.settings[setting], ...val };
+        this.emit(setting, val);
+    }
+
+    if (
+        updateSetting &&
+        (!isObject(this.settings[setting]) || !isObject(val))
     ) {
         debugSet('Setting ' + setting + ' to ' + val);
         this.settings[setting] = val;
