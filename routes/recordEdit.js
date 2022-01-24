@@ -52,7 +52,7 @@ var route = function(req, res, next) {
                 '\n\t(function () {\n\t' + conflictHandlersJS + '\n\t})();';
 
             const defaultScripts = [
-                linz.get('scriptLocations')['handlebars.min.js'],
+                linz.get('requiredScripts')['handlebars.min.js'],
                 {
                     src: `${linz.get(
                         'admin path'
@@ -63,8 +63,8 @@ var route = function(req, res, next) {
                         'admin path'
                     )}/public/js/documentarray.js?v3`,
                 },
-                linz.get('scriptLocations')['deep-diff.min.js'],
-                linz.get('scriptLocations')['json2.min.js'],
+                linz.get('requiredScripts')['deep-diff.min.js'],
+                linz.get('requiredScripts')['json2.min.js'],
                 {
                     src: `${linz.get('admin path')}/public/js/model/edit.js`,
                 },

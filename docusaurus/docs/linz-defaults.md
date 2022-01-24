@@ -134,12 +134,12 @@ const routes = {
 };
 ```
 
-### scriptLocations
+### requiredScripts
 
-You can customise where the external scripts are loaded from using the `scriptLocations` default. You might want to do this if you want to bring some of the scripts in-house.
+You can customise where the external scripts are loaded from using the `requiredScripts` default. You might want to do this if you want to bring some of the scripts in-house.
 
 ```
-'scriptLocations': {
+'requiredScripts': {
     'bootstrap-datetimepicker.min.js': {
         crossorigin: 'anonymous',
         src: '/js/bootstrap-datetimepicker.min.js',
@@ -213,12 +213,12 @@ This is the options object that is passed to the session middleware. The `cookie
 
 Review the options for the [session middleware](https://github.com/expressjs/session#cookie) and the [cookie parser middleware](https://github.com/jshttp/cookie#options).
 
-### styleLocations
+### requiredStyles
 
-You can customise where the external styles are loaded from using the `styleLocations` default. You might want to do this if you want to bring some of the styles in-house.
+You can customise where the external styles are loaded from using the `requiredStyles` default. You might want to do this if you want to bring some of the styles in-house.
 
 ```
-'styleLocations': {
+'requiredStyles': {
     'bootstrap-datetimepicker.min.css': {
         crossorigin: 'anonymous',
         href: '/css/bootstrap-datetimepicker.min.css',

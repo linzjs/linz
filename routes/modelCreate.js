@@ -32,7 +32,7 @@ var route = function(req, res, next) {
             })(function() {
                 Promise.all([
                     linz.api.views.getScripts(req, res, [
-                        linz.get('scriptLocations')['handlebars.min.js'],
+                        linz.get('requiredScripts')['handlebars.min.js'],
                         {
                             src: `${linz.get(
                                 'admin path'

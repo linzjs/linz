@@ -92,7 +92,7 @@ Linz.prototype.set = function(setting, val, override) {
 
     if (
         shouldOverride &&
-        ['scriptLocations', 'styleLocations'].includes(setting)
+        ['requiredScripts', 'requiredStyles'].includes(setting)
     ) {
         debugSet(`Merging into ${setting}`);
         this.settings[setting] = { ...this.settings[setting], ...val };
