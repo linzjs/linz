@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v1.0.0-18.9.2 - 2022-01-24
+
+### Added
+
+-   Added the ability to change the location of certain scripts and styles.
+
 ## v1.0.0-18.9.1 - 2021-10-14
 
 ### Changed
