@@ -134,6 +134,19 @@ const routes = {
 };
 ```
 
+### requiredScripts
+
+You can customise where the external scripts are loaded from using the `requiredScripts` default. You might want to do this if you want to bring some of the scripts in-house.
+
+```
+'requiredScripts': {
+    'bootstrap-datetimepicker.min.js': {
+        crossorigin: 'anonymous',
+        src: '/js/bootstrap-datetimepicker.min.js',
+    },
+},
+```
+
 ### scripts
 
 The `scripts` default allows you to customise the external JavaScripts that are loaded on each page in Linz.
@@ -199,6 +212,19 @@ You can also supply a `content` property, which if provided, will add the value 
 This is the options object that is passed to the session middleware. The `cookie` property is set based on the :ref:`cookie-options-reference` default.
 
 Review the options for the [session middleware](https://github.com/expressjs/session#cookie) and the [cookie parser middleware](https://github.com/jshttp/cookie#options).
+
+### requiredStyles
+
+You can customise where the external styles are loaded from using the `requiredStyles` default. You might want to do this if you want to bring some of the styles in-house.
+
+```
+'requiredStyles': {
+    'bootstrap-datetimepicker.min.css': {
+        crossorigin: 'anonymous',
+        href: '/css/bootstrap-datetimepicker.min.css',
+    },
+},
+```
 
 ### styles
 
