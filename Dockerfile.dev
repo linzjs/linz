@@ -1,8 +1,8 @@
-FROM node:8-alpine
+FROM node:16.14.0-alpine
 
 # Setup dockerize.
 # Keep bash and curl to run the codecov bash script.
-ENV DOCKERIZE_VERSION v0.6.0
+ENV DOCKERIZE_VERSION v0.6.1
 RUN apk add --no-cache bash curl git openssl && \
     curl -sSL https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz | tar -C /usr/local/bin -xzvf - && \
     apk del openssl
