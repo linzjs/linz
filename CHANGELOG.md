@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v1.0.0-18.9.3 - 2022-03-15
+
+### Fixed
+
+-   Fixed document array errors when viewing model versions.
+
 ## v1.0.0-18.9.2 - 2022-01-24
 
 ### Added
