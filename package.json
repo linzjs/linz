@@ -50,7 +50,7 @@
         "express": "^4.16.4",
         "express-session": "1.15.6",
         "formist": "0.3.0",
-        "handlebars": "4.0.11",
+        "handlebars": "4.7.7",
         "inflection": "1.3.8",
         "jade": "~1.1.5",
         "less-middleware": "1.0.3",
