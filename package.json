@@ -55,7 +55,7 @@
         "jade": "~1.1.5",
         "less-middleware": "1.0.3",
         "moment": "2.22.2",
-        "mongoose": "4.13.12",
+        "mongoose": "5.7.5",
         "mongoose-version": "linzjs/mongoose-version#27fa6beefa28f5ac983e967b5de6aea693a07728",
         "passport": "0.2.x",
         "passport-local": "1.0.0",
