@@ -1,25 +1,25 @@
 {
-  "name": "linz-app",
-  "version": "1.0.0",
-  "description": "An example application using Linz.",
-  "main": "server.js",
-  "engines": {
-    "node": ">=8.6"
-  },
-  "author": "Scott Mebberson",
-  "license": "MIT",
-  "private": true,
-  "scripts": {
-    "start": "nodemon --exec node server.js -w /app/lib -w /app/models -w /app/routes -w /app/schemas -w /app/views -w /app/app.js -w /app/server.js -w /linz/lib -w /linz/middleware -w /linz/params -w /linz/public -w /linz/routes -w /linz/views -w /linz/linz.js"
-  },
-  "dependencies": {
-    "connect-redis": "3.4.0",
-    "express-handlebars": "3.0.0",
-    "ioredis": "4.5.1",
-    "is-email": "1.0.0",
-    "linz": "file:/linz"
-  },
-  "devDependencies": {
-    "nodemon": "1.19.1"
-  }
+    "name": "linz-app",
+    "version": "1.0.0",
+    "description": "An example application using Linz.",
+    "main": "server.js",
+    "engines": {
+        "node": ">=8.6"
+    },
+    "author": "Scott Mebberson",
+    "license": "MIT",
+    "private": true,
+    "scripts": {
+        "start": "nodemon --exec node server.js -w /app/lib -w /app/models -w /app/routes -w /app/schemas -w /app/views -w /app/app.js -w /app/server.js -w /linz/lib -w /linz/middleware -w /linz/params -w /linz/public -w /linz/routes -w /linz/views -w /linz/linz.js"
+    },
+    "dependencies": {
+        "connect-redis": "6.1.3",
+        "express-handlebars": "6.0.5",
+        "ioredis": "5.0.4",
+        "is-email": "1.0.2",
+        "linz": "file:/linz"
+    },
+    "devDependencies": {
+        "nodemon": "2.0.15"
+    }
 }
