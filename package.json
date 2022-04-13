@@ -59,7 +59,7 @@
         "mongoose-version": "linzjs/mongoose-version#27fa6beefa28f5ac983e967b5de6aea693a07728",
         "passport": "0.2.x",
         "passport-local": "1.0.0",
-        "printf": "0.2.x",
+        "printf": "0.6.x",
         "sentence-case": "2.1.1",
         "stream-transform": "1.0.8",
         "stylus": "~0.40.3",
