@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Breaking
+
+-   The `getCount` method should now return an integer in the callback rather than a query.
+
+### Added
+
+-   The `getQuery` query now accepts a mongoose aggregate query instead of a normal find query. Note the fields selected will not be limited when using an aggregate.
+
 ## v1.0.0-18.9.3 - 2022-03-15
 
 ### Fixed
