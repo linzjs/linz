@@ -1369,7 +1369,7 @@ etag@~1.8.1:
 
 event-stream@~3.3.0:
   version "3.3.4"
-  resolved "http://registry.npmjs.org/event-stream/-/event-stream-3.3.4.tgz#4ab4c9a0f5a54db9338b4c34d86bfce8f4b35571"
+  resolved "https://registry.npmjs.org/event-stream/-/event-stream-3.3.4.tgz#4ab4c9a0f5a54db9338b4c34d86bfce8f4b35571"
   integrity sha1-SrTJoPWlTbkzi0w02Gv86PSzVXE=
   dependencies:
     duplexer "~0.1.1"
@@ -4057,10 +4057,10 @@ pretty-quick@1.11.1:
     mri "^1.1.0"
     multimatch "^3.0.0"
 
-printf@0.2.x:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/printf/-/printf-0.2.5.tgz#c438ca2ca33e3927671db4ab69c0e52f936a4f0f"
-  integrity sha1-xDjKLKM+OSdnHbSracDlL5NqTw8=
+printf@0.6.x:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/printf/-/printf-0.6.1.tgz#b9afa3d3b55b7f2e8b1715272479fc756ed88650"
+  integrity sha512-is0ctgGdPJ5951KulgfzvHGwJtZ5ck8l042vRkV6jrkpBzTmb/lueTqguWHy2JfVA+RY6gFVlaZgUS0j7S/dsw==
 
 private@^0.1.7:
   version "0.1.8"
