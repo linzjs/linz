@@ -41,13 +41,13 @@ jobs:
               if: contains(github.ref, 'beta')
               run: |
                   docker load -i /tmp/linz.tar
-                  docker run --name linz --rm -i -e CI=true linz:latest yarn publish --tag beta --access public
+                  docker run --name linz --rm -i -e CI=true linz:latest echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > ./.npmrc && yarn publish --tag beta --access public
               env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
             - name: Publish
               if: "!contains(github.ref , 'beta')"
               run: |
                   docker load -i /tmp/linz.tar
-                  docker run --name linz --rm -i -e CI=true linz:latest yarn publish --access public
+                  docker run --name linz --rm -i -e CI=true linz:latest echo "//registry.npmjs.org/:_authToken=$NPM_AUTH_TOKEN" > ./.npmrc && yarn publish --access public
               env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
