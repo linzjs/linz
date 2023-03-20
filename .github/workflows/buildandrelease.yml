@@ -1,0 +1,53 @@
+name: release
+on:
+    push:
+    release:
+        types: [published]
+
+jobs:
+    test:
+        if: github.event_name == 'push' || github.event_name == 'release'
+        name: Test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  cache: yarn
+                  node-version: lts/*
+                  registry-url: 'https://registry.npmjs.org'
+            - run: yarn
+            - run: yarn test
+              shell: 'script -q -e -c "bash {0}"'
+    publish:
+        if: github.event_name == 'release'
+        name: Publish
+        needs: test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Setup Buildx
+              uses: docker/setup-buildx-action@v2
+            - name: Build Linz image
+              uses: docker/build-push-action@v4
+              with:
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
+                  context: .
+                  file: Dockerfile
+                  outputs: type=docker,dest=/tmp/linz.tar
+                  tags: linz:latest
+            - name: Publish (beta)
+              if: contains(github.ref, 'beta')
+              run: |
+                  docker load -i /tmp/linz.tar
+                  docker run --name linz --rm -i -e CI=true linz:latest yarn publish --tag beta --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+            - name: Publish
+              if: "!contains(github.ref , 'beta')"
+              run: |
+                  docker load -i /tmp/linz.tar
+                  docker run --name linz --rm -i -e CI=true linz:latest yarn publish --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
