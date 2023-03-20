@@ -7,7 +7,7 @@ beforeAll((done) => {
     linz.init({
         options: {
             'mongo':
-                'mongodb://localhost:27017/lib-formtools-renderers-cell-reference',
+                'mongodb://mongodb:27017/lib-formtools-renderers-cell-reference',
             'user model': 'user',
             'load models': false,
             'load configs': false,

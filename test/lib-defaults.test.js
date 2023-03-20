@@ -69,7 +69,7 @@ describe('once Linz is initialised', () => {
             options: {
                 'load configs': false,
                 'load models': false,
-                'mongo': 'mongodb://localhost:27017/lib-defaults',
+                'mongo': 'mongodb://mongodb:27017/lib-defaults',
                 'user model': 'user',
                 'routes': {
                     get: {
@@ -137,9 +137,7 @@ describe('once Linz is initialised', () => {
     test('overrides defaults', () => {
         expect(linz.get('load configs')).toBe(false);
         expect(linz.get('load models')).toBe(false);
-        expect(linz.get('mongo')).toBe(
-            'mongodb://localhost:27017/lib-defaults'
-        );
+        expect(linz.get('mongo')).toBe('mongodb://mongodb:27017/lib-defaults');
     });
 
     test('executes middleware defined via routes default', async () => {

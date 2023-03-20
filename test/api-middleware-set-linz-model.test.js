@@ -10,7 +10,7 @@ beforeAll((done) => {
         options: {
             'csrf token': { value: 'token' },
             'mongo':
-                'mongodb://localhost:27017/api-middleware-set-linz-model-test',
+                'mongodb://mongodb:27017/api-middleware-set-linz-model-test',
             'user model': 'user',
             'load models': false,
             'load configs': false,

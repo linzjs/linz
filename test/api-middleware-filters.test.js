@@ -9,7 +9,7 @@ beforeAll((done) => {
     // Init Linz.
     linz.init({
         options: {
-            'mongo': 'mongodb://localhost:27017/api-middleware-filters-test',
+            'mongo': 'mongodb://mongodb:27017/api-middleware-filters-test',
             'user model': 'user',
             'load models': false,
             'load configs': false,

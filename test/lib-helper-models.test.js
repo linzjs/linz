@@ -11,7 +11,7 @@ const {
 beforeEach((done) => {
     linz.init({
         options: {
-            'mongo': 'mongodb://localhost:27017/lib-helper-models',
+            'mongo': 'mongodb://mongodb:27017/lib-helper-models',
             'user model': 'user',
             'load models': false,
             'load configs': false,
