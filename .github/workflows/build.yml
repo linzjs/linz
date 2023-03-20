@@ -43,10 +43,6 @@ jobs:
             - name: Load image
               run: |
                   docker load -i /tmp/linz.tar
-            - name: Start MongoDB
-              uses: supercharge/mongodb-github-action@1.8.0
-              with:
-                  mongodb-version: 4.4
             - name: Testing linz
               run: |
-                  docker run --name linz --rm -i -e CI=true -e NODE_ENV=test linz:latest yarn test-app
+                  docker run --name linz --rm -i -e CI=true -e NODE_ENV=test linz:latest yarn test-start
