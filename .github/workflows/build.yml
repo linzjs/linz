@@ -6,13 +6,8 @@ on:
         tags:
             - 'v*'
 jobs:
-    environment:
-        name: Setup environment
-        uses: idearium/actions/.github/workflows/environment.yaml@v1
-
     buildLinz:
         name: Build Linz
-        needs: environment
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
@@ -22,8 +17,6 @@ jobs:
             - name: Build Linz image
               uses: docker/build-push-action@v4
               with:
-                  build-args: |
-                      CI_ENV=${{ needs.environment.outputs.CI_ENV }}
                   cache-from: type=gha
                   cache-to: type=gha,mode=max
                   context: .
@@ -37,7 +30,7 @@ jobs:
                   path: /tmp/linz.tar
     testLinz:
         name: Test plant
-        needs: [environment, buildLinz]
+        needs: buildLinz
         runs-on: ubuntu-latest
         steps:
             - name: Setup Buildx
