@@ -5,7 +5,7 @@ const linz = require('linz');
 beforeAll((done) => {
     linz.init({
         options: {
-            'mongo': `${process.env.MONGO_URI}/lib-api-model`,
+            'mongo': 'mongodb://localhost:27017/lib-api-model',
             'user model': 'user',
             'load models': false,
             'load configs': false,

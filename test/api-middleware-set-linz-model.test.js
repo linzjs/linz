@@ -9,7 +9,8 @@ beforeAll((done) => {
     linz.init({
         options: {
             'csrf token': { value: 'token' },
-            'mongo': `${process.env.MONGO_URI}/api-middleware-set-linz-model-test`,
+            'mongo':
+                'mongodb://localhost:27017/api-middleware-set-linz-model-test',
             'user model': 'user',
             'load models': false,
             'load configs': false,

@@ -6,7 +6,8 @@ const supertest = require('supertest');
 beforeAll((done) => {
     linz.init({
         options: {
-            'mongo': `${process.env.MONGO_URI}/lib-formtools-renderers-cell-reference`,
+            'mongo':
+                'mongodb://localhost:27017/lib-formtools-renderers-cell-reference',
             'user model': 'user',
             'load models': false,
             'load configs': false,

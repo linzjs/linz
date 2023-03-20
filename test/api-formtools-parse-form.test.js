@@ -12,7 +12,7 @@ beforeAll((done) => {
     // Init Linz.
     linz.init({
         options: {
-            'mongo': `${process.env.MONGO_URI}/api-formtools-parse-form-test`,
+            'mongo': 'mongodb://localhost:27017/api-formtools-parse-form-test',
             'user model': 'user',
             'load models': false,
             'load configs': false,

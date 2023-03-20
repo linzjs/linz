@@ -7,7 +7,7 @@ beforeAll((done) => {
     linz.init({
         options: {
             'csrf token': { value: 'token' },
-            'mongo': `${process.env.MONGO_URI}/csrf`,
+            'mongo': 'mongodb://localhost:27017/csrf',
             'user model': 'user',
             'load models': false,
             'load configs': false,
