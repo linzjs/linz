@@ -31,14 +31,13 @@ jobs:
                   cache: yarn
                   node-version: lts/*
                   registry-url: 'https://registry.npmjs.org'
-            - run: yarn install --frozen-lockfile
             - name: Publish (beta)
               if: contains(github.ref, 'beta')
-              run: yarn publish --tag beta --access public
+              run: npm publish --tag beta --access public
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
             - name: Publish
               if: "!contains(github.ref , 'beta')"
-              run: yarn publish --access public
+              run: npm publish --access public
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
