@@ -1,0 +1,43 @@
+name: Build and release
+on:
+    push:
+    release:
+        types: [published]
+
+jobs:
+    test:
+        if: github.event_name == 'push' || github.event_name == 'release'
+        name: Test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  cache: yarn
+                  node-version: lts/*
+                  registry-url: 'https://registry.npmjs.org'
+            - run: yarn
+            - run: yarn test
+              shell: 'script -q -e -c "bash {0}"'
+    publish:
+        if: github.event_name == 'release'
+        name: Publish
+        needs: test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  cache: yarn
+                  node-version: lts/*
+                  registry-url: 'https://registry.npmjs.org'
+            - name: Publish (beta)
+              if: contains(github.ref, 'beta')
+              run: yarn publish --tag beta --access public
+              env:
+                  NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+            - name: Publish
+              if: "!contains(github.ref , 'beta')"
+              run: yarn publish --access public
+              env:
+                  NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -4,18 +4,17 @@ const linz = require('linz');
 const supertest = require('supertest');
 
 beforeAll((done) => {
-
     linz.init({
         options: {
-            'mongo': 'mongodb://mongodb:27017/lib-formtools-renderers-cell-reference',
+            'mongo':
+                'mongodb://mongodb:27017/lib-formtools-renderers-cell-reference',
             'user model': 'user',
             'load models': false,
-            'load configs': false
-        }
+            'load configs': false,
+        },
     });
 
     linz.once('initialised', () => {
-
         const organisationSchema = new linz.mongoose.Schema({ name: String });
 
         const userSchema = new linz.mongoose.Schema({
@@ -25,7 +24,7 @@ beforeAll((done) => {
             password: String,
             bAdmin: {
                 type: Boolean,
-                default: false
+                default: false,
             },
             org: {
                 ref: 'organisation',
@@ -43,7 +42,9 @@ beforeAll((done) => {
             list: {
                 fields: {
                     name: true,
-                    org: { renderer: linz.formtools.cellRenderers.defaultRenderer },
+                    org: {
+                        renderer: linz.formtools.cellRenderers.defaultRenderer,
+                    },
                 },
             },
             model: { title: 'username' },
@@ -57,17 +58,23 @@ beforeAll((done) => {
             },
         });
 
-        userSchema.virtual('hasAdminAccess').get(function () {
+        userSchema.virtual('hasAdminAccess').get(function() {
             return this.bAdmin === true;
         });
 
-        userSchema.methods.verifyPassword = function (candidatePassword, callback) {
+        userSchema.methods.verifyPassword = function(
+            candidatePassword,
+            callback
+        ) {
             return callback(null, this.password === candidatePassword);
-        }
+        };
 
         // Set manually as we're not loading via file.
         linz.set('models', {
-            organisation: linz.mongoose.model('organisation', organisationSchema),
+            organisation: linz.mongoose.model(
+                'organisation',
+                organisationSchema
+            ),
             user: linz.mongoose.model('user', userSchema),
         });
 
@@ -75,15 +82,12 @@ beforeAll((done) => {
         linz.initModels();
 
         return done();
-
     });
-
 }, 10000);
 
 afterAll(() => linz.mongoose.disconnect());
 
 test('renders a link to the ref record overview', async () => {
-
     expect.assertions(1);
 
     const organisation = new linz.api.model.get('organisation')();
@@ -102,29 +106,29 @@ test('renders a link to the ref record overview', async () => {
 
     const request = supertest.agent(linz.app);
 
-    return Promise.all([
-        organisation.save(),
-        user.save(),
-    ])
-        .then(() => request.get('/admin/login').send())
-        .then((token) => {
+    return (
+        Promise.all([organisation.save(), user.save()])
+            .then(() => request.get('/admin/login').send())
+            .then((token) => {
+                const [
+                    csrfToken,
+                ] = /(?<=name="csrf-token" content=")(.*)(?="><title>)/.exec(
+                    token.text
+                );
 
-            const [csrfToken] = /(?<=name="csrf-token" content=")(.*)(?="><title>)/.exec(token.text);
-
-            return request.post('/admin/login').send({
-                _csrf: csrfToken,
-                password: 'password',
-                username: 'test',
-            });
-
-        })
-        // Supertest seems to use non native promises which stop Jest tests from completing.
-        // Wrapping it in a Promise.resolve fixes that.
-        .then(() => Promise.resolve(request.get('/admin/model/user/list')))
-        .then((response) => {
-
-            expect(response.text).toMatch(`/admin/model/organisation/${organisation._id}/overview`);
-
-        });
-
+                return request.post('/admin/login').send({
+                    _csrf: csrfToken,
+                    password: 'password',
+                    username: 'test',
+                });
+            })
+            // Supertest seems to use non native promises which stop Jest tests from completing.
+            // Wrapping it in a Promise.resolve fixes that.
+            .then(() => Promise.resolve(request.get('/admin/model/user/list')))
+            .then((response) => {
+                expect(response.text).toMatch(
+                    `/admin/model/organisation/${organisation._id}/overview`
+                );
+            })
+    );
 }, 10000);
