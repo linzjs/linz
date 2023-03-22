@@ -1572,31 +1572,36 @@ describe('formtools', () => {
                                 dateFormat
                             ).toISOString();
 
-                            linz.formtools.filters.date().bind(
-                                fieldName,
-                                {
-                                    dateCreated: [dateFromString, dateToString],
-                                },
-                                (err, result) => {
-                                    expect(result).toBeInstanceOf(Array);
-                                    expect(result).toHaveLength(2);
-                                    expect(result[0]).toBe(
-                                        '<input type="text" name="' +
-                                            fieldName +
-                                            '[]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' +
-                                            dateFromIsoString +
-                                            '" required>'
-                                    );
-                                    expect(result[1]).toBe(
-                                        '<input type="text" name="' +
-                                            fieldName +
-                                            '[]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' +
-                                            dateToIsoString +
-                                            '" required>'
-                                    );
-                                    done();
-                                }
-                            );
+                            linz.formtools.filters
+                                .date()
+                                .bind(
+                                    fieldName,
+                                    {
+                                        dateCreated: [
+                                            dateFromString,
+                                            dateToString,
+                                        ],
+                                    },
+                                    (err, result) => {
+                                        expect(result).toBeInstanceOf(Array);
+                                        expect(result).toHaveLength(2);
+                                        expect(result[0]).toBe(
+                                            '<input type="text" name="' +
+                                                fieldName +
+                                                '[]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' +
+                                                dateFromIsoString +
+                                                '" required>'
+                                        );
+                                        expect(result[1]).toBe(
+                                            '<input type="text" name="' +
+                                                fieldName +
+                                                '[]" class="form-control" data-ui-datepicker="true" data-linz-date-format="YYYY-MM-DD" data-linz-date-value="' +
+                                                dateToIsoString +
+                                                '" required>'
+                                        );
+                                        done();
+                                    }
+                                );
                         });
 
                         it('should return a filter object for a single date input', () => {
