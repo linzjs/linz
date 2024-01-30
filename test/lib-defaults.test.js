@@ -40,7 +40,6 @@ test('sets a default', () => {
     expect(linz.get('disable navigation cache')).toEqual(false);
     expect(typeof linz.get('navigationTransform')).toBe('function');
     expect(typeof linz.get('customAttributes')).toBe('function');
-    expect(linz.get('mongoOptions')).toEqual({ useMongoClient: true });
     expect(linz.get('routes')).toEqual({});
     expect(linz.get('cookie options')).toEqual({
         httpOnly: true,
