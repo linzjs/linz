@@ -22,7 +22,7 @@ mtUserSchema.methods.verifyPassword = function(candidatePassword, callback) {
     return callback(null, this.password === candidatePassword);
 };
 
-mtUserSchema.pre('save', function() {
+mtUserSchema.pre('save', function(next) {
     if (this.user) {
         this.modifiedBy = this.username;
     }
