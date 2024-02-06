@@ -1,60 +1,52 @@
 var linz = require('../'),
     async = require('async');
 
-module.exports = function () {
-
-	return function (req, res, next) {
-
+module.exports = function() {
+    return function(req, res, next) {
         req.linz.overview = req.linz.overview || {};
 
-        async.series([
+        async.series(
+            [
+                async function(cb) {
+                    // get doc
+                    const { db } = linz.mongoose.connection;
+                    const collection = db.collection(
+                        linz.get('configs collection name')
+                    );
 
-            function (cb) {
-
-                // get doc
-                var db = linz.mongoose.connection.db;
-
-                db.collection(linz.get('configs collection name'), function (err, collection) {
-
-                    if (err) {
-                        return cb(err);
-                    }
-
-                    collection.findOne({ _id: req.params.config}, function (findErr, doc) {
-
-                        if (findErr) {
-                            return cb(findErr);
-                        }
+                    try {
+                        const doc = await collection.findOne({
+                            _id: req.params.config,
+                        });
 
                         req.linz.record = doc;
 
-                        return cb(null);
-
-                    });
-
-                });
-
-            },
-
-            function (cb) {
-
-                linz.formtools.overview.body(req, res, req.linz.record, req.linz.config, function (err, body) {
-
-                    if (err) {
-                        return cb(err);
+                        return cb();
+                    } catch (findErr) {
+                        return cb(findErr);
                     }
+                },
 
-                    // body could be a string of HTML content OR an array of objects
-                    req.linz.overview.body = body;
+                function(cb) {
+                    linz.formtools.overview.body(
+                        req,
+                        res,
+                        req.linz.record,
+                        req.linz.config,
+                        function(err, body) {
+                            if (err) {
+                                return cb(err);
+                            }
 
-                    return cb();
+                            // body could be a string of HTML content OR an array of objects
+                            req.linz.overview.body = body;
 
-                });
-
-            }
-
-        ], next);
-
-	};
-
+                            return cb();
+                        }
+                    );
+                },
+            ],
+            next
+        );
+    };
 };

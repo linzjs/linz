@@ -1,19 +1,17 @@
 var linz = require('../');
 
 module.exports = {
-    get: function(req, res, next) {
+    get: async function(req, res, next) {
         req.linz.record = {};
 
         if (!req.params.id) {
             return next(new Error('User id is required.'));
         }
 
-        var User = linz.api.model.get(linz.get('user model'));
+        const User = linz.api.model.get(linz.get('user model'));
 
-        User.findById(req.params.id, function(err, doc) {
-            if (err) {
-                return next(err);
-            }
+        try {
+            const doc = await User.findById(req.params.id).exec();
 
             if (!doc.verifyPasswordResetHash) {
                 throw new Error(
@@ -37,7 +35,9 @@ module.exports = {
 
                 return next();
             });
-        });
+        } catch (err) {
+            return next(err);
+        }
     },
 
     post: function(req, res, next) {

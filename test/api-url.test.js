@@ -25,7 +25,9 @@ beforeAll((done) => {
     });
 }, 10000);
 
-afterAll((done) => linz.mongoose.connection.close(done));
+afterAll(async () => {
+    await linz.mongoose.connection.close();
+});
 
 describe('Linz has a url api', () => {
     describe('has a getAdminLink method', () => {

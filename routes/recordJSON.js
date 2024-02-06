@@ -1,13 +1,7 @@
-
 /* GET /admin/:model/:id/json */
-var route = function (req, res, next) {
-
-    // get doc
-    req.linz.model.findById(req.params.id, function (err, doc) {
-
-        if (err) {
-            return next(err);
-        }
+const route = async (req, res, next) => {
+    try {
+        const doc = await req.linz.model.findById(req.params.id).exec();
 
         // Skip to a 404 page.
         if (!doc) {
@@ -15,9 +9,9 @@ var route = function (req, res, next) {
         }
 
         res.json(doc);
-
-    });
-
-}
+    } catch (err) {
+        return next(err);
+    }
+};
 
 module.exports = route;

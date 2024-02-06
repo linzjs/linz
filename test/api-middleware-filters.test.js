@@ -88,7 +88,9 @@ beforeAll((done) => {
     });
 }, 10000);
 
-afterAll((done) => linz.mongoose.connection.close(done));
+afterAll(async () => {
+    await linz.mongoose.connection.close();
+});
 
 test('search filter', async () => {
     expect.assertions(1);

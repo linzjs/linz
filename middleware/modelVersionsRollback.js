@@ -11,7 +11,10 @@ module.exports = {
         async.series(
             {
                 latest: function(cb) {
-                    Model.findById(req.params.id, cb);
+                    Model.findById(req.params.id)
+                        .exec()
+                        .then((doc) => cb(null, doc))
+                        .catch((err) => cb(err));
                 },
                 previous: function(cb) {
                     var exclusions = {
@@ -37,9 +40,11 @@ module.exports = {
                     Model.VersionedModel.findById(
                         req.params.revisionAId,
                         exclusions,
-                        { lean: 1 },
-                        cb
-                    );
+                        { lean: 1 }
+                    )
+                        .exec()
+                        .then((doc) => cb(null, doc))
+                        .catch((err) => cb(err));
                 },
             },
             function(err, result) {
