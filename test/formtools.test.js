@@ -42,9 +42,7 @@ beforeAll((done) => {
     });
 }, 10000);
 
-afterAll(async () => {
-    await linz.mongoose.connection.close();
-});
+afterAll(() => linz.mongoose.connection.close());
 
 describe('formtools', () => {
     var PostSchema, PostModel;
@@ -2995,9 +2993,7 @@ describe('formtools', () => {
                     });
 
                     it('should execute the query in mongoose find() with no error', async () => {
-                        const result = await OverridesPostModel.find(
-                            result
-                        ).exec();
+                        await OverridesPostModel.find(result).exec();
 
                         expect(err === null).toBe(true);
                     });
