@@ -210,7 +210,7 @@ Linz.prototype.configure = function() {
         debugGeneral('Connecting to the database');
 
         _this.mongoose.connect(_this.get('mongo'), _this.get('mongoOptions'));
-        _this.mongoose.connection.once('connected', function() {
+        _this.mongoose.connection.on('connected', function() {
             debugGeneral('Database connected');
         });
     }
@@ -350,81 +350,43 @@ Linz.prototype.initConfigs = function(cb) {
 
     async.each(
         Object.keys(configs),
-        async function(configName, initDone) {
-            try {
-                const doc = await collection.findOne({ _id: configName });
+        async function(configName) {
+            const doc = await collection.findOne({ _id: configName });
 
-                if (doc) {
-                    const updatedDoc = {};
+            if (doc) {
+                const updatedDoc = {};
 
-                    // doc exists, check if there are any new properties
-                    configs[configName].schema.eachPath(function(
-                        fieldName,
-                        field
-                    ) {
-                        if (doc[fieldName] === undefined) {
-                            updatedDoc[
-                                fieldName
-                            ] = linz.formtools.utils.getDefaultValue(field);
-                            doc[fieldName] = updatedDoc[fieldName];
-                        }
-                    });
-
-                    if (!Object.keys(updatedDoc).length) {
-                        configs[configName].config = doc;
-                        debugConfigs('Initialised config %s', configName);
-
-                        // since there are no change, return early
-                        return initDone(null);
-                    }
-
-                    try {
-                        await collection.updateOne(
-                            { _id: configName },
-                            { $set: updatedDoc },
-                            { w: 1 }
-                        );
-
-                        // add config to linz
-                        configs[configName].config = doc;
-
-                        debugConfigs('Initialised config %s', configName);
-
-                        return initDone(err);
-                    } catch (err) {
-                        throw new Error(
-                            'Unable to write config file %s to database. ' +
-                                err.message,
-                            configName
-                        );
-                    }
-                }
-
-                const newConfig = {};
-
-                // contruct doc from config schema
+                // doc exists, check if there are any new properties
                 configs[configName].schema.eachPath(function(fieldName, field) {
-                    newConfig[fieldName] = linz.formtools.utils.getDefaultValue(
-                        field
-                    );
+                    if (doc[fieldName] === undefined) {
+                        updatedDoc[
+                            fieldName
+                        ] = linz.formtools.utils.getDefaultValue(field);
+                        doc[fieldName] = updatedDoc[fieldName];
+                    }
                 });
 
-                // overwrite _id field with custom id name
-                newConfig['_id'] = configName;
+                if (!Object.keys(updatedDoc).length) {
+                    configs[configName].config = doc;
+                    debugConfigs('Initialised config %s', configName);
 
-                // Use update instead of insert to prevent duplicate key errors.
+                    // since there are no change, return early
+                    return;
+                }
+
                 try {
-                    await collection.updateOne(newConfig, {
-                        upsert: true,
-                        w: 1,
-                    });
+                    await collection.updateOne(
+                        { _id: configName },
+                        { $set: updatedDoc },
+                        { w: 1 }
+                    );
+
+                    // add config to linz
+                    configs[configName].config = doc;
 
                     debugConfigs('Initialised config %s', configName);
 
-                    // add new config to linz
-                    configs[configName].config = newConfig;
-
-                    return initDone();
+                    return;
                 } catch (err) {
                     throw new Error(
                         'Unable to write config file %s to database. ' +
@@ -432,8 +394,39 @@ Linz.prototype.initConfigs = function(cb) {
                         configName
                     );
                 }
+            }
+
+            const newConfig = {};
+
+            // contruct doc from config schema
+            configs[configName].schema.eachPath(function(fieldName, field) {
+                newConfig[fieldName] = linz.formtools.utils.getDefaultValue(
+                    field
+                );
+            });
+
+            // overwrite _id field with custom id name
+            newConfig['_id'] = configName;
+
+            // Use update instead of insert to prevent duplicate key errors.
+            try {
+                await collection.updateOne(newConfig, {
+                    upsert: true,
+                    w: 1,
+                });
+
+                debugConfigs('Initialised config %s', configName);
+
+                // add new config to linz
+                configs[configName].config = newConfig;
+
+                return;
             } catch (err) {
-                return initDone(err);
+                throw new Error(
+                    'Unable to write config file %s to database. ' +
+                        err.message,
+                    configName
+                );
             }
         },
         cb

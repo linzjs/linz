@@ -15,18 +15,14 @@ module.exports = function() {
                     return cb(null, collection);
                 },
 
-                async function(collection, cb) {
+                async function(collection) {
                     // remove this config from db
-                    try {
-                        const deletedCollection = await collection.deleteOne(
-                            { _id: req.params.config },
-                            { w: 1 }
-                        );
+                    const deletedCollection = await collection.deleteOne(
+                        { _id: req.params.config },
+                        { w: 1 }
+                    );
 
-                        return cb(null, deletedCollection);
-                    } catch (err) {
-                        return cb(err);
-                    }
+                    return deletedCollection;
                 },
 
                 async function(collection, cb) {
@@ -53,7 +49,7 @@ module.exports = function() {
                             req.params.config
                         ].config = newConfig;
 
-                        return cb();
+                        return;
                     } catch (err) {
                         throw new Error(
                             'Unable to write config file %s to database. ' +

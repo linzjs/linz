@@ -14,17 +14,13 @@ module.exports = function() {
                         linz.get('configs collection name')
                     );
 
-                    try {
-                        const doc = await collection.findOne({
-                            _id: req.params.config,
-                        });
+                    const doc = await collection.findOne({
+                        _id: req.params.config,
+                    });
 
-                        req.linz.record = doc;
+                    req.linz.record = doc;
 
-                        return cb();
-                    } catch (findErr) {
-                        return cb(findErr);
-                    }
+                    return;
                 },
 
                 function(cb) {

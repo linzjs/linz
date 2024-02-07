@@ -7,7 +7,7 @@ var linz = require('../'),
 var route = function(req, res, next) {
     async.waterfall(
         [
-            async function(cb) {
+            async function() {
                 const { db } = linz.mongoose.connection;
                 const { form } = req.linz.config.linz.formtools;
 
@@ -87,22 +87,18 @@ var route = function(req, res, next) {
                 record.modifiedBy = req.user._id;
                 record.dateModified = new Date();
 
-                try {
-                    await collection.updateOne(
-                        { _id: req.params.config },
-                        { $set: record },
-                        { w: 1 }
-                    );
+                await collection.updateOne(
+                    { _id: req.params.config },
+                    { $set: record },
+                    { w: 1 }
+                );
 
-                    record._id = req.params.config;
+                record._id = req.params.config;
 
-                    // update linz with changes to this config
-                    linz.get('configs')[req.params.config].config = record;
+                // update linz with changes to this config
+                linz.get('configs')[req.params.config].config = record;
 
-                    return cb();
-                } catch (err) {
-                    return cb(err);
-                }
+                return;
             },
         ],
         function(err) {

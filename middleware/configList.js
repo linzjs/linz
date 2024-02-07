@@ -32,7 +32,7 @@ module.exports = function() {
         async.waterfall(
             [
                 // find the configs
-                async function(cb) {
+                async function() {
                     const db = linz.mongoose.connection.db;
                     const configKeys = Object.keys(req.linz.configs);
                     const filter = { _id: { $in: configKeys } };
@@ -41,18 +41,14 @@ module.exports = function() {
                     );
 
                     // find documents matching each of the available config schema name
-                    try {
-                        const items = await collection.find(filter).toArray();
+                    const items = await collection.find(filter).toArray();
 
-                        if (items.length === 0) {
-                            // return error to skip the next asyn function that inspect the records since none is found.
-                            return cb(new Error('No record found.'), items);
-                        }
-
-                        return cb(null, items);
-                    } catch (err) {
-                        return cb(err);
+                    if (items.length === 0) {
+                        // return error to skip the next asyn function that inspect the records since none is found.
+                        throw new Error('No record found.');
                     }
+
+                    return items;
                 },
 
                 function(records, cb) {

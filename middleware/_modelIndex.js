@@ -6,7 +6,9 @@ var linz = require('../'),
     escapeStringRegexp = require('escape-string-regexp');
 
 module.exports = function(req, res, next) {
-    const isDevelopment = process.env.NODE_ENV === 'development';
+    const isDevelopment =
+        process.env.NODE_ENV === 'development' ||
+        process.env.NODE_ENV === 'test';
     let body = req.body;
     let queryErrorCount = 0;
     const model = req.linz.model.modelName;
@@ -366,7 +368,7 @@ module.exports = function(req, res, next) {
                 },
 
                 // find the docs
-                function(cb) {
+                async function() {
                     const getDefaultOrder = (field) =>
                         field.defaultOrder.toLowerCase() === 'desc' ? '-' : '';
 
@@ -401,29 +403,23 @@ module.exports = function(req, res, next) {
                             .limit(pageSize);
                     }
 
-                    query.exec(function(err, docs) {
-                        // A query error has occured, let's short circuit this entire process
-                        // and start again from the last known working state.
-                        if (err) {
-                            return handleQueryError(err);
+                    try {
+                        const docs = await query.exec();
+
+                        if (docs.length === 0) {
+                            throw new new Error('No records found')();
                         }
 
-                        if (!err && docs.length === 0) {
-                            return cb(new Error('No records found'));
-                        }
+                        mongooseRecords = docs;
+                        // convert mongoose documents to plain javascript objects
+                        mongooseRecords.forEach(function(record) {
+                            records.push(record.toObject({ virtuals: true }));
+                        });
 
-                        if (!err) {
-                            mongooseRecords = docs;
-                            // convert mongoose documents to plain javascript objects
-                            mongooseRecords.forEach(function(record) {
-                                records.push(
-                                    record.toObject({ virtuals: true })
-                                );
-                            });
-                        }
-
-                        cb(err);
-                    });
+                        return;
+                    } catch (err) {
+                        return handleQueryError(err);
+                    }
                 },
 
                 // check if each doc can be edited
