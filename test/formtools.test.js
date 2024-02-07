@@ -2992,11 +2992,8 @@ describe('formtools', () => {
                         });
                     });
 
-                    it('should execute the query in mongoose find() with no error', async () => {
-                        await OverridesPostModel.find(result).exec();
-
-                        expect(err === null).toBe(true);
-                    });
+                    it('should execute the query in mongoose find() with no error', () =>
+                        OverridesPostModel.find(result).exec());
                 });
             }); // end describe('filters')
         }); // end  describe('list')
