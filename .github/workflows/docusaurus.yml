@@ -11,8 +11,8 @@ jobs:
     checks:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
             - name: Test Build
               run: |
                   if [ -e yarn.lock ]; then
@@ -27,8 +27,8 @@ jobs:
     gh-release:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
             - name: Add key to allow access to repository
               env:
                   SSH_AUTH_SOCK: /tmp/ssh_agent.sock
