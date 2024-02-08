@@ -1,11 +1,5 @@
 extends layout
 
-block header
-    != header
-
-block content
-    != body
-
 block page
     if !page
         header
@@ -16,6 +10,3 @@ block page
         block content
     else
         != page
-
-block script
-    != script
