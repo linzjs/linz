@@ -1,7 +1,7 @@
 'use strict';
 
 const async = require('async');
-const clone = require('clone');
+const clone = require('lodash/cloneDeep');
 const linz = require('../');
 
 /* GET /admin/:model/:id/overview */
