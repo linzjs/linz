@@ -17,7 +17,7 @@
                             td= from + index + 1
                             if model.list.groupActions && model.list.groupActions.length
                                 td
-                                    input(type="checkbox", name="ids[]", value="#{record._id}", data-linz-control="checked-record")
+                                    input(type="checkbox", name="ids[]", value=record._id, data-linz-control="checked-record")
                             if permissions.canEdit !== false || permissions.canDelete !== false || model.list.recordActions.length || model.list.primaryRecordActions.length
                                 td!= record.actionsTemplate
 

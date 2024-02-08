@@ -1,30 +1,30 @@
 if help !== false
-	- help.attributes = {}
-	if help.animation
-		- help.attributes['data-animation'] = help.animation
-	if help.container
-		- help.attributes['data-container'] = help.container
-	if help.content
-		- help.attributes['data-content'] = help.content
-	if help.delay
-		- help.attributes['data-delay'] = help.delay
-	if help.html
-		- help.attributes['data-html'] = help.html
-	if help.placement
-		- help.attributes['data-placement'] = help.placement
-	if help.selector
-		- help.attributes['data-selector'] = help.selector
-	if help.template
-		- help.attributes['data-template'] = help.template
-	if help.title
-		- help.attributes['data-title'] = help.title
-	if help.trigger
-		- help.attributes['data-trigger'] = help.trigger
-	if help.viewport
-		- help.attributes['data-viewport'] = help.viewport
-	a.help(data-toggle='popover')&attributes(help.attributes)
-		span.glyphicon.glyphicon-info-sign(aria-hidden='true')
-	script.
-		linz.addLoadEvent(function () {
-			$('[data-toggle="popover"]').popover();
-		});
+    - help.attributes = {}
+    if help.animation
+        - help.attributes['data-animation'] = help.animation
+    if help.container
+        - help.attributes['data-container'] = help.container
+    if help.content
+        - help.attributes['data-content'] = help.content
+    if help.delay
+        - help.attributes['data-delay'] = help.delay
+    if help.html
+        - help.attributes['data-html'] = help.html
+    if help.placement
+        - help.attributes['data-placement'] = help.placement
+    if help.selector
+        - help.attributes['data-selector'] = help.selector
+    if help.template
+        - help.attributes['data-template'] = help.template
+    if help.title
+        - help.attributes['data-title'] = help.title
+    if help.trigger
+        - help.attributes['data-trigger'] = help.trigger
+    if help.viewport
+        - help.attributes['data-viewport'] = help.viewport
+    a.help(data-toggle='popover')&attributes(help.attributes)
+        span.glyphicon.glyphicon-info-sign(aria-hidden='true')
+    script.
+        linz.addLoadEvent(function () {
+            $('[data-toggle="popover"]').popover();
+        });

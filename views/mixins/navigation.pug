@@ -1,24 +1,24 @@
 mixin dropdown(node)
-	li.dropdown
-		a.dropdown-toggle(href=node.href, data-toggle='dropdown')= node.name
-			b.caret
-		ul.dropdown-menu
-			each childNode,childIndex in node.children
-				li
-					mixin basic(childNode)
+    li.dropdown
+        a.dropdown-toggle(href=node.href, data-toggle='dropdown')= node.name
+            b.caret
+        ul.dropdown-menu
+            each childNode,childIndex in node.children
+                li
+                    +basic(childNode)
 
 mixin submenu(node)
-	a(href=node.href target=node.target)= node.name
-	ul
-		each childNode,childIndex in node.children
-			if (request && request.path && childNode.href === request.path)
-				li(class='active')
-					mixin basic(childNode)
-			else
-				li
-					mixin basic(childNode)
+    a(href=node.href target=node.target)= node.name
+    ul
+        each childNode,childIndex in node.children
+            if (request && request.path && childNode.href === request.path)
+                li(class='active')
+                    +basic(childNode)
+            else
+                li
+                    +basic(childNode)
 
 mixin basic(node)
-	a(href=node.href target=node.target)
-		span.icon!= node.icon
-		span.name= node.name
+    a(href=node.href target=node.target)
+        span.icon!= node.icon
+        span.name= node.name

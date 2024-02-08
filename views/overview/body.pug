@@ -7,8 +7,8 @@ if (overview.body)
         else
             each section in overview.body
                 if Array.isArray(section)
-                    mixin tabs(section)
+                    +tabs(section)
                 else if typeof section === 'object'
-                    mixin section(section)
+                    +section(section)
                 else
                     !=section

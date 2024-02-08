@@ -37,17 +37,17 @@ html(lang="en")&attributes(attributes)
                         if node.children && node.children.length
                             if request && request.path && node.href === request.path
                                 li(class='active')
-                                    mixin submenu(node)
+                                    +submenu(node)
                             else
                                 li
-                                    mixin submenu(node)
+                                    +submenu(node)
                         else
                             if (request && request.path && node.href === request.path)
                                 li(class='active')
-                                    mixin basic(node)
+                                    +basic(node)
                             else
                                 li
-                                    mixin basic(node)
+                                    +basic(node)
 
         .wrap
             block page
