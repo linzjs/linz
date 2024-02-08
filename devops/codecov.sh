@@ -1120,7 +1120,7 @@ $PWD/coverage.xml"
                     -not -name '*.erb' \
                     -not -name '*.rb' \
                     -not -name '*.js' \
-                    -not -name '*.jade' \
+                    -not -name '*.pug' \
                     -not -name '*.db' \
                     -not -name '*.md' \
                     -not -name '*.cpp' \

@@ -529,8 +529,7 @@ Linz.prototype.bootstrapExpress = function(cb) {
         express.static(path.resolve(__dirname, 'public'))
     );
 
-    this.app.engine('jade', require('jade').__express);
-    this.app.set('view engine', 'jade');
+    this.app.set('view engine', 'pug');
 
     // setup body-parser, and cookie-parser
     this.app.use(bodyParser());
