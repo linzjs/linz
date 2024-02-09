@@ -25,7 +25,7 @@ module.exports = function() {
                     return deletedCollection;
                 },
 
-                async function(collection, cb) {
+                async function(collection) {
                     // now that we have removed the record, let's add it again with default values.
                     // this is a more efficient way of resetting the config values than updating the existing record.
 

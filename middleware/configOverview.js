@@ -7,7 +7,7 @@ module.exports = function() {
 
         async.series(
             [
-                async function(cb) {
+                async function() {
                     // get doc
                     const { db } = linz.mongoose.connection;
                     const collection = db.collection(

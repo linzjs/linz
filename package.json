@@ -55,7 +55,7 @@
         "lodash": "4.17.21",
         "moment": "2.22.2",
         "mongoose": "8.1.1",
-        "mongoose-version": "linzjs/mongoose-version#9a6e4c3d121def03761b3b0cfc33ed4b8c46cfa7",
+        "mongoose-version": "linzjs/mongoose-version#ede58522e5e2c5921635ff1628a852c0012c2a69",
         "passport": "0.2.x",
         "passport-local": "1.0.0",
         "printf": "0.2.x",

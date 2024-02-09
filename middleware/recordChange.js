@@ -220,7 +220,7 @@ module.exports = (req, res, next) => {
 
     async.waterfall(
         [
-            async (cb) => {
+            async () => {
                 const doc = await model
                     .findById(req.params.id, exclusionFields, { lean: 1 })
                     .exec();
