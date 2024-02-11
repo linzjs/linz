@@ -17,19 +17,22 @@ module.exports = function() {
 
                 async function(collection) {
                     // remove this config from db
-                    const deletedCollection = await collection.deleteOne(
+                    await collection.deleteOne(
                         { _id: req.params.config },
                         { w: 1 }
                     );
 
-                    return deletedCollection;
+                    return collection;
                 },
 
                 async function(collection) {
                     // now that we have removed the record, let's add it again with default values.
                     // this is a more efficient way of resetting the config values than updating the existing record.
 
-                    var newConfig = {};
+                    var newConfig = {
+                        dateModified: new Date(),
+                        modifiedBy: req.user._id,
+                    };
 
                     // contruct doc from config schema
                     req.linz.config.schema.eachPath(function(fieldName, field) {
@@ -42,7 +45,7 @@ module.exports = function() {
                     newConfig['_id'] = req.params.config;
 
                     try {
-                        await collection.insert(newConfig, { w: 1 });
+                        await collection.insertOne(newConfig, { w: 1 });
 
                         // add new config to linz
                         linz.get('configs')[
@@ -54,12 +57,12 @@ module.exports = function() {
                         throw new Error(
                             'Unable to write config file %s to database. ' +
                                 err.message,
-                            configName
+                            req.params.config
                         );
                     }
                 },
             ],
-            function(err, result) {
+            function(err) {
                 return next(err);
             }
         );
