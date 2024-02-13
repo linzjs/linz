@@ -54,7 +54,7 @@
         "less-middleware": "1.0.3",
         "lodash": "4.17.21",
         "moment": "2.22.2",
-        "mongoose": "8.1.1",
+        "mongoose": "8.1.2",
         "mongoose-version": "linzjs/mongoose-version#ede58522e5e2c5921635ff1628a852c0012c2a69",
         "passport": "0.2.x",
         "passport-local": "1.0.0",
