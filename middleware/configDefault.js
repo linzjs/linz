@@ -29,10 +29,7 @@ module.exports = function() {
                     // now that we have removed the record, let's add it again with default values.
                     // this is a more efficient way of resetting the config values than updating the existing record.
 
-                    var newConfig = {
-                        dateModified: new Date(),
-                        modifiedBy: req.user._id,
-                    };
+                    var newConfig = {};
 
                     // contruct doc from config schema
                     req.linz.config.schema.eachPath(function(fieldName, field) {
@@ -43,6 +40,8 @@ module.exports = function() {
 
                     // overwrite _id field with custom id name
                     newConfig['_id'] = req.params.config;
+                    newConfig.dateModified = new Date();
+                    newConfig.modifiedBy = req.user._id;
 
                     try {
                         await collection.insertOne(newConfig, { w: 1 });
