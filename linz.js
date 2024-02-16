@@ -405,15 +405,16 @@ Linz.prototype.initConfigs = function(cb) {
                 );
             });
 
-            // overwrite _id field with custom id name
-            newConfig['_id'] = configName;
-
             // Use update instead of insert to prevent duplicate key errors.
             try {
-                await collection.updateOne(newConfig, {
-                    upsert: true,
-                    w: 1,
-                });
+                await collection.updateOne(
+                    { _id: configName },
+                    { $set: newConfig },
+                    {
+                        upsert: true,
+                        w: 1,
+                    }
+                );
 
                 debugConfigs('Initialised config %s', configName);
 
