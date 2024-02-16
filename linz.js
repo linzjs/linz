@@ -400,9 +400,11 @@ Linz.prototype.initConfigs = function(cb) {
 
             // contruct doc from config schema
             configs[configName].schema.eachPath(function(fieldName, field) {
-                newConfig[fieldName] = linz.formtools.utils.getDefaultValue(
-                    field
-                );
+                if (fieldName !== '_id') {
+                    newConfig[fieldName] = linz.formtools.utils.getDefaultValue(
+                        field
+                    );
+                }
             });
 
             // Use update instead of insert to prevent duplicate key errors.
