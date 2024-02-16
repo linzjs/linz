@@ -1,4 +1,4 @@
-FROM node:20.11.0-alpine
+FROM node:20.11.1-alpine
 
 # Setup dockerize.
 # Keep bash and curl to run the codecov bash script.
