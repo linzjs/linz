@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## v1.0.0-19.0.0 - 2024-02-21
+
+### Changed
+
+-   Node.js v20 compatibility.
+-   Mongoose v8 compatibility.
+-   MongoDB v7 compatibility.
+
 ## v1.0.0-18.9.3 - 2022-03-15
 
 ### Fixed
