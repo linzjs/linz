@@ -17,15 +17,15 @@ module.exports = {
         // pre-render the admin view, ready to plug into the larger wrapper
         async.series(
             [
-                function (done) {
+                function(done) {
                     // render either a custom form, or the default Linz form
                     typeof linz.get('admin login view') === 'function'
                         ? linz
                               .get('admin login view')
                               .call(null, req, locals, done)
-                        : (function () {
+                        : (function() {
                               linz.app.render(
-                                  linz.api.views.viewPath('login/form.jade'),
+                                  linz.api.views.viewPath('login/form.pug'),
                                   locals,
                                   done
                               );
@@ -44,7 +44,7 @@ module.exports = {
                     .then(([scripts, styles]) => {
                         // Now render the final template, within the layout.
                         return res.render(
-                            linz.api.views.viewPath('adminLogin.jade'),
+                            linz.api.views.viewPath('adminLogin.pug'),
                             {
                                 csrfToken: req.csrfToken(),
                                 html,

@@ -1,29 +1,28 @@
 var linz = require('../');
 
 module.exports = {
-
-    get: function (req, res, next) {
-
+    get: async function(req, res, next) {
         req.linz.record = {};
 
         if (!req.params.id) {
             return next(new Error('User id is required.'));
         }
 
-        var User = linz.api.model.get(linz.get('user model'));
+        const User = linz.api.model.get(linz.get('user model'));
 
-        User.findById(req.params.id, function (err, doc) {
-
-            if (err) {
-                return next(err);
-            }
+        try {
+            const doc = await User.findById(req.params.id).exec();
 
             if (!doc.verifyPasswordResetHash) {
-                throw new Error('verifyPasswordResetHash() is not defined for user model document.');
+                throw new Error(
+                    'verifyPasswordResetHash() is not defined for user model document.'
+                );
             }
 
-            doc.verifyPasswordResetHash(req.params.hash, function (err, isMatch) {
-
+            doc.verifyPasswordResetHash(req.params.hash, function(
+                err,
+                isMatch
+            ) {
                 if (err) {
                     return next(err);
                 }
@@ -34,22 +33,28 @@ module.exports = {
 
                 req.linz.record = doc;
 
-                return next(null);
-
+                return next();
             });
-
-        });
-
+        } catch (err) {
+            return next(err);
+        }
     },
 
-    post: function (req, res, next) {
-
+    post: function(req, res, next) {
         if (!req.body.password || !req.body.confirmPassword || !req.body.id) {
-            return next(new Error('Unable to reset password. Required fields are missing.'));
+            return next(
+                new Error(
+                    'Unable to reset password. Required fields are missing.'
+                )
+            );
         }
 
         if (req.body.password !== req.body.confirmPassword) {
-            return next(new Error('Unable to reset password. Password and confirm password must be the same.'));
+            return next(
+                new Error(
+                    'Unable to reset password. Password and confirm password must be the same.'
+                )
+            );
         }
 
         var User = linz.api.model.get(linz.get('user model'));
@@ -62,7 +67,5 @@ module.exports = {
         res.clearCookie('linzReturnUrl');
 
         User.updatePassword(req.body.id, req.body.password, req, res, next);
-
-    }
-
-}
+    },
+};

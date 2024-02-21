@@ -87,7 +87,7 @@ beforeAll((done) => {
     });
 }, 10000);
 
-afterAll((done) => linz.mongoose.connection.close(done));
+afterAll(() => linz.mongoose.connection.close());
 
 describe('Linz has a query api', () => {
     describe('which has a field function', () => {

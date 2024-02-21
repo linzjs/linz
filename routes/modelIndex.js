@@ -7,8 +7,7 @@ const listRenderers = require('../lib/formtools/renderers-list');
 const recordActionRenderers = require('../lib/formtools/renderers-action-record');
 
 /* GET /admin/model/:model/list */
-var route = function (req, res, next) {
-
+var route = function(req, res, next) {
     Promise.all([
         linz.api.views.getScripts(req, res, [
             {
@@ -21,12 +20,11 @@ var route = function (req, res, next) {
         linz.api.views.getStyles(req, res),
     ])
         .then(([scripts, styles]) => {
-
             var total = Number(req.linz.records.total),
                 pageSize = Number(req.linz.records.pageSize),
                 page = Number(req.linz.records.page),
                 pages = Number(req.linz.records.pages),
-                to = pageSize*page,
+                to = pageSize * page,
                 sortDirection = '',
                 form = req.linz.model.formData || {};
 
@@ -35,58 +33,60 @@ var route = function (req, res, next) {
             }
 
             if (Object.keys(req.linz.model.list.sortingBy).length) {
-
                 if (!req.linz.model.formData.sort) {
-                    req.linz.model.formData.sort = req.linz.model.list.sortingBy.field;
+                    req.linz.model.formData.sort =
+                        req.linz.model.list.sortingBy.field;
                 }
 
-                sortDirection = ((req.linz.model.formData.sort.charAt(0) === '-') ? 'desc' : 'asc')
+                sortDirection =
+                    req.linz.model.formData.sort.charAt(0) === '-'
+                        ? 'desc'
+                        : 'asc';
             }
 
             const { actions, recordActions } = req.linz.model.list;
             const { parseModalProperties } = linz.api.formtools.actions;
 
             req.linz.model.list.actions = parseModalProperties(actions);
-            req.linz.model.list.recordActions = parseModalProperties(recordActions);
+            req.linz.model.list.recordActions = parseModalProperties(
+                recordActions
+            );
 
             // Create a list of primary recordActions.
-            req.linz.model.list.primaryRecordActions = req.linz.model.list.recordActions.filter(action => action.type === 'primary');
+            req.linz.model.list.primaryRecordActions = req.linz.model.list.recordActions.filter(
+                (action) => action.type === 'primary'
+            );
 
             // Remove the primary record actions, from the standard ones.
-            req.linz.model.list.recordActions = req.linz.model.list.recordActions.filter(action => action.type !== 'primary');
+            req.linz.model.list.recordActions = req.linz.model.list.recordActions.filter(
+                (action) => action.type !== 'primary'
+            );
 
             // Work through the sorting options.
             const sortingOptions = [];
 
-            req.linz.model.list.sortBy.forEach(function (sortBy) {
-
+            req.linz.model.list.sortBy.forEach(function(sortBy) {
                 const sort = form.sort || '';
                 const sortFieldName = sort.replace('/^-/', '');
 
                 // Don't display ascending, if it's already sorting ascending on this field.
                 if (sortFieldName.toLowerCase() != sortBy.field.toLowerCase()) {
-
                     sortingOptions.push({
                         label: `${sortBy.label} <em>(ascending)</em>`,
                         value: `${sortBy.field}`,
                     });
-
                 }
 
                 // Don't display descending, if it's already sorting descending on this field.
                 if (sort.toLowerCase() !== `-${sortBy.field}`.toLowerCase()) {
-
                     sortingOptions.push({
                         label: `${sortBy.label} <em>(descending)</em>`,
                         value: `-${sortBy.field}`,
                     });
-
                 }
-
             });
 
             const clean = (obj) => {
-
                 const newObj = {};
 
                 Object.keys(obj).forEach((key) => {
@@ -94,17 +94,19 @@ var route = function (req, res, next) {
                 });
 
                 return newObj;
-
             };
 
             const data = {
                 csrfToken: req.csrfToken(),
                 customAttributes: res.locals.customAttributes,
                 form,
-                from: pageSize*page-pageSize,
+                from: pageSize * page - pageSize,
                 help: req.linz.model.list.help,
                 label: {
-                    singular: inflection.humanize(req.linz.model.linz.formtools.model.label, true),
+                    singular: inflection.humanize(
+                        req.linz.model.linz.formtools.model.label,
+                        true
+                    ),
                     plural: req.linz.model.linz.formtools.model.plural,
                 },
                 model: req.linz.model,
@@ -113,7 +115,8 @@ var route = function (req, res, next) {
                 pages,
                 pageTitle: req.linz.model.linz.formtools.model.plural,
                 pageSize,
-                pageSizes: req.linz.model.list.paging.sizes || linz.get('page sizes'),
+                pageSizes:
+                    req.linz.model.list.paging.sizes || linz.get('page sizes'),
                 pagination: req.linz.model.list.paging.active === true,
                 permissions: req.linz.model.linz.formtools.permissions,
                 query: req.query,
@@ -129,74 +132,77 @@ var route = function (req, res, next) {
                 view: 'model-list',
             };
 
-            async.parallel([
+            async.parallel(
+                [
+                    (cb) => {
+                        linz.api.views.renderNotifications(
+                            req,
+                            (err, notificationHtml) => {
+                                if (err) {
+                                    return cb(err);
+                                }
 
-                (cb) => {
+                                if (notificationHtml) {
+                                    data.notifications = notificationHtml;
+                                }
 
-                    linz.api.views.renderNotifications(req, (err, notificationHtml) => {
+                                return cb();
+                            }
+                        );
+                    },
 
-                        if (err) {
-                            return cb(err);
-                        }
+                    (cb) => {
+                        const renderRecordAction =
+                            data.model.list.recordActions.renderer ||
+                            recordActionRenderers.defaultRenderer;
 
-                        if (notificationHtml) {
-                            data.notifications = notificationHtml;
-                        }
+                        async.eachOf(
+                            data.records,
+                            (record, index, callback) => {
+                                renderRecordAction(
+                                    {
+                                        csrfToken: req.csrfToken(),
+                                        model: data.model,
+                                        permissions: data.permissions,
+                                        record,
+                                    },
+                                    (err, html) => {
+                                        data.records[
+                                            index
+                                        ].actionsTemplate = html;
 
-                        return cb();
-
-                    });
-
-                },
-
-                (cb) => {
-
-                    const renderRecordAction = data.model.list.recordActions.renderer || recordActionRenderers.defaultRenderer;
-
-                    async.eachOf(data.records, (record, index, callback) => {
-
-                        renderRecordAction({
-                            csrfToken: req.csrfToken(),
-                            model: data.model,
-                            permissions: data.permissions,
-                            record
-                        }, (err, html) => {
-
-                            data.records[index].actionsTemplate = html;
-
-                            callback(err);
-
-                        });
-
-                    }, cb);
-
-                }
-
-            ], (err) => {
-
-                if (err) {
-                    return res.send(err);
-                }
-
-                const renderList = data.model.list.renderer || listRenderers.default;
-
-                renderList(data, (renderErr, html) => {
-
-                    if (renderErr) {
-                        return res.send(renderErr);
+                                        callback(err);
+                                    }
+                                );
+                            },
+                            cb
+                        );
+                    },
+                ],
+                (err) => {
+                    if (err) {
+                        return res.send(err);
                     }
 
-                    data.records.template = html;
+                    const renderList =
+                        data.model.list.renderer || listRenderers.default;
 
-                    return res.render(linz.api.views.viewPath('modelIndex.jade'), data);
+                    renderList(data, (renderErr, html) => {
+                        if (renderErr) {
+                            return res.send(renderErr);
+                        }
 
-                });
+                        data.records.template = html;
 
-            });
-
+                        return res.render(
+                            linz.api.views.viewPath('modelIndex.pug'),
+                            data
+                        );
+                    });
+                }
+            );
         })
         .catch(next);
-
 };
 
 module.exports = route;

@@ -102,7 +102,7 @@ var route = function(req, res, next) {
                 ])
                     .then(([scripts, styles]) => {
                         return res.render(
-                            linz.api.views.viewPath('recordEdit.jade'),
+                            linz.api.views.viewPath('recordEdit.pug'),
                             Object.assign(data, {
                                 cancelUrl: linz.api.url.getAdminLink(
                                     req.linz.model

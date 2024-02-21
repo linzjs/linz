@@ -1,0 +1,12 @@
+mixin conflictDropdown()
+    script(id="conflict-dropdown-template" type="text/x-handlebars-template")
+        .input-group-btn.conflict-btn
+            button(type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false")
+                span(class="glyphicon")
+            ul(class="dropdown-menu dropdown-menu-right" role="menu")
+                li(role="presentation" class="dropdown-header") Your change
+                li(class="your-change")
+                    a(href="#" class="conflict-selection" data-conflict-value="{{{yourChange.value}}}") {{yourChange.label}}
+                li(role="presentation" class="dropdown-header their-change-author") {{theirChange.author}}'s change
+                li(class="their-change")
+                    a(href="#" class="conflict-selection" data-conflict-value="{{{theirChange.value}}}") {{theirChange.label}}

@@ -1,0 +1,25 @@
+mixin documentarray()
+    template.document-array-list
+        ul {{#documents}}
+            li(data-document-index="{{@index}}")
+                a.btn.btn-default(data-document-action="edit")
+                    span.glyphicon.glyphicon-pencil
+                a.btn.btn-default(data-document-action="remove")
+                    span.glyphicon.glyphicon-trash
+                span {{label}}
+            | {{/documents}}
+    #documentsModal.modal.fade
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type="button") &times;
+                    h4.modal-title Modal title
+                .modal-body
+                    form.form-horizontal(role='form', data-linz-embedded-validation='true')
+                .modal-footer
+                    div.edit-actions
+                        button.btn.btn-primary.btn-save(type="button") Save
+                        button.btn.btn-default.btn-cancel(type="button") Cancel
+                    div.delete-actions
+                        button.btn.btn-primary.btn-save(type="button") Yes
+                        button.btn.btn-default.btn-cancel(type="button") No

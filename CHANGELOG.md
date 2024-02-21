@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## v1.0.0-19.0.0 - 2024-02-21
+
+### Changed
+
+-   Node.js v20 compatibility.
+-   Mongoose v8 compatibility.
+-   MongoDB v7 compatibility.
+
 ## v1.0.0-18.9.3 - 2022-03-15
 
 ### Fixed
@@ -350,7 +358,7 @@
 -   `utils.js` has been move back into the head. Client-side scripts can now make use of `linz.loadScript` and `linz.addLoadEvent` once again.
 -   Added a new default `mongoose options` which can be used to control the options passed to Mongoose when making a connection. Provides support for Mongoose `4.11.x` in which the default connection logic has been removed.
 -   By allowing the results of record/overview actions to return the `.modal-dialog` div, you have more flexibility on the size of the modal (i.e. `<div class="modal-dialog modal-lg">` renders a large modal).
--   Removed `.modal-dialog .modal-content` from the modal divs in `layout.jade`. They should now be included in the HTML returned from any record/overview actions that specify the use of a modal.
+-   Removed `.modal-dialog .modal-content` from the modal divs in `layout.pug`. They should now be included in the HTML returned from any record/overview actions that specify the use of a modal.
 -   You can now use `req.flash('linz-notification', linz.api.views.notification({ text: 'Hi' }))` to have Linz show a notification for you on redirect.
 -   You can now use `req.linz.notifications.push(linz.api.views.notification({ text: 'Hi' }))` to have Linz show a notification for you.
 -   Notifications are now shown in models list, model create, model list, record edit and record overview pages.

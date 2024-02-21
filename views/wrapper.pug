@@ -1,0 +1,12 @@
+extends layout
+
+block page
+    if !page
+        header
+            .container
+                .row
+                    .col-xs-12
+                        block header
+        block content
+    else
+        != page

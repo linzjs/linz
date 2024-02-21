@@ -1,0 +1,14 @@
+.model-sort
+    if model.list.sortBy.length
+        div #{total} records sorted by
+        .dropdown
+            .field(data-toggle='dropdown')= sort.label
+                span.caret
+            ul.dropdown-menu(role='menu')
+                for sortingOption in sortingOptions
+                    li
+                        a(data-sort-field='' + sortingOption.value + '')
+                            != sortingOption.label
+        .direction= ((sortDirection === 'asc') ? 'ascending' : 'descending')
+    else
+        div #{total} records.

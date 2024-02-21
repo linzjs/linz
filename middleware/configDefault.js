@@ -1,68 +1,69 @@
 var linz = require('../'),
     async = require('async');
 
-module.exports = function () {
+module.exports = function() {
+    return function(req, res, next) {
+        async.waterfall(
+            [
+                // find the configs
+                function(cb) {
+                    const { db } = linz.mongoose.connection;
+                    const collection = db.collection(
+                        linz.get('configs collection name')
+                    );
 
-    return function (req, res, next) {
+                    return cb(null, collection);
+                },
 
-        async.waterfall([
+                async function(collection) {
+                    // remove this config from db
+                    await collection.deleteOne(
+                        { _id: req.params.config },
+                        { w: 1 }
+                    );
 
-            // find the configs
-            function (cb) {
+                    return collection;
+                },
 
-                var db  = linz.mongoose.connection.db;
+                async function(collection) {
+                    // now that we have removed the record, let's add it again with default values.
+                    // this is a more efficient way of resetting the config values than updating the existing record.
 
-                db.collection(linz.get('configs collection name'), function (err, collection) {
-                    return cb(err, collection);
-                });
+                    var newConfig = {};
 
-            },
+                    // contruct doc from config schema
+                    req.linz.config.schema.eachPath(function(fieldName, field) {
+                        newConfig[
+                            fieldName
+                        ] = linz.formtools.utils.getDefaultValue(field);
+                    });
 
-            function (collection, cb) {
+                    // overwrite _id field with custom id name
+                    newConfig['_id'] = req.params.config;
+                    newConfig.dateModified = new Date();
+                    newConfig.modifiedBy = req.user._id;
 
-                // remove this config from db
-                collection.remove({ _id: req.params.config }, { w: 1 }, function (err, result) {
-                    return cb(err, collection);
-                });
+                    try {
+                        await collection.insertOne(newConfig, { w: 1 });
 
-            },
+                        // add new config to linz
+                        linz.get('configs')[
+                            req.params.config
+                        ].config = newConfig;
 
-            function (collection, cb) {
-
-                // now that we have removed the record, let's add it again with default values.
-                // this is a more efficient way of resetting the config values than updating the existing record.
-
-                var newConfig = {};
-
-                // contruct doc from config schema
-                req.linz.config.schema.eachPath(function (fieldName, field) {
-                    newConfig[fieldName] = linz.formtools.utils.getDefaultValue(field);
-                });
-
-                // overwrite _id field with custom id name
-                newConfig['_id'] = req.params.config;
-
-                collection.insert(newConfig, { w: 1 }, function (err, result) {
-
-                    if (err) {
-                        throw new Error('Unable to write config file %s to database. ' + err.message, configName);
+                        return;
+                    } catch (err) {
+                        throw new Error(
+                            'Unable to write config file %s to database. ' +
+                                err.message,
+                            req.params.config
+                        );
                     }
-
-                    // add new config to linz
-                    linz.get('configs')[req.params.config].config = newConfig;
-
-                    return cb(null);
-
-                });
-
+                },
+            ],
+            function(err) {
+                return next(err);
             }
-
-        ], function (err, result) {
-
-            return next(err);
-
-        });
-
-    }
-
-}
+        );
+    };
+};

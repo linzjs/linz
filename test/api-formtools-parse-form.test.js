@@ -87,7 +87,7 @@ beforeAll((done) => {
     });
 }, 10000);
 
-afterAll((done) => linz.mongoose.connection.close(done));
+afterAll(() => linz.mongoose.connection.close());
 
 test('it parses a field to the correct value', () => {
     expect(

@@ -1,0 +1,35 @@
+extends layout
+
+block header
+    h1 Configs
+
+block content
+    if records.length > 0
+        .container.linz-container.list.config
+            .pane
+                .body
+                    div(class="table-responsive")
+                        table.table.table-hover
+                            thead
+                                tr
+                                    th #
+                                    if renderActionsField
+                                        th Actions
+                                    for field in list.fields
+                                        th= field.label
+                            tbody
+                                for record, index in records
+                                    if record.permissions.canList !== false
+                                        tr
+                                            td= index+1
+                                            if renderActionsField
+                                                td
+                                                    div.btn-group
+                                                        if record.permissions.canEdit !== false
+                                                            a.btn.btn-default.control-edit(href='' + linz.api.url.getAdminLink(configs[Object.keys(configs)[0]], 'edit', record._id))
+                                                                span(class="glyphicon glyphicon-pencil")
+                                                        if record.permissions.canReset !== false
+                                                            a.btn.btn-default(href='' + linz.api.url.getAdminLink(configs[Object.keys(configs)[0]], 'default', record._id), data-linz-control="config-default")
+                                                                span(class="glyphicon glyphicon-refresh")
+                                            each val in Object.keys(list.fields)
+                                                td!= record[val]

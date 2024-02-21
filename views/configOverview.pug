@@ -1,0 +1,40 @@
+extends layout
+
+block header
+    .model-title
+        h1= record.label
+    .model-actions
+        if (permissions.canEdit !== false || permissions.canList !== false)
+            .actions
+                if permissions.canEdit !== false
+                    span.edit
+                        a.btn.btn-primary(href='' + linz.api.url.getAdminLink(config, 'edit', record._id))
+                            i.fa.fa-edit
+                            | Edit
+                if permissions.canList !== false
+                    span.back
+                        a.btn.btn-default(href='' + linz.api.url.getAdminLink(config, 'list'))
+                            i.fa.fa-chevron-left
+                            | View all Configs
+        if formtools.overview.actions.length
+            .custom-actions
+                if formtools.overview.actions.length === 1
+                    for action in formtools.overview.actions
+                        a.btn.btn-default(href='' + linz.api.url.getAdminLink(config, action.action, record._id))= action.label
+                else
+                    .dropdown
+                        button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown')
+                            | Actions&nbsp;
+                            span.caret
+                        ul.dropdown-menu(role='menu')
+                            for action in formtools.overview.actions
+                                li(role='presentation')
+                                    a(role='menuitem', tabindex='-1', href='' + linz.api.url.getAdminLink(config, action.action))= action.label
+
+block content
+    .container.linz-container.overview.config
+        .pane
+            .body
+                .overview-body
+                    if overview.body
+                        include overview/body

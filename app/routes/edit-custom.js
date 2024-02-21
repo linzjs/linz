@@ -10,7 +10,6 @@ let docSchema;
  * @returns {Object} Returns the dorm dsl.
  */
 const getCustomFormDsl = () => {
-
     // Only load it once.
     if (!docSchema) {
         docSchema = require('../schemas/docSchema');
@@ -28,11 +27,9 @@ const getCustomFormDsl = () => {
             type: 'documentarray',
             widget: linz.formtools.widgets.documents({
                 setLabel: function setLabel(doc) {
-
                     doc.label = doc.email + ' (' + doc.type + ')';
 
                     return doc;
-
                 },
             }),
         },
@@ -59,16 +56,14 @@ const getCustomFormDsl = () => {
             schema: docSchema,
             widget: linz.formtools.widgets.documents({
                 setLabel: function setLabel(doc) {
-
-                    doc.label = doc.name + ' ' + moment(doc.time).format('hh:mm a');
+                    doc.label =
+                        doc.name + ' ' + moment(doc.time).format('hh:mm a');
 
                     return doc;
-
                 },
             }),
         },
     };
-
 };
 
 /**
@@ -79,41 +74,47 @@ const getCustomFormDsl = () => {
  * @returns {Void} Renders the form.
  */
 const renderForm = (req, res, next) => {
-
     const User = linz.api.model.get('mtUser');
     const { id } = req.params;
 
     User.findById(id)
+        .exec()
         .then((record) => {
-
             if (!record) {
                 return Promise.reject(new Error('User record not found'));
             }
 
-            return linz.api.model.generateFormString(linz.api.model.get('mtUser'), {
-                actionUrl: `${linz.get('admin path')}/model/mtUser/${id}/action/edit-custom`,
-                cancelUrl: `${linz.get('admin path')}/model/mtUser/list`,
-                form: getCustomFormDsl(),
-                record,
-                req,
-                type: 'edit',
-            });
-
+            return linz.api.model.generateFormString(
+                linz.api.model.get('mtUser'),
+                {
+                    actionUrl: `${linz.get(
+                        'admin path'
+                    )}/model/mtUser/${id}/action/edit-custom`,
+                    cancelUrl: `${linz.get('admin path')}/model/mtUser/list`,
+                    form: getCustomFormDsl(),
+                    record,
+                    req,
+                    type: 'edit',
+                }
+            );
         })
-        .then(html => res.render('partials/edit-custom-form', {
-            html,
-            title: 'Custom edit form',
-        }, (err, page) => {
+        .then((html) =>
+            res.render(
+                'partials/edit-custom-form',
+                {
+                    html,
+                    title: 'Custom edit form',
+                },
+                (err, page) => {
+                    if (err) {
+                        return Promise.reject(err);
+                    }
 
-            if (err) {
-                return Promise.reject(err);
-            }
-
-            return linz.api.views.render({ page }, req, res);
-
-        }))
+                    return linz.api.views.render({ page }, req, res);
+                }
+            )
+        )
         .catch(next);
-
 };
 
 /**
@@ -124,23 +125,26 @@ const renderForm = (req, res, next) => {
  * @returns {Void} Renders the parsed form.
  */
 const parseForm = (req, res, next) => {
+    linz.api.formtools
+        .parseForm(linz.api.model.get('mtUser'), req, getCustomFormDsl())
+        .then((data) =>
+            res.render(
+                'partials/edit-custom-result',
+                {
+                    backLink: req.get('Referrer'),
+                    html: JSON.stringify(data),
+                    title: 'Custom edit form result',
+                },
+                (err, page) => {
+                    if (err) {
+                        return Promise.reject(err);
+                    }
 
-    linz.api.formtools.parseForm(linz.api.model.get('mtUser'), req, getCustomFormDsl())
-        .then(data => res.render('partials/edit-custom-result', {
-            backLink: req.get('Referrer'),
-            html: JSON.stringify(data),
-            title: 'Custom edit form result',
-        }, (err, page) => {
-
-            if (err) {
-                return Promise.reject(err);
-            }
-
-            return linz.api.views.render({ page }, req, res);
-
-        }))
+                    return linz.api.views.render({ page }, req, res);
+                }
+            )
+        )
         .catch(next);
-
 };
 
 module.exports = {

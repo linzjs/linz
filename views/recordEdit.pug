@@ -1,0 +1,19 @@
+extends layout
+
+include mixins/conflictDropdown
+include mixins/conflictDocumentArrayDropdown
+
+block header
+    h1 Editing '#{record.title}'
+
+block content
+    .container.linz-container.edit.record
+        .pane
+            .body
+                div
+                    include partials/form
+
+    script
+        != conflictHandlersJS
+    +conflictDropdown()
+    +conflictDocumentArrayDropdown()

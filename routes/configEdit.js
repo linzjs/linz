@@ -37,7 +37,7 @@ var route = function(req, res, next) {
             ])
                 .then(([scripts, styles]) => {
                     return res.render(
-                        linz.api.views.viewPath('configEdit.jade'),
+                        linz.api.views.viewPath('configEdit.pug'),
                         {
                             actionUrl: linz.api.url.getAdminLink(
                                 req.linz.config,

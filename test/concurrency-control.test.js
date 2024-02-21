@@ -39,7 +39,7 @@ beforeAll((done) => {
     });
 }, 10000);
 
-afterAll((done) => linz.mongoose.connection.close(done));
+afterAll(() => linz.mongoose.connection.close());
 
 describe('concurrency control', () => {
     const modifiedByProperty = 'modifiedBy';
