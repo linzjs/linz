@@ -3,7 +3,7 @@ if pagination
         .records
             span Showing
             select.pagination.form-control(data-linz-csrf-required, disabled)
-                each page, i in new Array(pages)
+                each _, i in new Array(pages)
                     if page === i+1
                         option(value=i+1, selected)= i+1
                     else
