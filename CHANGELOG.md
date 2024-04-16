@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## v1.0.0-19.0.1 - 2024-04-17
+
+### Fixed
+
+-   Fixed the paging number.
+
 ## v1.0.0-19.0.0 - 2024-02-21
 
 ### Changed
